@@ -12,9 +12,11 @@ public class EventTest {
 
     @Test
     public void fieldsSetByConstructorCanBeRead() {
-        Event e = new Event(3, "Pool Party");
+        Event e = new Event(3, "Pool Party", "Party at Brous House", "Pacific Palisades");
         assertThat(e.getId(), is(3));
         assertThat(e.getName(), is("Pool Party"));
+        assertThat(e.getDescription(), is("Party at Brous House"));
+        assertThat(e.getLocation(), is("Pacific Palisades"));
     }
 
     @Test
@@ -22,8 +24,12 @@ public class EventTest {
         Event e = new Event();
         e.setId(5);
         e.setName("Programming Contest");
+        e.setDescription("Student Programming Contest");
+        e.setLocation("LMU");
         assertThat(e.getId(), is(5));
         assertThat(e.getName(), is("Programming Contest"));
+        assertThat(e.getDescription(), is("Student Programming Contest"));
+        assertThat(e.getLocation(), is("LMU"));
     }
 
     @Test
