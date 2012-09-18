@@ -11,9 +11,10 @@ public class CommentTest {
     
     @Test
     public void fieldsSetByConstructorCanBeRead() {
-        Comment c = new Comment("This is a comment", new DateTime());
+    	DateTime timestamp = new DateTime();
+        Comment c = new Comment("This is a comment", timestamp);
         assertThat(c.getBody(), is("This is a comment"));
-        assertNotNull(c.getTimestamp());
+        assertThat(c.getTimestamp(), is(timestamp));
     }
     
     @Test
