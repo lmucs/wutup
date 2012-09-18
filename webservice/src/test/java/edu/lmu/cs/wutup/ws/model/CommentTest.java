@@ -20,9 +20,10 @@ public class CommentTest {
     @Test
     public void fieldsSetBySettersCanBeRead() {
         Comment c = new Comment();
+        DateTime timestamp = new DateTime();
         c.setBody("Comments are awesome");
-        c.setTimestamp(new DateTime());
+        c.setTimestamp(timestamp);
         assertThat(c.getBody(), is("Comments are awesome"));
-        assertNotNull(c.getTimestamp());
+        assertThat(c.getTimestamp(), is(timestamp));
     }
 }
