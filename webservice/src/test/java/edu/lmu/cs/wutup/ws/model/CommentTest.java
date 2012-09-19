@@ -1,6 +1,5 @@
 package edu.lmu.cs.wutup.ws.model;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
