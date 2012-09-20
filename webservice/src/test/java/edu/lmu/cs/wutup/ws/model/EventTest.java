@@ -26,12 +26,12 @@ public class EventTest {
     @Test
     public void fieldsSetBySettersCanBeRead() {
         Event e = new Event();
-        User eventOwner = new User("Bohnam", "John", "jbohnan@gmail.com", "John");
+        User eventOwner = new User(21, "Bohnam", "John", "jbohnan@gmail.com", "John");
         DateTime timeToStart = new DateTime("2011-12-13T21:39:45.618-08:00");
         DateTime timeToEnd = new DateTime("2011-12-14T21:39:45.618-08:00");
         List<User> someUsers = new ArrayList<User>();
-        someUsers.add(new User("Plant", "Robert", "rplant@gmail.com", "Rob"));
-        someUsers.add(new User("Page", "Jimmy", "jpage@gmail.com", "Jim"));
+        someUsers.add(new User(22, "Plant", "Robert", "rplant@gmail.com", "Rob"));
+        someUsers.add(new User(23, "Page", "Jimmy", "jpage@gmail.com", "Jim"));
         e.setId(5);
         e.setName("Programming Contest");
         e.setDescription("Student Programming Contest");
