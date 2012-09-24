@@ -10,7 +10,7 @@ import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 
 public class UserTest {
-    
+
     @Test
     public void fieldsSetByConstructorCanBeRead() {
         User u = new User(1492, "Joe", "Coffee", "jcoffee@gmail.com","jc1989");
@@ -20,7 +20,7 @@ public class UserTest {
         assertThat(u.getEmail(), is("jcoffee@gmail.com"));
         assertThat(u.getNickname(), is("jc1989"));
     }
-    
+
     @Test
     public void fieldsSetBySettersCanBeRead() {
         User u = new User();
@@ -35,28 +35,31 @@ public class UserTest {
         assertThat(u.getEmail(), is("admiralty@ymail.com"));
         assertThat(u.getNickname(), is("seapirate"));
     }
-    
+
     @Test
     public void getFullNameIsCorrect() {
-    	User u = new User();
-    	u.setFirstName("Renly");
-    	u.setLastName("Cheeseburger");
-    	assertThat(u.getFullName(), is("Renly Cheeseburger"));
+        User u = new User();
+        u.setFirstName("Renly");
+        u.setLastName("Cheeseburger");
+        assertThat(u.getFullName(), is("Renly Cheeseburger"));
     }
-    
+
     @Test
     public void equalsUsesEmailAndIdOnly() {
-    	assertThat(new User(1, "abcdefg@gmail.com"), equalTo(new User(1, "abcdefg@gmail.com")));
-    	assertThat(new User(1, "dward@yahoo.com"), not(equalTo(new User(1, "notdward@yahoo.com"))));
-    	assertThat(new User(1, "dward@yahoo.com"), not(equalTo(new User(999, "dward@yahoo.com"))));
-    	assertFalse(new User(21, "tarik@lion.lmu.edu").equals(5000));
-    	assertFalse(new User(1776, "tjefferson@whitehouse.gov").equals(null));
-    	
+        assertThat(new User(1, "abcdefg@gmail.com"), equalTo(new User(1, "abcdefg@gmail.com")));
+        assertThat(new User(1, "dward@yahoo.com"), not(equalTo(new User(1, "notdward@yahoo.com"))));
+        assertThat(new User(1, "dward@yahoo.com"), not(equalTo(new User(999, "dward@yahoo.com"))));
+        assertFalse(new User(21, "tarik@lion.lmu.edu").equals(5000));
+        assertFalse(new User(1776, "tjefferson@whitehouse.gov").equals(null));
+
     }
-    
-    public void hashCodeReturnsId() {
-    	User u = new User();
-    	u.setId(9999);
-    	assertThat(u.hashCode(), is(9999));
+
+    @Test
+    public void hashCodeConsidersIdAndName() {
+        User alice = new User(1, "alice@example.com");
+        User aliceClone = new User(1, "alice@example.com");
+        User evilAlice = new User(1, "evilAlice@example.com");
+        assertThat(alice.hashCode(), is(aliceClone.hashCode()));
+        assertThat(alice.hashCode(), is(not(evilAlice.hashCode())));
     }
 }

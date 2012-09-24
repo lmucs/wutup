@@ -7,38 +7,38 @@ import com.google.common.base.Objects;
 
 @XmlRootElement(name = "user")
 public class User {
-	
+
+    private Integer id;
     private String firstName;
     private String lastName;
     private String email;
     private String nickname;
-    private Integer id;
-    
+
     public User() {
-        
+        // No-arg constructor required for annotations
     }
-    
+
     public User(int id, String email) {
-    	this.id = id;
-    	this.email = email;
+        this(id, null, null, email, null);
     }
-    
+
     public User(Integer id, String first, String last, String email, String nick) {
-    	this.id = id;
+        this.id = id;
         this.firstName = first;
         this.lastName = last;
         this.email = email;
         this.nickname = nick;
     }
-    
+
     @XmlElement(name = "id")
     public int getId() {
-    	return this.id;
+        return this.id;
     }
-    
+
     public void setId(int i) {
-    	this.id = i;
+        this.id = i;
     }
+
     @XmlElement(name = "firstname")
     public String getFirstName() {
         return firstName;
@@ -47,7 +47,7 @@ public class User {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
+
     @XmlElement(name = "lastname")
     public String getLastName() {
         return lastName;
@@ -56,7 +56,7 @@ public class User {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
     @XmlElement(name = "email")
     public String getEmail() {
         return email;
@@ -74,25 +74,25 @@ public class User {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-    
+
     public String getFullName() {
-    	return this.firstName + " " + this.lastName;
+        return this.firstName + " " + this.lastName;
     }
-    
+
     @Override
     public int hashCode() {
-    	return this.id;
+        return Objects.hashCode(id, email);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-    	boolean result = false;
-    	
-    	if (obj != null && obj instanceof User) {
-    		User u = (User) obj;
-    		result = this.id == u.id && Objects.equal(u.email, this.email);
-    	}
-    	
-    	return result;
+        boolean result = false;
+
+        if (obj instanceof User) {
+            User u = User.class.cast(obj);
+            result = Objects.equal(id, u.id) && Objects.equal(u.email, this.email);
+        }
+
+        return result;
     }
 }
