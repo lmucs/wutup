@@ -6,8 +6,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.joda.time.DateTime;
-
 import com.google.common.base.Objects;
 
 @XmlRootElement(name = "event")
@@ -16,12 +14,10 @@ public class Event {
     private Integer id;
     private String name;
     private String description;
-    private String category;
-    private String location;
-    private DateTime start;
-    private DateTime end;
+    // private List<Category> category = new ArrayList<Category>();
     private User owner;
     private List<User> attendees = new ArrayList<User>();
+    // private List<EventOccurrence> eventOccurrences = new ArrayList<EventOccurrence>();
     
 
     public Event() {
@@ -33,11 +29,10 @@ public class Event {
         this.name = name;
     }
     
-    public Event(int id, String name, String description, String location) {
+    public Event(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.location = location;
     }
 
     public void setId(int id) {
@@ -67,15 +62,6 @@ public class Event {
         return this.description;
     }
 
-    public void setLocation(final String location) {
-        this.location = location;
-    }
-
-    @XmlElement(name = "location")
-    public String getLocation() {
-        return this.location;
-    }
-
     public void setOwner(final User owner) {
         this.owner = owner;
     }
@@ -84,33 +70,6 @@ public class Event {
     public User getOwner() {
         return this.owner;
     }
-    
-    public void setCategory(final String category) {
-        this.category = category;
-    }
-
-    @XmlElement(name = "category")
-    public String getCategory() {
-        return this.category;
-    }
-    
-    @XmlElement(name = "start")
-    public DateTime getStart() {
-		return start;
-	}
-
-	public void setStart(DateTime start) {
-		this.start = start;
-	}
-
-	@XmlElement(name = "end")
-	public DateTime getEnd() {
-		return end;
-	}
-
-	public void setEnd(DateTime end) {
-		this.end = end;
-	}
 
 	@XmlElement(name = "attendees")
 	public List<User> getAttendees() {
@@ -120,6 +79,24 @@ public class Event {
 	public void setAttendees(List<User> attendees) {
 		this.attendees = attendees;
 	}
+
+	// @XmlElement(name = "eventOccurrence")
+	// public List<EventOccurrence> getEventOccurrence() {
+	//	return eventOccurrence;
+	// }
+
+	// public void setEventOccurrence(List<EventOccurrence> eventOccurrence) {
+	// 	this.eventOccurrence = eventOccurrence;
+	// }
+	
+	// @XmlElement(name = "category")
+	// public List<Category> getCategory() {
+	//	return category;
+	// }
+
+	// public void setCategory(List<User> category) {
+	// 	this.category = category;
+	// }
 	
 	@Override
     public String toString() {
@@ -135,7 +112,7 @@ public class Event {
     public boolean equals(Object obj) {
         boolean result = false;
 
-        if (obj != null && obj instanceof Event) {
+        if (obj != null) {
             Event other = (Event) obj;
             result = other.id == this.id && Objects.equal(other.name, this.name);
         }
