@@ -14,31 +14,31 @@ import edu.lmu.cs.wutup.ws.model.Event;
 public class EventServiceImpl implements EventService {
 
     @Autowired
-    EventDao EventDao;
+    EventDao eventDao;
 
     @Override
     public void createEvent(Event e) {
-        EventDao.createEvent(e);
+        eventDao.createEvent(e);
     }
 
     @Override
     public void updateEvent(Event e) {
-        EventDao.updateEvent(e);
+        eventDao.updateEvent(e);
     }
 
     @Override
     public Event findEventById(int id) {
-        return EventDao.findEventById(id);
+        return eventDao.findEventById(id);
     }
 
     @Override
     public List<Event> findEvents(String name, int pageNumber, int pageSize) {
-        return name == null ? EventDao.findAllEvents(pageNumber, pageSize) : EventDao.findEventsByName(
+        return name == null ? eventDao.findAllEvents(pageNumber, pageSize) : eventDao.findEventsByName(
                 name, pageNumber, pageSize);
     }
 
     @Override
     public void deleteEvent(Event e) {
-        EventDao.deleteEvent(e);
+        eventDao.deleteEvent(e);
     }
 }

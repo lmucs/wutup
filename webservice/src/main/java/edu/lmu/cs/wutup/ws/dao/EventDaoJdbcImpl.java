@@ -49,7 +49,7 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public Event findEventById(int id) {
         try {
-            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, EventRowMapper);
+            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();
         }
@@ -58,12 +58,12 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public List<Event> findEventsByName(String name, int pageNumber, int pageSize) {
         return jdbcTemplate.query(FIND_BY_NAME_SQL, new Object[]{name, pageSize, pageNumber * pageSize},
-                EventRowMapper);
+                eventRowMapper);
     }
 
     @Override
     public List<Event> findAllEvents(int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pageSize, pageNumber * pageSize}, EventRowMapper);
+        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pageSize, pageNumber * pageSize}, eventRowMapper);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class EventDaoJdbcImpl implements EventDao {
         return jdbcTemplate.queryForInt(COUNT_SQL);
     }
 
-    private static RowMapper<Event> EventRowMapper = new RowMapper<Event>() {
+    private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Event(rs.getInt("id"), rs.getString("name"));
         }

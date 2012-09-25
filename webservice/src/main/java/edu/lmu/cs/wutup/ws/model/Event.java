@@ -22,7 +22,7 @@ public class Event {
     private DateTime end;
     private User owner;
     private List<User> attendees = new ArrayList<User>();
-    
+
 
     public Event() {
         // No-arg constructor required for annotations
@@ -32,7 +32,7 @@ public class Event {
         this.id = id;
         this.name = name;
     }
-    
+
     public Event(int id, String name, String description, String location) {
         this.id = id;
         this.name = name;
@@ -84,7 +84,7 @@ public class Event {
     public User getOwner() {
         return this.owner;
     }
-    
+
     public void setCategory(final String category) {
         this.category = category;
     }
@@ -93,35 +93,35 @@ public class Event {
     public String getCategory() {
         return this.category;
     }
-    
+
     @XmlElement(name = "start")
     public DateTime getStart() {
-		return start;
-	}
+        return start;
+    }
 
-	public void setStart(DateTime start) {
-		this.start = start;
-	}
+    public void setStart(DateTime start) {
+        this.start = start;
+    }
 
-	@XmlElement(name = "end")
-	public DateTime getEnd() {
-		return end;
-	}
+    @XmlElement(name = "end")
+    public DateTime getEnd() {
+        return end;
+    }
 
-	public void setEnd(DateTime end) {
-		this.end = end;
-	}
+    public void setEnd(DateTime end) {
+        this.end = end;
+    }
 
-	@XmlElement(name = "attendees")
-	public List<User> getAttendees() {
-		return attendees;
-	}
+    @XmlElement(name = "attendees")
+    public List<User> getAttendees() {
+        return attendees;
+    }
 
-	public void setAttendees(List<User> attendees) {
-		this.attendees = attendees;
-	}
-	
-	@Override
+    public void setAttendees(List<User> attendees) {
+        this.attendees = attendees;
+    }
+
+    @Override
     public String toString() {
         return Objects.toStringHelper(this).add("id", this.id).add("name", this.name).toString();
     }
@@ -137,7 +137,7 @@ public class Event {
 
         if (obj != null && obj instanceof Event) {
             Event other = (Event) obj;
-            result = other.id == this.id && Objects.equal(other.name, this.name);
+            result = Objects.equal(id, other.id) && Objects.equal(name, other.name);
         }
 
         return result;
