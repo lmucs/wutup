@@ -99,7 +99,7 @@ public class EventDaoTest {
     }
 
     @Test
-    public void EventAliceIsInInitialDataSet() {
+    public void eventAliceIsInInitialDataSet() {
         List<Event> events = eventDao.findEventsByName("Poker Night", 0, 12);
         assertThat(events.size(), is(1));
 

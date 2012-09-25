@@ -25,7 +25,7 @@ public class EventServiceTest {
     public void setUp() {
         service = new EventServiceImpl();
         dao = mock(EventDao.class);
-        service.EventDao = dao;
+        service.eventDao = dao;
     }
 
     @Test

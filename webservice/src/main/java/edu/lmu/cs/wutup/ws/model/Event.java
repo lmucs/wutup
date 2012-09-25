@@ -18,7 +18,7 @@ public class Event {
     private User owner;
     private List<User> attendees = new ArrayList<User>();
     // private List<EventOccurrence> eventOccurrences = new ArrayList<EventOccurrence>();
-    
+
 
     public Event() {
         // No-arg constructor required for annotations
@@ -30,6 +30,7 @@ public class Event {
     }
     
     public Event(int id, String name, String description) {
+
         this.id = id;
         this.name = name;
         this.description = description;
@@ -114,7 +115,7 @@ public class Event {
 
         if (obj != null) {
             Event other = (Event) obj;
-            result = other.id == this.id && Objects.equal(other.name, this.name);
+            result = Objects.equal(id, other.id) && Objects.equal(name, other.name);
         }
 
         return result;

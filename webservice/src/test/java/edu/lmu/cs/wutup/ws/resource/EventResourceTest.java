@@ -44,7 +44,7 @@ public class EventResourceTest {
     }
 
     @Test
-    public void EventCreationCreatesEventWithLocationHeader() {
+    public void eventCreationCreatesEventWithLocationHeader() {
         Response response = resource.createEvent(sampleEvent, sampleUriInfo);
         verify(service).createEvent(sampleEvent);
         assertThat(response.getMetadata().getFirst("Location").toString(), is("http://example.com/1"));
