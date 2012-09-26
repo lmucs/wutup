@@ -17,14 +17,15 @@ public class Event {
 	private User owner;
 	private List<User> attendees = new ArrayList<User>();
 	private List<EventOccurrence> eventOccurrence = new ArrayList<EventOccurrence>();
-    private List<Category> category = new ArrayList<Category>();
+	private List<Category> category = new ArrayList<Category>();
 
 	public Event() {
 		// No-arg constructor required for annotations
 	}
 
-	public Event(int id, String name, String description, User owner, List<User> attendees,
-			List<EventOccurrence> eventOccurrence, List<Category> category) {
+	public Event(Integer id, String name, String description, User owner,
+			List<User> attendees, List<EventOccurrence> eventOccurrence,
+			List<Category> category) {
 
 		this.id = id;
 		this.name = name;
@@ -35,7 +36,7 @@ public class Event {
 		this.category = category;
 	}
 
-	public Event(int id, String name) {
+	public Event(Integer id, String name) {
 		this(id, name, null, null, null, null, null);
 	}
 
@@ -94,18 +95,21 @@ public class Event {
 	}
 
 	public void setCategory(List<Category> category) {
-	this.category = category;
+		this.category = category;
 	}
 
 	@XmlElement(name = "category")
 	public List<Category> getCategory() {
-	return category;
+		return category;
 	}
 
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add("id", this.id)
-				.add("name", this.name).toString();
+				.add("name", this.name).add("description", this.description)
+				.add("owner", this.owner).add("attendees", this.attendees)
+				.add("eventOccurrence", this.eventOccurrence)
+				.add("category", this.category).toString();
 	}
 
 	@Override
@@ -116,12 +120,13 @@ public class Event {
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = false;
-		
+
 		if (obj instanceof Event) {
-            Event e = Event.class.cast(obj);
-            result = Objects.equal(id, e.id) && Objects.equal(e.name, this.name);
-        }
-		
+			Event e = Event.class.cast(obj);
+			result = Objects.equal(id, e.id)
+					&& Objects.equal(e.name, this.name);
+		}
+
 		return result;
 	}
 }
