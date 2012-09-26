@@ -59,7 +59,7 @@ public class EventTest {
 	@Test
 	public void toStringProducesExpectedString() {
 		Event e = new Event(3, "Pool Party");
-		String expected = "Event{id=3, name=Pool Party, description=null, owner=null,"
+		String expected = "Event{id=3, name=Pool Party, description=null, owner=null, "
 				+ "attendees=null, eventOccurrence=null, category=null}";
 		List<User> someUsers = new ArrayList<User>();
 		List<EventOccurrence> someOccurrences = new ArrayList<EventOccurrence>();
@@ -67,7 +67,7 @@ public class EventTest {
 		Event e1 = new Event(3, "Pool Party", "Party at Brous House", null,
 				someUsers, someOccurrences, someCategories);
 		System.out.print(e.toString());
-		String expected1 = "Event{id=3, name=Pool Party, description=Party at Brous House,"
+		String expected1 = "Event{id=3, name=Pool Party, description=Party at Brous House, "
 				+ "owner=null, attendees=[], eventOccurrence=[], category=[]}";
 		assertEquals(expected, e.toString());
 		assertEquals(expected1, e1.toString());
