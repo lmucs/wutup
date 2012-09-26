@@ -116,13 +116,12 @@ public class Event {
 	@Override
 	public boolean equals(Object obj) {
 		boolean result = false;
-
-		if (obj != null) {
-			Event other = (Event) obj;
-			result = Objects.equal(id, other.id)
-					&& Objects.equal(name, other.name);
-		}
-
+		
+		if (obj instanceof Event) {
+            Event e = Event.class.cast(obj);
+            result = Objects.equal(id, e.id) && Objects.equal(e.name, this.name);
+        }
+		
 		return result;
 	}
 }
