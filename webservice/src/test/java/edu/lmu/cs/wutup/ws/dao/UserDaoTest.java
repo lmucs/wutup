@@ -6,7 +6,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.junit.Before;
+import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
+import edu.lmu.cs.wutup.ws.exception.UserExistsException;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -30,10 +32,73 @@ public class UserDaoTest {
     }
     
     @Test
+    public void tableHasCorrectSizFromSetup() {
+        assertThat(userDao.findNumberOfUsers(), is(6));
+    }
+    
+    @Test
     public void creatingIncrementsSize() {
         User u = new User(7, "Dodger", "Duck", "dd@gmail.com", null);
         int beforeSize = userDao.findNumberOfUsers();
         userDao.createUser(u);
         assertThat(userDao.findNumberOfUsers(), is(beforeSize + 1));
+    }
+
+    @Test
+    public void deletingDecrementsSize() {
+        User u = new User(1, "40mpg@gmail.com");
+        int initialSize = userDao.findNumberOfUsers();
+        userDao.deleteUser(u);
+        assertThat(userDao.findNumberOfUsers(), is(initialSize - 1));
+    }
+
+    @Test
+    public void createdUserCanBeFound() {
+        User u = new User(8, "me@ymail.com");
+        userDao.createUser(u);
+        User result = userDao.findUserById(8);
+        assertThat(result.getId(), is(u.getId()));
+        assertThat(result.getEmail(), is(u.getEmail()));
+    }
+    
+    
+    @Test(expected=UserExistsException.class)
+    public void creatingUserWithDuplicateIdThrowsException() {
+        User u = new User(2, "ImABigPhony@hotmail.com");
+        userDao.createUser(u);
+    }
+    @Test(expected=NoSuchUserException.class)
+    public void deletingNonExistantUserThrowsException() {
+        User u = new User(9999, "notreal@gmail.com");
+        userDao.deleteUser(u);
+    }
+
+    @Test(expected=NoSuchUserException.class)
+    public void updatingNonExistantUserThrowsException() {
+        User u = new User(9998, "notreal@gmail.com");
+        userDao.updateUser(u);
+    }
+    
+    @Test(expected=NoSuchUserException.class)
+    public void findingNonExistantUserThrowsException() {
+        userDao.findUserById(2012);
+    }
+
+    @Test 
+    public void updatedUserColumnsCanBeRead() {
+        userDao.createUser(new User(9, "Busby", "Fernjoy", "bf@lol.com", "bferny"));
+        User u = userDao.findUserById(9);
+        u.setEmail("fernjoy@aol.com");
+        u.setNickname("greenhouser");
+        userDao.updateUser(u);
+        
+        User newer = userDao.findUserById(9);
+        assertThat(newer.getEmail(), is(u.getEmail()));
+        assertThat(newer.getNickname(), is(u.getNickname()));
+    }
+    
+    @After
+    public void tearDownDatabase() {
+        database.shutdown();
     }
 }
