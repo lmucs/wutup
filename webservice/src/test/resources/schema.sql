@@ -12,5 +12,6 @@ create table user(
   firstName varchar(512),
   lastName varchar(512),
   email varchar(512),
-  nickname varchar(512)
+  nickname varchar(512),
+  primary key(id)
 );  
