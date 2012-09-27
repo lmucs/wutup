@@ -21,7 +21,7 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String CREATE_SQL = "insert into event (id, name) values (?,?)";
     private static final String UPDATE_SQL = "update event set name=? where id=?";
     private static final String FIND_BY_ID_SQL = "select id, name from event where id=?";
-    private static final String FIND_BY_NAME_SQL = "select id, name from event where name=? limit ? offset ?";
+    private static final String FIND_BY_NAME_SQL = "select id, name f// TODO Auto-generated method stubrom event where name=? limit ? offset ?";
     private static final String FIND_ALL_SQL = "select id, name from event limit ? offset ?";
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
@@ -33,13 +33,13 @@ public class EventDaoJdbcImpl implements EventDao {
     public void createEvent(Event e) {
         try {
             jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName());
-        } catch (DuplicateKeyException ex) {
+        } catch (DuplicateKeyException ex) {// TODO Auto-generated method stub
             throw new EventExistsException();
         }
     }
-
+ // TODO Auto-generated method stub
     @Override
-    public void updateEvent(Event e) {
+    public void updateEvent(Event e) {// TODO Auto-generated method stub
         int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getName(), e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventException();
@@ -48,7 +48,7 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public Event findEventById(int id) {
-        try {
+        try {// TODO Auto-generated method stub
             return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();
