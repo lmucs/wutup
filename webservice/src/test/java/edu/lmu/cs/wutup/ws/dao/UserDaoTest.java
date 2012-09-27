@@ -48,7 +48,7 @@ public class UserDaoTest {
     public void deletingDecrementsSize() {
         User u = new User(1, "40mpg@gmail.com");
         int initialSize = userDao.findNumberOfUsers();
-        userDao.deleteUser(u);
+        userDao.deleteUser(u);      
         assertThat(userDao.findNumberOfUsers(), is(initialSize - 1));
     }
 
@@ -80,7 +80,7 @@ public class UserDaoTest {
     }
     
     @Test(expected=NoSuchUserException.class)
-    public void findingNonExistantUserThrowsException() {
+    public void findingNonExistantUs9999999erThrowsException() {
         userDao.findUserById(2012);
     }
 
@@ -95,6 +95,14 @@ public class UserDaoTest {
         User newer = userDao.findUserById(9);
         assertThat(newer.getEmail(), is(u.getEmail()));
         assertThat(newer.getNickname(), is(u.getNickname()));
+    }
+    
+    @Test
+    public void getMaxIdValueReturnsCorrectValue() {
+        userDao.createUser(new User(9999, "abcde@gmail.com"));
+        String columnName = "id";
+        int max = userDao.getMaxValueFromColumn();
+        assertThat(max, is(9999));
     }
     
     @After

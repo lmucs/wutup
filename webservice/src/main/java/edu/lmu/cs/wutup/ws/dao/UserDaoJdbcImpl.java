@@ -22,6 +22,8 @@ public class UserDaoJdbcImpl implements UserDao {
     private static final String UPDATE_SQL = "update user set firstName=?, lastName=?, email=?, nickname=? where id=?;";
     private static final String DELETE_SQL = "delete from user where id=?;";
     private static final String FIND_BY_ID_SQL = "select * from user where id=?;";
+    private static final String FIND_MAX_VALUE_SQL = "select max(id) from user;";
+    //private static final String FIND_MAX_VALUE_SQL = "select max(?) from user;";
     private static final String COUNT_SQL = "select count(*) from user;";
     
     @Autowired
@@ -68,11 +70,17 @@ public class UserDaoJdbcImpl implements UserDao {
         }
     }
     
+    @Override
+    public int getMaxValueFromColumn() {
+        // Need to check on what happens if column is empty
+        return jdbcTemplate.queryForInt(FIND_MAX_VALUE_SQL);
+    }
+    
     private static RowMapper<User> userRowMapper = new RowMapper<User>() {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(rs.getInt("id"), 
                     rs.getString("firstName"), rs.getString("lastName"), rs.getString("email"), rs.getString("nickname"));
         }
     };
-   
+
 }
