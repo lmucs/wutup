@@ -7,7 +7,7 @@ import com.google.common.base.Objects;
 
 @XmlRootElement(name = "comment")
 public class Comment {
-    private int id;
+    private Integer id;
     private User author;
     private String body;
     private DateTime timestamp;
