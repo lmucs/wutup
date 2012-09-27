@@ -9,8 +9,8 @@ public interface LocationService {
     void createLocation(Location loc);
 
     Location findLocationById(int id);
-    List<Location> findLocationByAddress(String address, int pageNumber, int pageSize);
-    List<Location> findLocationByPropertyMap(String propertyMap, int pageNumber, int pageSize);
+    List<Location> findLocationsByAddress(String address, int pageNumber, int pageSize);
+    List<Location> findLocationsByPropertyMap(String propertyMap, int pageNumber, int pageSize);
     List<Location> findAllLocations(int pageNumber, int pageSize);
     
     void updateLocation(Location loc);
