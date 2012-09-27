@@ -16,6 +16,10 @@ public class EventOccurrence {
     private DateTime end;
 
     public EventOccurrence() {
+        // toString gives errors if DateTime properties are null,
+        // Initializing new DateTime should set start and end time
+        // as when initialized. Not sure if the best way to handle.
+
         // No-arg constructor required for annotations
     }
 
