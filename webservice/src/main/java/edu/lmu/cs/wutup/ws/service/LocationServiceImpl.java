@@ -18,41 +18,41 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public void createLocation(Location loc) {
-        LocationDao.createLocation(loc);
+        locationDao.createLocation(loc);
     }
 
     @Override
     public void updateLocation(Location loc) {
-        LocationDao.updateLocation(loc);
+        locationDao.updateLocation(loc);
     }
 
     @Override
     public Location findLocationById(int id) {
-        return LocationDao.findLocationById(id);
+        return locationDao.findLocationById(id);
     }
 
     @Override
-    public List<Location> findLocationByAddress(String address, int pageNumber, int pageSize) {
-        return LocationDao.findLocationsByAddress(address, pageNumber, pageSize);
+    public List<Location> findLocationsByAddress(String address, int pageNumber, int pageSize) {
+        return locationDao.findLocationsByAddress(address, pageNumber, pageSize);
     }
 
     @Override
     public List<Location> findLocationsByPropertyMap(String propertyMap, int pageNumber, int pageSize) {
-        return LocationDao.findLocationsByPropertyMap(propertyMap, pageNumber, pageSize);
+        return locationDao.findLocationsByPropertyMap(propertyMap, pageNumber, pageSize);
     }
 
     @Override
     public List<Location> findAllLocations(int pageNumber, int pageSize) {
-        return LocationDao.findAllLocations(pageNumber, pageSize);
+        return locationDao.findAllLocations(pageNumber, pageSize);
     }
 
     @Override
     public void deleteLocation(Location loc) {
-        LocationDao.deleteLocation(loc);
+        locationDao.deleteLocation(loc);
     }
 
     @Override
     public int findNumberOfLocations() {
-        return LocationDao.findNumberOfLocations();
+        return locationDao.findNumberOfLocations();
     }
 }

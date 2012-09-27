@@ -1,10 +1,9 @@
 package edu.lmu.cs.wutup.ws.model;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertFalse;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
@@ -37,16 +36,16 @@ public class LocationTest {
 
     @Test
     public void equalsUsesIdAddressAndPropertymapOnly() {
-        assertThat(new Location(1, "Keck Lab", "Doolan"), equalTo(new Location(1, "Keck Lab", "Doolan")));
-        assertThat(new Location(1, "Keck Lab", "Doolan"), not(equalTo(new Location(1, "Restroom", "Doolan"))));
-        assertThat(new Location(1, "Keck Lab", "Doolan"), not(equalTo(new Location(999, "Keck Lab", "Doolan"))));
-        assertFalse(new Location(1, "Keck Lab", "Doolan").equals("candy"));
-        assertFalse(new Location(1, "Keck Lab", "Doolan").equals(null));
+        assertThat(new Location(1, "Keck Lab"), is(new Location(1, "Keck Lab")));
+        assertThat(new Location(1, "Keck Lab"), not(is(new Location(1, "Restroom"))));
+        assertThat(new Location(1, "Keck Lab"), not(is(new Location(999, "Keck Lab"))));
+        assertFalse(new Location(1, "Keck Lab").equals("candy"));
+        assertFalse(new Location(1, "Keck Lab").equals(null));
 
     }
 
     @Test
     public void hashCodeProducesId() {
-        assertThat(new Location(1, "Keck Lab", "Doolan").hashCode(), is(1));
+        assertThat(new Location(1, "Keck Lab").hashCode(), is(1));
     }
 }

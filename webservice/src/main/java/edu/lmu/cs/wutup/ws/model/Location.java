@@ -18,6 +18,10 @@ public class Location {
         // No-arg constructor
     }
 
+    public Location(Integer id, String address) {
+        this(id, address, 0.0, 0.0, null);
+    }
+
     public Location(Integer id, String address, double latitude, double longtitude, String propertyMap) {
         this.id = id;
         this.address = address;
