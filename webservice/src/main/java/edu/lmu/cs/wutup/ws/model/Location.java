@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
 
+@XmlRootElement(name = "location")
 public class Location {
     private String address;
     private double latitude;
