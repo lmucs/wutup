@@ -13,6 +13,7 @@ public class UserDaoJdbcImpl implements UserDao {
     
     private static final String CREATE_SQL = "insert into user(id, firstName, lastName, email, nickname) values(?, ?, ?, ?, ?);";
     private static final String UPDATE_SQL = "update user set email=? where id=?;";
+    private static final String COUNT_SQL = "select count(*) from user;";
     
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -36,5 +37,10 @@ public class UserDaoJdbcImpl implements UserDao {
     public void updateUser(User u) {
         // TODO Auto-generated method stub
         
+    }
+    
+    @Override
+    public int findNumberOfUsers() {
+        return jdbcTemplate.queryForInt(COUNT_SQL);
     }
 }

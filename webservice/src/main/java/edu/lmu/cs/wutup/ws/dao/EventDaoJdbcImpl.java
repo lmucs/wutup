@@ -21,7 +21,7 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String CREATE_SQL = "insert into event (id, name) values (?,?)";
     private static final String UPDATE_SQL = "update event set name=? where id=?";
     private static final String FIND_BY_ID_SQL = "select id, name from event where id=?";
-    private static final String FIND_BY_NAME_SQL = "select id, name f// TODO Auto-generated method stubrom event where name=? limit ? offset ?";
+    private static final String FIND_BY_NAME_SQL = "select id, name from event where name=? limit ? offset ?";
     private static final String FIND_ALL_SQL = "select id, name from event limit ? offset ?";
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";

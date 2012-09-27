@@ -9,4 +9,6 @@ public interface UserDao {
     User findUserById(int id);
     
     void updateUser(User u);
+    
+    int findNumberOfUsers();
 }
