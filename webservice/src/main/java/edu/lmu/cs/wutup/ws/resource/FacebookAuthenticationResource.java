@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Path("/auth")
 public class FacebookAuthenticationResource {
     @GET
-    @Path("facebook")
+    @Path("/facebook")
     public Response authenticate() throws URISyntaxException {
         return Response
                 .temporaryRedirect(new java.net.URI("http://www.facebook.com/"))
