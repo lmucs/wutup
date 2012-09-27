@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.google.common.base.Objects;
 
 @XmlRootElement(name = "location")
-public class Location {
+public class Venue {
 
     private Integer id;
     private String address;
@@ -14,15 +14,15 @@ public class Location {
     private double longtitude;
     private String propertyMap;
 
-    public Location() {
+    public Venue() {
         // No-arg constructor
     }
 
-    public Location(Integer id, String address) {
+    public Venue(Integer id, String address) {
         this(id, address, 0.0, 0.0, null);
     }
 
-    public Location(Integer id, String address, double latitude, double longtitude, String propertyMap) {
+    public Venue(Integer id, String address, double latitude, double longtitude, String propertyMap) {
         this.id = id;
         this.address = address;
         this.latitude = latitude;
@@ -79,8 +79,8 @@ public class Location {
     public boolean equals(Object obj) {
         boolean result = false;
 
-        if (obj instanceof Location) {
-            Location other = Location.class.cast(obj);
+        if (obj instanceof Venue) {
+            Venue other = Venue.class.cast(obj);
             result = Objects.equal(id, other.id) &&
                      Objects.equal(address, other.address) &&
                      Objects.equal(other.propertyMap, this.propertyMap);
