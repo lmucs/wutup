@@ -23,6 +23,10 @@ public class EventOccurrence {
         // No-arg constructor required for annotations
     }
 
+    public EventOccurrence(int id, String location) {
+        this(id, location, new DateTime(), new DateTime());
+    }
+
     public EventOccurrence(int id, String location, DateTime start, DateTime end) {
         this.id = new Integer(id);
         this.location = location;
