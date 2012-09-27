@@ -31,7 +31,7 @@ public class CommentResourceTest {
     CommentService service;
 
     User sampleUser = new User( 1000, "first", "last", "email", "nick");
-    Comment sampleComment = new Comment("This is a comment.", sampleUser, new DateTime());
+    Comment sampleComment = new Comment(400,"This is a comment.", new DateTime(), sampleUser);
     List<Comment> sampleCommentList = new ArrayList<Comment>();
     UriInfo sampleUriInfo;
 

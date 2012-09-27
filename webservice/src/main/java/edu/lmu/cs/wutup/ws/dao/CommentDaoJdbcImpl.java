@@ -77,7 +77,7 @@ public class CommentDaoJdbcImpl implements CommentDao {
 
     private static RowMapper<Comment> CommentRowMapper = new RowMapper<Comment>() {
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Comment(rs.getString("body"), (User)rs.getObject("user"), (DateTime)rs.getObject("timestamp"));
+            return new Comment(rs.getInt("id"), rs.getString("body"), (DateTime)rs.getObject("timestamp"), (User)rs.getObject("user"));
         }
     };
 }

@@ -9,11 +9,11 @@ import edu.lmu.cs.wutup.ws.dao.UserDao;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService{
-    
+public class UserServiceImpl implements UserService {
+
     @Autowired
-    private UserDao userDao;
-    
+    UserDao userDao;
+
     @Override
     public void updateUser(User u) {
         userDao.updateUser(u);
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void createUser(User u) {
-        userDao.createUser(u);  
+        userDao.createUser(u);
     }
 
     @Override
@@ -32,7 +32,5 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteUser(User u) {
         userDao.deleteUser(u);
-        
     }
-
 }

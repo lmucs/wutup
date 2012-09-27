@@ -11,25 +11,27 @@ public class Comment {
     private User author;
     private String body;
     private DateTime timestamp;
-    
-	public Comment() {
-	 // No-arg constructor required for annotations
+
+    public Comment() {
+        // No-arg constructor required for annotations
     }
-    
-    public Comment(String body, User author, DateTime timestamp) {
+
+    public Comment(Integer id, String body, DateTime timestamp, User author) {
+        this.id = id;
         this.body = body;
         this.author = author;
         this.timestamp = timestamp;
+        this.author = author;
      }
     
     @XmlElement(name = "id")
     public int getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
 	@XmlElement(name = "author")
 	public User getAuthor() {

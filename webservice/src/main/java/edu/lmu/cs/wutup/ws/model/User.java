@@ -95,7 +95,7 @@ public class User {
 
         return result;
     }
-    
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
@@ -103,6 +103,6 @@ public class User {
                 .add("name", this.getFullName())
                 .add("email", this.email)
                 .add("nickname", this.nickname).toString();
-        
+
     }
 }
