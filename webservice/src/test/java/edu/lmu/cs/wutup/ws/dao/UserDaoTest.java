@@ -9,13 +9,11 @@ import org.junit.Test;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.UserExistsException;
 
-import org.junit.Before;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.User;
 
 public class UserDaoTest {
@@ -80,6 +78,11 @@ public class UserDaoTest {
         User u = new User(9998, "notreal@gmail.com");
         userDao.updateUser(u);
     }
+    
+    @Test(expected=NoSuchUserException.class)
+    public void findingNonExistantUserThrowsException() {
+        userDao.findUserById(2012);
+    }
 
     @Test 
     public void updatedUserColumnsCanBeRead() {
@@ -92,5 +95,10 @@ public class UserDaoTest {
         User newer = userDao.findUserById(9);
         assertThat(newer.getEmail(), is(u.getEmail()));
         assertThat(newer.getNickname(), is(u.getNickname()));
+    }
+    
+    @After
+    public void tearDownDatabase() {
+        database.shutdown();
     }
 }

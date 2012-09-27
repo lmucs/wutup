@@ -10,13 +10,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.UserExistsException;
 
-import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.User;
 
+@Repository
 public class UserDaoJdbcImpl implements UserDao {
     
     private static final String CREATE_SQL = "insert into user(id, firstName, lastName, email, nickname) values(?, ?, ?, ?, ?);";
@@ -39,7 +38,11 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public User findUserById(int id) {
-        return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, userRowMapper);
+        try {
+            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, userRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchUserException();
+        }
     }
 
     @Override
