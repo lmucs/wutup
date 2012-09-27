@@ -36,17 +36,17 @@ public class LocationTest {
     }
 
     @Test
-    public void equalsUsesIdLatitudeAndLongtitudeOnly() {
-        assertThat(new Location(1, 11.1, 22.2), equalTo(new Location(1, 11.1, 22.2)));
-        assertThat(new Location(1, 11.1, 22.2), not(equalTo(new Location(1, 22.2, 11.1))));
-        assertThat(new Location(1, 11.1, 22.2), not(equalTo(new Location(999, 11.1, 22.2))));
-        assertFalse(new Location(1, 11.1, 22.2).equals("candy"));
-        assertFalse(new Location(1, 11.1, 22.2).equals(null));
+    public void equalsUsesIdAddressAndPropertymapOnly() {
+        assertThat(new Location(1, "Keck Lab", "Doolan"), equalTo(new Location(1, "Keck Lab", "Doolan")));
+        assertThat(new Location(1, "Keck Lab", "Doolan"), not(equalTo(new Location(1, "Restroom", "Doolan"))));
+        assertThat(new Location(1, "Keck Lab", "Doolan"), not(equalTo(new Location(999, "Keck Lab", "Doolan"))));
+        assertFalse(new Location(1, "Keck Lab", "Doolan").equals("candy"));
+        assertFalse(new Location(1, "Keck Lab", "Doolan").equals(null));
 
     }
 
     @Test
     public void hashCodeProducesId() {
-        assertThat(new Location(1, 11.1, 22.2).hashCode(), is(1));
+        assertThat(new Location(1, "Keck Lab", "Doolan").hashCode(), is(1));
     }
 }

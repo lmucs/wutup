@@ -78,8 +78,8 @@ public class Location {
         if (obj instanceof Location) {
             Location other = Location.class.cast(obj);
             result = Objects.equal(id, other.id) &&
-                     Objects.equal(latitude, other.latitude) &&
-                     Objects.equal(other.longtitude, this.longtitude);
+                     Objects.equal(address, other.address) &&
+                     Objects.equal(other.propertyMap, this.propertyMap);
         }
 
         return result;
