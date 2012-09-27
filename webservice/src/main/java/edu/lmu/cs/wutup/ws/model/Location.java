@@ -7,6 +7,8 @@ import com.google.common.base.Objects;
 
 @XmlRootElement(name = "location")
 public class Location {
+
+    private Integer id;
     private String address;
     private double latitude;
     private double longtitude;
@@ -16,11 +18,21 @@ public class Location {
         // No-arg constructor
     }
 
-    public Location(String address, double latitude, double longtitude, String propertyMap) {
+    public Location(Integer id, String address, double latitude, double longtitude, String propertyMap) {
+        this.id = id;
         this.address = address;
         this.latitude = latitude;
         this.longtitude = longtitude;
         this.propertyMap = propertyMap;
+    }
+
+    @XmlElement(name = "id")
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @XmlElement(name = "address")
@@ -65,10 +77,11 @@ public class Location {
 
         if (obj instanceof Location) {
             Location other = Location.class.cast(obj);
-            result = Objects.equal(address, other.address) &&
+            result = Objects.equal(id, other.id) &&
+                     Objects.equal(address, other.address) &&
                      Objects.equal(latitude, other.latitude) &&
                      Objects.equal(longtitude, other.longtitude) &&
-                     Objects.equal(propertyMap, other.propertyMap);
+                     Objects.equal(other.propertyMap, this.propertyMap);
         }
 
         return result;
@@ -77,10 +90,15 @@ public class Location {
     @Override
     public String toString() {
         return Objects.toStringHelper(this)
+                .add("id", this.id)
                 .add("address", this.address)
                 .add("latitude", this.latitude)
                 .add("longtitude", this.longtitude)
                 .add("propertyMap", this.propertyMap).toString();
     }
 
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
 }
