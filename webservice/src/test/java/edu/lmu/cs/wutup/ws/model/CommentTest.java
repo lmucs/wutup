@@ -7,15 +7,16 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class CommentTest {
-    
+
     @Test
     public void fieldsSetByConstructorCanBeRead() {
     	DateTime timestamp = new DateTime();
-        Comment c = new Comment("This is a comment", timestamp);
+    	User user = new User();
+        Comment c = new Comment("This is a comment", user, timestamp);
         assertThat(c.getBody(), is("This is a comment"));
         assertThat(c.getTimestamp(), is(timestamp));
     }
-    
+
     @Test
     public void fieldsSetBySettersCanBeRead() {
         Comment c = new Comment();
