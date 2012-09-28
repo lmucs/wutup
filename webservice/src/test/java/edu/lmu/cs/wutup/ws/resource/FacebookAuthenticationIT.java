@@ -8,7 +8,7 @@ public class FacebookAuthenticationIT {
     @Test
     public void redirectToFacebookForAuthentication() {
         expect().
-            statusCode(307).
+            statusCode(200).
         when().
             get("/wutup/auth/facebook");
     }
