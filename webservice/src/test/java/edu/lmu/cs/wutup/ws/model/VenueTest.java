@@ -7,11 +7,11 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-public class LocationTest {
+public class VenueTest {
 
     @Test
     public void fieldsSetByConstructorCanBeRead() {
-        Location loc = new Location(123456, "Keck Lab", 33.969962, -118.4185002, "Doolan");
+        Venue loc = new Venue(123456, "Keck Lab", 33.969962, -118.4185002, "Doolan");
         assertThat(loc.getId(), is(123456));
         assertThat(loc.getAddress(), is("Keck Lab"));
         assertThat(loc.getLatitude(), is(33.969962));
@@ -21,7 +21,7 @@ public class LocationTest {
 
     @Test
     public void fieldsSetBySettersCanBeRead() {
-        Location loc = new Location();
+        Venue loc = new Venue();
         loc.setId(654321);
         loc.setAddress("pool");
         loc.setLatitude(30.000001);
@@ -36,16 +36,16 @@ public class LocationTest {
 
     @Test
     public void equalsUsesIdAddressAndPropertymapOnly() {
-        assertThat(new Location(1, "Keck Lab"), is(new Location(1, "Keck Lab")));
-        assertThat(new Location(1, "Keck Lab"), not(is(new Location(1, "Restroom"))));
-        assertThat(new Location(1, "Keck Lab"), not(is(new Location(999, "Keck Lab"))));
-        assertFalse(new Location(1, "Keck Lab").equals("candy"));
-        assertFalse(new Location(1, "Keck Lab").equals(null));
+        assertThat(new Venue(1, "Keck Lab"), is(new Venue(1, "Keck Lab")));
+        assertThat(new Venue(1, "Keck Lab"), not(is(new Venue(1, "Restroom"))));
+        assertThat(new Venue(1, "Keck Lab"), not(is(new Venue(999, "Keck Lab"))));
+        assertFalse(new Venue(1, "Keck Lab").equals("candy"));
+        assertFalse(new Venue(1, "Keck Lab").equals(null));
 
     }
 
     @Test
     public void hashCodeProducesId() {
-        assertThat(new Location(1, "Keck Lab").hashCode(), is(1));
+        assertThat(new Venue(1, "Keck Lab").hashCode(), is(1));
     }
 }
