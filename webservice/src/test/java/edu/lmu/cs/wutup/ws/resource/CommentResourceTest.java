@@ -58,7 +58,7 @@ public class CommentResourceTest {
 
     @Test
     public void updatingCommentProducesHttp204() {
-        Response response = resource.updateComment("1", sampleComment);
+        Response response = resource.updateComment("400", sampleComment);
         verify(service).updateComment(sampleComment);
         assertThat(response.getStatus(), is(204));
     }
@@ -77,7 +77,7 @@ public class CommentResourceTest {
     public void updatingNonexistingCommentThrowsException() {
         try {
             doThrow(new NoSuchCommentException()).when(service).updateComment(sampleComment);
-            resource.updateComment("1", sampleComment);
+            resource.updateComment("400", sampleComment);
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(404));
