@@ -1,7 +1,5 @@
 package edu.lmu.cs.wutup.ws.service;
 
-import java.util.List;
-
 import edu.lmu.cs.wutup.ws.model.Comment;
 
 public interface CommentService {
@@ -10,5 +8,5 @@ public interface CommentService {
     void updateComment(Comment c);
     Comment findCommentById(int id);
     void deleteComment(Comment c);
-    List<Comment> findCommentsByUserId(int user);
+    //List<Comment> findCommentsByUserId(int user);
 }

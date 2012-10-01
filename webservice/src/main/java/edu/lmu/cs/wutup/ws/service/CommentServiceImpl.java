@@ -1,7 +1,5 @@
 package edu.lmu.cs.wutup.ws.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,10 +29,10 @@ public class CommentServiceImpl implements CommentService {
         return CommentDao.findCommentById(id);
     }
 
-    @Override
+    /*@Override
     public List<Comment> findCommentsByUserId(int user) {
         return CommentDao.findCommentsByUserId(user);
-    }
+    }*/
 
     @Override
     public void deleteComment(Comment c) {

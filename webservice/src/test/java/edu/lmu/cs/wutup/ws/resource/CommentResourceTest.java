@@ -1,33 +1,8 @@
 package edu.lmu.cs.wutup.ws.resource;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
-import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-
-import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
-import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
-import edu.lmu.cs.wutup.ws.exception.ServiceException;
-import edu.lmu.cs.wutup.ws.model.Comment;
-import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.service.CommentService;
 
 public class CommentResourceTest {
-    CommentResource resource;
+    /*CommentResource resource;
     CommentService service;
 
     User sampleUser = new User( 1000, "first", "last", "email", "nick");
@@ -156,6 +131,6 @@ public class CommentResourceTest {
         when(service.findCommentsByUserId(sampleUser.getId())).thenReturn(sampleCommentList);
         List<Comment> result = resource.findCommentsByUserId("1000");
         assertThat(result, is(sampleCommentList));
-    }
+    }*/
 
 }

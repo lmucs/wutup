@@ -5,7 +5,6 @@ import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -90,7 +89,7 @@ public class CommentResource {
         }
     }
     
-    @GET
+    /*@GET
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}")
@@ -103,7 +102,7 @@ public class CommentResource {
         } catch (NoSuchCommentException e) {
             throw new ServiceException(NOT_FOUND, Comment_NOT_FOUND, user);
         }
-    }
+    }*/
 
     @DELETE
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
