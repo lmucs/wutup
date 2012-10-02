@@ -12,4 +12,20 @@ public class FacebookAuthenticationIT {
         when().
             get("/wutup/auth/facebook");
     }
+    
+    @Test
+    public void testSuccessfulAuthenticationLanding() {
+        expect().
+            statusCode(200).
+        when().
+            get("/wutup/auth/landing?state=637730135&code=AQA_5m_sNTv-g7HaAev6TYeNPb7naOU#_=_");
+    }
+    
+    @Test
+    public void testAuthenticationLandingWithErrorFromFacebook() {
+        expect().
+            statusCode(401).
+        when().
+            get("/wutup/auth/landing?error=someshitwentwrong#_=_");
+    }
 }
