@@ -11,7 +11,7 @@ public class Venue {
     private Integer id;
     private String address;
     private double latitude;
-    private double longtitude;
+    private double longitude;
     private String propertyMap;
 
     public Venue() {
@@ -22,11 +22,12 @@ public class Venue {
         this(id, address, 0.0, 0.0, null);
     }
 
-    public Venue(Integer id, String address, double latitude, double longtitude, String propertyMap) {
+    public Venue(Integer id, String address, double latitude,
+            double longtitude, String propertyMap) {
         this.id = id;
         this.address = address;
         this.latitude = latitude;
-        this.longtitude = longtitude;
+        this.longitude = longtitude;
         this.propertyMap = propertyMap;
     }
 
@@ -59,11 +60,11 @@ public class Venue {
 
     @XmlElement(name = "longtitude")
     public double getLongtitude() {
-        return longtitude;
+        return longitude;
     }
 
     public void setLongtitude(double longtitude) {
-        this.longtitude = longtitude;
+        this.longitude = longtitude;
     }
 
     @XmlElement(name = "propertymap")
@@ -81,9 +82,9 @@ public class Venue {
 
         if (obj instanceof Venue) {
             Venue other = Venue.class.cast(obj);
-            result = Objects.equal(id, other.id) &&
-                     Objects.equal(address, other.address) &&
-                     Objects.equal(other.propertyMap, this.propertyMap);
+            result = Objects.equal(id, other.id)
+                    && Objects.equal(address, other.address)
+                    && Objects.equal(other.propertyMap, this.propertyMap);
         }
 
         return result;
@@ -91,11 +92,9 @@ public class Venue {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("id", this.id)
-                .add("address", this.address)
-                .add("latitude", this.latitude)
-                .add("longtitude", this.longtitude)
+        return Objects.toStringHelper(this).add("id", this.id)
+                .add("address", this.address).add("latitude", this.latitude)
+                .add("longtitude", this.longitude)
                 .add("propertyMap", this.propertyMap).toString();
     }
 

@@ -92,9 +92,9 @@ public class EventOccurrence {
 
         if (obj != null && obj instanceof EventOccurrence) {
             EventOccurrence other = EventOccurrence.class.cast(obj);
-            result = Objects.equal(id, other.id) &&
-                    Objects.equal(venue, other.venue) &&
-                    Objects.equal(this.start, other.start);
+            result = Objects.equal(id, other.id)
+                    && Objects.equal(venue, other.venue)
+                    && Objects.equal(this.start, other.start);
         }
 
         return result;
