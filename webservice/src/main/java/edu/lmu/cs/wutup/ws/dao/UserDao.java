@@ -10,5 +10,5 @@ public interface UserDao {
     int findNumberOfUsers();
     void deleteUser(User u);
     int getMaxValueFromColumn(String columnName);
-    int getNextUniqueUserId();
+    int getNextUsableUserId();
 }

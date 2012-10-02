@@ -73,8 +73,8 @@ public class UserDaoJdbcImpl implements UserDao {
         String queryForMax = "select max(" + columnName + ") from user;";
         return jdbcTemplate.queryForInt(queryForMax);
     }
-    
-    public int getNextUniqueUserId() {
+    @Override
+    public int getNextUsableUserId() {
         int largestIdValue = getMaxValueFromColumn("id");
         return largestIdValue + 1;
     }

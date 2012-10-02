@@ -85,7 +85,7 @@ public class UserDaoTest {
         userDao.findUserById(2012);
     }
 
-    @Test 
+    @Test //TODO need to automate user ids
     public void updatedUserColumnsCanBeRead() {
         userDao.createUser(new User(9, "Busby", "Fernjoy", "bf@lol.com", "bferny"));
         User u = userDao.findUserById(9);
@@ -95,7 +95,7 @@ public class UserDaoTest {
         
         User newer = userDao.findUserById(9);
         assertThat(newer.getEmail(), is(u.getEmail()));
-        assertThat(newer.getNickname(), is(u.getNickname()));
+        assertThat(newer.getNickname(), is(u.getNickname()));//TODO need to automate user ids
     }
     
     @Test
@@ -106,11 +106,11 @@ public class UserDaoTest {
     }
     
     @Test
-    public void getNextUniqueUserIdReturnsMaxPlusOne() {
+    public void getNextUsableUserIdReturnsMaxPlusOne() {
         int currentMaxIdValue = userDao.getMaxValueFromColumn("id");
-        int nextGeneratedUserId = userDao.getNextUniqueUserId();
+        int nextGeneratedUserId = userDao.getNextUsableUserId();
         assertEquals(nextGeneratedUserId, currentMaxIdValue + 1);
-    };
+    }
     
     @After
     public void tearDownDatabase() {

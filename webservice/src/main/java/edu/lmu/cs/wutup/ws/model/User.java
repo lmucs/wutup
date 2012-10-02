@@ -21,6 +21,10 @@ public class User {
     public User(int id, String email) {
         this(id, null, null, email, null);
     }
+    
+    public User(String first, String last, String email, String nick) {
+        this(null, first, last, email, nick);
+    }
 
     public User(Integer id, String first, String last, String email, String nick) {
         this.id = id;
