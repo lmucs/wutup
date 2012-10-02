@@ -8,6 +8,7 @@ import org.junit.Test;
 
 public class CommentTest {
 
+
     User alice = new User(1, "alice@example.com");
 
     @Test
