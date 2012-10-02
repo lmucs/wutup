@@ -22,8 +22,6 @@ public class UserDaoJdbcImpl implements UserDao {
     private static final String UPDATE_SQL = "update user set firstName=?, lastName=?, email=?, nickname=? where id=?;";
     private static final String DELETE_SQL = "delete from user where id=?;";
     private static final String FIND_BY_ID_SQL = "select * from user where id=?;";
-    private static final String FIND_MAX_VALUE_SQL = "select max(id) from user;";
-    //private static final String FIND_MAX_VALUE_SQL = "select max(?) from user;";
     private static final String COUNT_SQL = "select count(*) from user;";
     
     @Autowired
@@ -33,7 +31,7 @@ public class UserDaoJdbcImpl implements UserDao {
     public void createUser(User u) {
         try {
             jdbcTemplate.update(CREATE_SQL, u.getId(), u.getFirstName(), u.getLastName(), u.getEmail(), u.getNickname());
-        } catch (DuplicateKeyException ex) { // TODO go over exception UIDs with Dr. Toal
+        } catch (DuplicateKeyException ex) {
             throw new UserExistsException();
         }
     }
@@ -71,11 +69,15 @@ public class UserDaoJdbcImpl implements UserDao {
     }
     
     @Override
-    public int getMaxValueFromColumn() {
-        // Need to check on what happens if column is empty
-        return jdbcTemplate.queryForInt(FIND_MAX_VALUE_SQL);
+    public int getMaxValueFromColumn(String columnName) {
+        String queryForMax = "select max(" + columnName + ") from user;";
+        return jdbcTemplate.queryForInt(queryForMax);
     }
     
+    public int getNextUniqueUserId() {
+        int largestIdValue = getMaxValueFromColumn("id");
+        return largestIdValue + 1;
+    }
     private static RowMapper<User> userRowMapper = new RowMapper<User>() {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(rs.getInt("id"), 

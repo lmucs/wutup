@@ -35,7 +35,6 @@ import edu.lmu.cs.wutup.ws.exception.ServiceException;
 public class UserResource {
     
     private static final String USER_NOT_FOUND = "User %d does not exist.";
-    private static final String USER_ALREADY_EXISTS = "User with id %d already exists.";
     private static final String PARAMETER_REQUIRED = "The parameter %s is required.";
     private static final String PARAMETER_NON_INTEGER = "The paramater %s must be an Integer.";
     private static final String PATH_BODY_CONFLICT = "Conflicting IDs in path and: %d does not match %d.";
