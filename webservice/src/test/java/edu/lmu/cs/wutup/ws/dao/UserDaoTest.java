@@ -2,6 +2,7 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,10 +101,16 @@ public class UserDaoTest {
     @Test
     public void getMaxIdValueReturnsCorrectValue() {
         userDao.createUser(new User(9999, "abcde@gmail.com"));
-        String columnName = "id";
-        int max = userDao.getMaxValueFromColumn();
-        assertThat(max, is(9999));
+        int max = userDao.getMaxValueFromColumn("id");
+        assertEquals(max, 9999);
     }
+    
+    @Test
+    public void getNextUniqueUserIdReturnsMaxPlusOne() {
+        int currentMaxIdValue = userDao.getMaxValueFromColumn("id");
+        int nextGeneratedUserId = userDao.getNextUniqueUserId();
+        assertEquals(nextGeneratedUserId, currentMaxIdValue + 1);
+    };
     
     @After
     public void tearDownDatabase() {

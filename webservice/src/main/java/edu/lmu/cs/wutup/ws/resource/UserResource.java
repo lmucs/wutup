@@ -24,8 +24,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws. service.UserService;
 
@@ -35,7 +37,6 @@ import edu.lmu.cs.wutup.ws.exception.ServiceException;
 public class UserResource {
     
     private static final String USER_NOT_FOUND = "User %d does not exist.";
-    private static final String USER_ALREADY_EXISTS = "User with id %d already exists.";
     private static final String PARAMETER_REQUIRED = "The parameter %s is required.";
     private static final String PARAMETER_NON_INTEGER = "The paramater %s must be an Integer.";
     private static final String PATH_BODY_CONFLICT = "Conflicting IDs in path and: %d does not match %d.";
@@ -80,6 +81,7 @@ public class UserResource {
         }
         return Response.noContent().build();
     }
+    
     private static void checkRequiredParameter(String name, String value) {
         if (value == null || value.equals("")) {
             throw new ServiceException(BAD_REQUEST, PARAMETER_REQUIRED, name);
