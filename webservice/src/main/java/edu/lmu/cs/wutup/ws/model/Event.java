@@ -1,8 +1,5 @@
 package edu.lmu.cs.wutup.ws.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,30 +11,22 @@ public class Event {
     private Integer id;
     private String name;
     private String description;
-    private User owner;
-    private List<User> attendees = new ArrayList<User>();
-    private List<EventOccurrence> eventOccurrence = new ArrayList<EventOccurrence>();
-    private List<Category> category = new ArrayList<Category>();
+    private Integer ownerId;
 
     public Event() {
         // No-arg constructor required for annotations
     }
 
-    public Event(Integer id, String name, String description, User owner,
-            List<User> attendees, List<EventOccurrence> eventOccurrence,
-            List<Category> category) {
+    public Event(Integer id, String name, String description, Integer ownerId) {
 
         this.id = id;
         this.name = name;
         this.description = description;
-        this.owner = owner;
-        this.attendees = attendees;
-        this.eventOccurrence = eventOccurrence;
-        this.category = category;
+        this.ownerId = ownerId;
     }
 
     public Event(Integer id, String name) {
-        this(id, name, null, null, null, null, null);
+        this(id, name, null, null);
     }
 
     public void setId(int id) {
@@ -67,40 +56,13 @@ public class Event {
         return this.description;
     }
 
-    public void setOwner(final User owner) {
-        this.owner = owner;
+    public void setOwnerId(final Integer ownerId) {
+        this.ownerId = ownerId;
     }
 
-    @XmlElement(name = "owner")
-    public User getOwner() {
-        return this.owner;
-    }
-
-    public void setAttendees(List<User> attendees) {
-        this.attendees = attendees;
-    }
-
-    @XmlElement(name = "attendees")
-    public List<User> getAttendees() {
-        return attendees;
-    }
-
-    public void setEventOccurrence(List<EventOccurrence> eventOccurrence) {
-        this.eventOccurrence = eventOccurrence;
-    }
-
-    @XmlElement(name = "eventOccurrence")
-    public List<EventOccurrence> getEventOccurrence() {
-        return eventOccurrence;
-    }
-
-    public void setCategory(List<Category> category) {
-        this.category = category;
-    }
-
-    @XmlElement(name = "category")
-    public List<Category> getCategory() {
-        return category;
+    @XmlElement(name = "ownerId")
+    public Integer getOwnerId() {
+        return this.ownerId;
     }
 
     @Override
@@ -124,8 +86,6 @@ public class Event {
     public String toString() {
         return Objects.toStringHelper(this).add("id", this.id)
                 .add("name", this.name).add("description", this.description)
-                .add("owner", this.owner).add("attendees", this.attendees)
-                .add("eventOccurrence", this.eventOccurrence)
-                .add("category", this.category).toString();
+                .add("ownerId", this.ownerId).toString();
     }
 }
