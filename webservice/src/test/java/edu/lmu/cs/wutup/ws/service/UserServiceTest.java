@@ -28,7 +28,23 @@ public class UserServiceTest {
         service.createUser(sampleUser);
         verify(dao).createUser(sampleUser);
     }
+    
+    @Test 
+    public void updateDelegatesToDao() {
+        service.updateUser(sampleUser);
+        verify(dao).updateUser(sampleUser);
+    }
+    
+    @Test
+    public void deleteDelegatesToDao() {
+        service.deleteUser(sampleUser);
+        verify(dao).deleteUser(sampleUser);
+    }
 
-    // TODO - WAY MORE TO DO
+    @Test
+    public void findByIdDelegatesToDao() {
+        service.findUserById(sampleUser.getId());
+        verify(dao).findUserById(sampleUser.getId());
+    }
 
 }

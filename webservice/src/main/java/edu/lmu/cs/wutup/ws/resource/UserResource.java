@@ -24,8 +24,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws. service.UserService;
 
@@ -79,6 +81,7 @@ public class UserResource {
         }
         return Response.noContent().build();
     }
+    
     private static void checkRequiredParameter(String name, String value) {
         if (value == null || value.equals("")) {
             throw new ServiceException(BAD_REQUEST, PARAMETER_REQUIRED, name);
