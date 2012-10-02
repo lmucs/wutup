@@ -2,7 +2,6 @@ package edu.lmu.cs.wutup.ws.service;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,20 +29,6 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     @Override
     public EventOccurrence findEventOccurrenceById(int id) {
         return eventOccurrenceDao.findEventOccurrenceById(id);
-    }
-
-    @Override
-    public List<EventOccurrence> findEventOccurrencesByVenue(
-            String venue, int pageNumber, int pageSize) {
-        return eventOccurrenceDao.findEventOccurrencesByVenue(venue,
-                pageNumber, pageSize);
-    }
-
-    @Override
-    public List<EventOccurrence> findEventOccurrencesByStartTime(
-            DateTime start, int pageNumber, int pageSize) {
-        return eventOccurrenceDao.findEventOccurrencesByStartTime(start,
-                pageNumber, pageSize);
     }
 
     @Override

@@ -11,8 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import org.joda.time.DateTime;
-
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.model.Venue;
@@ -24,8 +22,6 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static final String CREATE_SQL = "insert into eventOccurrence (id, venue) values (?,?)";
     private static final String UPDATE_SQL = "update eventOccurrence set venue=? where id=?";
     private static final String FIND_BY_ID_SQL = "select id, name from eventOccurrence where id=?";
-    private static final String FIND_BY_VENUE_SQL = "select id, venue from eventOccurrence where venue=? limit ? offset ?";
-    private static final String FIND_BY_START_TIME_SQL = "select id, venue from eventOccurrence where start=? limit ? offset ?";
     private static final String FIND_ALL_SQL = "select id, name from eventOccurrence limit ? offset ?";
     private static final String DELETE_SQL = "delete from eventOccurrence where id=?";
     private static final String COUNT_SQL = "select count(*) from eventOccurrence";
@@ -44,7 +40,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public void updateEventOccurrence(EventOccurrence e) {
-        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getId());
+        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getVenue(), e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventOccurrenceException();
         }
@@ -58,20 +54,6 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventOccurrenceException();
         }
-    }
-
-    @Override
-    public List<EventOccurrence> findEventOccurrencesByVenue(String venue,
-            int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_BY_VENUE_SQL, new Object[]{venue,
-                pageSize, pageNumber * pageSize}, eventOccurrenceRowMapper);
-    }
-
-    @Override
-    public List<EventOccurrence> findEventOccurrencesByStartTime(DateTime start,
-            int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_BY_START_TIME_SQL, new Object[]{start,
-                pageSize, pageNumber * pageSize}, eventOccurrenceRowMapper);
     }
 
     @Override
