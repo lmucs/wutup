@@ -33,9 +33,9 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public List<EventOccurrence> findEventOccurrencesByLocation(
-            String location, int pageNumber, int pageSize) {
-        return eventOccurrenceDao.findEventOccurrencesByLocation(location,
+    public List<EventOccurrence> findEventOccurrencesByVenue(
+            String venue, int pageNumber, int pageSize) {
+        return eventOccurrenceDao.findEventOccurrencesByVenue(venue,
                 pageNumber, pageSize);
     }
 

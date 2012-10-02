@@ -15,16 +15,17 @@ import org.joda.time.DateTime;
 
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
+import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
-    private static final String CREATE_SQL = "insert into eventOccurrence (id, location) values (?,?)";
-    private static final String UPDATE_SQL = "update eventOccurrence set location=? where id=?";
+    private static final String CREATE_SQL = "insert into eventOccurrence (id, venue) values (?,?)";
+    private static final String UPDATE_SQL = "update eventOccurrence set venue=? where id=?";
     private static final String FIND_BY_ID_SQL = "select id, name from eventOccurrence where id=?";
-    private static final String FIND_BY_LOCATION_SQL = "select id, location from eventOccurrence where location=? limit ? offset ?";
-    private static final String FIND_BY_START_TIME_SQL = "select id, location from eventOccurrence where start=? limit ? offset ?";
+    private static final String FIND_BY_VENUE_SQL = "select id, venue from eventOccurrence where venue=? limit ? offset ?";
+    private static final String FIND_BY_START_TIME_SQL = "select id, venue from eventOccurrence where start=? limit ? offset ?";
     private static final String FIND_ALL_SQL = "select id, name from eventOccurrence limit ? offset ?";
     private static final String DELETE_SQL = "delete from eventOccurrence where id=?";
     private static final String COUNT_SQL = "select count(*) from eventOccurrence";
@@ -35,7 +36,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     @Override
     public void createEventOccurrence(EventOccurrence e) {
         try {
-            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getLocation());
+            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getVenue());
         } catch (DuplicateKeyException ex) {
             throw new EventOccurrenceExistsException();
         }
@@ -60,9 +61,9 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public List<EventOccurrence> findEventOccurrencesByLocation(String location,
+    public List<EventOccurrence> findEventOccurrencesByVenue(String venue,
             int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_BY_LOCATION_SQL, new Object[]{location,
+        return jdbcTemplate.query(FIND_BY_VENUE_SQL, new Object[]{venue,
                 pageSize, pageNumber * pageSize}, eventOccurrenceRowMapper);
     }
 
@@ -95,7 +96,18 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static RowMapper<EventOccurrence> eventOccurrenceRowMapper =
             new RowMapper<EventOccurrence>() {
         public EventOccurrence mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new EventOccurrence(rs.getInt("id"), rs.getString("location"));
+            return new EventOccurrence(rs.getInt("id"), VenueParser(rs.getString("venue")));
         }
     };
+
+    private static Venue VenueParser (String venue) {
+        String[] venueAttributes = venue.split(",");
+        // TODO: Ask Dr. Toal if this is good enough
+        try {
+            return new Venue(Integer.parseInt(venueAttributes[0]), venueAttributes[1], Double.parseDouble(venueAttributes[2]), Double.parseDouble(venueAttributes[3]), venueAttributes[4]);
+        } catch(Exception e) {
+            // Do we have a log to write to?
+            return new Venue();
+        }
+    }
 }

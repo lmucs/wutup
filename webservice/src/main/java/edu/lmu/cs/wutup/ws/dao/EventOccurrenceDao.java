@@ -11,7 +11,7 @@ public interface EventOccurrenceDao {
     void createEventOccurrence(EventOccurrence e);
 
     EventOccurrence findEventOccurrenceById(int id);
-    List<EventOccurrence> findEventOccurrencesByLocation(String location, int pageNumber, int pageSize);
+    List<EventOccurrence> findEventOccurrencesByVenue(String venue, int pageNumber, int pageSize);
     List<EventOccurrence> findEventOccurrencesByStartTime(DateTime start, int pageNumber, int pageSize);
     List<EventOccurrence> findAllEventOccurrences(int pageNumber, int pageSize);
 

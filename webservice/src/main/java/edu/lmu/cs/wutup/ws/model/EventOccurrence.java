@@ -11,7 +11,7 @@ import com.google.common.base.Objects;
 public class EventOccurrence {
 
     private Integer id;
-    private String location;
+    private Venue venue;
     private DateTime start;
     private DateTime end;
 
@@ -23,13 +23,13 @@ public class EventOccurrence {
         // No-arg constructor required for annotations
     }
 
-    public EventOccurrence(int id, String location) {
-        this(id, location, new DateTime(), new DateTime());
+    public EventOccurrence(final int id, final Venue venue) {
+        this(id, venue, new DateTime(), new DateTime());
     }
 
-    public EventOccurrence(int id, String location, DateTime start, DateTime end) {
+    public EventOccurrence(int id, Venue venue, DateTime start, DateTime end) {
         this.id = new Integer(id);
-        this.location = location;
+        this.venue = venue;
         this.start = start;
         this.end = end;
     }
@@ -43,13 +43,15 @@ public class EventOccurrence {
         return this.id;
     }
 
-    public void setLocation(final String location) {
-        this.location = location;
+    public void setVenue(final Venue venue) {
+        // Setting address and property map as empty strings until I better
+        // understand what to keep within these properties.
+        this.venue = venue;
     }
 
-    @XmlElement(name = "location")
-    public String getLocation() {
-        return this.location;
+    @XmlElement(name = "venue")
+    public String getVenue() {
+        return this.venue.toString();
     }
 
     public void setStart(final DateTime start) {
@@ -73,7 +75,7 @@ public class EventOccurrence {
     @Override
     public String toString() {
         return Objects.toStringHelper(this).add("id", this.id)
-                .add("location", this.location)
+                .add("location", this.venue)
                 .add("start", this.start.toString("yyyy/MM/dd hh:mm:ss aa"))
                 .add("end", this.end.toString("yyyy/MM/dd hh:mm:ss aa"))
                 .toString();
@@ -90,8 +92,8 @@ public class EventOccurrence {
 
         if (obj != null && obj instanceof EventOccurrence) {
             EventOccurrence other = EventOccurrence.class.cast(obj);
-            result = Objects.equal(id, other.id) && 
-                    Objects.equal(location, other.location) &&
+            result = Objects.equal(id, other.id) &&
+                    Objects.equal(venue, other.venue) &&
                     Objects.equal(this.start, other.start);
         }
 

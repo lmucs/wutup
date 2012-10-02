@@ -17,10 +17,10 @@ public class EventOccurrenceTest {
     public void fieldsSetByConstructorCanBeRead() {
         DateTime start = new DateTime(2012, 9, 27, 10, 50, 0);
         DateTime end = new DateTime(2012, 9, 27, 12, 5, 0);
-        EventOccurrence e = new EventOccurrence(3, "latitude and longitude",
+        EventOccurrence e = new EventOccurrence(3, new Venue(3, "", 15.0, 15.0, ""),
                 start, end);
         assertThat(e.getId(), is(3));
-        assertThat(e.getLocation(), is("latitude and longitude"));
+        assertThat(e.getVenue(), is("Venue{id=3, address=, latitude=15.0, longtitude=15.0, propertyMap=}"));
         assertThat(e.getStart(), is(start));
         assertThat(e.getEnd(), is(end));
     }
@@ -31,11 +31,11 @@ public class EventOccurrenceTest {
         DateTime start = new DateTime(2012, 9, 27, 9, 25, 0);
         DateTime end = new DateTime(2012, 9, 27, 10, 40, 0);
         e.setId(5);
-        e.setLocation("latitude and longitude again");
+        e.setVenue(new Venue(e.getId(), "", 0.0, 100.0, ""));
         e.setStart(start);
         e.setEnd(end);
         assertThat(e.getId(), is(5));
-        assertThat(e.getLocation(), is("latitude and longitude again"));
+        assertThat(e.getVenue().toString(), is("Venue{id=5, address=, latitude=0.0, longtitude=100.0, propertyMap=}"));
         assertThat(e.getStart(), is(start));
         assertThat(e.getEnd(), is(end));
     }
@@ -44,9 +44,9 @@ public class EventOccurrenceTest {
     public void toStringProducesExpectedString() {
         DateTime start = new DateTime(2012, 9, 27, 9, 25, 0);
         DateTime end = new DateTime(2012, 9, 27, 10, 40, 0);
-        EventOccurrence e1 = new EventOccurrence(3, "latitude and longitude",
+        EventOccurrence e1 = new EventOccurrence(3, new Venue(3, "", 33.969369, -118.414386, ""),
                 start, end);
-        String expected1 = "EventOccurrence{id=3, location=latitude and longitude, "
+        String expected1 = "EventOccurrence{id=3, location=Venue{id=3, address=, latitude=33.969369, longtitude=-118.414386, propertyMap=}, "
                 + "start=2012/09/27 09:25:00 AM, end=2012/09/27 10:40:00 AM}";
         EventOccurrence e2 = new EventOccurrence();
         e2.setId(5);
@@ -60,7 +60,7 @@ public class EventOccurrenceTest {
 
     @Test
     public void hashCodeProducesId() {
-        assertThat(new EventOccurrence(7, "", new DateTime(),
+        assertThat(new EventOccurrence(7, new Venue(), new DateTime(),
                 new DateTime()).hashCode(), is(7));
     }
 
@@ -70,17 +70,17 @@ public class EventOccurrenceTest {
         DateTime end1 = new DateTime(2011, 12, 25, 11, 59, 59);
         DateTime start2 = new DateTime(2011, 12, 25, 0, 0, 0);
         DateTime end2 = new DateTime(2011, 12, 25, 11, 59, 59);
-        assertThat(new EventOccurrence(7, "Location", start1, end1),
+        assertThat(new EventOccurrence(7, new Venue(), start1, end1),
                 equalTo(new EventOccurrence(7,
-                "Location", start2, end2)));
-        assertThat(new EventOccurrence(7, "Location", start1, end1),
+                new Venue(), start2, end2)));
+        assertThat(new EventOccurrence(7, new Venue(10, "", 5.0, 5.0, ""), start1, end1),
                 not(equalTo(new EventOccurrence(17,
-                "Location", new DateTime(), new DateTime()))));
-        assertThat(new EventOccurrence(7, "Location", new DateTime(), new DateTime()),
+                    new Venue(10, "", 5.0, 5.0, ""), new DateTime(), new DateTime()))));
+        assertThat(new EventOccurrence(7, new Venue(10, "", 5.0, 5.0, ""), new DateTime(), new DateTime()),
                 not(equalTo(new EventOccurrence(7,
-                "other location", new DateTime(), new DateTime()))));
-        assertFalse(new EventOccurrence(7, "Pool Party", new DateTime(), new DateTime()).equals("some string"));
-        assertFalse(new EventOccurrence(7, "Pool Party", new DateTime(), new DateTime()).equals(null));
+                    new Venue(8, "", 15.0, 5.0, ""), new DateTime(), new DateTime()))));
+        assertFalse(new EventOccurrence(7, new Venue(10, "", 5.0, 5.0, ""), new DateTime(), new DateTime()).equals("some string"));
+        assertFalse(new EventOccurrence(7, new Venue(10, "", 5.0, 5.0, ""), new DateTime(), new DateTime()).equals(null));
     }
 
 }
