@@ -159,15 +159,15 @@ public class EventResourceTest {
 
     @Test
     public void findingByNameReturnsList() {
-        when(service.findEvents("Alice", 1, 10)).thenReturn(sampleEventList);
-        List<Event> result = resource.findEvents("Alice", "1", "10");
+        when(service.findEventsByName("Alice", 1, 10)).thenReturn(sampleEventList);
+        List<Event> result = resource.findEventsByName("Alice", "1", "10");
         assertThat(result, is(sampleEventList));
     }
 
     @Test
     public void findingByNameWithPageSizeTooHighProducesHttp403() {
         try {
-            resource.findEvents("Alice", "1", "51");
+            resource.findEventsByName("Alice", "1", "51");
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(403));
@@ -177,7 +177,7 @@ public class EventResourceTest {
     @Test
     public void findingByNameWithPageSizeTooLowProducesHttp403() {
         try {
-            resource.findEvents("Alice", "0", "0");
+            resource.findEventsByName("Alice", "0", "0");
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(403));

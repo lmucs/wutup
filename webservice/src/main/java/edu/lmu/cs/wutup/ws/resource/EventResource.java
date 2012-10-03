@@ -100,13 +100,13 @@ public class EventResource {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/")
-    public List<Event> findEvents(@QueryParam("name") String name, @QueryParam("page") String pageString,
+    public List<Event> findEventsByName(@QueryParam("name") String name, @QueryParam("page") String pageString,
             @QueryParam("pageSize") String pageSizeString) {
         int page = toInteger("page", pageString);
         int pageSize = toInteger("pageSize", pageSizeString);
         checkRange("pageSize", pageSize, MIN_PAGE_SIZE, MAX_PAGE_SIZE);
 
-        return eventService.findEvents(name, page, pageSize);
+        return eventService.findEventsByName(name, page, pageSize);
     }
 
     @DELETE

@@ -9,6 +9,6 @@ public interface EventService {
     void createEvent(Event e);
     void updateEvent(Event e);
     Event findEventById(int id);
-    List<Event> findEvents(String name, int pageNumber, int pageSize);
+    List<Event> findEventsByName(String name, int pageNumber, int pageSize);
     void deleteEvent(Event e);
 }

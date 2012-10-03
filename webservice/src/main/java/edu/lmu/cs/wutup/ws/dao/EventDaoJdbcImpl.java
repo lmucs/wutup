@@ -33,13 +33,13 @@ public class EventDaoJdbcImpl implements EventDao {
     public void createEvent(Event e) {
         try {
             jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName());
-        } catch (DuplicateKeyException ex) {// TODO Auto-generated method stub
+        } catch (DuplicateKeyException ex) {
             throw new EventExistsException();
         }
     }
- // TODO Auto-generated method stub
+
     @Override
-    public void updateEvent(Event e) {// TODO Auto-generated method stub
+    public void updateEvent(Event e) {
         int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getName(), e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventException();
@@ -48,7 +48,7 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public Event findEventById(int id) {
-        try {// TODO Auto-generated method stub
+        try {
             return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();

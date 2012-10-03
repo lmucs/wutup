@@ -32,7 +32,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findEvents(String name, int pageNumber, int pageSize) {
+    public List<Event> findEventsByName(String name, int pageNumber, int pageSize) {
         return name == null ? eventDao.findAllEvents(pageNumber, pageSize) : eventDao.findEventsByName(
                 name, pageNumber, pageSize);
     }
