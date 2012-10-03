@@ -1,11 +1,11 @@
-insert into event (id, name) values (1, 'Poker Night');
-insert into event (id, name) values (2, 'Billiards with Prince Harry');
-insert into event (id, name) values (3, 'Dinner with Barack and Michelle');
-insert into event (id, name) values (4, 'Sunset Strip Music Festival');
-insert into event (id, name) values (5, 'Ballyshannon Music Festival');
-insert into event (id, name) values (6, '2012 Olympic Women''s Soccer Final');
-insert into event (id, name) values (7, 'Weekly Hackaton');
-insert into event (id, name) values (8, 'Ironman Triathlon Practice');
+insert into event (id, name, description, ownerId) values (1, 'Poker Night', 'Cards with the guys', 5001);
+insert into event (id, name, description, ownerId) values (2, 'Billiards with Prince Harry', 'Pool and drinks', 5002);
+insert into event (id, name, description, ownerId) values (3, 'Dinner with Barack and Michelle', 'A presidential meal', 5003);
+insert into event (id, name, description, ownerId) values (4, 'Sunset Strip Music Festival', 'West Hollywood hosts music event', 5004);
+insert into event (id, name, description, ownerId) values (5, 'Ballyshannon Music Festival', 'Irish music festival', 5005);
+insert into event (id, name, description, ownerId) values (6, '2012 Olympic Women''s Soccer Final', 'The final Women''s Soccer game', 5006);
+insert into event (id, name, description, ownerId) values (7, 'Weekly Hackathon', 'Show your hackin'' skeelz', 5007);
+insert into event (id, name, description, ownerId) values (8, 'Ironman Triathlon Practice', 'Don''t miss out', 5008);
 
 insert into user values(1, 'Honda', 'Prius', '40mpg@gmail.com', 'hybrid');
 insert into user values(2, 'Ned', 'Stark', 'naked@winterfell.com', 'headless');

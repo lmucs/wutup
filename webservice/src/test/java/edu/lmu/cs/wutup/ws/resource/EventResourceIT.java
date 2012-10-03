@@ -14,8 +14,12 @@ public class EventResourceIT {
             header("Accept", "application/json").
         expect().
             statusCode(200).
+            // 200 = request fulfilled, returning 404 in error
             contentType("application/json").
             body(containsString("\"id\":1")).
+            body(containsString("\"name\":null")).
+            body(containsString("\"description\":null")).
+            body(containsString("\"ownerId\":null")).
         when().
             get("/wutup/events/1");
     }
@@ -24,6 +28,7 @@ public class EventResourceIT {
     public void endpointGetFindsExistingEventXML() {
         expect().
             statusCode(200).
+            // 200 = request fulfilled
             contentType("application/xml").
             body(containsString("<id>1</id>")).
             body(containsString("<event>")).
@@ -35,6 +40,7 @@ public class EventResourceIT {
     public void endpointGetWithUnusedIdProduces404() {
         expect().
             statusCode(404).
+            // 404 = not found
             body(containsString("Event 100")).
         when().
             get("/wutup/events/100");

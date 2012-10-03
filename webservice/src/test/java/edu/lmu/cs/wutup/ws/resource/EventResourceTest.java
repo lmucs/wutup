@@ -64,6 +64,7 @@ public class EventResourceTest {
 
     @Test
     public void updatingEventProducesHttp204() {
+        // 204 = server received but no response to send back
         Response response = resource.updateEvent("1", sampleEvent);
         verify(service).updateEvent(sampleEvent);
         assertThat(response.getStatus(), is(204));

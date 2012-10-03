@@ -82,14 +82,16 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         }
     };
 
+
     private static Venue VenueParser (String venue) {
         String[] venueAttributes = venue.split(",");
         // TODO: Ask Dr. Toal if this is good enough
         try {
-            return new Venue(Integer.parseInt(venueAttributes[0]), venueAttributes[1], Double.parseDouble(venueAttributes[2]), Double.parseDouble(venueAttributes[3]), venueAttributes[4]);
+            return new Venue(Integer.parseInt(venueAttributes[0]), venueAttributes[1], venueAttributes[2], Double.parseDouble(venueAttributes[3]), Double.parseDouble(venueAttributes[4]));
         } catch(Exception e) {
             // Do we have a log to write to?
             return new Venue();
         }
     }
+
 }
