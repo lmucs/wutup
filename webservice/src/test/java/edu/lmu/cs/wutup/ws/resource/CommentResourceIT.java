@@ -1,9 +1,21 @@
 package edu.lmu.cs.wutup.ws.resource;
 
+import static com.jayway.restassured.RestAssured.expect;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class CommentResourceIT {
-/*
+
     @Test
+    public void placeholder() {
+        // Avoid no runnable tests error - for now.
+    }
+
+
+    @Ignore
     public void endpointGetFindsExistingCommentJson() {
         given().
             header("Accept", "application/json").
@@ -15,7 +27,7 @@ public class CommentResourceIT {
             get("/wutup/comments/1");
     }
 
-    @Test
+    @Ignore
     public void endpointGetFindsExistingCommentXML() {
         expect().
             statusCode(200).
@@ -26,7 +38,7 @@ public class CommentResourceIT {
             get("/wutup/comments/1");
     }
 
-    @Test
+    @Ignore
     public void endpointGetWithUnusedIdProduces404() {
         expect().
             statusCode(404).
@@ -35,7 +47,7 @@ public class CommentResourceIT {
             get("/wutup/comments/100");
     }
 
-    @Test
+    @Ignore
     public void endpointPutWithUnusedIdProduces404() {
         given().
             header("Accept", "application/json").
@@ -47,7 +59,7 @@ public class CommentResourceIT {
             put("/wutup/comments/100");
     }
 
-    @Test
+    @Ignore
     public void endpointPutWithMismatchedIdProduces409() {
         given().
             header("Accept", "application/json").
@@ -59,7 +71,7 @@ public class CommentResourceIT {
             put("/wutup/comments/46");
     }
 
-    @Test
+    @Ignore
     public void endpointPostJsonCorrectlyCreatesCommentAndProduces201() {
         given().
             header("Accept", "application/json").
@@ -72,5 +84,4 @@ public class CommentResourceIT {
         when().
             post("/wutup/comments");
     }
-    */
 }
