@@ -58,7 +58,9 @@ public class FacebookAuthenticationResource {
                     .build();
         } else if (!code.equals("")) {
             try {
-                FacebookAuthentication.getAccessToken(code);
+                return Response
+                        .ok(FacebookAuthentication.getAccessToken(code))
+                        .build();
             } catch (Exception e) {
                 return Response
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -70,11 +72,6 @@ public class FacebookAuthenticationResource {
                     .ok(accessToken)
                     .build();
         }
-        
-        /*
-         * We need to send a request to FB in order to exchange our code for an access token.
-         * Once we have our access token, we will be golden.
-         */
         
         return Response
                 .ok(code)
