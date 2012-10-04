@@ -13,7 +13,7 @@ create table user (
 create table event (
   id integer not null,
   name varchar(512),
-  description varchar(1024),
+  description varchar(512),
   ownerId integer,
   primary key(id),
   foreign key(ownerId) references user(id)
