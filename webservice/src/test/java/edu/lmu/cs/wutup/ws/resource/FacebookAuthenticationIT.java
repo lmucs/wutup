@@ -5,6 +5,7 @@ import static com.jayway.restassured.RestAssured.expect;
 import org.junit.Test;
 
 public class FacebookAuthenticationIT {
+    
     @Test
     public void redirectToFacebookForAuthentication() {
         expect().

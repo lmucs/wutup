@@ -5,6 +5,8 @@ import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,6 +16,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,11 +35,11 @@ import edu.lmu.cs.wutup.ws.service.CommentService;
 
 @Component
 @Scope(BeanDefinition.SCOPE_SINGLETON)
-@Path("/Comments")
+@Path("/comments")
 public class CommentResource {
 
-    private static final String Comment_NOT_FOUND = "Comment %d does not exist";
-    private static final String Comment_ALREADY_EXISTS = "Comment %d already exists";
+    private static final String COMMENT_NOT_FOUND = "Comment %d does not exist";
+    private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists";
     private static final String PARAMETER_REQUIRED = "The parameter %s is required";
     private static final String PARAMETER_NON_INTEGER = "The parameter %s should be an integer";
     private static final String PATH_BODY_CONFLICT = "Id %d in path differs from id %d in body";
@@ -49,13 +52,13 @@ public class CommentResource {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/")
-    public Response createComment(final Comment Comment, @Context UriInfo uriInfo) {
+    public Response createComment(final Comment comment, @Context UriInfo uriInfo) {
         try {
-            CommentService.createComment(Comment);
-            URI newLocation = uriInfo.getAbsolutePathBuilder().path(Comment.getId() + "").build();
+            CommentService.createComment(comment);
+            URI newLocation = uriInfo.getAbsolutePathBuilder().path(comment.getId() + "").build();
             return Response.created(newLocation).build();
         } catch (CommentExistsException e) {
-            throw new ServiceException(CONFLICT, Comment_ALREADY_EXISTS, Comment.getId());
+            throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, comment.getId());
         }
     }
 
@@ -70,7 +73,7 @@ public class CommentResource {
             CommentService.updateComment(Comment);
             return Response.noContent().build();
         } catch (NoSuchCommentException e) {
-            throw new ServiceException(NOT_FOUND, Comment_NOT_FOUND, id);
+            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, id);
         }
     }
 
@@ -85,24 +88,31 @@ public class CommentResource {
         try {
             return CommentService.findCommentById(id);
         } catch (NoSuchCommentException e) {
-            throw new ServiceException(NOT_FOUND, Comment_NOT_FOUND, id);
+            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, id);
         }
     }
-    
-    /*@GET
+
+    // TODO ---> MANY MORE PARAMETERS!! ESPECIALLY PAGINATION!!
+    @GET
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/{id}")
-    public List<Comment> findCommentsByUserId(@PathParam("id") String userIdString) {
-        checkRequiredParameter("id", userIdString);
-        int user = toInteger("id", userIdString);
+    @Path("/")
+    public List<Comment> findComments(@QueryParam("user") String userIdString) {
 
-        try {
-            return CommentService.findCommentsByUserId(user);
-        } catch (NoSuchCommentException e) {
-            throw new ServiceException(NOT_FOUND, Comment_NOT_FOUND, user);
+        // TODO - Handle pagination parameters here
+
+        if (userIdString != null) {
+            int user = toInteger("id", userIdString);
+
+            try {
+                return CommentService.findCommentsByUserId(user);
+            } catch (NoSuchCommentException e) {
+                throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, user);
+            }
         }
-    }*/
+
+        return new ArrayList<Comment>();
+    }
 
     @DELETE
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
@@ -115,7 +125,7 @@ public class CommentResource {
             CommentService.deleteComment(e);
             return Response.noContent().build();
         } catch (NoSuchCommentException ex) {
-            throw new ServiceException(NOT_FOUND, Comment_NOT_FOUND, id);
+            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, id);
         }
     }
 
