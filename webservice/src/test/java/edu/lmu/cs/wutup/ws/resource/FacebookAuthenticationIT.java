@@ -29,4 +29,12 @@ public class FacebookAuthenticationIT {
         when().
             get("/wutup/auth/landing?error=someshitwentwrong#_=_");
     }
+    
+    @Test
+    public void testAuthenticationLandingWithAccessTokenFromFacebook() {
+        expect().
+            statusCode(200).
+        when().
+            get("/wutup/auth/landing?access_token=SomeSuper-Long_key&expires=346517");
+    }
 }

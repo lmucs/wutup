@@ -1,18 +1,17 @@
 package edu.lmu.cs.wutup.ws.service;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URLEncoder;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.HttpEntity;
+import org.apache.http.util.EntityUtils;
 
 public class FacebookAuthenticationImpl {
-    public void getAccessToken(String code) throws ClientProtocolException, IOException {
+    public String getAccessToken(String code) throws IOException {
         
         String landingURL = "https://graph.facebook.com/oauth/access_token?" +
                 "client_id=" + System.getenv("WUTUP_FB_APP_ID") +
@@ -20,18 +19,11 @@ public class FacebookAuthenticationImpl {
                 "&client_secret=" + System.getenv("WUTUP_FB_APP_SECRET") +
                 "&code=" + code;
         
-        /*HttpClient httpclient = new DefaultHttpClient();
+        HttpClient httpclient = new DefaultHttpClient();
         HttpGet httpget = new HttpGet(landingURL);
         HttpResponse response = httpclient.execute(httpget);
         HttpEntity entity = response.getEntity();
         
-        if (entity != null) {
-            InputStream instream = entity.getContent();
-            try {
-                String responseContent = instream.read(instream.available());
-            } finally {
-                instream.close();
-            }
-        }*/
+        return EntityUtils.toString(entity);
     }
 }
