@@ -6,6 +6,7 @@ insert into user values(5, 'Ignatius', 'Krumpkin', 'iggy@hotmail.com', 'IKOK');
 insert into user values(6, 'Eva', 'Sandleborn', 'eva@htomail.com', 'sandy');
 insert into user values(7, 'Olga', 'Shoopa', 'olga@gmail.com', 'gaah');
 insert into user values(8, 'Katrina', 'Sherbina', 'ksherbina@gmail.com', 'Kat');
+insert into user values(3503, 'John', 'Lennon', 'jlennon@gmail.com', 'John');
 
 
 insert into event (id, name, description, ownerId) values (1, 'Poker Night', 'Cards with the guys', 8);

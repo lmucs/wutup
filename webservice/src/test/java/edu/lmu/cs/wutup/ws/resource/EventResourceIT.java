@@ -17,13 +17,13 @@ public class EventResourceIT {
             // 200 = request fulfilled, returning 404 in error
             contentType("application/json").
             body(containsString("\"id\":1")).
-            body(containsString("\"name\":null")).
-            body(containsString("\"description\":null")).
-            body(containsString("\"ownerId\":null")).
+            body(containsString("\"name\":\"Poker Night\"")).
+            body(containsString("\"description\":\"Cards with the guys\"")).
+            body(containsString("\"ownerId\":8")).
         when().
             get("/wutup/events/1");
     }
-
+    
     @Test
     public void endpointGetFindsExistingEventXML() {
         expect().

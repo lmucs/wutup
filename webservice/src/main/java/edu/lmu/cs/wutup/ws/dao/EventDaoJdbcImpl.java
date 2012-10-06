@@ -19,11 +19,10 @@ import edu.lmu.cs.wutup.ws.model.Event;
 public class EventDaoJdbcImpl implements EventDao {
 
     private static final String CREATE_SQL = "insert into event (id, name, description, ownerId) values (?,?,?,?)";
-    private static final String UPDATE_SQL = "update event set name=? where id=?";
-    private static final String FIND_BY_ID_SQL = "select id, name from event where id=?";
-    // private static final String FIND_BY_ID_SQL = "select id, name, description, ownerId from event where id=?";
-    private static final String FIND_BY_NAME_SQL = "select id, name from event where name=? limit ? offset ?";
-    private static final String FIND_ALL_SQL = "select id, name from event limit ? offset ?";
+    private static final String UPDATE_SQL = "update event set name=?, description=?, ownerId=? where id=?";
+    private static final String FIND_BY_ID_SQL = "select id, name, description, ownerId from event where id=?";
+    private static final String FIND_BY_NAME_SQL = "select id, name, description, ownerId from event where name=? limit ? offset ?";
+    private static final String FIND_ALL_SQL = "select id, name, description, ownerId from event limit ? offset ?";
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 
@@ -41,7 +40,7 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public void updateEvent(Event e) {
-        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getName(), e.getId());
+        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getName(), e.getDescription(), e.getOwnerId(), e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventException();
         }
@@ -82,7 +81,7 @@ public class EventDaoJdbcImpl implements EventDao {
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Event(rs.getInt("id"), rs.getString("name"));
+            return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getInt("ownerId"));
         }
     };
 }
