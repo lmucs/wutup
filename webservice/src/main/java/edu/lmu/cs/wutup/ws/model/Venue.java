@@ -1,7 +1,5 @@
 package edu.lmu.cs.wutup.ws.model;
 
-import java.util.Map;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,6 +13,7 @@ public class Venue {
     private String address;
     private double latitude;
     private double longitude;
+
     // private Map propertyMap;
 
     public Venue() {
@@ -26,9 +25,8 @@ public class Venue {
         // this(id, name, address, 0.0, 0.0, null);
     }
 
-    public Venue(Integer id, String name, String address, double latitude,
-            double longitude) {
-            // double longitude, Map propertyMap) {
+    public Venue(Integer id, String name, String address, double latitude, double longitude) {
+        // double longitude, Map propertyMap) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -82,14 +80,14 @@ public class Venue {
         this.longitude = longtitude;
     }
 
-    //@XmlElement(name = "propertymap")
-    //public Map getPropertyMap() {
-        //return propertyMap;
-    //}
+    // @XmlElement(name = "propertymap")
+    // public Map getPropertyMap() {
+    // return propertyMap;
+    // }
 
-    //public void setPropertyMap(Map propertyMap) {
-    //    this.propertyMap = propertyMap;
-    //}
+    // public void setPropertyMap(Map propertyMap) {
+    // this.propertyMap = propertyMap;
+    // }
 
     @Override
     public boolean equals(Object obj) {
@@ -97,9 +95,8 @@ public class Venue {
 
         if (obj instanceof Venue) {
             Venue other = Venue.class.cast(obj);
-            result = Objects.equal(id, other.id)
-                    && Objects.equal(address, other.address);
-                    // && Objects.equal(other.propertyMap, this.propertyMap);
+            result = Objects.equal(id, other.id) && Objects.equal(address, other.address);
+            // && Objects.equal(other.propertyMap, this.propertyMap);
         }
 
         return result;
@@ -107,10 +104,13 @@ public class Venue {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("id", this.id)
-                .add("address", this.address).add("latitude", this.latitude)
-                .add("longtitude", this.longitude).toString();
-                // .add("propertyMap", this.propertyMap).toString();
+        return Objects.toStringHelper(this)
+                .add("id", this.id)
+                .add("address", this.address)
+                .add("latitude", this.latitude)
+                .add("longtitude", this.longitude)
+                .toString();
+        // .add("propertyMap", this.propertyMap).toString();
     }
 
     @Override
