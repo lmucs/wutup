@@ -1,5 +1,7 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -8,12 +10,13 @@ import org.joda.time.DateTime;
 import com.google.common.base.Objects;
 
 @XmlRootElement(name = "eventOccurrence")
-public class EventOccurrence {
+public class EventOccurrence implements Commentable {
 
     private Integer id;
     private Venue venue;
     private DateTime start;
     private DateTime end;
+    private ArrayList<Comment> comments;
 
     public EventOccurrence() {
         // toString gives errors if DateTime properties are null,
@@ -74,7 +77,8 @@ public class EventOccurrence {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("id", this.id)
+        return Objects.toStringHelper(this)
+                .add("id", this.id)
                 .add("location", this.venue)
                 .add("start", this.start.toString("yyyy/MM/dd hh:mm:ss aa"))
                 .add("end", this.end.toString("yyyy/MM/dd hh:mm:ss aa"))
@@ -92,11 +96,30 @@ public class EventOccurrence {
 
         if (obj != null && obj instanceof EventOccurrence) {
             EventOccurrence other = EventOccurrence.class.cast(obj);
-            result = Objects.equal(id, other.id)
-                    && Objects.equal(venue, other.venue)
+            result = Objects.equal(id, other.id) && Objects.equal(venue, other.venue)
                     && Objects.equal(this.start, other.start);
         }
 
         return result;
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    @Override
+    public void removeComment(int commentNumber) {
+        this.comments.remove(commentNumber);
+    }
+
+    @Override
+    public void updateComment(int commentNumber, Comment comment) {
+        this.comments.set(commentNumber, comment);
+    }
+
+    @Override
+    public ArrayList<Comment> getComments() {
+        return this.comments;
     }
 }

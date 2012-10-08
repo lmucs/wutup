@@ -1,18 +1,21 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
 
 @XmlRootElement(name = "location")
-public class Venue {
+public class Venue implements Commentable {
 
     private Integer id;
     private String name;
     private String address;
     private double latitude;
     private double longitude;
+    private ArrayList<Comment> comments;
 
     // private Map propertyMap;
 
@@ -116,5 +119,25 @@ public class Venue {
     @Override
     public int hashCode() {
         return this.id;
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    @Override
+    public void removeComment(int commentNumber) {
+        this.comments.remove(commentNumber);
+    }
+
+    @Override
+    public void updateComment(int commentNumber, Comment comment) {
+        this.comments.set(commentNumber, comment);
+    }
+
+    @Override
+    public ArrayList<Comment> getComments() {
+        return this.comments;
     }
 }

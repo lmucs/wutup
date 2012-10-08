@@ -1,17 +1,20 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
 
 @XmlRootElement(name = "event")
-public class Event {
+public class Event implements Commentable {
 
     private Integer id;
     private String name;
     private String description;
     private Integer ownerId;
+    private ArrayList<Comment> comments;
 
     public Event() {
         // No-arg constructor required for annotations
@@ -76,16 +79,39 @@ public class Event {
 
         if (obj instanceof Event) {
             Event e = Event.class.cast(obj);
-            result = Objects.equal(id, e.id)
-                    && Objects.equal(e.name, this.name);
+            result = Objects.equal(id, e.id) && Objects.equal(e.name, this.name);
         }
 
         return result;
     }
+
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("id", this.id)
-                .add("name", this.name).add("description", this.description)
-                .add("ownerId", this.ownerId).toString();
+        return Objects.toStringHelper(this)
+                .add("id", this.id)
+                .add("name", this.name)
+                .add("description", this.description)
+                .add("ownerId", this.ownerId)
+                .toString();
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    @Override
+    public void removeComment(int commentNumber) {
+        this.comments.remove(commentNumber);
+    }
+
+    @Override
+    public void updateComment(int commentNumber, Comment comment) {
+        this.comments.set(commentNumber, comment);
+    }
+
+    @Override
+    public ArrayList<Comment> getComments() {
+        return this.comments;
     }
 }
