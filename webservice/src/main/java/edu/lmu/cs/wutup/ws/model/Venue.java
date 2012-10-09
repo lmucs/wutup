@@ -1,5 +1,7 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,25 +16,24 @@ public class Venue {
     private double latitude;
     private double longitude;
 
-    // private Map propertyMap;
+    private Map<String, String> propertyMap;
 
     public Venue() {
         // No-arg constructor
     }
 
     public Venue(Integer id, String name, String address) {
-        this(id, name, address, 0.0, 0.0);
-        // this(id, name, address, 0.0, 0.0, null);
+        this(id, name, address, 0.0, 0.0, null);
     }
 
-    public Venue(Integer id, String name, String address, double latitude, double longitude) {
-        // double longitude, Map propertyMap) {
+    public Venue(Integer id, String name, String address, double latitude, double longitude,
+            Map<String, String> propertyMap) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
-        // this.propertyMap = propertyMap;
+        this.propertyMap = propertyMap;
     }
 
     @XmlElement(name = "id")
@@ -80,14 +81,13 @@ public class Venue {
         this.longitude = longtitude;
     }
 
-    // @XmlElement(name = "propertymap")
-    // public Map getPropertyMap() {
-    // return propertyMap;
-    // }
+    public Map<String, String> getPropertyMap() {
+        return propertyMap;
+    }
 
-    // public void setPropertyMap(Map propertyMap) {
-    // this.propertyMap = propertyMap;
-    // }
+    public void setPropertyMap(Map<String, String> propertyMap) {
+        this.propertyMap = propertyMap;
+    }
 
     @Override
     public boolean equals(Object obj) {

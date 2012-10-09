@@ -21,7 +21,7 @@ public class User {
     public User(int id, String email) {
         this(id, null, null, email, null);
     }
-    
+
     public User(String first, String last, String email, String nick) {
         this(null, first, last, email, nick);
     }
@@ -106,7 +106,7 @@ public class User {
                 .add("id", this.id)
                 .add("name", this.getFullName())
                 .add("email", this.email)
-                .add("nickname", this.nickname).toString();
-
+                .add("nickname", this.nickname)
+                .toString();
     }
 }

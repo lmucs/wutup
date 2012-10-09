@@ -18,7 +18,6 @@ public class Event {
     }
 
     public Event(Integer id, String name, String description, Integer ownerId) {
-
         this.id = id;
         this.name = name;
         this.description = description;
@@ -76,16 +75,19 @@ public class Event {
 
         if (obj instanceof Event) {
             Event e = Event.class.cast(obj);
-            result = Objects.equal(id, e.id)
-                    && Objects.equal(e.name, this.name);
+            result = Objects.equal(id, e.id) && Objects.equal(e.name, this.name);
         }
 
         return result;
     }
+
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("id", this.id)
-                .add("name", this.name).add("description", this.description)
-                .add("ownerId", this.ownerId).toString();
+        return Objects.toStringHelper(this)
+                .add("id", this.id)
+                .add("name", this.name)
+                .add("description", this.description)
+                .add("ownerId", this.ownerId)
+                .toString();
     }
 }

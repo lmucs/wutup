@@ -13,8 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
-import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
+import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
@@ -87,7 +87,9 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         String[] venueAttributes = venue.split(",");
         // TODO: Ask Dr. Toal if this is good enough
         try {
-            return new Venue(Integer.parseInt(venueAttributes[0]), venueAttributes[1], venueAttributes[2], Double.parseDouble(venueAttributes[3]), Double.parseDouble(venueAttributes[4]));
+            return new Venue(Integer.parseInt(venueAttributes[0]), venueAttributes[1],
+                    venueAttributes[2], Double.parseDouble(venueAttributes[3]),
+                    Double.parseDouble(venueAttributes[4]), null);
         } catch(Exception e) {
             // Do we have a log to write to?
             return new Venue();

@@ -11,7 +11,7 @@ public class VenueTest {
 
     @Test
     public void fieldsSetByConstructorCanBeRead() {
-        Venue loc = new Venue(123456, "Keck Lab", "1234 main st", 33.969962, -118.4185002);
+        Venue loc = new Venue(123456, "Keck Lab", "1234 main st", 33.969962, -118.4185002, null);
         // Venue loc = new Venue(123456, "Keck Lab", "1234 main st", 33.969962, -118.4185002, "Doolan");
         assertThat(loc.getId(), is(123456));
         assertThat(loc.getName(), is("Keck Lab"));
