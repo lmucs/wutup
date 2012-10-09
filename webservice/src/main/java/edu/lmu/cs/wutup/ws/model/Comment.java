@@ -21,7 +21,6 @@ public class Comment {
         this.body = body;
         this.author = author;
         this.timestamp = timestamp;
-        this.author = author;
     }
 
     @XmlElement(name = "id")
@@ -62,7 +61,12 @@ public class Comment {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("id", this.id).add("body", this.body).toString();
+        return Objects.toStringHelper(this)
+                .add("id", this.id)
+                .add("body", this.body)
+                .add("timestamp", this.timestamp)
+                .add("owner", this.author)
+                .toString();
     }
 
     @Override
