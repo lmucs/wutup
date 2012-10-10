@@ -1,5 +1,7 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import java.util.ArrayList;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -8,34 +10,27 @@ import org.joda.time.DateTime;
 import com.google.common.base.Objects;
 
 @XmlRootElement(name = "eventOccurrence")
-public class EventOccurrence {
+public class EventOccurrence implements Commentable {
 
     private Integer id;
     private Venue venue;
     private DateTime start;
     private DateTime end;
+    private ArrayList<Comment> comments;
 
     public EventOccurrence() {
-        // toString gives errors if DateTime properties are null,
-        // Initializing new DateTime should set start and end time
-        // as when initialized. Not sure if the best way to handle.
-
         // No-arg constructor required for annotations
     }
 
-    public EventOccurrence(final int id, final Venue venue) {
-        this(id, venue, new DateTime(), new DateTime());
+    public EventOccurrence(Integer id, Venue venue) {
+        this(id, venue, new DateTime(), new DateTime().plusDays(1));
     }
 
-    public EventOccurrence(int id, Venue venue, DateTime start, DateTime end) {
-        this.id = new Integer(id);
+    public EventOccurrence(Integer id, Venue venue, DateTime start, DateTime end) {
+        this.id = id;
         this.venue = venue;
         this.start = start;
         this.end = end;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @XmlElement(name = "id")
@@ -43,19 +38,17 @@ public class EventOccurrence {
         return this.id;
     }
 
-    public void setVenue(final Venue venue) {
-        // Setting address and property map as empty strings until I better
-        // understand what to keep within these properties.
-        this.venue = venue;
+    public void setId(int id) {
+        this.id = id;
     }
 
     @XmlElement(name = "venue")
-    public String getVenue() {
-        return this.venue.toString();
+    public Venue getVenue() {
+        return venue;
     }
 
-    public void setStart(final DateTime start) {
-        this.start = start;
+    public void setVenue(Venue venue) {
+        this.venue = venue;
     }
 
     @XmlElement(name = "start")
@@ -63,8 +56,8 @@ public class EventOccurrence {
         return this.start;
     }
 
-    public void setEnd(final DateTime end) {
-        this.end = end;
+    public void setStart(final DateTime start) {
+        this.start = start;
     }
 
     @XmlElement(name = "end")
@@ -72,13 +65,28 @@ public class EventOccurrence {
         return this.end;
     }
 
+    public void setEnd(final DateTime end) {
+        this.end = end;
+    }
+
     @Override
-    public String toString() {
-        return Objects.toStringHelper(this).add("id", this.id)
-                .add("location", this.venue)
-                .add("start", this.start.toString("yyyy/MM/dd hh:mm:ss aa"))
-                .add("end", this.end.toString("yyyy/MM/dd hh:mm:ss aa"))
-                .toString();
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    @Override
+    public void removeComment(int commentIndex) {
+        this.comments.remove(commentIndex);
+    }
+
+    @Override
+    public void updateComment(int commentIndex, Comment comment) {
+        this.comments.set(commentIndex, comment);
+    }
+
+    @Override
+    public ArrayList<Comment> getComments() {
+        return this.comments;
     }
 
     @Override
@@ -88,15 +96,16 @@ public class EventOccurrence {
 
     @Override
     public boolean equals(Object obj) {
-        boolean result = false;
+        return obj instanceof EventOccurrence && Objects.equal(id, EventOccurrence.class.cast(obj).id);
+    }
 
-        if (obj != null && obj instanceof EventOccurrence) {
-            EventOccurrence other = EventOccurrence.class.cast(obj);
-            result = Objects.equal(id, other.id)
-                    && Objects.equal(venue, other.venue)
-                    && Objects.equal(this.start, other.start);
-        }
-
-        return result;
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("id", this.id)
+                .add("location", this.venue)
+                .add("start", this.start)
+                .add("end", this.end)
+                .toString();
     }
 }

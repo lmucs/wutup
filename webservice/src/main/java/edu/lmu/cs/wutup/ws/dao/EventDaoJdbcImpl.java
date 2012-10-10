@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.User;
 
 @Repository
 public class EventDaoJdbcImpl implements EventDao {
@@ -32,7 +33,8 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public void createEvent(Event e) {
         try {
-            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName(), e.getDescription(), e.getOwnerId());
+            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName(), e.getDescription(),
+                    e.getCreator() == null ? null : e.getCreator().getId());
         } catch (DuplicateKeyException ex) {
             throw new EventExistsException();
         }
@@ -40,7 +42,8 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public void updateEvent(Event e) {
-        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getName(), e.getDescription(), e.getOwnerId(), e.getId());
+        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getName(), e.getDescription(), e.getCreator().getId(),
+                e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventException();
         }
@@ -57,8 +60,7 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public List<Event> findEventsByName(String name, int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_BY_NAME_SQL, new Object[]{name, pageSize, pageNumber * pageSize},
-                eventRowMapper);
+        return jdbcTemplate.query(FIND_BY_NAME_SQL, new Object[]{name, pageSize, pageNumber * pageSize}, eventRowMapper);
     }
 
     @Override
@@ -81,7 +83,8 @@ public class EventDaoJdbcImpl implements EventDao {
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"), rs.getInt("ownerId"));
+            return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"),
+                    new User(rs.getInt("ownerId"), "email-not-yet-known"));
         }
     };
 }

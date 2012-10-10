@@ -16,6 +16,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.User;
 
 /**
  * Unit tests on the JDBC Dao using a programmatically-configured embedded database.  The database is setup and torn
@@ -25,6 +26,10 @@ public class EventDaoTest {
 
     private EmbeddedDatabase database;
     private EventDaoJdbcImpl eventDao = new EventDaoJdbcImpl();
+
+    User sam = new User(20, "sam@example.org");
+    User marc = new User(20, "marc@example.org");
+    User allyson = new User(20, "allyson@example.org");
 
     @Before
     public void setUp() {
@@ -38,7 +43,7 @@ public class EventDaoTest {
 
     @Test
     public void creatingIncrementsSize() {
-        Event e = new Event(9, "Company Softball Game", "A super fun time", 1);
+        Event e = new Event(9, "Company Softball Game", "A super fun time", sam);
 
         int initialCount = eventDao.findNumberOfEvents();
         eventDao.createEvent(e);
@@ -47,7 +52,7 @@ public class EventDaoTest {
 
     @Test
     public void deletingDecrementsSize() {
-        Event e = new Event(1, "Poker Night", "Cards with the guys", 2);
+        Event e = new Event(1, "Poker Night", "Cards with the guys", marc);
 
         int initialCount = eventDao.findNumberOfEvents();
         eventDao.deleteEvent(e);
@@ -56,27 +61,27 @@ public class EventDaoTest {
 
     @Test
     public void createdEventCanBeFound() {
-        eventDao.createEvent(new Event(9, "Company Softball Game", "A super fun time", 3));
+        eventDao.createEvent(new Event(9, "Company Softball Game", "A super fun time", marc));
         Event e = eventDao.findEventById(9);
         assertThat(e.getId(), is(9));
         assertThat(e.getName(), is("Company Softball Game"));
         assertThat(e.getDescription(), is("A super fun time"));
-        assertThat(e.getOwnerId(), is(3));
+        assertThat(e.getCreator(), is(marc));
     }
 
     @Test
     public void updatesToCreatedEventCanBeRead() {
-        eventDao.createEvent(new Event(9, "Company Softball Game", "A super fun time", 4));
+        eventDao.createEvent(new Event(9, "Company Softball Game", "A super fun time", sam));
         Event e = eventDao.findEventById(9);
         e.setName("Cricket Game");
-        e.setOwnerId(3503);
+        e.setCreator(allyson);
         e.setDescription("A really really super fun time!");
         eventDao.updateEvent(e);
         e = eventDao.findEventById(9);
         assertThat(e.getId(), is(9));
         assertThat(e.getName(), is("Cricket Game"));
         assertThat(e.getDescription(), is("A really really super fun time!"));
-        assertThat(e.getOwnerId(), is(3503));
+        assertThat(e.getCreator(), is(allyson));
     }
 
     @Test(expected=EventExistsException.class)

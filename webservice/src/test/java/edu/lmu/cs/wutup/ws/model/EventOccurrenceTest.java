@@ -3,13 +3,11 @@ package edu.lmu.cs.wutup.ws.model;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertFalse;
-
-import org.junit.Test;
+import static org.junit.Assert.assertThat;
 
 import org.joda.time.DateTime;
+import org.junit.Test;
 
 public class EventOccurrenceTest {
 
@@ -71,7 +69,7 @@ public class EventOccurrenceTest {
     }
 
     @Test
-    public void equalsUsesIdLocationAndStartOnly() {
+    public void equalsUsesIdOnly() {
         DateTime start1 = new DateTime(2011, 12, 25, 0, 0, 0);
         DateTime end1 = new DateTime(2011, 12, 25, 11, 59, 59);
         DateTime start2 = new DateTime(2011, 12, 25, 0, 0, 0);

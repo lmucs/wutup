@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -7,19 +8,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
 
-@XmlRootElement(name = "location")
-public class Venue {
+@XmlRootElement(name = "venue")
+public class Venue implements Commentable {
 
     private Integer id;
     private String name;
     private String address;
     private double latitude;
     private double longitude;
+    private ArrayList<Comment> comments;
 
     private Map<String, String> propertyMap;
 
     public Venue() {
-        // No-arg constructor
+        // No-arg constructor, needed for annotations
     }
 
     public Venue(Integer id, String name, String address) {
@@ -89,17 +91,42 @@ public class Venue {
         this.propertyMap = propertyMap;
     }
 
+    public String getProperty(String key) {
+        return propertyMap.get(key);
+    }
+
+    public void setProperty(String key, String value) {
+        propertyMap.put(key, value);
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    @Override
+    public void removeComment(int commentIndex) {
+        this.comments.remove(commentIndex);
+    }
+
+    @Override
+    public void updateComment(int commentIndex, Comment comment) {
+        this.comments.set(commentIndex, comment);
+    }
+
+    @Override
+    public ArrayList<Comment> getComments() {
+        return this.comments;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        boolean result = false;
-
-        if (obj instanceof Venue) {
-            Venue other = Venue.class.cast(obj);
-            result = Objects.equal(id, other.id) && Objects.equal(address, other.address);
-            // && Objects.equal(other.propertyMap, this.propertyMap);
-        }
-
-        return result;
+        return obj instanceof Venue && Objects.equal(id, Venue.class.cast(obj).id);
     }
 
     @Override
@@ -109,12 +136,7 @@ public class Venue {
                 .add("address", this.address)
                 .add("latitude", this.latitude)
                 .add("longtitude", this.longitude)
+                .add("propertyMap", this.propertyMap)
                 .toString();
-        // .add("propertyMap", this.propertyMap).toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id;
     }
 }
