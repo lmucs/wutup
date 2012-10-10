@@ -44,11 +44,12 @@ public class CommentTest {
 
     @Test
     public void toStringProducesExpectedString() {
-        Comment c = new Comment(3, "This is a great event.", null, null);   
-        String expected = "Comment{id=3, body=This is a great event., timestamp=null, owner=null}";
+        Comment c = new Comment(3, "This is a great event.", null, null);
+        String expected = "Comment{id=3, body=This is a great event., owner=null, timestamp=null}";
         Comment c1 = new Comment(3, "This is a great event.", timestamp, alice);
-        String expected1 = "Comment{id=3, body=This is a great event., timestamp=" + timestamp.toString()
-                + ", owner=User{id=1, name=null null, email=alice@example.com, nickname=null}}";
+        String expected1 = "Comment{id=3, body=This is a great event., "
+                + "owner=User{id=1, name=null null, email=alice@example.com, nickname=null}, "
+                + "timestamp=" + timestamp + "}";
         assertEquals(expected, c.toString());
         assertEquals(expected1, c1.toString());
     }
@@ -59,8 +60,8 @@ public class CommentTest {
                 "This is a great event.", timestamp, alice)));
         assertThat(new Comment(7, "This is a great event.", timestamp, alice), not(equalTo(new Comment(17,
                 "This is a great event.", timestamp, alice))));
-        assertThat(new Comment(7, "This is a great event.", timestamp, alice), not(equalTo(new Comment(7,
-                "I HAD A TERRIBLE TIME.", timestamp, alice))));
+        assertThat(new Comment(7, "This is a great event.", timestamp, alice), equalTo(new Comment(7,
+                "I HAD A TERRIBLE TIME.", timestamp, alice)));
         assertFalse(new Comment(7, "This is a great event.", timestamp, alice).equals("some string"));
         assertFalse(new Comment(7, "This is a great event.", timestamp, alice).equals(null));
     }

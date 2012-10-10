@@ -38,9 +38,10 @@ public class EventTest {
     @Test
     public void toStringProducesExpectedString() {
         Event e = new Event(3, "Pool Party", null, null);
-        String expected = "Event{id=3, name=Pool Party, description=null, ownerId=null}";
+        String expected = "Event{id=3, name=Pool Party, description=null, creator=null}";
         Event e1 = new Event(3, "Pool Party", "Party at Brous House", null);
-        String expected1 = "Event{id=3, name=Pool Party, description=Party at Brous House, " + "ownerId=null}";
+        String expected1 = "Event{id=3, name=Pool Party, description=Party at Brous House, " + "creator=null}";
+        System.out.println(e);
         assertEquals(expected, e.toString());
         assertEquals(expected1, e1.toString());
     }
@@ -51,10 +52,10 @@ public class EventTest {
     }
 
     @Test
-    public void equalsUsesIdAndNameOnly() {
+    public void equalsUsesIdOnly() {
         assertThat(new Event(7, "Pool Party"), equalTo(new Event(7, "Pool Party")));
         assertThat(new Event(7, "Pool Party"), not(equalTo(new Event(17, "Pool Party"))));
-        assertThat(new Event(7, "Pool Party"), not(equalTo(new Event(7, "Target Practice"))));
+        assertThat(new Event(7, "Pool Party"), equalTo(new Event(7, "Target Practice")));
         assertFalse(new Event(7, "Pool Party").equals("some string"));
         assertFalse(new Event(7, "Pool Party").equals(null));
     }

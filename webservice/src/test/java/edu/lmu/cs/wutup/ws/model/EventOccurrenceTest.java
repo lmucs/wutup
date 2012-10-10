@@ -81,7 +81,7 @@ public class EventOccurrenceTest {
                 10, "", "", 5.0, 5.0, null), new DateTime(), new DateTime()))));
         assertThat(new EventOccurrence(7, new Venue(10, "", "", 5.0, 5.0, null),
                 new DateTime(), new DateTime()),
-                not(equalTo(new EventOccurrence(7, new Venue(8, "","", 15.0, 5.0, null), new DateTime(), new DateTime()))));
+                equalTo(new EventOccurrence(7, new Venue(8, "","", 15.0, 5.0, null), new DateTime(), new DateTime())));
         assertFalse(new EventOccurrence(7, new Venue(10, "", "", 5.0, 5.0, null),
                 new DateTime(), new DateTime()).equals("some string"));
         assertFalse(new EventOccurrence(7, new Venue(10, "", "", 5.0, 5.0, null),

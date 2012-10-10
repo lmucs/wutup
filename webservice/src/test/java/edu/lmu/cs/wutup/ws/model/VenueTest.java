@@ -39,10 +39,9 @@ public class VenueTest {
     }
 
     @Test
-    public void equalsUsesIdAddressAndPropertymapOnly() {
+    public void equalsUsesIdOnly() {
         assertThat(new Venue(1, "Keck Lab", "123 main"), is(new Venue(1, "Keck Lab", "123 main")));
-        assertThat(new Venue(1, "Keck Lab", "123 main"), not(is(new Venue(1, "Restroom", "456 maple"))));
-        assertThat(new Venue(1, "Keck Lab", "123 main"), not(is(new Venue(999, "Keck Lab", "123 main"))));
+        assertThat(new Venue(1, "Keck Lab", "123 main"), not(is(new Venue(2, "Restroom", "456 maple"))));
         assertFalse(new Venue(1, "Keck Lab", "123 main").equals("candy"));
         assertFalse(new Venue(1, "Keck Lab", "123 main").equals(null));
     }
