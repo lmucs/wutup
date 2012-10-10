@@ -45,8 +45,6 @@ public class FacebookAuthenticationResource {
     public Response handleFacebookAuthenticationResponse (
             @DefaultValue("") @QueryParam("state") String state,
             @DefaultValue("") @QueryParam("code") String code,
-            @DefaultValue("") @QueryParam("access_token") String accessToken,
-            @DefaultValue("") @QueryParam("expires") String accessTokenExpiry,
             @DefaultValue("") @QueryParam("error_reason") String errorReason,
             @DefaultValue("") @QueryParam("error") String error,
             @DefaultValue("") @QueryParam("error_description") String errorDescription
@@ -56,25 +54,16 @@ public class FacebookAuthenticationResource {
             return Response
                     .status(Response.Status.UNAUTHORIZED)
                     .build();
-        } else if (!code.equals("")) {
-            try {
-                return Response
-                        .ok(FacebookAuthentication.getAccessToken(code))
-                        .build();
-            } catch (Exception e) {
-                return Response
-                        .status(Response.Status.INTERNAL_SERVER_ERROR)
-                        .build();
-            }
-        } else if (!accessToken.equals("")) {
-            // Realistically, we want to store the access token and expiry in the DB here
-            return Response
-                    .ok(accessToken)
-                    .build();
         }
         
-        return Response
-                .ok(code)
-                .build();
+        try {
+            return Response
+                    .ok(FacebookAuthentication.getAccessToken(code))
+                    .build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
     }
 }
