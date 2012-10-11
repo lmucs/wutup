@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.EventDao;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 
 @Service
@@ -40,5 +41,11 @@ public class EventServiceImpl implements EventService {
     @Override
     public void deleteEvent(Event e) {
         eventDao.deleteEvent(e);
+    }
+
+    @Override
+    public void addComment(Integer eventId, Comment comment) {
+        // TODO Auto-generated method stub
+
     }
 }

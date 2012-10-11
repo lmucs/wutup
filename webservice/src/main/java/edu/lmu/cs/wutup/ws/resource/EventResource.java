@@ -25,9 +25,11 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.service.EventService;
 
@@ -38,6 +40,7 @@ public class EventResource extends AbstractWutupResource {
 
     private static final String EVENT_NOT_FOUND = "Event %d does not exist";
     private static final String EVENT_ALREADY_EXISTS = "Event %d already exists";
+    private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists";
 
     @Autowired
     EventService eventService;
@@ -111,6 +114,20 @@ public class EventResource extends AbstractWutupResource {
             return Response.noContent().build();
         } catch (NoSuchEventException ex) {
             throw new ServiceException(NOT_FOUND, EVENT_NOT_FOUND, id);
+        }
+    }
+
+    @POST
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/{id}/comments")
+    public void addComment(@PathParam("id") String idString, Comment comment) {
+        int eventId = toInteger("id", idString);
+
+        try {
+            eventService.addComment(eventId, comment);
+        } catch (CommentExistsException e) {
+            throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, comment.getId());
         }
     }
 }

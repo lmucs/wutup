@@ -21,6 +21,7 @@ import org.junit.Test;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.service.EventService;
 
@@ -183,5 +184,11 @@ public class EventResourceTest {
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(403));
         }
+    }
+
+    @Test
+    public void canAddCommentsToEvent() {
+        Comment eventComment = new Comment();
+        resource.addComment("1", eventComment);
     }
 }

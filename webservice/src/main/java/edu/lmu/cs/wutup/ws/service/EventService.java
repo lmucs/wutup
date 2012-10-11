@@ -2,6 +2,7 @@ package edu.lmu.cs.wutup.ws.service;
 
 import java.util.List;
 
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 
 public interface EventService {
@@ -11,4 +12,6 @@ public interface EventService {
     Event findEventById(int id);
     List<Event> findEventsByName(String name, int pageNumber, int pageSize);
     void deleteEvent(Event e);
+
+    public void addComment(Integer eventId, Comment comment);
 }
