@@ -17,7 +17,7 @@ public class VenueTest {
         assertThat(loc.getName(), is("Keck Lab"));
         assertThat(loc.getAddress(), is("1234 main st"));
         assertThat(loc.getLatitude(), is(33.969962));
-        assertThat(loc.getLongtitude(), is(-118.4185002));
+        assertThat(loc.getLongitude(), is(-118.4185002));
         // assertThat(loc.getPropertyMap(), is("Doolan"));
     }
 
@@ -28,13 +28,13 @@ public class VenueTest {
         loc.setName("LMU pool");
         loc.setAddress("pool");
         loc.setLatitude(30.000001);
-        loc.setLongtitude(-118.000001);
+        loc.setLongitude(-118.000001);
         // loc.setPropertyMap("gym");
         assertThat(loc.getId(), is(654321));
         assertThat(loc.getName(), is("LMU pool"));
         assertThat(loc.getAddress(), is("pool"));
         assertThat(loc.getLatitude(), is(30.000001));
-        assertThat(loc.getLongtitude(), is(-118.000001));
+        assertThat(loc.getLongitude(), is(-118.000001));
         // assertThat(loc.getPropertyMap(), is("gym"));
     }
 

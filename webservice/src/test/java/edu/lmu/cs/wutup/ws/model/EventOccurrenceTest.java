@@ -50,7 +50,7 @@ public class EventOccurrenceTest {
         DateTime end = new DateTime(2012, 9, 27, 10, 40, 0);
         EventOccurrence e1 = new EventOccurrence(3, new Venue(3, "", "", 33.969369, -118.414386, null), start, end);
         // EventOccurrence e1 = new EventOccurrence(3, new Venue(3, "", 33.969369, -118.414386, ""), start, end);
-        String expected1 = "EventOccurrence{id=3,location=Venue{id=3, name=, address=, latitude=33.969369, longtitude=-118.414386}, "
+        String expected1 = "EventOccurrence{id=3,location=Venue{id=3, name=, address=, latitude=33.969369, longitude=-118.414386}, "
                 + "start=2012/09/27 09:25:00 AM, end=2012/09/27 10:40:00 AM}";
         EventOccurrence e2 = new EventOccurrence();
         e2.setId(5);
