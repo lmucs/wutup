@@ -74,13 +74,13 @@ public class Venue implements Commentable {
         this.latitude = latitude;
     }
 
-    @XmlElement(name = "longtitude")
-    public double getLongtitude() {
+    @XmlElement(name = "longitude")
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongtitude(double longtitude) {
-        this.longitude = longtitude;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public Map<String, String> getPropertyMap() {
@@ -135,7 +135,7 @@ public class Venue implements Commentable {
                 .add("id", this.id)
                 .add("address", this.address)
                 .add("latitude", this.latitude)
-                .add("longtitude", this.longitude)
+                .add("longitude", this.longitude)
                 .add("propertyMap", this.propertyMap)
                 .toString();
     }
