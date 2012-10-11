@@ -30,6 +30,7 @@ public class EventDaoTest {
     User sam = new User(20, "sam@example.org");
     User marc = new User(20, "marc@example.org");
     User allyson = new User(20, "allyson@example.org");
+    User katrina = new User(8, "Katrina", "Sherbina", "ksherbina@gmail.com", "Kat");
 
     @Before
     public void setUp() {
@@ -43,7 +44,7 @@ public class EventDaoTest {
 
     @Test
     public void creatingIncrementsSize() {
-        Event e = new Event(9, "Company Softball Game", "A super fun time", sam);
+        Event e = new Event(9, "Company Softball Game");
 
         int initialCount = eventDao.findNumberOfEvents();
         eventDao.createEvent(e);
@@ -52,7 +53,7 @@ public class EventDaoTest {
 
     @Test
     public void deletingDecrementsSize() {
-        Event e = new Event(1, "Poker Night", "Cards with the guys", marc);
+        Event e = new Event(1, "Poker Night");
 
         int initialCount = eventDao.findNumberOfEvents();
         eventDao.deleteEvent(e);
@@ -61,27 +62,24 @@ public class EventDaoTest {
 
     @Test
     public void createdEventCanBeFound() {
-        eventDao.createEvent(new Event(9, "Company Softball Game", "A super fun time", marc));
+        eventDao.createEvent(new Event(9, "Company Softball Game"));
         Event e = eventDao.findEventById(9);
         assertThat(e.getId(), is(9));
         assertThat(e.getName(), is("Company Softball Game"));
-        assertThat(e.getDescription(), is("A super fun time"));
-        assertThat(e.getCreator(), is(marc));
     }
 
     @Test
     public void updatesToCreatedEventCanBeRead() {
-        eventDao.createEvent(new Event(9, "Company Softball Game", "A super fun time", sam));
+        eventDao.createEvent(new Event(9, "Company Softball Game", "A really really super fun time!", katrina));
         Event e = eventDao.findEventById(9);
         e.setName("Cricket Game");
-        e.setCreator(allyson);
         e.setDescription("A really really super fun time!");
         eventDao.updateEvent(e);
         e = eventDao.findEventById(9);
         assertThat(e.getId(), is(9));
         assertThat(e.getName(), is("Cricket Game"));
         assertThat(e.getDescription(), is("A really really super fun time!"));
-        assertThat(e.getCreator(), is(allyson));
+        assertThat(e.getCreator().getId(), is(katrina.getId()));
     }
 
     @Test(expected=EventExistsException.class)
@@ -91,7 +89,7 @@ public class EventDaoTest {
 
     @Test(expected=NoSuchEventException.class)
     public void updatingNonExistentEventThrowsException() {
-        eventDao.updateEvent(new Event(1000, "Unknown"));
+        eventDao.updateEvent(new Event(1000, "Unknown", "No Description", katrina));
     }
 
     @Test(expected=NoSuchEventException.class)
