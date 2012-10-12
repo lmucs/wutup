@@ -41,7 +41,7 @@ create table venue_property (
   venueId integer not null,
   key varchar(128),
   value varchar(1024),
-  primary key(venueId),
+  primary key(venueId, key),
   foreign key(venueId) references venue(Id)
 );
 
