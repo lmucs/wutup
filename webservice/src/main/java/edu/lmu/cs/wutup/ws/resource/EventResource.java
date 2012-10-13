@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Comment;
@@ -41,6 +42,7 @@ public class EventResource extends AbstractWutupResource {
     private static final String EVENT_NOT_FOUND = "Event %d does not exist";
     private static final String EVENT_ALREADY_EXISTS = "Event %d already exists";
     private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists";
+    private static final String COMMENT_DOESNT_EXIST = "Comment %d does not exist";
 
     @Autowired
     EventService eventService;
@@ -121,13 +123,28 @@ public class EventResource extends AbstractWutupResource {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}/comments")
-    public void addComment(@PathParam("id") String idString, Comment comment) {
+    public void addComment(@PathParam("id") String idString, Comment eventComment) {
         int eventId = toInteger("id", idString);
 
         try {
-            eventService.addComment(eventId, comment);
+            eventService.addComment(eventId, eventComment);
         } catch (CommentExistsException e) {
-            throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, comment.getId());
+            throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, eventComment.getId());
         }
+    }
+
+    @PUT
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/{id}/comments/{index}")
+    public Response updateComment(@PathParam("id") String idString, @PathParam("index") String indexString, Comment eventComment) {
+       int eventId = toInteger("id", idString);
+       int commentIndex = toInteger("index", indexString);
+       try {
+           eventService.updateComment(eventId, commentIndex, eventComment);
+           return Response.noContent().build();
+       } catch (NoSuchCommentException e) {
+           throw new ServiceException(CONFLICT, COMMENT_DOESNT_EXIST, eventComment.getId());
+       }
     }
 }

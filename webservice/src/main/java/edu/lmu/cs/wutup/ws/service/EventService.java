@@ -8,10 +8,16 @@ import edu.lmu.cs.wutup.ws.model.Event;
 public interface EventService {
 
     void createEvent(Event e);
+
     void updateEvent(Event e);
+
     Event findEventById(int id);
+
     List<Event> findEventsByName(String name, int pageNumber, int pageSize);
+
     void deleteEvent(Event e);
 
     public void addComment(Integer eventId, Comment comment);
+
+    public void updateComment(Integer eventId, Integer commentIndex, Comment comment);
 }

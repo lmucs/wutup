@@ -31,6 +31,7 @@ public class EventResourceTest {
     EventService service;
 
     Event sampleEvent = new Event(1, "Alice");
+    Comment sampleEventComment = new Comment();
     List<Event> sampleEventList = new ArrayList<Event>();
     UriInfo sampleUriInfo;
 
@@ -188,7 +189,16 @@ public class EventResourceTest {
 
     @Test
     public void canAddCommentsToEvent() {
-        Comment eventComment = new Comment();
-        resource.addComment("1", eventComment);
+        resource.addComment("1", sampleEventComment);
     }
+
+    @Test
+    public void updatingCommentProducesHttp204() {
+        // 204 = server received but no response to send back
+        resource.addComment("1", sampleEventComment);
+        Response response = resource.updateComment("1", "0", sampleEventComment);
+        verify(service).updateComment(1, 0, sampleEventComment);
+        assertThat(response.getStatus(), is(204));
+    }
+
 }

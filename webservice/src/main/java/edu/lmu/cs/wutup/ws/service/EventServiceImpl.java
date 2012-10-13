@@ -34,8 +34,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> findEventsByName(String name, int pageNumber, int pageSize) {
-        return name == null ? eventDao.findAllEvents(pageNumber, pageSize) : eventDao.findEventsByName(
-                name, pageNumber, pageSize);
+        return name == null ? eventDao.findAllEvents(pageNumber, pageSize) : eventDao.findEventsByName(name,
+                pageNumber, pageSize);
     }
 
     @Override
@@ -45,7 +45,13 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void addComment(Integer eventId, Comment comment) {
-        // TODO Auto-generated method stub
+        eventDao.findEventById(eventId).addComment(comment);
+
+    }
+
+    @Override
+    public void updateComment(Integer eventId, Integer commentIndex, Comment comment) {
+        eventDao.findEventById(eventId).updateComment(commentIndex, comment);
 
     }
 }
