@@ -2,6 +2,7 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -23,26 +24,30 @@ import edu.lmu.cs.wutup.ws.model.User;
 @Repository
 public class EventDaoJdbcImpl implements EventDao {
 
+    private static final String SELECT_EVENT = "select e.*, u.* from event e join user u on (e.ownerId = u.id)";
+    private static final String SELECT_COMMENT = "select ec.*, u.* from event_comment ec join user u on (ec.authorId = u.id)";
+    private static final String PAGINATION = "limit ? offset ?";
+
     private static final String CREATE_SQL = "insert into event (id, name, description, ownerId) values (?,?,?,?)";
     private static final String UPDATE_SQL = "update event set name=?, description=?, ownerId=? where id=?";
-    private static final String FIND_BY_ID_SQL = "select id, name, description, ownerId from event where id=?";
-    private static final String FIND_BY_NAME_SQL = "select id, name, description, ownerId from event where name=? limit ? offset ?";
-    private static final String FIND_ALL_SQL = "select id, name, description, ownerId from event limit ? offset ?";
+    private static final String FIND_BY_ID_SQL = SELECT_EVENT + " where e.id=?";
+    private static final String FIND_ALL_SQL = SELECT_EVENT + " " + PAGINATION;
+    private static final String FIND_BY_NAME_SQL = SELECT_EVENT + " where e.name=? " + PAGINATION;
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
+
     private static final String CREATE_COMMENT_SQL = "insert into event_comments (id, eventid, authorid, text, timestamp) values (?,?,?,?)";
     private static final String UPDATE_COMMENT_SQL = "update event_comments set text=?, timestamp=? where id=?";
-    private static final String DELETE_COMMENT_SQL = "delete from event_comments where id=?";
+    private static final String DELETE_COMMENT_SQL = "delete from event_comments where eventId=? and id=?";
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    static UserDao userDao;
 
     @Override
     public void createEvent(Event e) {
         try {
-            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName(), e.getDescription(), e.getCreator() == null ? null
-                    : e.getCreator().getId());
+            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName(), e.getDescription(), e.getCreator().getId());
         } catch (DuplicateKeyException ex) {
             throw new EventExistsException();
         }
@@ -89,20 +94,6 @@ public class EventDaoJdbcImpl implements EventDao {
         return jdbcTemplate.queryForInt(COUNT_SQL);
     }
 
-    private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
-        public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"), new User(
-                    rs.getInt("ownerId"), "email-not-yet-known"));
-        }
-    };
-
-    private static RowMapper<Comment> commentRowMapper = new RowMapper<Comment>() {
-        public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Comment(rs.getInt("id"), rs.getString("text"), rs.getObject("timestamp", DateTime.class),
-                    userDao.findUserById(rs.getInt("authorid")));
-        }
-    };
-
     @Override
     public void addComment(Integer eventId, Comment comment) {
         int rowsUpdated = jdbcTemplate.update(CREATE_COMMENT_SQL, comment.getId(), eventId,
@@ -119,24 +110,43 @@ public class EventDaoJdbcImpl implements EventDao {
         if (rowsUpdated == 0) {
             throw new NoSuchCommentException();
         }
-
     }
 
     @Override
-    public void deleteComment(Comment comment) {
-        int rowsUpdated = jdbcTemplate.update(DELETE_COMMENT_SQL, comment.getId());
+    public void deleteComment(int eventId, int commentId) {
+        int rowsUpdated = jdbcTemplate.update(DELETE_COMMENT_SQL, eventId, commentId);
         if (rowsUpdated == 0) {
             throw new NoSuchCommentException();
         }
     }
 
     @Override
-    public Comment findCommentbyId(int id) {
-        try {
-            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, commentRowMapper);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            throw new NoSuchEventException();
-        }
+    public List<Comment> findEventComments(int eventId, int page, int pageSize) {
+        //
+        // TODO - STUB
+        //
+        return null;
     }
 
+    private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
+        public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Event(rs.getInt("e.id"),
+                    rs.getString("e.name"),
+                    rs.getString("e.description"),
+                    new User(rs.getInt("u.Id"), rs.getString("u.firstName"), rs.getString("u.lastName"),
+                            rs.getString("u.email"), rs.getString("u.nickname")));
+        }
+    };
+
+    private static RowMapper<Comment> commentRowMapper = new RowMapper<Comment>() {
+        public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
+            int commentId = rs.getInt("ec.id");
+            String text = rs.getString("ec.text");
+            Timestamp persistedTimestamp = rs.getTimestamp("ec.timestamp");
+            DateTime timestamp = persistedTimestamp == null ? null : new DateTime(persistedTimestamp);
+            return new Comment(commentId, text, timestamp,
+                    new User(rs.getInt("u.Id"), rs.getString("u.firstName"), rs.getString("u.lastName"),
+                            rs.getString("u.email"), rs.getString("u.nickname")));
+        }
+    };
 }

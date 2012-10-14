@@ -17,12 +17,12 @@ public interface EventService {
 
     void deleteEvent(Event e);
 
-    public void addComment(Integer eventId, Comment comment);
+    public void addComment(int eventId, Comment comment);
 
-    public void updateComment(Integer eventId, Comment comment);
+    public void updateComment(int eventId, Comment comment);
 
-    Comment findCommentById(int id);
-    
-    void deleteComment(Comment sampleEventComment);
+    List<Comment> findEventComments(int eventId, int page, int pageSize);
+
+    void deleteComment(int eventId, int commentId);
 
 }

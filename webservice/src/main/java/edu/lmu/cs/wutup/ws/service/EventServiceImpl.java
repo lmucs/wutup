@@ -44,25 +44,25 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void addComment(Integer eventId, Comment comment) {
+    public void addComment(int eventId, Comment comment) {
         eventDao.addComment(eventId, comment);
 
     }
 
     @Override
-    public void updateComment(Integer commentId, Comment comment) {
+    public void updateComment(int commentId, Comment comment) {
         eventDao.updateComment(commentId, comment);
 
     }
 
     @Override
-    public Comment findCommentById(int id) {
-        return eventDao.findCommentbyId(id);
+    public List<Comment> findEventComments(int eventId, int page, int pageSize) {
+        return eventDao.findEventComments(eventId, page, pageSize);
     }
 
     @Override
-    public void deleteComment(Comment sampleEventComment) {
-        eventDao.deleteComment(sampleEventComment);
+    public void deleteComment(int eventId, int commentId) {
+        eventDao.deleteComment(eventId, commentId);
 
     }
 }

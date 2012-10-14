@@ -197,26 +197,17 @@ public class EventResourceTest {
 
     @Test
     public void updatingCommentProducesHttp204() {
-        // 204 = server received but no response to send back
-        resource.addComment("1", sampleEventComment);
-        Response response = resource.updateComment("1", sampleEventComment);
+        Response response = resource.updateComment("1", "1", sampleEventComment);
         verify(service).updateComment(1, sampleEventComment);
         assertThat(response.getStatus(), is(204));
     }
-    
+
     @Test
     public void deletingCommentProducesHttp204() {
-        when(service.findCommentById(1)).thenReturn(sampleEventComment);
-        Response response = resource.deleteComment("1");
-        verify(service).deleteComment(sampleEventComment);
+        Response response = resource.deleteComment("1", "1");
+        verify(service).deleteComment(1, 1);
         assertThat(response.getStatus(), is(204));
     }
-    
-    @Test
-    public void findingExistingCommentByIdProducesHttp200() {
-        when(service.findCommentById(1)).thenReturn(sampleEventComment);
-        resource.findEventById("1");
-        verify(service).findEventById(1);
-    }
 
+    // TODO - need test to get event comments
 }

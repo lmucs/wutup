@@ -36,20 +36,44 @@ import edu.lmu.cs.wutup.ws.service.EventService;
 
 @Component
 @Scope(BeanDefinition.SCOPE_SINGLETON)
+@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
 @Path("/events")
 public class EventResource extends AbstractWutupResource {
 
     private static final String EVENT_NOT_FOUND = "Event %d does not exist";
     private static final String EVENT_ALREADY_EXISTS = "Event %d already exists";
-    private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists";
-    private static final String COMMENT_DOESNT_EXIST = "Comment %d does not exist";
+    private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for event %d";
+    private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists for event %d";
 
     @Autowired
     EventService eventService;
 
+    @GET
+    @Path("/")
+    public List<Event> findEventsByName(@QueryParam("name") String name, @QueryParam("page") String pageString,
+            @QueryParam("pageSize") String pageSizeString) {
+        int page = toInteger("page", pageString);
+        int pageSize = toInteger("pageSize", pageSizeString);
+        checkPageSizeRange(pageSize);
+
+        return eventService.findEventsByName(name, page, pageSize);
+    }
+
+    @GET
+    @Path("/{id}")
+    public Event findEventById(@PathParam("id") String idString) {
+        checkRequiredParameter("id", idString);
+        int id = toInteger("id", idString);
+
+        try {
+            return eventService.findEventById(id);
+        } catch (NoSuchEventException e) {
+            throw new ServiceException(NOT_FOUND, EVENT_NOT_FOUND, id);
+        }
+    }
+
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/")
     public Response createEvent(final Event event, @Context UriInfo uriInfo) {
         try {
@@ -62,7 +86,6 @@ public class EventResource extends AbstractWutupResource {
     }
 
     @PUT
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}")
     public Response updateEvent(@PathParam("id") String idString, Event event) {
         int id = toInteger("id", idString);
@@ -76,36 +99,7 @@ public class EventResource extends AbstractWutupResource {
         }
     }
 
-    @GET
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/{id}")
-    public Event findEventById(@PathParam("id") String idString) {
-        checkRequiredParameter("id", idString);
-        int id = toInteger("id", idString);
-
-        try {
-            return eventService.findEventById(id);
-        } catch (NoSuchEventException e) {
-            throw new ServiceException(NOT_FOUND, EVENT_NOT_FOUND, id);
-        }
-    }
-
-    @GET
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/")
-    public List<Event> findEventsByName(@QueryParam("name") String name, @QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
-        int page = toInteger("page", pageString);
-        int pageSize = toInteger("pageSize", pageSizeString);
-        checkPageSizeRange(pageSize);
-
-        return eventService.findEventsByName(name, page, pageSize);
-    }
-
     @DELETE
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}")
     public Response deleteEvent(@PathParam("id") String idString) {
         int id = toInteger("id", idString);
@@ -119,9 +113,20 @@ public class EventResource extends AbstractWutupResource {
         }
     }
 
+    @GET
+    @Path("/{id}/comments")
+    public List<Comment> findEventComments(@PathParam("id") String idString, @QueryParam("page") String pageString,
+            @QueryParam("pageSize") String pageSizeString) {
+        checkRequiredParameter("id", idString);
+        int eventId = toInteger("id", idString);
+        int page = toInteger("page", pageString);
+        int pageSize = toInteger("pageSize", pageSizeString);
+        checkPageSizeRange(pageSize);
+
+        return eventService.findEventComments(eventId, page, pageSize);
+    }
+
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}/comments")
     public void addComment(@PathParam("id") String idString, Comment eventComment) {
         int eventId = toInteger("id", idString);
@@ -134,48 +139,31 @@ public class EventResource extends AbstractWutupResource {
     }
 
     @PUT
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}/comments/{commentid}")
-    public Response updateComment( @PathParam("commentid") String commentidString,
+    public Response updateComment(@PathParam("id") String eventIdString, @PathParam("commentid") String commentIdString,
             Comment eventComment) {
-        int commentid = toInteger("commentid", commentidString);
-        try {
-            eventService.updateComment(commentid, eventComment);
-            return Response.noContent().build();
-        } catch (NoSuchCommentException e) {
-            throw new ServiceException(CONFLICT, COMMENT_DOESNT_EXIST, eventComment.getId());
-        }
-    }
-    
-    @DELETE
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/{id}/comments/{commentid}")
-    public Response deleteComment( @PathParam("commentid") String commentIdString) {
+        int eventId = toInteger("id", commentIdString);
         int commentId = toInteger("commentid", commentIdString);
-        try {
-            Comment comment = eventService.findCommentById(commentId);
-            eventService.deleteComment(comment);
-            return Response.noContent().build();
-        } catch (NoSuchEventException ex) {
-            throw new ServiceException(NOT_FOUND, COMMENT_DOESNT_EXIST, commentId);
-        }
-    }
- 
-    @GET
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/{id}/comments/{commentid}")
-    public Comment findCommentById(@PathParam("commentid") String idString) {
-        checkRequiredParameter("commentid", idString);
-        int commentId = toInteger("commentid", idString);
+        checkIdAgreement(commentId, eventComment.getId());
 
         try {
-            return eventService.findCommentById(commentId);
-        } catch (NoSuchEventException e) {
-            throw new ServiceException(NOT_FOUND, COMMENT_DOESNT_EXIST, commentId);
+            eventService.updateComment(eventId, eventComment);
+            return Response.noContent().build();
+        } catch (NoSuchCommentException e) {
+            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventId);
         }
     }
-    
+
+    @DELETE
+    @Path("/{id}/comments/{commentid}")
+    public Response deleteComment(@PathParam("id") String eventIdString, @PathParam("commentid") String commentIdString) {
+        int eventId = toInteger("id", commentIdString);
+        int commentId = toInteger("commentid", commentIdString);
+        try {
+            eventService.deleteComment(eventId, commentId);
+            return Response.noContent().build();
+        } catch (NoSuchEventException ex) {
+            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventId);
+        }
+    }
 }
