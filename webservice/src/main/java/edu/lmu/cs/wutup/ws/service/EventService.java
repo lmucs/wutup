@@ -19,5 +19,10 @@ public interface EventService {
 
     public void addComment(Integer eventId, Comment comment);
 
-    public void updateComment(Integer eventId, Integer commentIndex, Comment comment);
+    public void updateComment(Integer eventId, Comment comment);
+
+    Comment findCommentById(int id);
+    
+    void deleteComment(Comment sampleEventComment);
+
 }

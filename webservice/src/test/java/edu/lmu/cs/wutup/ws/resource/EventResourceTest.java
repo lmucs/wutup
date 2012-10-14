@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.service.EventService;
 
 public class EventResourceTest {
@@ -31,7 +33,7 @@ public class EventResourceTest {
     EventService service;
 
     Event sampleEvent = new Event(1, "Alice");
-    Comment sampleEventComment = new Comment();
+    Comment sampleEventComment = new Comment(1, "body", new DateTime(), new User());
     List<Event> sampleEventList = new ArrayList<Event>();
     UriInfo sampleUriInfo;
 
@@ -190,15 +192,31 @@ public class EventResourceTest {
     @Test
     public void canAddCommentsToEvent() {
         resource.addComment("1", sampleEventComment);
+        verify(service).addComment(1, sampleEventComment);
     }
 
     @Test
     public void updatingCommentProducesHttp204() {
         // 204 = server received but no response to send back
         resource.addComment("1", sampleEventComment);
-        Response response = resource.updateComment("1", "0", sampleEventComment);
-        verify(service).updateComment(1, 0, sampleEventComment);
+        Response response = resource.updateComment("1", sampleEventComment);
+        verify(service).updateComment(1, sampleEventComment);
         assertThat(response.getStatus(), is(204));
+    }
+    
+    @Test
+    public void deletingCommentProducesHttp204() {
+        when(service.findCommentById(1)).thenReturn(sampleEventComment);
+        Response response = resource.deleteComment("1");
+        verify(service).deleteComment(sampleEventComment);
+        assertThat(response.getStatus(), is(204));
+    }
+    
+    @Test
+    public void findingExistingCommentByIdProducesHttp200() {
+        when(service.findCommentById(1)).thenReturn(sampleEventComment);
+        resource.findEventById("1");
+        verify(service).findEventById(1);
     }
 
 }

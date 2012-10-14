@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -11,8 +12,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.User;
 
@@ -26,15 +30,19 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String FIND_ALL_SQL = "select id, name, description, ownerId from event limit ? offset ?";
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
+    private static final String CREATE_COMMENT_SQL = "insert into event_comments (id, eventid, authorid, text, timestamp) values (?,?,?,?)";
+    private static final String UPDATE_COMMENT_SQL = "update event_comments set text=?, timestamp=? where id=?";
+    private static final String DELETE_COMMENT_SQL = "delete from event_comments where id=?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+    static UserDao userDao;
 
     @Override
     public void createEvent(Event e) {
         try {
-            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName(), e.getDescription(),
-                    e.getCreator() == null ? null : e.getCreator().getId());
+            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName(), e.getDescription(), e.getCreator() == null ? null
+                    : e.getCreator().getId());
         } catch (DuplicateKeyException ex) {
             throw new EventExistsException();
         }
@@ -83,8 +91,52 @@ public class EventDaoJdbcImpl implements EventDao {
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"),
-                    new User(rs.getInt("ownerId"), "email-not-yet-known"));
+            return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"), new User(
+                    rs.getInt("ownerId"), "email-not-yet-known"));
         }
     };
+
+    private static RowMapper<Comment> commentRowMapper = new RowMapper<Comment>() {
+        public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Comment(rs.getInt("id"), rs.getString("text"), rs.getObject("timestamp", DateTime.class),
+                    userDao.findUserById(rs.getInt("authorid")));
+        }
+    };
+
+    @Override
+    public void addComment(Integer eventId, Comment comment) {
+        int rowsUpdated = jdbcTemplate.update(CREATE_COMMENT_SQL, comment.getId(), eventId,
+                comment.getAuthor().getId(), comment.getBody(), comment.getTimestamp());
+        if (rowsUpdated == 0) {
+            throw new CommentExistsException();
+        }
+
+    }
+
+    @Override
+    public void updateComment(Integer commentId, Comment c) {
+        int rowsUpdated = jdbcTemplate.update(UPDATE_COMMENT_SQL, c.getBody(), c.getTimestamp(), c.getId());
+        if (rowsUpdated == 0) {
+            throw new NoSuchCommentException();
+        }
+
+    }
+
+    @Override
+    public void deleteComment(Comment comment) {
+        int rowsUpdated = jdbcTemplate.update(DELETE_COMMENT_SQL, comment.getId());
+        if (rowsUpdated == 0) {
+            throw new NoSuchCommentException();
+        }
+    }
+
+    @Override
+    public Comment findCommentbyId(int id) {
+        try {
+            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, commentRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchEventException();
+        }
+    }
+
 }

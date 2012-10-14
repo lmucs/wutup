@@ -136,15 +136,46 @@ public class EventResource extends AbstractWutupResource {
     @PUT
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    @Path("/{id}/comments/{index}")
-    public Response updateComment(@PathParam("id") String idString, @PathParam("index") String indexString, Comment eventComment) {
-       int eventId = toInteger("id", idString);
-       int commentIndex = toInteger("index", indexString);
-       try {
-           eventService.updateComment(eventId, commentIndex, eventComment);
-           return Response.noContent().build();
-       } catch (NoSuchCommentException e) {
-           throw new ServiceException(CONFLICT, COMMENT_DOESNT_EXIST, eventComment.getId());
-       }
+    @Path("/{id}/comments/{commentid}")
+    public Response updateComment( @PathParam("commentid") String commentidString,
+            Comment eventComment) {
+        int commentid = toInteger("commentid", commentidString);
+        try {
+            eventService.updateComment(commentid, eventComment);
+            return Response.noContent().build();
+        } catch (NoSuchCommentException e) {
+            throw new ServiceException(CONFLICT, COMMENT_DOESNT_EXIST, eventComment.getId());
+        }
     }
+    
+    @DELETE
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/{id}/comments/{commentid}")
+    public Response deleteComment( @PathParam("commentid") String commentIdString) {
+        int commentId = toInteger("commentid", commentIdString);
+        try {
+            Comment comment = eventService.findCommentById(commentId);
+            eventService.deleteComment(comment);
+            return Response.noContent().build();
+        } catch (NoSuchEventException ex) {
+            throw new ServiceException(NOT_FOUND, COMMENT_DOESNT_EXIST, commentId);
+        }
+    }
+ 
+    @GET
+    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Path("/{id}/comments/{commentid}")
+    public Comment findCommentById(@PathParam("commentid") String idString) {
+        checkRequiredParameter("commentid", idString);
+        int commentId = toInteger("commentid", idString);
+
+        try {
+            return eventService.findCommentById(commentId);
+        } catch (NoSuchEventException e) {
+            throw new ServiceException(NOT_FOUND, COMMENT_DOESNT_EXIST, commentId);
+        }
+    }
+    
 }

@@ -2,6 +2,7 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import java.util.List;
 
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 
 public interface EventDao {
@@ -19,4 +20,13 @@ public interface EventDao {
     void deleteEvent(Event e);
 
     int findNumberOfEvents();
+
+    void updateComment(Integer commentId, Comment comment);
+
+    void addComment(Integer eventId, Comment comment);
+    
+    void deleteComment(Comment comment);
+
+    Comment findCommentbyId(int id);
+
 }
