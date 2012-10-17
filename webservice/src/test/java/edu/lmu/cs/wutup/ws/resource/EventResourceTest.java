@@ -109,7 +109,7 @@ public class EventResourceTest {
     public void deletingEventProducesHttp204() {
         when(service.findEventById(1)).thenReturn(sampleEvent);
         Response response = resource.deleteEvent("1");
-        verify(service).deleteEvent(sampleEvent);
+        verify(service).deleteEvent(sampleEvent.getId());
         assertThat(response.getStatus(), is(204));
     }
 
@@ -117,7 +117,7 @@ public class EventResourceTest {
     public void deletingNonexistingEventThrowsException() {
         try {
             when(service.findEventById(1)).thenReturn(sampleEvent);
-            doThrow(new NoSuchEventException()).when(service).deleteEvent(sampleEvent);
+            doThrow(new NoSuchEventException()).when(service).deleteEvent(sampleEvent.getId());
             resource.deleteEvent("1");
             fail();
         } catch (ServiceException e) {

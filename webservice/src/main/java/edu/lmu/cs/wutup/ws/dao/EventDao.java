@@ -15,7 +15,7 @@ public interface EventDao {
 
     void updateEvent(Event e);
 
-    void deleteEvent(Event e);
+    void deleteEvent(int id);
 
     int findNumberOfEvents();
 

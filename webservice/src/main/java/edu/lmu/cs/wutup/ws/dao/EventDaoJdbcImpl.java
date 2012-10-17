@@ -82,8 +82,8 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public void deleteEvent(Event e) {
-        int rowsUpdated = jdbcTemplate.update(DELETE_SQL, e.getId());
+    public void deleteEvent(int id) {
+        int rowsUpdated = jdbcTemplate.update(DELETE_SQL, id);
         if (rowsUpdated == 0) {
             throw new NoSuchEventException();
         }

@@ -60,7 +60,7 @@ public class EventServiceTest {
 
     @Test
     public void deletionDelegatesToDao() {
-        service.deleteEvent(sampleEvent);
-        verify(dao).deleteEvent(sampleEvent);
+        service.deleteEvent(sampleEvent.getId());
+        verify(dao).deleteEvent(sampleEvent.getId());
     }
 }

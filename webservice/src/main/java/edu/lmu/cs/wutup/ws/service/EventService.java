@@ -15,7 +15,7 @@ public interface EventService {
 
     List<Event> findEventsByName(String name, int pageNumber, int pageSize);
 
-    void deleteEvent(Event e);
+    void deleteEvent(int id);
 
     public void addComment(int eventId, Comment comment);
 

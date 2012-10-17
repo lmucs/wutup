@@ -105,8 +105,7 @@ public class EventResource extends AbstractWutupResource {
         int id = toInteger("id", idString);
 
         try {
-            Event e = eventService.findEventById(id);
-            eventService.deleteEvent(e);
+            eventService.deleteEvent(id);
             return Response.noContent().build();
         } catch (NoSuchEventException ex) {
             throw new ServiceException(NOT_FOUND, EVENT_NOT_FOUND, id);
