@@ -130,23 +130,23 @@ public class EventDaoJdbcImpl implements EventDao {
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Event(rs.getInt("e.id"),
-                    rs.getString("e.name"),
-                    rs.getString("e.description"),
-                    new User(rs.getInt("u.Id"), rs.getString("u.firstName"), rs.getString("u.lastName"),
-                            rs.getString("u.email"), rs.getString("u.nickname")));
+            return new Event(rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    new User(rs.getInt("ownerid"), rs.getString("firstName"), rs.getString("lastName"),
+                            rs.getString("email"), rs.getString("nickname")));
         }
     };
 
     private static RowMapper<Comment> commentRowMapper = new RowMapper<Comment>() {
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
-            int commentId = rs.getInt("ec.id");
-            String text = rs.getString("ec.text");
-            Timestamp persistedTimestamp = rs.getTimestamp("ec.timestamp");
+            int commentId = rs.getInt("id");
+            String text = rs.getString("text");
+            Timestamp persistedTimestamp = rs.getTimestamp("timestamp");
             DateTime timestamp = persistedTimestamp == null ? null : new DateTime(persistedTimestamp);
             return new Comment(commentId, text, timestamp,
-                    new User(rs.getInt("u.Id"), rs.getString("u.firstName"), rs.getString("u.lastName"),
-                            rs.getString("u.email"), rs.getString("u.nickname")));
+                    new User(rs.getInt("authorid"), rs.getString("firstName"), rs.getString("lastName"),
+                            rs.getString("email"), rs.getString("nickname")));
         }
     };
 }

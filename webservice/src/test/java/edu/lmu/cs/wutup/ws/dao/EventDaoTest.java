@@ -45,7 +45,9 @@ public class EventDaoTest {
 
     @Test
     public void creatingIncrementsSize() {
-        Event e = new Event(9, "Company Softball Game");
+        Event e = new Event(9, "Company Softball Game",
+        		"Lots of fun in the sun hitting balls and catching them",
+        		sam);
 
         int initialCount = eventDao.findNumberOfEvents();
         eventDao.createEvent(e);
@@ -88,7 +90,7 @@ public class EventDaoTest {
 
     @Test(expected=EventExistsException.class)
     public void creatingDuplicateEventThrowsException() {
-        eventDao.createEvent(new Event(1, "Id1WasAlreadyUsed"));
+        eventDao.createEvent(new Event(1, "Id1WasAlreadyUsed", "", sam));
     }
 
     @Ignore
