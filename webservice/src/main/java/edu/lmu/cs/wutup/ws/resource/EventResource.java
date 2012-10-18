@@ -111,7 +111,7 @@ public class EventResource extends AbstractWutupResource {
             throw new ServiceException(NOT_FOUND, EVENT_NOT_FOUND, id);
         }
     }
-
+    /* Begins the Comment implementation. */
     @GET
     @Path("/{id}/comments")
     public List<Comment> findEventComments(@PathParam("id") String idString, @QueryParam("page") String pageString,

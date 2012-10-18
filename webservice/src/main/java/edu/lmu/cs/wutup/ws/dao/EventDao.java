@@ -10,7 +10,9 @@ public interface EventDao {
     void createEvent(Event e);
 
     Event findEventById(int id);
+
     List<Event> findEventsByName(String name, int pageNumber, int pageSize);
+
     List<Event> findAllEvents(int pageNumber, int pageSize);
 
     void updateEvent(Event e);
@@ -19,8 +21,11 @@ public interface EventDao {
 
     int findNumberOfEvents();
 
-    void addComment(Integer eventId, Comment comment);
+    void addComment(Integer venueId, Comment comment);
+
     void updateComment(Integer commentId, Comment comment);
-    List<Comment> findEventComments(int eventId, int page, int pageSize);
-    void deleteComment(int eventId, int commentId);
+
+    List<Comment> findEventComments(int venueId, int page, int pageSize);
+
+    void deleteComment(int venueId, int commentId);
 }

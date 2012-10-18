@@ -2,10 +2,8 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -13,9 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
-import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
@@ -96,34 +92,23 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public void addComment(Integer eventId, Comment comment) {
-        int rowsUpdated = jdbcTemplate.update(CREATE_COMMENT_SQL, eventId,
-                comment.getAuthor().getId(), comment.getBody(), comment.getTimestamp());
-        if (rowsUpdated == 0) {
-            throw new CommentExistsException();
-        }
-
+        CommentableDaoHelper.addComment(jdbcTemplate, CREATE_COMMENT_SQL, eventId, comment);
     }
 
     @Override
     public void updateComment(Integer commentId, Comment c) {
-        int rowsUpdated = jdbcTemplate.update(UPDATE_COMMENT_SQL, c.getBody(), c.getTimestamp(), c.getId());
-        if (rowsUpdated == 0) {
-            throw new NoSuchCommentException();
-        }
+        CommentableDaoHelper.updateComment(jdbcTemplate, UPDATE_COMMENT_SQL, commentId, c);
     }
 
     @Override
     public void deleteComment(int eventId, int commentId) {
-        int rowsUpdated = jdbcTemplate.update(DELETE_COMMENT_SQL, eventId, commentId);
-        if (rowsUpdated == 0) {
-            throw new NoSuchCommentException();
-        }
+        CommentableDaoHelper.deleteComment(jdbcTemplate, DELETE_COMMENT_SQL, eventId, commentId);
     }
 
     @Override
     public List<Comment> findEventComments(int eventId, int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_COMMENTS_SQL, new Object[]{eventId, pageSize, pageNumber * pageSize},
-                commentRowMapper);
+        return CommentableDaoHelper.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId, pageNumber,
+                pageSize);
     }
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
@@ -134,14 +119,4 @@ public class EventDaoJdbcImpl implements EventDao {
         }
     };
 
-    private static RowMapper<Comment> commentRowMapper = new RowMapper<Comment>() {
-        public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
-            int commentId = rs.getInt("id");
-            String text = rs.getString("text");
-            Timestamp persistedTimestamp = rs.getTimestamp("timestamp");
-            DateTime timestamp = persistedTimestamp == null ? null : new DateTime(persistedTimestamp);
-            return new Comment(commentId, text, timestamp, new User(rs.getInt("authorid"), rs.getString("firstName"),
-                    rs.getString("lastName"), rs.getString("email"), rs.getString("nickname")));
-        }
-    };
 }
