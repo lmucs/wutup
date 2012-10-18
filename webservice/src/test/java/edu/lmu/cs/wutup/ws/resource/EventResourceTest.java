@@ -35,6 +35,7 @@ public class EventResourceTest {
     Event sampleEvent = new Event(1, "Alice");
     Comment sampleEventComment = new Comment(1, "body", new DateTime(), new User());
     List<Event> sampleEventList = new ArrayList<Event>();
+    List<Comment> sampleEventCommentList = new ArrayList<Comment>();   
     UriInfo sampleUriInfo;
 
     @Before
@@ -189,6 +190,7 @@ public class EventResourceTest {
         }
     }
 
+    /* Begin Event Comment Testing */
     @Test
     public void canAddCommentsToEvent() {
         resource.addComment("1", sampleEventComment);
@@ -209,5 +211,30 @@ public class EventResourceTest {
         assertThat(response.getStatus(), is(204));
     }
 
-    // TODO - need test to get event comments
+    @Test
+    public void findingCommentsByEventIdReturnsList() {
+        when(service.findEventComments(1, 1, 10)).thenReturn(sampleEventCommentList);
+        List<Comment> result = resource.findEventComments("1", "1", "10");
+        assertThat(result, is(sampleEventCommentList));
+    }
+    
+    @Test
+    public void findingCommentsWithPageSizeTooHighProducesHttp403() {
+        try {
+            resource.findEventComments("1", "1", "51");
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(403));
+        }
+    }
+
+    @Test
+    public void findingCommentsWithPageSizeTooLowProducesHttp403() {
+        try {
+            resource.findEventsByName("1", "0", "0");
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(403));
+        }
+    }
 }

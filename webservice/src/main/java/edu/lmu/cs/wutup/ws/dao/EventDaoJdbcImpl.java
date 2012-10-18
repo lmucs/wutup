@@ -121,20 +121,16 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public List<Comment> findEventComments(int eventId, int page, int pageSize) {
-        //
-        // TODO - STUB
-        //
-        return null;
+    public List<Comment> findEventComments(int eventId, int pageNumber, int pageSize) {
+        return jdbcTemplate.query(FIND_COMMENTS_SQL, new Object[]{eventId, pageSize, pageNumber * pageSize},
+                commentRowMapper);
     }
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Event(rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("description"),
-                    new User(rs.getInt("ownerid"), rs.getString("firstName"), rs.getString("lastName"),
-                            rs.getString("email"), rs.getString("nickname")));
+            return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"), new User(
+                    rs.getInt("ownerid"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("email"),
+                    rs.getString("nickname")));
         }
     };
 
@@ -144,9 +140,8 @@ public class EventDaoJdbcImpl implements EventDao {
             String text = rs.getString("text");
             Timestamp persistedTimestamp = rs.getTimestamp("timestamp");
             DateTime timestamp = persistedTimestamp == null ? null : new DateTime(persistedTimestamp);
-            return new Comment(commentId, text, timestamp,
-                    new User(rs.getInt("authorid"), rs.getString("firstName"), rs.getString("lastName"),
-                            rs.getString("email"), rs.getString("nickname")));
+            return new Comment(commentId, text, timestamp, new User(rs.getInt("authorid"), rs.getString("firstName"),
+                    rs.getString("lastName"), rs.getString("email"), rs.getString("nickname")));
         }
     };
 }
