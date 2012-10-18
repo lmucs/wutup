@@ -19,11 +19,11 @@ public class EventResourceIT {
             body(containsString("\"id\":1")).
             body(containsString("\"name\":\"Poker Night\"")).
             body(containsString("\"description\":\"Cards with the guys\"")).
-            body(containsString("\"ownerId\":8")).
+            body(containsString("Katrina")).
         when().
             get("/wutup/events/1");
     }
-    
+
     @Test
     public void endpointGetFindsExistingEventXML() {
         expect().
@@ -51,7 +51,7 @@ public class EventResourceIT {
         given().
             header("Accept", "application/json").
             contentType("application/json").
-            body("{\"id\":\"100\",\"name\":\"Ski Trip\"}").
+            body("{\"id\":100,\"name\":\"Ski Trip\",\"description\":\"x\",\"comments\":null,\"ownerId\":{\"id\":8,\"email\":\"ksherbina@gmail.com\",\"nickname\":\"Kat\",\"fullName\":\"Katrina Sherbina\",\"firstname\":\"Katrina\",\"lastname\":\"Sherbina\"}}");
         expect().
             statusCode(404).
         when().
