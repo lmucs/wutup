@@ -7,21 +7,19 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.User;
 
 /**
- * Unit tests on the JDBC Dao using a programmatically-configured embedded database.  The database is setup and torn
- * down around each test so that the tests don't affect each other.
+ * Unit tests on the JDBC Dao using a programmatically-configured embedded database. The database is setup and torn down
+ * around each test so that the tests don't affect each other.
  */
 public class EventDaoTest {
 
@@ -35,8 +33,7 @@ public class EventDaoTest {
 
     @Before
     public void setUp() {
-        database = new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
+        database = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
                 .addScript("schema.sql")
                 .addScript("init.sql")
                 .build();
@@ -81,17 +78,17 @@ public class EventDaoTest {
         assertThat(e.getCreator().getId(), is(katrina.getId()));
     }
 
-    @Test(expected=NoSuchEventException.class)
+    @Test(expected = NoSuchEventException.class)
     public void updatingNonExistentEventThrowsException() {
         eventDao.updateEvent(new Event(1000, "Unknown", "No Description", katrina));
     }
 
-    @Test(expected=NoSuchEventException.class)
+    @Test(expected = NoSuchEventException.class)
     public void deletingNonExistentEventThrowsException() {
         eventDao.deleteEvent(1000);
     }
 
-    @Test(expected=NoSuchEventException.class)
+    @Test(expected = NoSuchEventException.class)
     public void findingNonExistentEventThrowsException() {
         eventDao.findEventById(1000);
     }

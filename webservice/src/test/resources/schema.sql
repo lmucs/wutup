@@ -79,7 +79,7 @@ create table attendee (
 );
 
 create table event_comment (
-  id integer not null,
+  id integer auto_increment not null,
   eventId integer,
   authorId integer,
   text varchar(2048),
@@ -90,7 +90,7 @@ create table event_comment (
 );
 
 create table occurrence_comment (
-  id integer not null,
+  id integer auto_increment not null,
   occurrenceId integer,
   authorId integer,
   text varchar(2048),
@@ -101,7 +101,7 @@ create table occurrence_comment (
 );
 
 create table venue_comment (
-  id integer not null,
+  id integer auto_increment not null,
   venueId integer,
   authorId integer,
   text varchar(2048),

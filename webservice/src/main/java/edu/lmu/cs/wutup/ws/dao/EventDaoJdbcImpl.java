@@ -36,7 +36,7 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 
-    private static final String CREATE_COMMENT_SQL = "insert into event_comments (id, eventid, authorid, text, timestamp) values (?,?,?,?)";
+    private static final String CREATE_COMMENT_SQL = "insert into event_comments (eventid, authorid, text, timestamp) values (?,?,?,?)";
     private static final String UPDATE_COMMENT_SQL = "update event_comments set text=?, timestamp=? where id=?";
     private static final String DELETE_COMMENT_SQL = "delete from event_comments where eventId=? and id=?";
     private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
@@ -96,7 +96,7 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public void addComment(Integer eventId, Comment comment) {
-        int rowsUpdated = jdbcTemplate.update(CREATE_COMMENT_SQL, comment.getId(), eventId,
+        int rowsUpdated = jdbcTemplate.update(CREATE_COMMENT_SQL, eventId,
                 comment.getAuthor().getId(), comment.getBody(), comment.getTimestamp());
         if (rowsUpdated == 0) {
             throw new CommentExistsException();
