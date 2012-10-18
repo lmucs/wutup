@@ -8,14 +8,14 @@ insert into user (id, firstName, lastName, email, nickname) values (7, 'Olga', '
 insert into user (id, firstName, lastName, email, nickname) values (8, 'Katrina', 'Sherbina', 'ksherbina@gmail.com', 'Kat');
 insert into user (id, firstName, lastName, email, nickname) values (3503, 'John', 'Lennon', 'jlennon@gmail.com', 'John');
 
-insert into event (id, name, description, ownerId) values (1, 'Poker Night', 'Cards with the guys', 8);
-insert into event (id, name, description, ownerId) values (2, 'Billiards with Prince Harry', 'Pool and drinks', 7);
-insert into event (id, name, description, ownerId) values (3, 'Dinner with Barack and Michelle', 'A presidential meal', 6);
-insert into event (id, name, description, ownerId) values (4, 'Sunset Strip Music Festival', 'West Hollywood hosts music event', 5);
-insert into event (id, name, description, ownerId) values (5, 'Ballyshannon Music Festival', 'Irish music festival', 4);
-insert into event (id, name, description, ownerId) values (6, '2012 Olympic Women''s Soccer Final', 'The final Women''s Soccer game', 3);
-insert into event (id, name, description, ownerId) values (7, 'Weekly Hackathon', 'Show your hackin'' skeelz', 2);
-insert into event (id, name, description, ownerId) values (8, 'Ironman Triathlon Practice', 'Don''t miss out', 1);
+insert into event (name, description, ownerId) values ('Poker Night', 'Cards with the guys', 8);
+insert into event (name, description, ownerId) values ('Billiards with Prince Harry', 'Pool and drinks', 7);
+insert into event (name, description, ownerId) values ('Dinner with Barack and Michelle', 'A presidential meal', 6);
+insert into event (name, description, ownerId) values ('Sunset Strip Music Festival', 'West Hollywood hosts music event', 5);
+insert into event (name, description, ownerId) values ('Ballyshannon Music Festival', 'Irish music festival', 4);
+insert into event (name, description, ownerId) values ('2012 Olympic Women''s Soccer Final', 'The final Women''s Soccer game', 3);
+insert into event (name, description, ownerId) values ('Weekly Hackathon', 'Show your hackin'' skeelz', 2);
+insert into event (name, description, ownerId) values ('Ironman Triathlon Practice', 'Don''t miss out', 1);
 
 insert into venue (id, name, address, latitude, longitude) values (1, 'Pantages Theater', '6233 Hollywood Bl, Los Angeles, CA', 34.1019444, -118.3261111);
 insert into venue (id, name, address, latitude, longitude) values (2, 'Hollywood Bowl', '2301 North Highland Ave, Hollywood, CA', 34.1127863, -118.3392439);

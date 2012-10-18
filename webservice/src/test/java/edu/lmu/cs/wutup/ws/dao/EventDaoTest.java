@@ -69,21 +69,16 @@ public class EventDaoTest {
 
     @Test
     public void updatesToCreatedEventCanBeRead() {
-        eventDao.createEvent(new Event(1000, "Company Softball Game", "A really really super fun time!", katrina));
-        Event e = eventDao.findEventById(1000);
+        eventDao.createEvent(new Event(9, "Company Softball Game", "A really really super fun time!", katrina));
+        Event e = eventDao.findEventById(9);
         e.setName("Cricket Game");
         e.setDescription("A really really super fun time!");
         eventDao.updateEvent(e);
-        e = eventDao.findEventById(1000);
-        assertThat(e.getId(), is(1000));
+        e = eventDao.findEventById(9);
+        assertThat(e.getId(), is(9));
         assertThat(e.getName(), is("Cricket Game"));
         assertThat(e.getDescription(), is("A really really super fun time!"));
         assertThat(e.getCreator().getId(), is(katrina.getId()));
-    }
-
-    @Test(expected=EventExistsException.class)
-    public void creatingDuplicateEventThrowsException() {
-        eventDao.createEvent(new Event(1, "Id1WasAlreadyUsed", "", sam));
     }
 
     @Test(expected=NoSuchEventException.class)

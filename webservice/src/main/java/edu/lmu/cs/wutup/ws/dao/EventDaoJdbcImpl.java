@@ -28,7 +28,7 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String SELECT_COMMENT = "select ec.*, u.* from event_comment ec join user u on (ec.authorId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
 
-    private static final String CREATE_SQL = "insert into event (id, name, description, ownerId) values (?,?,?,?)";
+    private static final String CREATE_SQL = "insert into event (name, description, ownerId) values (?,?,?)";
     private static final String UPDATE_SQL = "update event set name=?, description=?, ownerId=? where id=?";
     private static final String FIND_BY_ID_SQL = SELECT_EVENT + " where e.id=?";
     private static final String FIND_ALL_SQL = SELECT_EVENT + " " + PAGINATION;
@@ -47,7 +47,7 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public void createEvent(Event e) {
         try {
-            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getName(), e.getDescription(), e.getCreator().getId());
+            jdbcTemplate.update(CREATE_SQL, e.getName(), e.getDescription(), e.getCreator().getId());
         } catch (DuplicateKeyException ex) {
             throw new EventExistsException();
         }

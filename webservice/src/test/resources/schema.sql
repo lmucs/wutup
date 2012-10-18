@@ -20,7 +20,7 @@ create table user (
 );
 
 create table event (
-  id integer not null,
+  id integer auto_increment not null,
   name varchar(512),
   description varchar(512),
   ownerId integer,
