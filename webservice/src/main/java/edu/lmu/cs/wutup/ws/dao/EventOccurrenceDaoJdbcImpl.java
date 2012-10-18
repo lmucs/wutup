@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
@@ -26,6 +27,10 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static final String DELETE_SQL = "delete from eventOccurrence where id=?";
     private static final String COUNT_SQL = "select count(*) from eventOccurrence";
 
+    private static final String SELECT_COMMENT = "select ec.*, u.* from eventoccurence_comment ec join user u on (ec.authorId = u.id)";
+    private static final String PAGINATION = "limit ? offset ?";
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
+    
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -73,6 +78,28 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     @Override
     public int findNumberOfEventOccurrences() {
         return jdbcTemplate.queryForInt(COUNT_SQL);
+    }
+    
+    /* Begins the Comment Methods */
+    @Override
+    public void addComment(Integer eventId, Comment comment) {
+        CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
+    }
+
+    @Override
+    public void updateComment(Integer commentId, Comment c) {
+        CommentDaoUtils.updateComment(jdbcTemplate, "event", commentId, c);
+    }
+
+    @Override
+    public void deleteComment(int eventId, int commentId) {
+        CommentDaoUtils.deleteComment(jdbcTemplate, "event", eventId, commentId);
+    }
+
+    @Override
+    public List<Comment> findComments(int eventId, int pageNumber, int pageSize) {
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId, pageNumber,
+                pageSize);
     }
 
     private static RowMapper<EventOccurrence> eventOccurrenceRowMapper =

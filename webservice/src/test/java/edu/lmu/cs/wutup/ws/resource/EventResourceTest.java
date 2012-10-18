@@ -231,7 +231,7 @@ public class EventResourceTest {
     @Test
     public void findingCommentsWithPageSizeTooLowProducesHttp403() {
         try {
-            resource.findEventsByName("1", "0", "0");
+            resource.findEventComments("1", "0", "0");
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(403));

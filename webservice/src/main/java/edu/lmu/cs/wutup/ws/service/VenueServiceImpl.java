@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.VenueDao;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.VenueService;
 
@@ -55,5 +56,28 @@ public class VenueServiceImpl implements VenueService {
     @Override
     public int findNumberOfVenues() {
         return VenueDao.findNumberOfVenues();
+    }
+
+    @Override
+    public void addComment(int venueId, Comment comment) {
+        VenueDao.addComment(venueId, comment);
+
+    }
+
+    @Override
+    public void updateComment(int commentId, Comment comment) {
+        VenueDao.updateComment(commentId, comment);
+
+    }
+
+    @Override
+    public List<Comment> findVenueComments(int venueId, int page, int pageSize) {
+        return VenueDao.findComments(venueId, page, pageSize);
+    }
+
+    @Override
+    public void deleteComment(int venueId, int commentId) {
+        VenueDao.deleteComment(venueId, commentId);
+
     }
 }

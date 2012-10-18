@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 
-public interface EventOccurrenceDao {
+public interface EventOccurrenceDao extends CommentDao {
 
     void createEventOccurrence(EventOccurrence e);
 

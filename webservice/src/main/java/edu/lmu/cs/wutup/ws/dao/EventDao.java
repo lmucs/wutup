@@ -5,7 +5,7 @@ import java.util.List;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 
-public interface EventDao {
+public interface EventDao extends CommentDao {
 
     void createEvent(Event e);
 
@@ -21,11 +21,4 @@ public interface EventDao {
 
     int findNumberOfEvents();
 
-    void addComment(Integer venueId, Comment comment);
-
-    void updateComment(Integer commentId, Comment comment);
-
-    List<Comment> findEventComments(int venueId, int page, int pageSize);
-
-    void deleteComment(int venueId, int commentId);
 }

@@ -57,7 +57,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Comment> findEventComments(int eventId, int page, int pageSize) {
-        return eventDao.findEventComments(eventId, page, pageSize);
+        return eventDao.findComments(eventId, page, pageSize);
     }
 
     @Override

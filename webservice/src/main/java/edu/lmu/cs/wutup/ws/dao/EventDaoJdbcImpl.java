@@ -32,9 +32,6 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 
-    private static final String CREATE_COMMENT_SQL = "insert into event_comments (eventid, authorid, text, timestamp) values (?,?,?,?)";
-    private static final String UPDATE_COMMENT_SQL = "update event_comments set text=?, timestamp=? where id=?";
-    private static final String DELETE_COMMENT_SQL = "delete from event_comments where eventId=? and id=?";
     private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
 
     @Autowired
@@ -92,22 +89,22 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public void addComment(Integer eventId, Comment comment) {
-        CommentableDaoHelper.addComment(jdbcTemplate, CREATE_COMMENT_SQL, eventId, comment);
+        CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
     }
 
     @Override
     public void updateComment(Integer commentId, Comment c) {
-        CommentableDaoHelper.updateComment(jdbcTemplate, UPDATE_COMMENT_SQL, commentId, c);
+        CommentDaoUtils.updateComment(jdbcTemplate, "event", commentId, c);
     }
 
     @Override
     public void deleteComment(int eventId, int commentId) {
-        CommentableDaoHelper.deleteComment(jdbcTemplate, DELETE_COMMENT_SQL, eventId, commentId);
+        CommentDaoUtils.deleteComment(jdbcTemplate, "event", eventId, commentId);
     }
 
     @Override
-    public List<Comment> findEventComments(int eventId, int pageNumber, int pageSize) {
-        return CommentableDaoHelper.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId, pageNumber,
+    public List<Comment> findComments(int eventId, int pageNumber, int pageSize) {
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId, pageNumber,
                 pageSize);
     }
 
