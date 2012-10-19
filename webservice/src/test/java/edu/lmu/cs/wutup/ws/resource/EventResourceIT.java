@@ -75,7 +75,7 @@ public class EventResourceIT {
         given().
             header("Accept", "application/json").
             contentType("application/json").
-            body("{\"id\":\"9\",\"name\":\"Ski Trip\"}").
+            body("{\"id\":\"9\",\"name\":\"Ski Trip\",\"ownerId\":{\"id\":8,\"email\":\"ksherbina@gmail.com\",\"nickname\":\"Kat\",\"fullName\":\"Katrina Sherbina\",\"firstname\":\"Katrina\",\"lastname\":\"Sherbina\"}\"}").
         expect().
             statusCode(201).
             header("Location", "http://localhost:8080/wutup/events/9").
