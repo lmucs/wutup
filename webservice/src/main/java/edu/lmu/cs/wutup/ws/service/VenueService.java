@@ -2,10 +2,9 @@ package edu.lmu.cs.wutup.ws.service;
 
 import java.util.List;
 
-import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
-public interface VenueService {
+public interface VenueService extends CommentService {
 
     void createVenue(Venue loc);
 
@@ -23,11 +22,4 @@ public interface VenueService {
 
     int findNumberOfVenues();
 
-    public void addComment(int venueId, Comment comment);
-
-    public void updateComment(int venueId, Comment comment);
-
-    List<Comment> findVenueComments(int venueId, int page, int pageSize);
-
-    void deleteComment(int venueId, int commentId);
 }

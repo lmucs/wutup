@@ -54,7 +54,7 @@ public class VenueResource extends AbstractWutupResource {
         int pageSize = toInteger("pageSize", pageSizeString);
         checkPageSizeRange(pageSize);
 
-        return venueService.findVenueComments(venueId, page, pageSize);
+        return venueService.findComments(venueId, page, pageSize);
     }
 
     @POST

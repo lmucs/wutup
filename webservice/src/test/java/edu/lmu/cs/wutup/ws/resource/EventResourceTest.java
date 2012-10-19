@@ -213,7 +213,7 @@ public class EventResourceTest {
 
     @Test
     public void findingCommentsByEventIdReturnsList() {
-        when(service.findEventComments(1, 1, 10)).thenReturn(sampleEventCommentList);
+        when(service.findComments(1, 1, 10)).thenReturn(sampleEventCommentList);
         List<Comment> result = resource.findEventComments("1", "1", "10");
         assertThat(result, is(sampleEventCommentList));
     }

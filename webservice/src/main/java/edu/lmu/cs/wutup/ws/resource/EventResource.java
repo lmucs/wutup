@@ -122,7 +122,7 @@ public class EventResource extends AbstractWutupResource {
         int pageSize = toInteger("pageSize", pageSizeString);
         checkPageSizeRange(pageSize);
 
-        return eventService.findEventComments(eventId, page, pageSize);
+        return eventService.findComments(eventId, page, pageSize);
     }
 
     @POST

@@ -2,7 +2,6 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import java.util.List;
 
-import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 
 public interface EventDao extends CommentDao {

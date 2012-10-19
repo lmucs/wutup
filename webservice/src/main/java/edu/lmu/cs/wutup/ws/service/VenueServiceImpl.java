@@ -71,7 +71,7 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public List<Comment> findVenueComments(int venueId, int page, int pageSize) {
+    public List<Comment> findComments(int venueId, int page, int pageSize) {
         return VenueDao.findComments(venueId, page, pageSize);
     }
 

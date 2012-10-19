@@ -67,7 +67,7 @@ public class VenueResourceTest {
 
     @Test
     public void findingCommentsByVenueIdReturnsList() {
-        when(service.findVenueComments(1, 1, 10)).thenReturn(sampleVenueCommentList);
+        when(service.findComments(1, 1, 10)).thenReturn(sampleVenueCommentList);
         List<Comment> result = resource.findVenueComments("1", "1", "10");
         assertThat(result, is(sampleVenueCommentList));
     }
