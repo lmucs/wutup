@@ -16,68 +16,68 @@ import edu.lmu.cs.wutup.ws.service.VenueService;
 public class VenueServiceImpl implements VenueService {
 
     @Autowired
-    VenueDao VenueDao;
+    VenueDao venueDao;
 
     @Override
     public void createVenue(Venue loc) {
-        VenueDao.createVenue(loc);
+        venueDao.createVenue(loc);
     }
 
     @Override
     public void updateVenue(Venue loc) {
-        VenueDao.updateVenue(loc);
+        venueDao.updateVenue(loc);
     }
 
     @Override
     public Venue findVenueById(int id) {
-        return VenueDao.findVenueById(id);
+        return venueDao.findVenueById(id);
     }
 
     @Override
     public List<Venue> findVenuesByAddress(String address, int pageNumber, int pageSize) {
-        return VenueDao.findVenuesByAddress(address, pageNumber, pageSize);
+        return venueDao.findVenuesByAddress(address, pageNumber, pageSize);
     }
 
     @Override
     public List<Venue> findVenuesByPropertyMap(String propertyMap, int pageNumber, int pageSize) {
-        return VenueDao.findVenuesByPropertyMap(propertyMap, pageNumber, pageSize);
+        return venueDao.findVenuesByPropertyMap(propertyMap, pageNumber, pageSize);
     }
 
     @Override
     public List<Venue> findAllVenues(int pageNumber, int pageSize) {
-        return VenueDao.findAllVenues(pageNumber, pageSize);
+        return venueDao.findAllVenues(pageNumber, pageSize);
     }
 
     @Override
     public void deleteVenue(Venue loc) {
-        VenueDao.deleteVenue(loc);
+        venueDao.deleteVenue(loc);
     }
 
     @Override
     public int findNumberOfVenues() {
-        return VenueDao.findNumberOfVenues();
+        return venueDao.findNumberOfVenues();
     }
 
     @Override
     public void addComment(int venueId, Comment comment) {
-        VenueDao.addComment(venueId, comment);
+        venueDao.addComment(venueId, comment);
 
     }
 
     @Override
     public void updateComment(int commentId, Comment comment) {
-        VenueDao.updateComment(commentId, comment);
+        venueDao.updateComment(commentId, comment);
 
     }
 
     @Override
     public List<Comment> findComments(int venueId, int page, int pageSize) {
-        return VenueDao.findComments(venueId, page, pageSize);
+        return venueDao.findComments(venueId, page, pageSize);
     }
 
     @Override
     public void deleteComment(int venueId, int commentId) {
-        VenueDao.deleteComment(venueId, commentId);
+        venueDao.deleteComment(venueId, commentId);
 
     }
 }
