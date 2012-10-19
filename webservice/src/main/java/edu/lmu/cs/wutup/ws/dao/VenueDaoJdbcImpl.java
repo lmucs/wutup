@@ -57,7 +57,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     @Override
-    public void deleteVenue(Venue loc) {
+    public void deleteVenue(int venueId) {
         // TODO Auto-generated method stub
 
     }

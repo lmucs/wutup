@@ -18,7 +18,7 @@ public interface VenueService extends CommentService {
 
     void updateVenue(Venue loc);
 
-    void deleteVenue(Venue loc);
+    void deleteVenue(int venueId);
 
     int findNumberOfVenues();
 

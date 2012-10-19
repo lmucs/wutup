@@ -49,8 +49,8 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public void deleteVenue(Venue loc) {
-        venueDao.deleteVenue(loc);
+    public void deleteVenue(int venueId) {
+        venueDao.deleteVenue(venueId);
     }
 
     @Override
