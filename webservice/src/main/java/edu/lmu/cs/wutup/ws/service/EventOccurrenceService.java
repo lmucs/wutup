@@ -25,7 +25,8 @@ public interface EventOccurrenceService extends CommentService {
 
     List<EventOccurrence> findAllEventOccurrencesByCategories(List<Category> categories, int pageNumber, int pageSize);
 
-    List<EventOccurrence> findAllEventOccurrencesByCenterAndRadius(double latitude, double longitude, double radius, int pageNumber, int pageSize);
+    List<EventOccurrence> findAllEventOccurrencesByCenterAndRadius(double latitude, double longitude, double radius,
+            int pageNumber, int pageSize);
 
     List<EventOccurrence> findAllEventOccurrencesByDateRange(DateTime start, DateTime end, int pageNumber, int pageSize);
 

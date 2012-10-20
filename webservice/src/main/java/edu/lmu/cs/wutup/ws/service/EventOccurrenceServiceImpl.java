@@ -54,19 +54,22 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public List<EventOccurrence> findAllEventOccurrencesByCategories(List<Category> categories, int pageNumber, int pageSize) {
+    public List<EventOccurrence> findAllEventOccurrencesByCategories(List<Category> categories, int pageNumber,
+            int pageSize) {
         return new ArrayList<EventOccurrence>();
         // TODO
     }
 
     @Override
-    public List<EventOccurrence> findAllEventOccurrencesByCenterAndRadius(double latitude, double longitude, double radius, int pageNumber, int pageSize) {
+    public List<EventOccurrence> findAllEventOccurrencesByCenterAndRadius(double latitude, double longitude,
+            double radius, int pageNumber, int pageSize) {
         return new ArrayList<EventOccurrence>();
         // TODO
     }
 
     @Override
-    public List<EventOccurrence> findAllEventOccurrencesByDateRange(DateTime start, DateTime end, int pageNumber, int pageSize) {
+    public List<EventOccurrence> findAllEventOccurrencesByDateRange(DateTime start, DateTime end, int pageNumber,
+            int pageSize) {
         return new ArrayList<EventOccurrence>();
         // TODO
     }
@@ -96,7 +99,6 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     @Override
     public void addComment(int eventId, Comment comment) {
         eventOccurrenceDao.addComment(eventId, comment);
-
     }
 
     @Override
