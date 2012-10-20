@@ -48,8 +48,8 @@ public class CommentTest {
         String expected = "Comment{id=3, body=This is a great event., owner=null, timestamp=null}";
         Comment c1 = new Comment(3, "This is a great event.", timestamp, alice);
         String expected1 = "Comment{id=3, body=This is a great event., "
-                + "owner=User{id=1, name=null null, email=alice@example.com, nickname=null}, "
-                + "timestamp=" + timestamp + "}";
+                + "owner=User{id=1, name=null null, email=alice@example.com, nickname=null}, " + "timestamp="
+                + timestamp + "}";
         assertEquals(expected, c.toString());
         assertEquals(expected1, c1.toString());
     }
