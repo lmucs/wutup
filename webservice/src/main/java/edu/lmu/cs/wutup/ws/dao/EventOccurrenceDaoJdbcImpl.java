@@ -26,9 +26,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static final String CREATE_SQL = "insert into eventOccurrence (id, venue) values (?,?)";
     private static final String UPDATE_SQL = "update eventOccurrence set venue=? where id=?";
     private static final String FIND_BY_ID_SQL = "select id, name from eventOccurrence where id=?";
-    private static final String FIND_ALL_SQL = "select id, name from eventOccurrence limit ? offset ?";
+    //private static final String FIND_ALL_SQL = "select id, name from eventOccurrence limit ? offset ?";
     private static final String DELETE_SQL = "delete from eventOccurrence where id=?";
-    private static final String COUNT_SQL = "select count(*) from eventOccurrence";
 
     private static final String SELECT_COMMENT = "select ec.*, u.* from eventoccurence_comment ec join user u on (ec.authorId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
@@ -66,11 +65,6 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     public List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize) {
         return new java.util.ArrayList<User>();
         // TODO
-    }
-
-    @Override
-    public int findNumberOfEventOccurrences() {
-        return jdbcTemplate.queryForInt(COUNT_SQL);
     }
 
     @Override
@@ -127,12 +121,12 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public void registerAttendeeForEventOccurrence(int attendeeId) {
+    public void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId) {
         // TODO
     }
 
     @Override
-    public void unregisterAttendeeForEventOccurrence(int attendeeId) {
+    public void unregisterAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId) {
         // TODO
     }
 

@@ -19,8 +19,6 @@ public interface EventOccurrenceDao extends CommentDao {
 
     List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize);
 
-    int findNumberOfEventOccurrences();
-
     EventOccurrence findEventOccurrenceById(int id);
 
     List<EventOccurrence> findAllEventOccurrencesByAttendees(List<User> attendees, int pageNumber, int pageSize);
@@ -36,8 +34,8 @@ public interface EventOccurrenceDao extends CommentDao {
 
     List<EventOccurrence> findAllEventOccurrencesByVenues(List<Venue> venues, int pageNumber, int pageSize);
 
-    void registerAttendeeForEventOccurrence(int attendeeId);
+    void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
 
-    void unregisterAttendeeForEventOccurrence(int attendeeId);
+    void unregisterAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
 
 }

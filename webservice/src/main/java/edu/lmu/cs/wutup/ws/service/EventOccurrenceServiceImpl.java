@@ -42,11 +42,6 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public int findNumberOfEventOccurrences() {
-        return eventOccurrenceDao.findNumberOfEventOccurrences();
-    }
-
-    @Override
     public EventOccurrence findEventOccurrenceById(int id) {
         return eventOccurrenceDao.findEventOccurrenceById(id);
     }
@@ -85,13 +80,13 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public void registerAttendeeForEventOccurrence(int attendeeId) {
-        eventOccurrenceDao.registerAttendeeForEventOccurrence(attendeeId);
+    public void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId) {
+        eventOccurrenceDao.registerAttendeeForEventOccurrence(eventOccurrenceId, attendeeId);
     }
 
     @Override
-    public void unregisterAttendeeForEventOccurrence(int attendeeId) {
-        eventOccurrenceDao.unregisterAttendeeForEventOccurrence(attendeeId);
+    public void unregisterAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId) {
+        eventOccurrenceDao.unregisterAttendeeForEventOccurrence(eventOccurrenceId, attendeeId);
     }
 
     @Override
