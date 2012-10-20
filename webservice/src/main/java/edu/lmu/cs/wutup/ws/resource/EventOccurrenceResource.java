@@ -122,7 +122,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @DELETE
     @Path("/{id}")
-    public Response deleteEvent(@PathParam("id") String idString) {
+    public Response deleteEventOccurrence(@PathParam("id") String idString) {
         int id = toInteger("id", idString);
 
         try {
@@ -195,55 +195,55 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     /* Begins the Comment implementation. */
     @GET
     @Path("/{id}/comments")
-    public List<Comment> findEventComments(@PathParam("id") String idString, @QueryParam("page") String pageString,
+    public List<Comment> findEventOccurrenceComments(@PathParam("id") String idString, @QueryParam("page") String pageString,
             @QueryParam("pageSize") String pageSizeString) {
         checkRequiredParameter("id", idString);
-        int eventId = toInteger("id", idString);
+        int eventOccurrenceId = toInteger("id", idString);
         int page = toInteger("page", pageString);
         int pageSize = toInteger("pageSize", pageSizeString);
         checkPageSizeRange(pageSize);
 
-        return eventOccurrenceService.findComments(eventId, page, pageSize);
+        return eventOccurrenceService.findComments(eventOccurrenceId, page, pageSize);
     }
 
     @POST
     @Path("/{id}/comments")
-    public void addComment(@PathParam("id") String idString, Comment eventComment) {
-        int eventId = toInteger("id", idString);
+    public void addComment(@PathParam("id") String idString, Comment eventOccurrenceComment) {
+        int eventOccurrenceId = toInteger("id", idString);
 
         try {
-            eventOccurrenceService.addComment(eventId, eventComment);
+            eventOccurrenceService.addComment(eventOccurrenceId, eventOccurrenceComment);
         } catch (CommentExistsException e) {
-            throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, eventComment.getId());
+            throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, eventOccurrenceComment.getId());
         }
     }
 
     @PUT
     @Path("/{id}/comments/{commentid}")
-    public Response updateComment(@PathParam("id") String eventIdString,
-            @PathParam("commentid") String commentIdString, Comment eventComment) {
-        int eventId = toInteger("id", commentIdString);
+    public Response updateComment(@PathParam("id") String eventOccurrenceIdString,
+            @PathParam("commentid") String commentIdString, Comment eventOccurrenceComment) {
+        int eventOccurrenceId = toInteger("id", eventOccurrenceIdString);
         int commentId = toInteger("commentid", commentIdString);
-        checkIdAgreement(commentId, eventComment.getId());
+        checkIdAgreement(commentId, eventOccurrenceComment.getId());
 
         try {
-            eventOccurrenceService.updateComment(eventId, eventComment);
+            eventOccurrenceService.updateComment(eventOccurrenceId, eventOccurrenceComment);
             return Response.noContent().build();
         } catch (NoSuchCommentException e) {
-            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventId);
+            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventOccurrenceId);
         }
     }
 
     @DELETE
     @Path("/{id}/comments/{commentid}")
-    public Response deleteComment(@PathParam("id") String eventIdString, @PathParam("commentid") String commentIdString) {
-        int eventId = toInteger("id", commentIdString);
+    public Response deleteComment(@PathParam("id") String eventOccurrenceIdString, @PathParam("commentid") String commentIdString) {
+        int eventOccurrenceId = toInteger("id", eventOccurrenceIdString);
         int commentId = toInteger("commentid", commentIdString);
         try {
-            eventOccurrenceService.deleteComment(eventId, commentId);
+            eventOccurrenceService.deleteComment(eventOccurrenceId, commentId);
             return Response.noContent().build();
         } catch (NoSuchEventOccurrenceException ex) {
-            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventId);
+            throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventOccurrenceId);
         }
     }
 
