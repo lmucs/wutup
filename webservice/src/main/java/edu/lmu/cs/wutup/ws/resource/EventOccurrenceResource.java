@@ -195,8 +195,8 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     /* Begins the Comment implementation. */
     @GET
     @Path("/{id}/comments")
-    public List<Comment> findEventOccurrenceComments(@PathParam("id") String idString, @QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
+    public List<Comment> findEventOccurrenceComments(@PathParam("id") String idString,
+            @QueryParam("page") String pageString, @QueryParam("pageSize") String pageSizeString) {
         checkRequiredParameter("id", idString);
         int eventOccurrenceId = toInteger("id", idString);
         int page = toInteger("page", pageString);
@@ -236,7 +236,8 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @DELETE
     @Path("/{id}/comments/{commentid}")
-    public Response deleteComment(@PathParam("id") String eventOccurrenceIdString, @PathParam("commentid") String commentIdString) {
+    public Response deleteComment(@PathParam("id") String eventOccurrenceIdString,
+            @PathParam("commentid") String commentIdString) {
         int eventOccurrenceId = toInteger("id", eventOccurrenceIdString);
         int commentId = toInteger("commentid", commentIdString);
         try {

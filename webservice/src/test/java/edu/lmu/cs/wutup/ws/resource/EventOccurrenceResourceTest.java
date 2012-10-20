@@ -118,7 +118,8 @@ public class EventOccurrenceResourceTest {
     public void deletingNonexistingEventOccurrenceThrowsException() {
         try {
             when(service.findEventOccurrenceById(1)).thenReturn(sampleEventOccurrence);
-            doThrow(new NoSuchEventOccurrenceException()).when(service).deleteEventOccurrence(sampleEventOccurrence.getId());
+            doThrow(new NoSuchEventOccurrenceException()).when(service).deleteEventOccurrence(
+                    sampleEventOccurrence.getId());
             resource.deleteEventOccurrence("1");
             fail();
         } catch (ServiceException e) {
@@ -163,7 +164,7 @@ public class EventOccurrenceResourceTest {
         }
     }
 
-// TODO: Need to test GET on occurrences... a little scared.
+    // TODO: Need to test GET on occurrences... a little scared.
 
     /* Begin Event Comment Testing */
     @Test

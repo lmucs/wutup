@@ -26,7 +26,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static final String CREATE_SQL = "insert into eventOccurrence (id, venue) values (?,?)";
     private static final String UPDATE_SQL = "update eventOccurrence set venue=? where id=?";
     private static final String FIND_BY_ID_SQL = "select id, name from eventOccurrence where id=?";
-    //private static final String FIND_ALL_SQL = "select id, name from eventOccurrence limit ? offset ?";
+    // private static final String FIND_ALL_SQL = "select id, name from eventOccurrence limit ? offset ?";
     private static final String DELETE_SQL = "delete from eventOccurrence where id=?";
 
     private static final String SELECT_COMMENT = "select ec.*, u.* from eventoccurence_comment ec join user u on (ec.authorId = u.id)";
