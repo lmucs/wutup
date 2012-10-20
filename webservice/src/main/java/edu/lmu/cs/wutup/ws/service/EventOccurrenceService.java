@@ -15,9 +15,11 @@ public interface EventOccurrenceService extends CommentService {
 
     void updateEventOccurrence(EventOccurrence e);
 
-    void deleteEventOccurrence(EventOccurrence e);
+    void deleteEventOccurrence(int id);
 
     int findNumberOfEventOccurrences();
+
+    List<User> findAttendeesById(int id, int pageNumber, int pageSize);
 
     EventOccurrence findEventOccurrenceById(int id);
 

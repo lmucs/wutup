@@ -33,8 +33,13 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public void deleteEventOccurrence(EventOccurrence e) {
-        eventOccurrenceDao.deleteEventOccurrence(e);
+    public void deleteEventOccurrence(int id) {
+        eventOccurrenceDao.deleteEventOccurrence(id);
+    }
+
+    @Override
+    public List<User> findAttendeesById(int id, int pageNumber, int pageSize) {
+        return eventOccurrenceDao.findAttendeesById(id, pageNumber, pageSize);
     }
 
     @Override

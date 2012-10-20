@@ -55,11 +55,17 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public void deleteEventOccurrence(EventOccurrence e) {
-        int rowsUpdated = jdbcTemplate.update(DELETE_SQL, e.getId());
+    public void deleteEventOccurrence(int id) {
+        int rowsUpdated = jdbcTemplate.update(DELETE_SQL, id);
         if (rowsUpdated == 0) {
             throw new NoSuchEventOccurrenceException();
         }
+    }
+
+    @Override
+    public List<User> findAttendeesById(int id, int pageNumber, int pageSize) {
+        return new java.util.ArrayList<User>();
+        // TODO
     }
 
     @Override

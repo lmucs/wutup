@@ -15,7 +15,9 @@ public interface EventOccurrenceDao extends CommentDao {
 
     void updateEventOccurrence(EventOccurrence e);
 
-    void deleteEventOccurrence(EventOccurrence e);
+    void deleteEventOccurrence(int id);
+
+    List<User> findAttendeesById(int id, int pageNumber, int pageSize);
 
     int findNumberOfEventOccurrences();
 
@@ -37,4 +39,5 @@ public interface EventOccurrenceDao extends CommentDao {
     void registerAttendeeForEventOccurrence(User attendee);
 
     void unregisterAttendeeForEventOccurrence(User attendee);
+
 }
