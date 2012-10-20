@@ -19,7 +19,7 @@ public interface EventOccurrenceService extends CommentService {
 
     int findNumberOfEventOccurrences();
 
-    List<User> findAttendeesById(int id, int pageNumber, int pageSize);
+    List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize);
 
     EventOccurrence findEventOccurrenceById(int id);
 
@@ -36,7 +36,7 @@ public interface EventOccurrenceService extends CommentService {
 
     List<EventOccurrence> findAllEventOccurrencesByVenues(List<Venue> venues, int pageNumber, int pageSize);
 
-    void registerAttendeeForEventOccurrence(User attendee);
+    void registerAttendeeForEventOccurrence(int attendeeId);
 
-    void unregisterAttendeeForEventOccurrence(User attendee);
+    void unregisterAttendeeForEventOccurrence(int attendeeId);
 }

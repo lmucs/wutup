@@ -63,7 +63,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public List<User> findAttendeesById(int id, int pageNumber, int pageSize) {
+    public List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize) {
         return new java.util.ArrayList<User>();
         // TODO
     }
@@ -127,12 +127,12 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public void registerAttendeeForEventOccurrence(User attendee) {
+    public void registerAttendeeForEventOccurrence(int attendeeId) {
         // TODO
     }
 
     @Override
-    public void unregisterAttendeeForEventOccurrence(User attendee) {
+    public void unregisterAttendeeForEventOccurrence(int attendeeId) {
         // TODO
     }
 

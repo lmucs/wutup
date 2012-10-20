@@ -1,7 +1,6 @@
 package edu.lmu.cs.wutup.ws.service;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +37,8 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public List<User> findAttendeesById(int id, int pageNumber, int pageSize) {
-        return eventOccurrenceDao.findAttendeesById(id, pageNumber, pageSize);
+    public List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize) {
+        return eventOccurrenceDao.findAttendeesByEventOccurrenceId(id, pageNumber, pageSize);
     }
 
     @Override
@@ -54,51 +53,45 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
 
     @Override
     public List<EventOccurrence> findAllEventOccurrencesByAttendees(List<User> attendees, int pageNumber, int pageSize) {
-        return new ArrayList<EventOccurrence>();
-        // TODO
+        return eventOccurrenceDao.findAllEventOccurrencesByAttendees(attendees, pageNumber, pageSize);
     }
 
     @Override
     public List<EventOccurrence> findAllEventOccurrencesByCategories(List<Category> categories, int pageNumber,
             int pageSize) {
-        return new ArrayList<EventOccurrence>();
-        // TODO
+        return eventOccurrenceDao.findAllEventOccurrencesByCategories(categories, pageNumber, pageSize);
     }
 
     @Override
     public List<EventOccurrence> findAllEventOccurrencesByCenterAndRadius(double latitude, double longitude,
             double radius, int pageNumber, int pageSize) {
-        return new ArrayList<EventOccurrence>();
-        // TODO
+        return eventOccurrenceDao.findAllEventOccurrencesByCenterAndRadius(latitude, longitude, radius, pageNumber, pageSize);
     }
 
     @Override
     public List<EventOccurrence> findAllEventOccurrencesByDateRange(DateTime start, DateTime end, int pageNumber,
             int pageSize) {
-        return new ArrayList<EventOccurrence>();
-        // TODO
+        return eventOccurrenceDao.findAllEventOccurrencesByDateRange(start, end, pageNumber, pageSize);
     }
 
     @Override
     public List<EventOccurrence> findAllEventOccurrencesByEventId(int eventId, int pageNumber, int pageSize) {
-        return new ArrayList<EventOccurrence>();
-        // TODO
+        return eventOccurrenceDao.findAllEventOccurrencesByEventId(eventId, pageNumber, pageSize);
     }
 
     @Override
     public List<EventOccurrence> findAllEventOccurrencesByVenues(List<Venue> venues, int pageNumber, int pageSize) {
-        return new ArrayList<EventOccurrence>();
-        // TODO
+        return eventOccurrenceDao.findAllEventOccurrencesByVenues(venues, pageNumber, pageSize);
     }
 
     @Override
-    public void registerAttendeeForEventOccurrence(User attendee) {
-        // TODO
+    public void registerAttendeeForEventOccurrence(int attendeeId) {
+        eventOccurrenceDao.registerAttendeeForEventOccurrence(attendeeId);
     }
 
     @Override
-    public void unregisterAttendeeForEventOccurrence(User attendee) {
-        // TODO
+    public void unregisterAttendeeForEventOccurrence(int attendeeId) {
+        eventOccurrenceDao.unregisterAttendeeForEventOccurrence(attendeeId);
     }
 
     @Override
