@@ -16,6 +16,7 @@ public class EventOccurrence implements Commentable {
     private Venue venue;
     private DateTime start;
     private DateTime end;
+    private ArrayList<User> attendees;
     private ArrayList<Comment> comments;
 
     public EventOccurrence() {
@@ -67,6 +68,15 @@ public class EventOccurrence implements Commentable {
 
     public void setEnd(final DateTime end) {
         this.end = end;
+    }
+
+    @XmlElement(name = "attendees")
+    public ArrayList<User> getAttendees() {
+        return this.attendees;
+    }
+
+    public void addAttendee(User attendee) {
+        this.attendees.add(attendee);
     }
 
     @Override
