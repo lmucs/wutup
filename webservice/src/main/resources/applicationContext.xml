@@ -23,13 +23,13 @@
     http://www.springframework.org/schema/jdbc
     http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd">
 
-  <!-- enable @Autowired, @Required, etc. -->
+  <!-- enable Autowired, Required, etc. -->
   <context:annotation-config/>
 
-  <!-- scan for @Component, @Service, @Repository, @Controller -->
+  <!-- scan for Component, Service, Repository, Controller -->
   <context:component-scan base-package="edu.lmu.cs.wutup.ws"/>
 
-  <!-- enable @Transactional -->
+  <!-- enable Transactional -->
   <tx:annotation-driven/>
 
   <bean
