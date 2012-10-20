@@ -44,7 +44,7 @@ public class EventOccurrence implements Commentable {
 
     @XmlElement(name = "venue")
     public Venue getVenue() {
-        return venue;
+        return this.venue;
     }
 
     public void setVenue(Venue venue) {
