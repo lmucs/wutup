@@ -3,6 +3,10 @@ package edu.lmu.cs.wutup.ws.resource;
 import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
+
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
+
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 
 /**
@@ -14,6 +18,7 @@ public abstract class AbstractWutupResource {
     private static final String PARAMETER_NON_INTEGER = "The parameter %s should be an integer";
     private static final String PARAMETER_OUT_OF_RANGE = "The parameter %s should be the range %d...%d";
     private static final String PATH_BODY_CONFLICT = "Id %d in path differs from id %d in body";
+    private static final String MALFORMED_ARGUMENT_DATE = "The parameters %s and %s are not valid, respective start and end dates";
 
     private static final int MIN_PAGE_SIZE = 1;
     private static final int MAX_PAGE_SIZE = 50;
@@ -62,6 +67,17 @@ public abstract class AbstractWutupResource {
     void checkIdAgreement(int idInPath, int idInBody) {
         if (idInPath != idInBody) {
             throw new ServiceException(CONFLICT, PATH_BODY_CONFLICT, idInPath, idInBody);
+        }
+    }
+
+    /**
+     * Utility method for checking an input interval's validity.
+     */
+    Interval validateInterval(DateTime startDate, DateTime endDate) {
+        try {
+            return new Interval(startDate, endDate);
+        } catch(IllegalArgumentException iae) {
+            throw new ServiceException(BAD_REQUEST, MALFORMED_ARGUMENT_DATE, startDate, endDate);
         }
     }
 }

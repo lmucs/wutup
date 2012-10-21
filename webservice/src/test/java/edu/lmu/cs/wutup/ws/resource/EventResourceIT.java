@@ -51,7 +51,7 @@ public class EventResourceIT {
         given().
             header("Accept", "application/json").
             contentType("application/json").
-            body("{\"id\":100,\"name\":\"Ski Trip\",\"description\":\"x\",\"comments\":null,\"ownerId\":{\"id\":8,\"email\":\"ksherbina@gmail.com\",\"nickname\":\"Kat\",\"fullName\":\"Katrina Sherbina\",\"firstname\":\"Katrina\",\"lastname\":\"Sherbina\"}}");
+            body("{\"id\":\"100\",\"name\":\"Ski Trip\",\"ownerId\":{\"id\":8,\"email\":\"ksherbina@gmail.com\",\"nickname\":\"Kat\",\"firstname\":\"Katrina\",\"lastname\":\"Sherbina\"}}").
         expect().
             statusCode(404).
         when().
@@ -75,10 +75,10 @@ public class EventResourceIT {
         given().
             header("Accept", "application/json").
             contentType("application/json").
-            body("{\"id\":\"9\",\"name\":\"Ski Trip\",\"ownerId\":{\"id\":8,\"email\":\"ksherbina@gmail.com\",\"nickname\":\"Kat\",\"fullName\":\"Katrina Sherbina\",\"firstname\":\"Katrina\",\"lastname\":\"Sherbina\"}\"}").
+            body("{\"id\":\"100\",\"name\":\"Ski Trip\",\"ownerId\":{\"id\":8,\"email\":\"ksherbina@gmail.com\",\"nickname\":\"Kat\",\"firstname\":\"Katrina\",\"lastname\":\"Sherbina\"}}").
         expect().
             statusCode(201).
-            header("Location", "http://localhost:8080/wutup/events/9").
+            header("Location", "http://localhost:8080/wutup/events/100").
             contentType("application/json").
         when().
             post("/wutup/events");
