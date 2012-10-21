@@ -2,13 +2,18 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
@@ -38,9 +43,17 @@ public class EventDaoJdbcImpl implements EventDao {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public void createEvent(Event e) {
+    public int createEvent(Event e) {
+        PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_SQL, new int[]{
+                Types.VARCHAR, Types.VARCHAR, Types.INTEGER});;
+        factory.setReturnGeneratedKeys(true);
+        factory.setGeneratedKeysColumnNames(new String[]{"id"});
+        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[] {
+                e.getName(), e.getDescription(), e.getCreator().getId()});
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
-            jdbcTemplate.update(CREATE_SQL, e.getName(), e.getDescription(), e.getCreator().getId());
+            jdbcTemplate.update(creator, keyHolder);
+            return (Integer)keyHolder.getKey();
         } catch (DuplicateKeyException ex) {
             throw new EventExistsException();
         }
@@ -48,13 +61,6 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public void updateEvent(Event e) {
-        //int rowsUpdated = QueryBuilder.update("event")
-    //			.set("name", e.getName())
-    //			.set("description", e.getDescription())
-   // 			.where("id", e.getId())
-   // 			.execute(jdbcTemplate);
-
-
         int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getName(), e.getDescription(), e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventException();
@@ -99,8 +105,8 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public void updateComment(Integer commentId, Comment c) {
-        CommentDaoUtils.updateComment(jdbcTemplate, "event", commentId, c);
+    public void updateComment(Integer commentId, Comment comment) {
+        CommentDaoUtils.updateComment(jdbcTemplate, "event", commentId, comment);
     }
 
     @Override
@@ -121,5 +127,4 @@ public class EventDaoJdbcImpl implements EventDao {
                     rs.getString("nickname")));
         }
     };
-
 }

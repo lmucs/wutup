@@ -6,7 +6,7 @@ import edu.lmu.cs.wutup.ws.model.Event;
 
 public interface EventDao extends CommentDao {
 
-    void createEvent(Event e);
+    int createEvent(Event e);
 
     Event findEventById(int id);
 

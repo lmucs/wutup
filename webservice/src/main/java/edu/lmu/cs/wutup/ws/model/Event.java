@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
 
-@XmlRootElement(name = "event")
+@XmlRootElement
 public class Event implements Commentable {
 
     private Integer id;
@@ -31,7 +31,7 @@ public class Event implements Commentable {
         this(id, name, null, null);
     }
 
-    @XmlElement(name = "id")
+    @XmlElement
     public int getId() {
         return this.id;
     }
@@ -40,7 +40,7 @@ public class Event implements Commentable {
         this.id = id;
     }
 
-    @XmlElement(name = "name")
+    @XmlElement
     public String getName() {
         return this.name;
     }
@@ -49,7 +49,7 @@ public class Event implements Commentable {
         this.name = name;
     }
 
-    @XmlElement(name = "description")
+    @XmlElement
     public String getDescription() {
         return this.description;
     }
@@ -58,13 +58,13 @@ public class Event implements Commentable {
         this.description = description;
     }
 
-    public void setCreator(final User creator) {
-        this.creator = creator;
-    }
-
-    @XmlElement(name = "ownerId")
+    @XmlElement
     public User getCreator() {
         return this.creator;
+    }
+
+    public void setCreator(final User creator) {
+        this.creator = creator;
     }
 
     @Override
@@ -94,14 +94,7 @@ public class Event implements Commentable {
 
     @Override
     public boolean equals(Object obj) {
-        boolean result = false;
-
-        if (obj instanceof Event) {
-            Event e = Event.class.cast(obj);
-            result = Objects.equal(id, e.id);
-        }
-
-        return result;
+        return obj instanceof Event && Objects.equal(id, Event.class.cast(obj).id);
     }
 
     @Override

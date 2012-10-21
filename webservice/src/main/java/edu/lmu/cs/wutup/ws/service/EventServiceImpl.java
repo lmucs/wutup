@@ -18,8 +18,8 @@ public class EventServiceImpl implements EventService {
     EventDao eventDao;
 
     @Override
-    public void createEvent(Event e) {
-        eventDao.createEvent(e);
+    public int createEvent(Event e) {
+        return eventDao.createEvent(e);
     }
 
     @Override

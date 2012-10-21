@@ -1,6 +1,7 @@
 package edu.lmu.cs.wutup.ws.resource;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doThrow;
@@ -35,7 +36,7 @@ public class EventResourceTest {
     Event sampleEvent = new Event(1, "Alice");
     Comment sampleEventComment = new Comment(1, "body", new DateTime(), new User());
     List<Event> sampleEventList = new ArrayList<Event>();
-    List<Comment> sampleEventCommentList = new ArrayList<Comment>();   
+    List<Comment> sampleEventCommentList = new ArrayList<Comment>();
     UriInfo sampleUriInfo;
 
     @Before
@@ -52,7 +53,7 @@ public class EventResourceTest {
     public void eventCreationCreatesEventWithLocationHeader() {
         Response response = resource.createEvent(sampleEvent, sampleUriInfo);
         verify(service).createEvent(sampleEvent);
-        assertThat(response.getMetadata().getFirst("Location").toString(), is("http://example.com/1"));
+        assertThat(response.getMetadata().getFirst("Location").toString(), startsWith("http://example.com/"));
         assertThat(response.getStatus(), is(201));
     }
 
@@ -217,7 +218,7 @@ public class EventResourceTest {
         List<Comment> result = resource.findEventComments("1", "1", "10");
         assertThat(result, is(sampleEventCommentList));
     }
-    
+
     @Test
     public void findingCommentsWithPageSizeTooHighProducesHttp403() {
         try {

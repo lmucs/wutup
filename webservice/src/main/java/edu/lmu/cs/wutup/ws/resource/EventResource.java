@@ -9,7 +9,6 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -37,8 +36,8 @@ import edu.lmu.cs.wutup.ws.service.EventService;
 
 @Component
 @Scope(BeanDefinition.SCOPE_SINGLETON)
-@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_JSON})
 @Path("/events")
 public class EventResource extends AbstractWutupResource {
 
@@ -76,10 +75,10 @@ public class EventResource extends AbstractWutupResource {
 
     @POST
     @Path("/")
-    public Response createEvent(final Event event, @Context UriInfo uriInfo) {
+    public Response createEvent(Event event, @Context UriInfo uriInfo) {
         try {
-            eventService.createEvent(event);
-            URI newLocation = uriInfo.getAbsolutePathBuilder().path(event.getId() + "").build();
+            int newId = eventService.createEvent(event);
+            URI newLocation = uriInfo.getAbsolutePathBuilder().path(newId + "").build();
             return Response.created(newLocation).build();
         } catch (EventExistsException e) {
             throw new ServiceException(CONFLICT, EVENT_ALREADY_EXISTS, event.getId());
@@ -112,7 +111,7 @@ public class EventResource extends AbstractWutupResource {
             throw new ServiceException(NOT_FOUND, EVENT_NOT_FOUND, id);
         }
     }
-    /* Begins the Comment implementation. */
+
     @GET
     @Path("/{id}/comments")
     public List<Comment> findEventComments(@PathParam("id") String idString, @QueryParam("page") String pageString,

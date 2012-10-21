@@ -6,7 +6,7 @@ import edu.lmu.cs.wutup.ws.model.Event;
 
 public interface EventService extends CommentService {
 
-    void createEvent(Event e);
+    int createEvent(Event e);
 
     void updateEvent(Event e);
 
