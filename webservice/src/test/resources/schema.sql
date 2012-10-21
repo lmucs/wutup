@@ -29,7 +29,7 @@ create table event (
 );
 
 create table venue (
-  id integer not null,
+  id integer auto_increment not null,
   name varchar(512),
   address varchar(512),
   latitude double,

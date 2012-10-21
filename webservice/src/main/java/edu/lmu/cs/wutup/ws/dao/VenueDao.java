@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.lmu.cs.wutup.ws.model.Venue;
 
-public interface VenueDao extends CommentDao{
+public interface VenueDao extends CommentDao {
 
     void createVenue(Venue loc);
 
