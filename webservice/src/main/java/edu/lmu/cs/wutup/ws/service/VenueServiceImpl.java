@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.VenueDao;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.Quadrangle;
 import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.VenueService;
 
@@ -33,19 +34,11 @@ public class VenueServiceImpl implements VenueService {
         return venueDao.findVenueById(id);
     }
 
-    @Override
-    public List<Venue> findVenuesByAddress(String address, int pageNumber, int pageSize) {
-        return venueDao.findVenuesByAddress(address, pageNumber, pageSize);
-    }
+
 
     @Override
-    public List<Venue> findVenuesByPropertyMap(String propertyMap, int pageNumber, int pageSize) {
-        return venueDao.findVenuesByPropertyMap(propertyMap, pageNumber, pageSize);
-    }
-
-    @Override
-    public List<Venue> findAllVenues(int pageNumber, int pageSize) {
-        return venueDao.findAllVenues(pageNumber, pageSize);
+    public List<Venue> findVenues(String name, Integer eventId, Quadrangle searchBox, int pageNumber, int pageSize) {
+        return venueDao.findVenues(name, eventId, searchBox, pageNumber, pageSize);
     }
 
     @Override

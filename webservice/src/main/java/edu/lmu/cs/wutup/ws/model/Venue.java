@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
 
-@XmlRootElement(name = "venue")
+@XmlRootElement
 public class Venue implements Commentable {
 
     private Integer id;
@@ -38,7 +38,7 @@ public class Venue implements Commentable {
         this.propertyMap = propertyMap;
     }
 
-    @XmlElement(name = "id")
+    @XmlElement
     public int getId() {
         return id;
     }
@@ -47,7 +47,7 @@ public class Venue implements Commentable {
         this.id = id;
     }
 
-    @XmlElement(name = "name")
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -56,7 +56,7 @@ public class Venue implements Commentable {
         this.name = name;
     }
 
-    @XmlElement(name = "address")
+    @XmlElement
     public String getAddress() {
         return address;
     }
@@ -65,7 +65,7 @@ public class Venue implements Commentable {
         this.address = address;
     }
 
-    @XmlElement(name = "latitude")
+    @XmlElement
     public double getLatitude() {
         return latitude;
     }
@@ -74,7 +74,7 @@ public class Venue implements Commentable {
         this.latitude = latitude;
     }
 
-    @XmlElement(name = "longitude")
+    @XmlElement
     public double getLongitude() {
         return longitude;
     }

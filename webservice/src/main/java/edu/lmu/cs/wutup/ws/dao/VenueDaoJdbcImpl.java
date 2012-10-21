@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.Quadrangle;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Repository
@@ -72,20 +73,9 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     @Override
-    public List<Venue> findVenuesByAddress(String address, int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_BY_ADDRESS_SQL, new Object[]{address, pageSize, pageNumber * pageSize},
-                venueRowMapper);
-    }
-
-    @Override
-    public List<Venue> findVenuesByPropertyMap(String propertyMap, int pageNumber, int pageSize) {
-        // TODO Auto-generated method stub
+    public List<Venue> findVenues(String name, Integer eventId, Quadrangle searchBox, int pageNumber, int pageSize) {
+        // TODO!  STUB!
         return null;
-    }
-
-    @Override
-    public List<Venue> findAllVenues(int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pageSize, pageNumber * pageSize}, venueRowMapper);
     }
 
     @Override

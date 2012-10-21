@@ -60,7 +60,7 @@ public class EventResourceIT {
     public void endpointPatchWithMismatchedIdProduces409() {
         given().
             contentType("application/json").
-            body("{\"id\":\"172\",\"name\":\"Ski Trip\"}").
+            body("{\"id\":172,\"name\":\"Ski Trip\"}").
         expect().
             statusCode(409).
         when().
@@ -71,7 +71,7 @@ public class EventResourceIT {
     public void endpointPostJsonCorrectlyCreatesEventAndProduces201() {
         given().
             contentType("application/json").
-            body("{\"id\":\"100\",\"name\":\"Ski Trip\",\"creator\":{\"id\":8}}").
+            body("{\"name\":\"Ski Trip\",\"description\":\"WOOT\",\"creator\":{\"id\":8}}").
         expect().
             statusCode(201).
             header("Location", "http://localhost:8080/wutup/events/9").
