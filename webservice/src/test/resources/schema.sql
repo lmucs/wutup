@@ -11,7 +11,7 @@ drop table if exists occurrence_comment;
 drop table if exists venue_comment;
 
 create table user (
-  id integer not null,
+  id integer auto_increment not null,
   firstName varchar(512),
   lastName varchar(512),
   email varchar(512),

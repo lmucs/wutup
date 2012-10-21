@@ -18,7 +18,7 @@ public class User {
         // No-arg constructor required for annotations
     }
 
-    public User(int id, String email) {
+    public User(Integer id, String email) {
         this(id, null, null, email, null);
     }
 
@@ -35,12 +35,16 @@ public class User {
     }
 
     @XmlElement(name = "id")
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
     public void setId(int i) {
         this.id = i;
+    }
+    
+    public void nullOutId() {
+        this.id = null;
     }
 
     @XmlElement(name = "firstname")

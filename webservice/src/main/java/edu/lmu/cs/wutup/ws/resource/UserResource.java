@@ -40,6 +40,8 @@ public class UserResource extends AbstractWutupResource {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/")
     public Response createUser(User u, @Context UriInfo uriInfo) {
+        // User id will be automatically generated
+        u.nullOutId();
         try {
             userService.createUser(u);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(u.getId() + "").build();

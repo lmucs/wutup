@@ -41,6 +41,7 @@ public class UserResourceTest {
         Response response = resource.createUser(sampleUser, sampleUriInfo);
         verify(service).createUser(sampleUser);
         assertThat(response.getStatus(), is(201));
+        assertThat(response.getMetadata().getFirst("Location").toString(), is("http://example.com/" + sampleUser.getId()));
     }
 
 

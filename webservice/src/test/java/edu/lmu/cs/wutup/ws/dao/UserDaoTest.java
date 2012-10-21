@@ -34,7 +34,7 @@ public class UserDaoTest {
     
     @Test
     public void tableHasCorrectSizeFromSetup() {
-        // assertThat(userDao.findNumberOfUsers(), is(6));
+        assertThat(userDao.findNumberOfUsers(), is(9));
     }
     
     @Test
@@ -69,6 +69,14 @@ public class UserDaoTest {
         User u = new User(2, "ImABigPhony@hotmail.com");
         userDao.createUser(u);
     }
+    
+    @Test
+    public void createUserWithNullIdGeneratesId() {
+        User u = new User(null, "Fabio");
+        userDao.createUser(u);
+        assertThat(u.getId(), is(3504));
+    }
+    
     @Test(expected=NoSuchUserException.class)
     public void deletingNonExistantUserThrowsException() {
         User u = new User(9999, "notreal@gmail.com");
