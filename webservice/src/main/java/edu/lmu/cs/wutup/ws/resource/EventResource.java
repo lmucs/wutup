@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -85,7 +86,7 @@ public class EventResource extends AbstractWutupResource {
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/{id}")
     public Response updateEvent(@PathParam("id") String idString, Event event) {
         int id = toInteger("id", idString);

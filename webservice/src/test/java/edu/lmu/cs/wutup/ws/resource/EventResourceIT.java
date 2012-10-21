@@ -47,19 +47,19 @@ public class EventResourceIT {
     }
 
     @Test
-    public void endpointPutWithUnusedIdProduces404() {
+    public void endpointPatchWithUnusedIdProduces404() {
         given().
             header("Accept", "application/json").
             contentType("application/json").
-            body("{\"id\":\"100\",\"name\":\"Ski Trip\",\"ownerId\":{\"id\":8,\"email\":\"ksherbina@gmail.com\",\"nickname\":\"Kat\",\"firstname\":\"Katrina\",\"lastname\":\"Sherbina\"}}").
+            body("{\"id\":\"100\",\"name\":\"Ski Trip\"}").
         expect().
             statusCode(404).
         when().
-            put("/wutup/events/100");
+            patch("/wutup/events/100");
     }
 
     @Test
-    public void endpointPutWithMismatchedIdProduces409() {
+    public void endpointPatchWithMismatchedIdProduces409() {
         given().
             header("Accept", "application/json").
             contentType("application/json").
@@ -67,7 +67,7 @@ public class EventResourceIT {
         expect().
             statusCode(409).
         when().
-            put("/wutup/events/46");
+            patch("/wutup/events/46");
     }
 
     @Test
