@@ -7,31 +7,37 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Category {
 
     private Integer id;
-    private Integer parentId;
     private String name;
+    private Integer parentId;
 
     public Category() {
+        this.id = null;
+        this.name = null;
         this.parentId = null;
     }
     
-    public Category(Integer parentId) {
+    public Category(String name) {
+        this.id = null;
+        this.name = name;
+        this.parentId = null;
+    }
+    
+    public Category(String name, Integer parentId) {
+        this.id = null;
+        this.name = name;
         this.parentId = parentId;
     }
     
-    public Category(Integer parentId, String name) {
-        this.parentId = parentId;
+    public Category(Integer id, String name) {
+        this.id = id;
         this.name = name;
+        this.parentId = null;
     }
     
-    public Category(Integer id, Integer parentId, String name) {
+    public Category(Integer id, String name, Integer parentId) {
         this.id = id;
+        this.name = name;
         this.parentId = parentId;
-        this.name = name;
-    }
-
-    public Category(String name, Integer id) {
-        this.id = id;
-        this.name = name;
     }
 
     @XmlElement(name = "id")

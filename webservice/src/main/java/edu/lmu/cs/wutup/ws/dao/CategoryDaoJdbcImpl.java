@@ -109,8 +109,8 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
     
     private static RowMapper<Category> userRowMapper = new RowMapper<Category>() {
         public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Category(rs.getInt("id"),
-                    rs.getInt("parentId"), rs.getString("name"));
+            return new Category(rs.getInt("id"), rs.getString("name"),
+                    rs.getInt("parentId"));
         }
     };
 }
