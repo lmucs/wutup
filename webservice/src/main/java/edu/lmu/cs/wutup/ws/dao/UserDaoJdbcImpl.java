@@ -74,8 +74,8 @@ public class UserDaoJdbcImpl implements UserDao {
     }
     
     @Override
-    public void deleteUser(User u) {
-        int rowsUpdated = jdbcTemplate.update(DELETE_SQL, u.getId());
+    public void deleteUser(int id) {
+        int rowsUpdated = jdbcTemplate.update(DELETE_SQL, id);
         if (rowsUpdated == 0) {
             throw new NoSuchUserException();
         }

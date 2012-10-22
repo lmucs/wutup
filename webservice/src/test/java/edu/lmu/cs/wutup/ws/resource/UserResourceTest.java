@@ -17,6 +17,9 @@ import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.resource.UserResource;
 import edu.lmu.cs.wutup.ws.service.UserService;
+import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
+import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.exception.UserExistsException;
 import edu.lmu.cs.wutup.ws.model.User;
 
 public class UserResourceTest {
@@ -42,6 +45,59 @@ public class UserResourceTest {
         verify(service).createUser(sampleUser);
         assertThat(response.getStatus(), is(201));
         assertThat(response.getMetadata().getFirst("Location").toString(), is("http://example.com/" + sampleUser.getId()));
+    }
+    
+    @Test
+    public void createDuplicateUserRespondsWith409() {
+        try {
+            doThrow(new UserExistsException()).when(service).createUser(sampleUser);
+            resource.createUser(sampleUser, sampleUriInfo);
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(409));
+        }
+    }
+    
+    @Test
+    public void updateUserReturns204() {
+        Response response = resource.updateUser("1", sampleUser);
+        verify(service).updateUser(sampleUser);
+        assertThat(response.getStatus(), is(204));
+    }
+    
+    @Test
+    public void updateUserWithMismatchedIdRespondsWith409() {
+        try {
+            resource.updateUser("22", sampleUser);
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(409));
+        }
+    }
+    
+    @Test
+    public void updateNonExistantUserRespondsWith404() {
+        try {
+            doThrow(new NoSuchUserException()).when(service).updateUser(sampleUser);
+            resource.updateUser("1", sampleUser);
+        } catch(ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(404));
+        }
+    }
+    
+    @Test
+    public void deleteUserRespondsWith204() {
+        Response response = resource.deleteUser("1");
+        assertThat(response.getStatus(), is(204));
+    }
+    
+    @Test
+    public void deleteNonExistantUserResponds404() {
+        try {
+            doThrow(new NoSuchUserException()).when(service).deleteUser(sampleUser.getId());
+            resource.deleteUser("1");
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(404));
+        }
     }
 
 

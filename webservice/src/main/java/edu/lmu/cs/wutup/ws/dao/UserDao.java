@@ -8,7 +8,7 @@ public interface UserDao {
     User findUserById(int id);
     void updateUser(User u);
     int findNumberOfUsers();
-    void deleteUser(User u);
+    void deleteUser(int i);
     int getMaxValueFromColumn(String columnName);
     int getNextUsableUserId();
 }

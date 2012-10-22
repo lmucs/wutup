@@ -37,8 +37,8 @@ public class UserServiceTest {
     
     @Test
     public void deleteDelegatesToDao() {
-        service.deleteUser(sampleUser);
-        verify(dao).deleteUser(sampleUser);
+        service.deleteUser(sampleUser.getId());
+        verify(dao).deleteUser(sampleUser.getId());
     }
 
     @Test

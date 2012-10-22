@@ -118,7 +118,6 @@ public class EventResourceTest {
     @Test
     public void deletingNonexistingEventThrowsException() {
         try {
-            when(service.findEventById(1)).thenReturn(sampleEvent);
             doThrow(new NoSuchEventException()).when(service).deleteEvent(sampleEvent.getId());
             resource.deleteEvent("1");
             fail();

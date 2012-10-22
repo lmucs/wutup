@@ -7,5 +7,5 @@ public interface UserService {
     void updateUser(User u);
     void createUser(User u);
     User findUserById(int id);
-    void deleteUser(User u);
+    void deleteUser(int id);
 }

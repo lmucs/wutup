@@ -71,10 +71,8 @@ public class UserResource extends AbstractWutupResource {
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") String idString) {
         int id = toInteger("id", idString);
-
         try {
-            User u = userService.findUserById(id);
-            userService.deleteUser(u);
+            userService.deleteUser(id);
         } catch (NoSuchUserException e) {
             throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, id);
         }

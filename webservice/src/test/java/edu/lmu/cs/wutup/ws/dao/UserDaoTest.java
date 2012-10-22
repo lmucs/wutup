@@ -50,7 +50,7 @@ public class UserDaoTest {
         User u = new User(9, "nobody@gmail.com");
         userDao.createUser(u);
         int initialSize = userDao.findNumberOfUsers();
-        userDao.deleteUser(u);      
+        userDao.deleteUser(u.getId());      
         assertThat(userDao.findNumberOfUsers(), is(initialSize - 1));
     }
 
@@ -80,7 +80,7 @@ public class UserDaoTest {
     @Test(expected=NoSuchUserException.class)
     public void deletingNonExistantUserThrowsException() {
         User u = new User(9999, "notreal@gmail.com");
-        userDao.deleteUser(u);
+        userDao.deleteUser(u.getId());
     }
 
     @Test(expected=NoSuchUserException.class)
