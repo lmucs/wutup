@@ -99,6 +99,36 @@ public class UserResourceTest {
             assertThat(e.getResponse().getStatus(), is(404));
         }
     }
+    
+    @Test
+    public void getUserByIdReturnsWithRequestedUser() {
+        when(service.findUserById(sampleUser.getId())).thenReturn(sampleUser);
+        User u = resource.findUserById("1");
+        verify(service).findUserById(sampleUser.getId());
+        assertThat(u.getId(), is(1));
+        assertThat(u.getEmail(), is("heyheyhey@gmail.com"));
+    }
+    
+    @Test
+    public void getNonExistantUserByIdResponds404() {
+        try {
+            doThrow(new NoSuchUserException()).when(service).findUserById(sampleUser.getId());
+            resource.findUserById("1");
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(404));
+        }
+    }
+    
+    @Test
+    public void getUserByIdWithNoIdParameterResponds400() {
+        try {
+            resource.findUserById(null);
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(400));
+        }
+    }
 
 
 }
