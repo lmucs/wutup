@@ -14,11 +14,16 @@ public class Category {
         this.parentId = null;
     }
     
-    public Category(int parentId) {
+    public Category(Integer parentId) {
         this.parentId = parentId;
     }
     
-    public Category(int id, int parentId, String name) {
+    public Category(Integer parentId, String name) {
+        this.parentId = parentId;
+        this.name = name;
+    }
+    
+    public Category(Integer id, Integer parentId, String name) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;
