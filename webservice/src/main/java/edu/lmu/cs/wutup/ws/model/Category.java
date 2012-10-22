@@ -7,10 +7,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Category {
 
     private Integer id;
+    private Integer parentId;
     private String name;
 
     public Category() {
-        // No-arg constructor required for annotations
+        this.parentId = null;
+    }
+    
+    public Category(int parentId) {
+        this.parentId = parentId;
     }
 
     public Category(String name, Integer id) {
@@ -25,6 +30,15 @@ public class Category {
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    @XmlElement(name = "parentId")
+    public Integer getParentId() {
+        return this.parentId;
+    }
+    
+    public void setParentId(int id) {
+        this.parentId = id;
     }
 
     @XmlElement(name = "name")
