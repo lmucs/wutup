@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl;
@@ -18,7 +19,8 @@ import edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl;
 @Path("/auth")
 public class FacebookAuthenticationResource {
     
-    FBAuthServiceImpl FBAuth = new FBAuthServiceImpl();
+    @Autowired
+    FBAuthServiceImpl FBAuth;
 
     @GET
     @Path("/facebook")

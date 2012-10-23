@@ -9,7 +9,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.springframework.stereotype.Service;
 
+@Service
 public class FBAuthServiceImpl {
     public String getAccessToken(String code) throws IOException {
         
