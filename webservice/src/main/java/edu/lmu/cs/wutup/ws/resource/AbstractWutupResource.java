@@ -64,8 +64,8 @@ public abstract class AbstractWutupResource {
     /**
      * Ultimately causes an HTTP 409 (Conflict) if the two ids are not the same.
      */
-    void checkIdAgreement(int idInPath, int idInBody) {
-        if (idInPath != idInBody) {
+    void checkIdAgreement(int idInPath, Integer idInBody) {
+        if (idInBody != null && idInPath != idInBody) {
             throw new ServiceException(CONFLICT, PATH_BODY_CONFLICT, idInPath, idInBody);
         }
     }

@@ -92,6 +92,7 @@ public class EventResource extends AbstractWutupResource {
         checkIdAgreement(id, event.getId());
 
         try {
+            event.setId(id);
             eventService.updateEvent(event);
             return Response.noContent().build();
         } catch (NoSuchEventException e) {
