@@ -40,6 +40,8 @@ insert into occurrence (id, venueId, start, end) values (1, 4, '2012-03-15 20:00
 insert into category (id, name, parentId) values (1, 'Theater', null);
 insert into category (id, name, parentId) values (2, 'Club', null);
 
+insert into category (id, name, parentId) values (3, 'Comedy', 1);
+
 insert into event_category (eventId, categoryId) values (1, 1);
 
 insert into attendee (occurrenceId, userId) values (1, 1);
