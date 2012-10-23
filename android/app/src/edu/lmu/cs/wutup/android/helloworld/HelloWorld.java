@@ -1,9 +1,11 @@
-package com.example;
+package edu.lmu.cs.wutup.android.helloworld;
 
 import android.app.Activity;
 import android.os.Bundle;
+import com.example.R;
 
-public class HelloWolrd extends Activity {
+public class HelloWorld extends Activity {
+
     /**
      * Called when the activity is first created.
      */
