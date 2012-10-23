@@ -71,10 +71,11 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
         int pageNumber = toInteger("page", pageNumberString);
         int pageSize = toInteger("pageSize", pageSizeString);
-        checkPageSizeRange(pageSize);
 
-        validateIsSingleQuery(attendeesQuery, categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery,
-                venuesQuery);
+        checkPageSizeRange(pageSize);
+        validateQuery(attendeesQuery, categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);
+
+        // TODO: After updating dao turn into a single call.
         if (attendeesQuery) {
             return eventOccurrenceService.findAllEventOccurrencesByAttendees(attendees, pageNumber, pageSize);
         } else if (categoriesQuery) {
@@ -248,15 +249,9 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         }
     }
 
-    private void validateIsSingleQuery(boolean attendeesQuery, boolean categoriesQuery, boolean centerAndRadiusQuery,
+    private void validateQuery(boolean attendeesQuery, boolean categoriesQuery, boolean centerAndRadiusQuery,
             boolean dateRangeQuery, boolean eventIdQuery, boolean venuesQuery) {
-        // TODO: Ask Dr. Toal if this piece of code is awful
-        if (!((attendeesQuery && !categoriesQuery && !centerAndRadiusQuery && !dateRangeQuery && !eventIdQuery && !venuesQuery)
-                || (!attendeesQuery && categoriesQuery && !centerAndRadiusQuery && !dateRangeQuery && !eventIdQuery && !venuesQuery)
-                || (!attendeesQuery && !categoriesQuery && centerAndRadiusQuery && !dateRangeQuery && !eventIdQuery && !venuesQuery)
-                || (!attendeesQuery && !categoriesQuery && !centerAndRadiusQuery && dateRangeQuery && !eventIdQuery && !venuesQuery)
-                || (!attendeesQuery && !categoriesQuery && !centerAndRadiusQuery && !dateRangeQuery && eventIdQuery && !venuesQuery) || (!attendeesQuery
-                && !categoriesQuery && !centerAndRadiusQuery && !dateRangeQuery && !eventIdQuery && venuesQuery))) {
+        if (!(categoriesQuery || centerAndRadiusQuery || dateRangeQuery || eventIdQuery || venuesQuery)) {
             throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
         }
     }
