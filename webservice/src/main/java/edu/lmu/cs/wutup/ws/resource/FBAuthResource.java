@@ -17,7 +17,7 @@ import edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl;
 
 @Component
 @Path("/auth")
-public class FacebookAuthenticationResource {
+public class FBAuthResource {
     
     @Autowired
     FBAuthServiceImpl FBAuth;
