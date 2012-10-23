@@ -15,7 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import edu.lmu.cs.wutup.ws.exception.CategoryExistsException;
-import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchCategoryException;
 import edu.lmu.cs.wutup.ws.model.Category;
 
 public class CategoryDaoJdbcImpl implements CategoryDao {
@@ -49,9 +49,9 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
     @Override
     public Category findCategoryById(int id) {
         try {
-            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, userRowMapper);
+            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, categoryRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
-            throw new NoSuchUserException();
+            throw new NoSuchCategoryException();
         }
     }
 
@@ -61,7 +61,7 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
                 UPDATE_SQL, c.getName(), c.getParentId(), c.getId());
         
         if (rowsUpdated == 0) {
-            throw new NoSuchUserException();
+            throw new NoSuchCategoryException();
         }
     }
     
@@ -74,7 +74,7 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
     public void deleteCategory(int id) {
         int rowsUpdated = jdbcTemplate.update(DELETE_SQL, id);
         if (rowsUpdated == 0) {
-            throw new NoSuchUserException();
+            throw new NoSuchCategoryException();
         }
     }
     
@@ -112,7 +112,7 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
             keyHolder);
     }
     
-    private static RowMapper<Category> userRowMapper = new RowMapper<Category>() {
+    private static RowMapper<Category> categoryRowMapper = new RowMapper<Category>() {
         public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Category(rs.getInt("id"), rs.getString("name"),
                     rs.getInt("parentId"));
