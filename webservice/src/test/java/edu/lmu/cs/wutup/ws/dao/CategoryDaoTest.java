@@ -1,6 +1,7 @@
 package edu.lmu.cs.wutup.ws.dao;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.After;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.CategoryExistsException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchCategoryException;
 import edu.lmu.cs.wutup.ws.model.Category;
 
 public class CategoryDaoTest {
@@ -67,57 +69,63 @@ public class CategoryDaoTest {
     }
     
     
-    /*@Test
-    public void createCategoryWithNullIdGeneratesId() {
-        Category c = new Category(null, "Alcohol");
+    @Test
+    public void createCategoryWithNullIdAndNullParentGeneratesId() {
+        Category c = new Category("Alcohol");
         categoryDao.createCategory(c);
-        assertThat(c.getId(), is(15));
-    }*/
-    
-    /*
-    @Test(expected=NoSuchUserException.class)
-    public void deletingNonExistantUserThrowsException() {
-        User u = new User(9999, "notreal@gmail.com");
-        userDao.deleteUser(u.getId());
-    }
-
-    @Test(expected=NoSuchUserException.class)
-    public void updatingNonExistantUserThrowsException() {
-        User u = new User(9998, "notreal@gmail.com");
-        userDao.updateUser(u);
-    }
-    
-    @Test(expected=NoSuchUserException.class)
-    public void findingNonExistantUs9999999erThrowsException() {
-        userDao.findUserById(2012);
-    }
-
-    @Test //TODO need to automate user ids
-    public void updatedUserColumnsCanBeRead() {
-        userDao.createUser(new User(9, "Busby", "Fernjoy", "bf@lol.com", "bferny"));
-        User u = userDao.findUserById(9);
-        u.setEmail("fernjoy@aol.com");
-        u.setNickname("greenhouser");
-        userDao.updateUser(u);
-        
-        User newer = userDao.findUserById(9);
-        assertThat(newer.getEmail(), is(u.getEmail()));
-        assertThat(newer.getNickname(), is(u.getNickname()));//TODO need to automate user ids
+        assertThat(c.getId(), is(4));
     }
     
     @Test
+    public void createCategoryWithNullIdGeneratesId() {
+        Category c = new Category("Musical", 1);
+        categoryDao.createCategory(c);
+        assertThat(c.getId(), is(4));
+    }
+    
+    
+    @Test(expected=NoSuchCategoryException.class)
+    public void deletingNonExistentCategoryThrowsException() {
+        Category c = new Category(57, "Party");
+        categoryDao.deleteCategory(c.getId());
+    }
+
+    @Test(expected=NoSuchCategoryException.class)
+    public void updatingNonExistentCategoryThrowsException() {
+        Category c = new Category(57, "Party");
+        categoryDao.updateCategory(c);
+    }
+    
+    
+    @Test(expected=NoSuchCategoryException.class)
+    public void findingNonExistantCategoryThrowsException() {
+        categoryDao.findCategoryById(2012);
+    }
+    /*
+    @Test
+    public void updatedCategoryColumnsCanBeRead() {
+        categoryDao.createCategory(new Category(9, "Club meeting"));
+        Category c = categoryDao.findCategoryById(9);
+        c.setName("Fun meeting");
+        categoryDao.updateCategory(c);
+        
+        Category newer = categoryDao.findCategoryById(9);
+        assertThat(newer.getName(), is(c.getName()));
+    }*/
+    
+    @Test
     public void getMaxIdValueReturnsCorrectValue() {
-        userDao.createUser(new User(9999, "abcde@gmail.com"));
-        int max = userDao.getMaxValueFromColumn("id");
+        categoryDao.createCategory(new Category(9999, "Kick back"));
+        int max = categoryDao.getMaxValueFromColumn("id");
         assertEquals(max, 9999);
     }
     
     @Test
     public void getNextUsableUserIdReturnsMaxPlusOne() {
-        int currentMaxIdValue = userDao.getMaxValueFromColumn("id");
-        int nextGeneratedUserId = userDao.getNextUsableUserId();
+        int currentMaxIdValue = categoryDao.getMaxValueFromColumn("id");
+        int nextGeneratedUserId = categoryDao.getNextUsableCategoryId();
         assertEquals(nextGeneratedUserId, currentMaxIdValue + 1);
-    }*/
+    }
     
     @After
     public void tearDownDatabase() {
