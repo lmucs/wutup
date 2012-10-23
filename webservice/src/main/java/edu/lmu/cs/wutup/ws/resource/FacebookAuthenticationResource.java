@@ -12,12 +12,13 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
 
-import edu.lmu.cs.wutup.ws.service.FacebookAuthenticationImpl;
+import edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl;
 
 @Component
 @Path("/auth")
 public class FacebookAuthenticationResource {
-    FacebookAuthenticationImpl FacebookAuthentication = new FacebookAuthenticationImpl();
+    
+    FBAuthServiceImpl FBAuth = new FBAuthServiceImpl();
 
     @GET
     @Path("/facebook")
@@ -48,7 +49,7 @@ public class FacebookAuthenticationResource {
         }
 
         try {
-            return Response.ok(FacebookAuthentication.getAccessToken(code)).build();
+            return Response.ok(FBAuth.getAccessToken(code)).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }

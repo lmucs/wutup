@@ -1,5 +1,5 @@
 package edu.lmu.cs.wutup.ws.service;
 
-public interface FacebookAuthentication {
+public interface FBAuthService {
     public void getAccessToken(String code);
 }
