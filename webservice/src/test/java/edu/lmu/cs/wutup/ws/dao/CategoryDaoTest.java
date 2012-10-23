@@ -61,13 +61,11 @@ public class CategoryDaoTest {
         assertThat(result.getName(), is(c.getName()));
     }
     
-    
     @Test(expected=CategoryExistsException.class)
     public void creatingCategoryWithDuplicateIdThrowsException() {
         Category c = new Category(1, "Theater");
         categoryDao.createCategory(c);
     }
-    
     
     @Test
     public void createCategoryWithNullIdAndNullParentGeneratesId() {
@@ -95,7 +93,6 @@ public class CategoryDaoTest {
         Category c = new Category(57, "Party");
         categoryDao.updateCategory(c);
     }
-    
     
     @Test(expected=NoSuchCategoryException.class)
     public void findingNonExistantCategoryThrowsException() {
