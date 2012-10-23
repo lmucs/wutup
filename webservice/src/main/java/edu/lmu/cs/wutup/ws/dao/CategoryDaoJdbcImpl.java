@@ -98,9 +98,14 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
                 public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                     PreparedStatement ps =
                         connection.prepareStatement(CREATE_WITH_AUTO_GENERATE_ID, new String[] {"id"});
-                    // Are these values aligned properly?
                     ps.setString(1, name);
-                    ps.setInt(2, parentId);
+                    
+                    if (parentId == null) {
+                        ps.setNull(2,  java.sql.Types.NULL);
+                    } else {
+                        ps.setInt(2,  parentId);
+                    }
+                    
                     return ps;
                 }
             },
