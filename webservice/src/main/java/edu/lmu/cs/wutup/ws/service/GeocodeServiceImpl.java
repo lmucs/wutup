@@ -7,21 +7,22 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jettison.json.JSONObject;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import edu.lmu.cs.wutup.ws.exception.NoAddressProvidedException;
 import edu.lmu.cs.wutup.ws.model.LatLong;
 
-@Component
+@Service
 public class GeocodeServiceImpl implements GeocodeService {
     public LatLong resolveAddressToLatLong(String address) throws NoAddressProvidedException {
-        // TODO: Spaces will need to be replaced with + characters client-side
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + 
-                address.replaceAll("\\s+", "+") + "&sensor=true";
         
         if (address.equals("") || address == null) {
             throw new NoAddressProvidedException();
         }
+        
+        // TODO: Spaces will need to be replaced with + characters client-side
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + 
+                address.replaceAll("\\s+", "+") + "&sensor=true";
         
         try {
             HttpClient httpclient = new DefaultHttpClient();

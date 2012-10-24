@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import edu.lmu.cs.wutup.ws.exception.NoAddressProvidedException;
 import edu.lmu.cs.wutup.ws.model.LatLong;
 import edu.lmu.cs.wutup.ws.service.GeocodeServiceImpl;
 
@@ -22,7 +23,7 @@ public class GeocodeResource {
     @GET
     @Path("/address")
     @Produces({"application/json"})
-    public Response resolveAddressToLatLong(@QueryParam("address") String address) {
+    public Response resolveAddressToLatLong(@QueryParam("address") String address) throws NoAddressProvidedException {
         if (address == null) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
