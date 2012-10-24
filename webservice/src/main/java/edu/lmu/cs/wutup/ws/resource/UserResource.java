@@ -12,20 +12,28 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
-import edu.lmu.cs.wutup.ws.exception.UserExistsException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.exception.UserExistsException;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.service.UserService;
 
-@Path("/users/")
+@Component
+@Scope(BeanDefinition.SCOPE_SINGLETON)
+@Consumes({MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_JSON})
+@Path("/users")
 public class UserResource extends AbstractWutupResource {
 
     private static final String USER_NOT_FOUND = "User %d does not exist.";
@@ -35,7 +43,6 @@ public class UserResource extends AbstractWutupResource {
     UserService userService;
 
     @POST
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/")
     public Response createUser(User u, @Context UriInfo uriInfo) {
         // User id will be automatically generated
@@ -50,7 +57,6 @@ public class UserResource extends AbstractWutupResource {
     }
 
     @PUT
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}")
     public Response updateUser(@PathParam("id") String idString, User u) {
         int id = toInteger("id", idString);
@@ -63,7 +69,7 @@ public class UserResource extends AbstractWutupResource {
             throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, id);
         }
     }
-    
+
     @GET
     @Path("/{id}")
     public User findUserById(@PathParam("id") String idString) {
@@ -76,7 +82,6 @@ public class UserResource extends AbstractWutupResource {
     }
 
     @DELETE
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     @Path("/{id}")
     public Response deleteUser(@PathParam("id") String idString) {
         checkRequiredParameter("id", idString);
