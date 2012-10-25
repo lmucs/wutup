@@ -8,11 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * QueryBuilder is a builder that constructs a Hibernate query (HQL) from an
- * initial string and any number of "clauses" or arbitrary strings (which must
- * comply with the HQL syntax). Clauses represent conditions based on a
- * particular value; the resulting appended string follows Hibernate's format
- * for supplying parameters (i.e., ":identifier").
+ * QueryBuilder is a builder that constructs a SQL query from an initial string and any number of "clauses" or arbitrary
+ * strings. Clauses represent conditions based on a particular value; the resulting appended string follows Hibernate's
+ * format for supplying parameters (i.e., ":identifier").
  */
 public class QueryBuilder {
 
@@ -33,8 +31,7 @@ public class QueryBuilder {
     }
 
     /**
-     * Creates a new query builder with the given initial and after-where-clause
-     * strings.
+     * Creates a new query builder with the given initial and after-where-clause strings.
      */
     public QueryBuilder(final String initialString, final String afterWhereClauseString) {
         stringBuilder = new StringBuilder(initialString);
@@ -42,8 +39,8 @@ public class QueryBuilder {
     }
 
     /**
-     * Throws an <code>IllegalStateException</code> if this builder has already
-     * built a query. Used to guard the build operations.
+     * Throws an <code>IllegalStateException</code> if this builder has already built a query. Used to guard the build
+     * operations.
      */
     private void assertNotBuilt() {
         if (queryString != null) {
@@ -61,11 +58,9 @@ public class QueryBuilder {
     }
 
     /**
-     * Adds an HQL clause to the list of clauses, finding at most one named
-     * parameter within the clause, and adding it and its associated value to
-     * the parameter map. For example, calling <code>clause(":x > 5", 10)</code>
-     * will add the clause ":x > 5" to clauses, and the mapping
-     * <code>["x" => 10]</code> to map.
+     * Adds an HQL clause to the list of clauses, finding at most one named parameter within the clause, and adding it
+     * and its associated value to the parameter map. For example, calling <code>clause(":x > 5", 10)</code> will add
+     * the clause ":x > 5" to clauses, and the mapping <code>["x" => 10]</code> to map.
      */
     public QueryBuilder clause(String condition, Object paramValue) {
         assertNotBuilt();
@@ -78,16 +73,14 @@ public class QueryBuilder {
     }
 
     /**
-     * Puts the base string, the clauses, and the parameters all together into a
-     * Hibernate query object.
+     * Puts the base string, the clauses, and the parameters all together into a Hibernate query object.
      *
-     * This is a template method; it uses createQuery to instantiate the query
-     * object to be built and finishQuery to perform any final operations before
-     * returning the query. Subclasses can override these methods as needed.
+     * This is a template method; it uses createQuery to instantiate the query object to be built and finishQuery to
+     * perform any final operations before returning the query. Subclasses can override these methods as needed.
      */
     public String build() {
         boolean first = true;
-        for (String clause: clauses) {
+        for (String clause : clauses) {
             stringBuilder.append(first ? " where " : " and ").append(clause);
             first = false;
         }
