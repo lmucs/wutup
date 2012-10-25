@@ -28,7 +28,7 @@ public class UserResourceTest {
     UserService service;
     UriInfo sampleUriInfo;
     User sampleUser = new User(1, "heyheyhey@gmail.com");
-    
+
     @Before
     public void setUp() {
         resource = new UserResource();
@@ -38,15 +38,16 @@ public class UserResourceTest {
         UriBuilder uriBuilder = UriBuilder.fromUri("http://example.com");
         when(sampleUriInfo.getAbsolutePathBuilder()).thenReturn(uriBuilder);
     }
-    
+
     @Test
     public void createUserRespondsWithNewLocation() {
         Response response = resource.createUser(sampleUser, sampleUriInfo);
         verify(service).createUser(sampleUser);
         assertThat(response.getStatus(), is(201));
-        assertThat(response.getMetadata().getFirst("Location").toString(), is("http://example.com/" + sampleUser.getId()));
+        assertThat(response.getMetadata().getFirst("Location").toString(),
+                is("http://example.com/" + sampleUser.getId()));
     }
-    
+
     @Test
     public void createDuplicateUserRespondsWith409() {
         try {
@@ -56,14 +57,14 @@ public class UserResourceTest {
             assertThat(e.getResponse().getStatus(), is(409));
         }
     }
-    
+
     @Test
     public void updateUserReturns204() {
         Response response = resource.updateUser("1", sampleUser);
         verify(service).updateUser(sampleUser);
         assertThat(response.getStatus(), is(204));
     }
-    
+
     @Test
     public void updateUserWithMismatchedIdRespondsWith409() {
         try {
@@ -73,23 +74,30 @@ public class UserResourceTest {
             assertThat(e.getResponse().getStatus(), is(409));
         }
     }
-    
+
     @Test
     public void updateNonExistantUserRespondsWith404() {
         try {
             doThrow(new NoSuchUserException()).when(service).updateUser(sampleUser);
             resource.updateUser("1", sampleUser);
-        } catch(ServiceException e) {
+        } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(404));
         }
     }
-    
+
+    @Test
+    public void updateUserDoesNotRequireIdInBody() {
+        Response response = resource.updateUser("1", sampleUser);
+        verify(service).updateUser(sampleUser);
+        assertThat(response.getStatus(), is(204));
+    }
+
     @Test
     public void deleteUserRespondsWith204() {
         Response response = resource.deleteUser("1");
         assertThat(response.getStatus(), is(204));
     }
-    
+
     @Test
     public void deleteNonExistantUserResponds404() {
         try {
@@ -99,7 +107,7 @@ public class UserResourceTest {
             assertThat(e.getResponse().getStatus(), is(404));
         }
     }
-    
+
     @Test
     public void getUserByIdReturnsWithRequestedUser() {
         when(service.findUserById(sampleUser.getId())).thenReturn(sampleUser);
@@ -108,7 +116,7 @@ public class UserResourceTest {
         assertThat(u.getId(), is(1));
         assertThat(u.getEmail(), is("heyheyhey@gmail.com"));
     }
-    
+
     @Test
     public void getNonExistantUserByIdResponds404() {
         try {
@@ -119,7 +127,7 @@ public class UserResourceTest {
             assertThat(e.getResponse().getStatus(), is(404));
         }
     }
-    
+
     @Test
     public void getUserByIdWithNoIdParameterResponds400() {
         try {
@@ -129,6 +137,5 @@ public class UserResourceTest {
             assertThat(e.getResponse().getStatus(), is(400));
         }
     }
-
 
 }

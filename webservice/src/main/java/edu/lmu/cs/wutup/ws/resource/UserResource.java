@@ -56,12 +56,13 @@ public class UserResource extends AbstractWutupResource {
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/{id}")
     public Response updateUser(@PathParam("id") String idString, User u) {
         int id = toInteger("id", idString);
         checkRequiredParameter("email", u.getEmail());
-        checkIdAgreement(id,u.getId());
+        checkIdAgreement(id, u.getId());
+        u.setId(Integer.valueOf(id));
         try {
             userService.updateUser(u);
             return Response.noContent().build();
