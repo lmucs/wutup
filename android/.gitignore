@@ -3,3 +3,4 @@
 /app/bin/
 /app/local.properties
 /app/.idea
+/app/build.xml
