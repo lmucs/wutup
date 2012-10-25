@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.ws.resource;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -14,8 +15,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -24,17 +27,21 @@ import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.VenueService;
 
 @Component
 @Scope(BeanDefinition.SCOPE_SINGLETON)
-@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_JSON})
 @Path("/venues")
 public class VenueResource extends AbstractWutupResource {
+
     private static final String VENUE_NOT_FOUND = "Venue %d does not exist";
     private static final String VENUE_ALREADY_EXISTS = "Venue %d already exists";
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for venue %d";
@@ -42,8 +49,60 @@ public class VenueResource extends AbstractWutupResource {
 
     @Autowired
     VenueService venueService;
-    
-    /* Begins the Comment implementation. */
+
+    @GET
+    @Path("/{id}")
+    public Venue findVenueById(@PathParam("id") String idString) {
+        checkRequiredParameter("id", idString);
+        int id = toInteger("id", idString);
+
+        try {
+            return venueService.findVenueById(id);
+        } catch (NoSuchVenueException e) {
+            throw new ServiceException(NOT_FOUND, VENUE_NOT_FOUND, id);
+        }
+    }
+
+    @POST
+    @Path("/")
+    public Response createVenue(final Venue venue, @Context UriInfo uriInfo) {
+        try {
+            venueService.createVenue(venue);
+            URI newLocation = uriInfo.getAbsolutePathBuilder().path(venue.getId() + "").build();
+            return Response.created(newLocation).build();
+        } catch (VenueExistsException e) {
+            throw new ServiceException(CONFLICT, VENUE_ALREADY_EXISTS, venue.getId());
+        }
+    }
+
+    @PATCH
+    @Path("/{id}")
+    public Response updateVenue(@PathParam("id") String idString, Venue venue) {
+        int id = toInteger("id", idString);
+        checkIdAgreement(id, venue.getId());
+
+        try {
+            venue.setId(id);
+            venueService.updateVenue(venue);
+            return Response.noContent().build();
+        } catch (NoSuchEventException e) {
+            throw new ServiceException(NOT_FOUND, VENUE_NOT_FOUND, id);
+        }
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteEvent(@PathParam("id") String idString) {
+        int id = toInteger("id", idString);
+
+        try {
+            venueService.deleteVenue(id);
+            return Response.noContent().build();
+        } catch (NoSuchEventException ex) {
+            throw new ServiceException(NOT_FOUND, VENUE_NOT_FOUND, id);
+        }
+    }
+
     @GET
     @Path("/{id}/comments")
     public List<Comment> findVenueComments(@PathParam("id") String idString, @QueryParam("page") String pageString,
