@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.VenueDao;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
-import edu.lmu.cs.wutup.ws.model.Quadrangle;
 import edu.lmu.cs.wutup.ws.model.Venue;
-import edu.lmu.cs.wutup.ws.service.VenueService;
 
 @Service
 @Transactional
@@ -37,8 +36,8 @@ public class VenueServiceImpl implements VenueService {
 
 
     @Override
-    public List<Venue> findVenues(String name, Integer eventId, Quadrangle searchBox, int pageNumber, int pageSize) {
-        return venueDao.findVenues(name, eventId, searchBox, pageNumber, pageSize);
+    public List<Venue> findVenues(String name, Integer eventId, Circle circle, int pageNumber, int pageSize) {
+        return venueDao.findVenues(name, eventId, circle, pageNumber, pageSize);
     }
 
     @Override

@@ -31,6 +31,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.VenueService;
@@ -49,6 +50,20 @@ public class VenueResource extends AbstractWutupResource {
 
     @Autowired
     VenueService venueService;
+
+    @GET
+    @Path("/")
+    public List<Venue> findVenues(@PathParam("name") String name, @QueryParam("event") String eventIdString,
+            @QueryParam("center") String center, @QueryParam("radius") String radiusString,
+            @QueryParam("page") String pageString, @QueryParam("pageSize") String pageSizeString) {
+        Integer eventId = eventIdString == null ? null : toInteger("event", eventIdString);
+        Circle circle = fromCenterAndRadiusParameters(center, radiusString);
+        int page = toInteger("page", pageString);
+        int pageSize = toInteger("pageSize", pageSizeString);
+        checkPageSizeRange(pageSize);
+
+        return venueService.findVenues(name, eventId, circle, page, pageSize);
+    }
 
     @GET
     @Path("/{id}")

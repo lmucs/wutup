@@ -3,7 +3,6 @@ package edu.lmu.cs.wutup.ws.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -14,8 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
-import edu.lmu.cs.wutup.ws.model.Quadrangle;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Repository
@@ -73,8 +72,26 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     @Override
-    public List<Venue> findVenues(String name, Integer eventId, Quadrangle searchBox, int pageNumber, int pageSize) {
-        // TODO!  STUB!
+    public List<Venue> findVenues(String name, Integer eventId, Circle circle, int pageNumber, int pageSize) {
+        // QueryBuilder builder = new QueryBuilder();
+        // builder.addTable("venue v");
+        // if (eventId != null) {
+        //     builder.addTable("join occurrence o on (o.venueId = v.id)");
+        //     builder.addTable("join event_occurrence eo on (o.id = eo.occurrenceId)");
+        //     builder.addTable("join event e on eo.eventId = e.id");
+        //     builder.addWhere("e.eventId = :eventId");
+        // }
+        // if (name != null) {
+        //     builder.addWhere("v.name = :name");
+        // }
+        // if (circle != null) {
+        //     builder.addCircleSearch ...
+        // }
+        // builder.addPagination(pageNumber, pageSize);
+        //
+        // then send to jdbcTemplate
+        //
+        // Actually still a stub
         return null;
     }
 
