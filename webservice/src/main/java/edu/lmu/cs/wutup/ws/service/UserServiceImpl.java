@@ -33,4 +33,14 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(int id) {
         userDao.deleteUser(id);
     }
+    
+    public User createUserAsUpdateTemplate(User userToUpdate, User updater) {
+        User template = new User(
+                userToUpdate.getId(),
+                updater.getFirstName() == null ? userToUpdate.getFirstName() : updater.getFirstName(),
+                updater.getLastName() == null ? userToUpdate.getLastName() : updater.getLastName(),
+                updater.getEmail() == null ? userToUpdate.getEmail() : updater.getEmail(),
+                updater.getNickname() == null ? userToUpdate.getNickname() : updater.getNickname());
+        return template;
+    }
 }

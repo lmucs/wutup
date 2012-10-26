@@ -25,7 +25,8 @@ public class UserDaoJdbcImpl implements UserDao {
     
     private static final String CREATE_SQL = "insert into user(id, firstName, lastName, email, nickname) values(?, ?, ?, ?, ?);";
     private static final String CREATE_WITH_AUTO_GENERATE_ID = "insert into user(firstName, lastName, email, nickname) values(?, ?, ?, ?);";
-    private static final String UPDATE_SQL = "update user set firstName=?, lastName=?, email=?, nickname=? where id=?;";
+    private static final String UPDATE_SQL = "update user set firstName=ifnull(?, firstName), lastName=ifnull(?, lastName), " +
+            "email=ifnull(?, email), nickname=ifnull(?, nickname) where id=?;";
     private static final String DELETE_SQL = "delete from user where id=?;";
     private static final String FIND_BY_ID_SQL = "select * from user where id=?;";
     private static final String COUNT_SQL = "select count(*) from user;";

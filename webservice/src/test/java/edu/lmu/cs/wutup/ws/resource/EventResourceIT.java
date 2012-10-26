@@ -66,6 +66,31 @@ public class EventResourceIT {
         when().
             patch("/wutup/events/46");
     }
+    
+    @Test
+    public void patchToExistingEventResponds204() {
+        given().
+            contentType("application/json").
+            body("{\"name\":\"Texas Hold Em\"}").
+        expect().
+            statusCode(204).
+        when().
+            patch("/wutup/events/8");
+            
+    }
+    
+    @Test
+    public void getEventAfterUpdate() {
+        given()
+            .contentType("application/json")
+        .expect()
+            .statusCode(200)
+            .body(containsString("\"name\":\"Texas Hold Em\""))
+            .body(containsString("\"description\":\"Don't miss out\""))
+            .body(containsString("\"id\":8"))
+        .when()
+            .get("/wutup/events/8");
+    }
 
     @Test
     public void endpointPostJsonCorrectlyCreatesEventAndProduces201() {

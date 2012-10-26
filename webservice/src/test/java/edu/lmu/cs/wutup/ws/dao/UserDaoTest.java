@@ -104,7 +104,7 @@ public class UserDaoTest {
         
         User newer = userDao.findUserById(9);
         assertThat(newer.getEmail(), is(u.getEmail()));
-        assertThat(newer.getNickname(), is(u.getNickname()));//TODO need to automate user ids
+        assertThat(newer.getNickname(), is(u.getNickname()));
     }
     
     @Test

@@ -56,6 +56,20 @@ public class UserResourceIT {
         .when()
             .patch("wutup/users/1");
     }
+    
+    @Test
+    public void getUserAfterUpdate() {
+        expect()
+        .statusCode(200)
+        .contentType("application/json")
+            .body(containsString("\"id\":1"))
+            .body(containsString("\"nickname\":\"hybrid\""))
+            .body(containsString("\"email\":\"test@user.com\""))
+            .body(containsString("\"firstname\":\"Honda\""))
+            .body(containsString("\"lastname\":\"Prius\""))
+        .when()
+            .get("/wutup/users/1");
+    }
 
     @Test
     public void getNonExistantUserResponds404() {

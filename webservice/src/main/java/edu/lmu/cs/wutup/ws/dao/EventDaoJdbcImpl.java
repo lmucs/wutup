@@ -30,7 +30,7 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String PAGINATION = "limit ? offset ?";
 
     private static final String CREATE_SQL = "insert into event (name, description, ownerId) values (?,?,?)";
-    private static final String UPDATE_SQL = "update event set name=?, description=? where id=?";
+    private static final String UPDATE_SQL = "update event set name=ifnull(?, name), description=ifnull(?, description) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT_EVENT + " where e.id=?";
     private static final String FIND_ALL_SQL = SELECT_EVENT + " " + PAGINATION;
     private static final String FIND_BY_NAME_SQL = SELECT_EVENT + " where e.name=? " + PAGINATION;
