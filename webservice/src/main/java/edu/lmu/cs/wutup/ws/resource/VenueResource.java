@@ -53,9 +53,14 @@ public class VenueResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<Venue> findVenues(@PathParam("name") String name, @QueryParam("event") String eventIdString,
-            @QueryParam("center") String center, @QueryParam("radius") String radiusString,
-            @QueryParam("page") String pageString, @QueryParam("pageSize") String pageSizeString) {
+    public List<Venue> findVenues(
+            @QueryParam("name") String name,
+            @QueryParam("event") String eventIdString,
+            @QueryParam("center") String center,
+            @QueryParam("radius") String radiusString,
+            @QueryParam("page") String pageString,
+            @QueryParam("pageSize") String pageSizeString) {
+
         Integer eventId = eventIdString == null ? null : toInteger("event", eventIdString);
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
         int page = toInteger("page", pageString);
