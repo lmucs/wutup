@@ -4,12 +4,15 @@ import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class UserResourceIT {
 
+    @Ignore
     @Test
     public void getUserRespondsProperly() {
+        
         expect()
             .statusCode(200)
             .contentType("application/json")
@@ -55,13 +58,25 @@ public class UserResourceIT {
             .statusCode(204)
         .when()
             .patch("wutup/users/1");
+        
+        expect()
+            .statusCode(200)
+            .contentType("application/json")
+            .body(containsString("\"id\":1"))
+            .body(containsString("\"nickname\":\"hybrid\""))
+            .body(containsString("\"email\":\"test@user.com\""))
+            .body(containsString("\"firstname\":\"Honda\""))
+            .body(containsString("\"lastname\":\"Prius\""))
+        .when()
+            .get("/wutup/users/1");
     }
     
+    @Ignore
     @Test
     public void getUserAfterUpdate() {
         expect()
-        .statusCode(200)
-        .contentType("application/json")
+            .statusCode(200)
+            .contentType("application/json")
             .body(containsString("\"id\":1"))
             .body(containsString("\"nickname\":\"hybrid\""))
             .body(containsString("\"email\":\"test@user.com\""))
