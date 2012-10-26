@@ -11,27 +11,19 @@ public class Category {
     private Integer parentId;
 
     public Category() {
-        this.id = null;
-        this.name = null;
-        this.parentId = null;
+        this(null, null, null);
     }
     
     public Category(String name) {
-        this.id = null;
-        this.name = name;
-        this.parentId = null;
+        this(null, name, null);
     }
     
     public Category(String name, Integer parentId) {
-        this.id = null;
-        this.name = name;
-        this.parentId = parentId;
+        this(null, name, parentId);
     }
     
     public Category(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-        this.parentId = null;
+        this(id, name, null);
     }
     
     public Category(Integer id, String name, Integer parentId) {
