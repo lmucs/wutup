@@ -21,7 +21,6 @@ public class GeocodeResource {
     GeocodeServiceImpl geocodeService;
     
     @GET
-    @Path("/address")
     @Produces({"application/json"})
     public Response resolveAddressToLatLong(@QueryParam("address") String address) throws NoAddressProvidedException {
         if (address == null) {
