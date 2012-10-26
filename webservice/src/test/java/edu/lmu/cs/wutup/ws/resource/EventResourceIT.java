@@ -68,7 +68,7 @@ public class EventResourceIT {
     }
     
     @Test
-    public void patchToExistingEventResponds204() {
+    public void getEventAfterUpdate() {
         given().
             contentType("application/json").
             body("{\"name\":\"Texas Hold Em\"}").
@@ -76,11 +76,7 @@ public class EventResourceIT {
             statusCode(204).
         when().
             patch("/wutup/events/8");
-            
-    }
-    
-    @Test
-    public void getEventAfterUpdate() {
+        
         given()
             .contentType("application/json")
         .expect()
