@@ -115,8 +115,11 @@ public class EventResource extends AbstractWutupResource {
 
     @GET
     @Path("/{id}/comments")
-    public List<Comment> findEventComments(@PathParam("id") String idString, @QueryParam("page") String pageString,
+    public List<Comment> findEventComments(
+            @PathParam("id") String idString,
+            @QueryParam("page") String pageString,
             @QueryParam("pageSize") String pageSizeString) {
+
         checkRequiredParameter("id", idString);
         int eventId = toInteger("id", idString);
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
@@ -138,8 +141,11 @@ public class EventResource extends AbstractWutupResource {
 
     @PUT
     @Path("/{id}/comments/{commentid}")
-    public Response updateComment(@PathParam("id") String eventIdString, @PathParam("commentid") String commentIdString,
+    public Response updateComment(
+            @PathParam("id") String eventIdString,
+            @PathParam("commentid") String commentIdString,
             Comment eventComment) {
+
         int eventId = toInteger("id", commentIdString);
         int commentId = toInteger("commentid", commentIdString);
         checkIdAgreement(commentId, eventComment.getId());
@@ -154,7 +160,10 @@ public class EventResource extends AbstractWutupResource {
 
     @DELETE
     @Path("/{id}/comments/{commentid}")
-    public Response deleteComment(@PathParam("id") String eventIdString, @PathParam("commentid") String commentIdString) {
+    public Response deleteComment(
+            @PathParam("id") String eventIdString,
+            @PathParam("commentid") String commentIdString) {
+
         int eventId = toInteger("id", commentIdString);
         int commentId = toInteger("commentid", commentIdString);
         try {

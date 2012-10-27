@@ -104,7 +104,8 @@ public abstract class AbstractWutupResource {
 
     /**
      * Creates a circle object out of strings hopefully in the official format of the API; throws a service
-     * exception with BAD_REQUEST if the strings are malformed or have values out of range.
+     * exception with BAD_REQUEST if the strings are malformed or if only partially specified; throws a
+     * service exception with FORBIDDEN if values are out of range.
      */
     Circle fromCenterAndRadiusParameters(String center, String radiusString) {
         if (center == null && radiusString == null) {
@@ -131,16 +132,19 @@ public abstract class AbstractWutupResource {
         try {
             return new Circle(centerLatitude, centerLongitude, radius);
         } catch (IllegalArgumentException e) {
-            throw new ServiceException(BAD_REQUEST, e.getMessage());
+            throw new ServiceException(FORBIDDEN, e.getMessage());
         }
     }
 
+    /**
+     * Creates a pagination data object out of string parameters.  Throws a serice exception with BAD_REQUEST
+     * if either parmeter is missing or malformed; throws a service exception with FORBIDDEN if values are out
+     * of range.
+     */
     PaginationData paginationDataFor(String pageString, String pageSizeString) {
-        checkRequiredParameter("page", pageString);
-        checkRequiredParameter("pageSize", pageSizeString);
 
-        int page = toInteger("page", pageString);
-        int pageSize = toInteger("pageSize", pageSizeString);
+        int page = toIntegerRequired("page", pageString);
+        int pageSize = toIntegerRequired("pageSize", pageSizeString);
 
         try {
             return new PaginationData(page, pageSize);

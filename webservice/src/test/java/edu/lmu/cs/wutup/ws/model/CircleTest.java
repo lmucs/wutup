@@ -4,6 +4,10 @@ import org.junit.Test;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.CoreMatchers.endsWith;
+import static org.hamcrest.CoreMatchers.containsString;
 
 public class CircleTest {
 
@@ -51,6 +55,33 @@ public class CircleTest {
     @Test
     public void radiusTooHighIsChecked() {
         boundsCheck(0, 0, 100.015625, "Radius out of range: 100.015625");
+    }
+
+    @Test
+    public void equalsUsesAllFields() {
+        assertThat(new Circle(1, 1, 10), equalTo(new Circle(1, 1, 10)));
+        assertThat(new Circle(1, 1, 10), not(equalTo(new Circle(1.001, 1, 10))));
+        assertThat(new Circle(1, 1, 10), not(equalTo(new Circle(1, 1.001, 10))));
+        assertThat(new Circle(1, 1, 10), not(equalTo(new Circle(1, 1, 10.001))));
+    }
+
+    @Test
+    public void hashCodeMakesSense() {
+        Circle c1 = new Circle(10, 15, 10);
+        Circle c2 = new Circle(10, 15, 10);
+        Circle c3 = new Circle(10.000001, 15, 10);
+        assertThat(c1.hashCode(), equalTo(c2.hashCode()));
+        assertThat(c1.hashCode(), not(equalTo(c3.hashCode())));
+    }
+
+    @Test
+    public void toStringIncludesAllFields() {
+        String result = new Circle(7, 9, 20).toString();
+        assertThat(result, startsWith("Circle"));
+        assertThat(result, endsWith("}"));
+        assertThat(result, containsString("lat"));
+        assertThat(result, containsString("lon"));
+        assertThat(result, containsString("radius"));
     }
 
     private void boundsCheck(double lat, double lon, double radius, String expectedMessage) {

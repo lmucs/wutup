@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 
 /**
@@ -26,5 +27,30 @@ public class Circle {
         this.centerLatitude = centerLatitude;
         this.centerLongitude = centerLongitude;
         this.radius = radius;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(centerLatitude, centerLongitude, radius);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (! (obj instanceof Circle)) {
+            return false;
+        }
+        Circle other = Circle.class.cast(obj);
+        return (centerLatitude == other.centerLatitude
+                && centerLongitude == other.centerLongitude
+                && radius == other.radius);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("lat", centerLatitude)
+                .add("lon", centerLongitude)
+                .add("radius", radius)
+                .toString();
     }
 }
