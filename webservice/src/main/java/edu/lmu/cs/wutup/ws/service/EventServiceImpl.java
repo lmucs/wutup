@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.lmu.cs.wutup.ws.dao.EventDao;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 @Service
 @Transactional
@@ -33,9 +34,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findEventsByName(String name, int pageNumber, int pageSize) {
-        return name == null ? eventDao.findAllEvents(pageNumber, pageSize) : eventDao.findEventsByName(name,
-                pageNumber, pageSize);
+    public List<Event> findEvents(PaginationData pagination) {
+        return eventDao.findEvents(pagination);
     }
 
     @Override
@@ -56,8 +56,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Comment> findComments(int eventId, int page, int pageSize) {
-        return eventDao.findComments(eventId, page, pageSize);
+    public List<Comment> findComments(int eventId, PaginationData pagination) {
+        return eventDao.findComments(eventId, pagination);
     }
 
     @Override

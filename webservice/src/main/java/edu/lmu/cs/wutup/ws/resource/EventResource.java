@@ -32,6 +32,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.service.EventService;
 
 @Component
@@ -51,13 +52,12 @@ public class EventResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<Event> findEventsByName(@QueryParam("name") String name, @QueryParam("page") String pageString,
+    public List<Event> findEvents(@QueryParam("page") String pageString,
             @QueryParam("pageSize") String pageSizeString) {
-        int page = toInteger("page", pageString);
-        int pageSize = toInteger("pageSize", pageSizeString);
-        checkPageSizeRange(pageSize);
 
-        return eventService.findEventsByName(name, page, pageSize);
+        // TODO - STUB - NEEDS TO TAKE MORE PARAMETERS IN THE FUTURE
+        PaginationData pagination = paginationDataFor(pageString, pageSizeString);
+        return eventService.findEvents(pagination);
     }
 
     @GET
@@ -119,11 +119,9 @@ public class EventResource extends AbstractWutupResource {
             @QueryParam("pageSize") String pageSizeString) {
         checkRequiredParameter("id", idString);
         int eventId = toInteger("id", idString);
-        int page = toInteger("page", pageString);
-        int pageSize = toInteger("pageSize", pageSizeString);
-        checkPageSizeRange(pageSize);
+        PaginationData pagination = paginationDataFor(pageString, pageSizeString);
 
-        return eventService.findComments(eventId, page, pageSize);
+        return eventService.findComments(eventId, pagination);
     }
 
     @POST

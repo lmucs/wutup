@@ -15,6 +15,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 
 /**
@@ -98,27 +99,17 @@ public class EventDaoTest {
         assertThat(eventDao.findNumberOfEvents(), is(8));
     }
 
-    @Test
-    public void eventAliceIsInInitialDataSet() {
-        List<Event> events = eventDao.findEventsByName("Poker Night", 0, 12);
-        assertThat(events.size(), is(1));
-
-    }
-
-    @Test
-    public void findingByNonexistentNameReturnsEmptyList() {
-        List<Event> events = eventDao.findEventsByName("Qwertyuiop", 0, 10);
-        assertThat(events.size(), is(0));
-    }
+    // TODO - when general finding is implemented, do tests that find events and events that return an empty
+    // list of events.
 
     @Test
     public void findingEventsViaPaginationWorks() {
         assertThat(eventDao.findNumberOfEvents(), is(8));
-        List<Event> events = eventDao.findAllEvents(0, 3);
+        List<Event> events = eventDao.findEvents(new PaginationData(0, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findAllEvents(1, 3);
+        events = eventDao.findEvents(new PaginationData(1, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findAllEvents(2, 3);
+        events = eventDao.findEvents(new PaginationData(2, 3));
         assertThat(events.size(), is(2));
     }
 

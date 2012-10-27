@@ -12,6 +12,7 @@ import org.joda.time.Interval;
 
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Circle;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 /**
  * Base for all resource classes in the Wutup webservice.
@@ -27,16 +28,11 @@ public abstract class AbstractWutupResource {
     private static final String MISSING_RADIUS = "The radius parameter must be present if the center is supplied";
     private static final String MALFORMED_PARAMETER = "The parameter '%s' is malformed";
 
-    private static final int MIN_PAGE_SIZE = 1;
-    private static final int MAX_PAGE_SIZE = 50;
-    private static final double MIN_SEARCH_RADIUS = 0.001;
-    private static final double MAX_SEARCH_RADIUS = 200;
-
     private static final Pattern CENTER_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?");
     private static final Pattern RADIUS_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
 
     /**
-     * Ultimately causes an HTTP 400 (Bad Request) if the value is null (corresponds to a missing required HTTP
+     * Throws a service exception with BAD_REQUEST is the value is null (corresponds to a missing required HTTP
      * parameter.
      */
     void checkRequiredParameter(String name, String value) {
@@ -46,32 +42,21 @@ public abstract class AbstractWutupResource {
     }
 
     /**
-     * Returns the integer value for an HTTP parameter, ultimately causing an HTTP 400 (Bad Request) if the parameter
-     * value is not readable as an integer.
+     * Throws a service exception with BAD_REQUEST if the parameter is not readable as an integer (if present).
      */
-    int toInteger(String name, String value) {
-        checkRequiredParameter(name, value);
+    Integer toInteger(String name, String value) {
+        if (value == null) {
+            return null;
+        }
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
             throw new ServiceException(BAD_REQUEST, PARAMETER_NON_INTEGER, name);
         }
-
     }
 
     /**
-     * Ultimately causes an HTTP 403 (Forbidden) if the value is out of range (corresponds to an HTTP request asking for
-     * something that is too small or too large.
-     */
-    void checkDoubleRange(String name, double value, double low, double high) {
-        if (value < low || value > high) {
-            throw new ServiceException(FORBIDDEN, PARAMETER_OUT_OF_RANGE, name, low, high);
-        }
-    }
-
-    /**
-     * Ultimately causes an HTTP 403 (Forbidden) if the value is out of range (corresponds to an HTTP request asking for
-     * something that is too small or too large.
+     * Throws a service exception with FORBIDDEN if the given value is not in the range low..high.
      */
     void checkRange(String name, int value, int low, int high) {
         if (value < low || value > high) {
@@ -79,12 +64,8 @@ public abstract class AbstractWutupResource {
         }
     }
 
-    void checkPageSizeRange(int value) {
-        checkRange("pageSize", value, MIN_PAGE_SIZE, MAX_PAGE_SIZE);
-    }
-
     /**
-     * Ultimately generates an HTTP 400 if the parameter value doesn't match the regex.
+     * Throws a service exception with BAD_REQUEST if the parameter value doesn't match the regex.
      */
     void checkParameterSyntax(String parameterName, Pattern regex, String value) {
         Matcher matcher = regex.matcher(value);
@@ -94,7 +75,7 @@ public abstract class AbstractWutupResource {
     }
 
     /**
-     * Ultimately causes an HTTP 409 (Conflict) if the two ids are not the same.
+     * Throws a service exception with CONFLICT if the two ids are both present but not the same.
      */
     void checkIdAgreement(int idInPath, Integer idInBody) {
         if (idInBody != null && idInPath != idInBody) {
@@ -103,7 +84,7 @@ public abstract class AbstractWutupResource {
     }
 
     /**
-     * Utility method for checking an input interval's validity.
+     * Throws a service exception with BAD_REQUEST if an interval is illegal.
      */
     Interval validateInterval(DateTime startDate, DateTime endDate) {
         try {
@@ -113,6 +94,10 @@ public abstract class AbstractWutupResource {
         }
     }
 
+    /**
+     * Creates a circle object out of strings hopefully in the official format of the API; throws a service
+     * exception with BAD_REQUEST if the strings are malformed or have values out of range.
+     */
     Circle fromCenterAndRadiusParameters(String center, String radiusString) {
         if (center == null && radiusString == null) {
             // Perfectly fine, these are optional, but must appear together
@@ -129,11 +114,30 @@ public abstract class AbstractWutupResource {
 
         checkParameterSyntax("center", CENTER_PATTERN, center);
         checkParameterSyntax("radius", RADIUS_PATTERN, radiusString);
+
         String[] coordinates = center.split(",");
         double centerLatitude = Double.parseDouble(coordinates[0]);
         double centerLongitude = Double.parseDouble(coordinates[1]);
         double radius = Double.parseDouble(radiusString);
-        checkDoubleRange("radius", radius, MIN_SEARCH_RADIUS, MAX_SEARCH_RADIUS);
-        return new Circle(centerLatitude, centerLongitude, radius);
+
+        try {
+            return new Circle(centerLatitude, centerLongitude, radius);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException(BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    PaginationData paginationDataFor(String pageString, String pageSizeString) {
+        checkRequiredParameter("page", pageString);
+        checkRequiredParameter("pageSize", pageSizeString);
+
+        int page = toInteger("page", pageString);
+        int pageSize = toInteger("pageSize", pageSizeString);
+
+        try {
+            return new PaginationData(page, pageSize);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException(FORBIDDEN, e.getMessage());
+        }
     }
 }

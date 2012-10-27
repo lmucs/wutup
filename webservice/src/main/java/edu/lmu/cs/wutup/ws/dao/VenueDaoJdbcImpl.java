@@ -15,6 +15,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Repository
@@ -72,7 +73,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     @Override
-    public List<Venue> findVenues(String name, Integer eventId, Circle circle, int pageNumber, int pageSize) {
+    public List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination) {
         // QueryBuilder builder = new QueryBuilder();
         // builder.addTable("venue v");
         // if (eventId != null) {
@@ -116,9 +117,9 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     @Override
-    public List<Comment> findComments(int venueId, int pageNumber, int pageSize) {
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, venueId, pageNumber,
-                pageSize);
+    public List<Comment> findComments(int venueId, PaginationData pagination) {
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, venueId,
+                pagination.pageNumber, pagination.pageSize);
     }
 
     private static RowMapper<Venue> venueRowMapper = new RowMapper<Venue>() {

@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.ws.dao;
 import java.util.List;
 
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 public interface EventDao extends CommentDao {
 
@@ -10,9 +11,7 @@ public interface EventDao extends CommentDao {
 
     Event findEventById(int id);
 
-    List<Event> findEventsByName(String name, int pageNumber, int pageSize);
-
-    List<Event> findAllEvents(int pageNumber, int pageSize);
+    List<Event> findEvents(PaginationData pagination);
 
     void updateEvent(Event e);
 

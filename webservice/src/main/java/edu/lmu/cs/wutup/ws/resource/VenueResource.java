@@ -33,6 +33,7 @@ import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.VenueService;
 
@@ -63,11 +64,9 @@ public class VenueResource extends AbstractWutupResource {
 
         Integer eventId = eventIdString == null ? null : toInteger("event", eventIdString);
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
-        int page = toInteger("page", pageString);
-        int pageSize = toInteger("pageSize", pageSizeString);
-        checkPageSizeRange(pageSize);
+        PaginationData pagination = paginationDataFor(pageString, pageSizeString);
 
-        return venueService.findVenues(name, eventId, circle, page, pageSize);
+        return venueService.findVenues(name, eventId, circle, pagination);
     }
 
     @GET
@@ -129,11 +128,9 @@ public class VenueResource extends AbstractWutupResource {
             @QueryParam("pageSize") String pageSizeString) {
         checkRequiredParameter("id", idString);
         int venueId = toInteger("id", idString);
-        int page = toInteger("page", pageString);
-        int pageSize = toInteger("pageSize", pageSizeString);
-        checkPageSizeRange(pageSize);
+        PaginationData pagination = paginationDataFor(pageString, pageSizeString);
 
-        return venueService.findComments(venueId, page, pageSize);
+        return venueService.findComments(venueId, pagination);
     }
 
     @POST

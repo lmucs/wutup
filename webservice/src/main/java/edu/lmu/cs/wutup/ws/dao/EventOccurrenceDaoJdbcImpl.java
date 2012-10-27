@@ -17,6 +17,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
@@ -147,9 +148,9 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public List<Comment> findComments(int eventId, int pageNumber, int pageSize) {
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId, pageNumber,
-                pageSize);
+    public List<Comment> findComments(int eventId, PaginationData pagination) {
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
+                pagination.pageNumber, pagination.pageSize);
     }
 
     private static RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {

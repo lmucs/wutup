@@ -24,8 +24,9 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
-import edu.lmu.cs.wutup.ws.model.Venue;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.EventOccurrenceService;
 
 public class EventOccurrenceResourceTest {
@@ -189,7 +190,7 @@ public class EventOccurrenceResourceTest {
 
     @Test
     public void findingCommentsByEventIdReturnsList() {
-        when(service.findComments(1, 1, 10)).thenReturn(sampleEventOccurrenceCommentList);
+        when(service.findComments(1, new PaginationData(1, 10))).thenReturn(sampleEventOccurrenceCommentList);
         List<Comment> result = resource.findEventOccurrenceComments("1", "1", "10");
         assertThat(result, is(sampleEventOccurrenceCommentList));
     }

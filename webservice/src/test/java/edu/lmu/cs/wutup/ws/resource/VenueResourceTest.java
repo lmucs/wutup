@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.VenueService;
@@ -67,7 +68,7 @@ public class VenueResourceTest {
 
     @Test
     public void findingCommentsByVenueIdReturnsList() {
-        when(service.findComments(1, 1, 10)).thenReturn(sampleVenueCommentList);
+        when(service.findComments(1, new PaginationData(1, 10))).thenReturn(sampleVenueCommentList);
         List<Comment> result = resource.findVenueComments("1", "1", "10");
         assertThat(result, is(sampleVenueCommentList));
     }

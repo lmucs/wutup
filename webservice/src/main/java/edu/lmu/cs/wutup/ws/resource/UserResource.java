@@ -74,6 +74,7 @@ public class UserResource extends AbstractWutupResource {
     @GET
     @Path("/{id}")
     public User findUserById(@PathParam("id") String idString) {
+        checkRequiredParameter("id", idString);
         int id = toInteger("id", idString);
         try {
             return userService.findUserById(id);

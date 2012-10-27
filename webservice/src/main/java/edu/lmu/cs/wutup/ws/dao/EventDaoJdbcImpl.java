@@ -20,6 +20,7 @@ import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 
 @Repository
@@ -77,13 +78,9 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public List<Event> findEventsByName(String name, int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_BY_NAME_SQL, new Object[]{name, pageSize, pageNumber * pageSize}, eventRowMapper);
-    }
-
-    @Override
-    public List<Event> findAllEvents(int pageNumber, int pageSize) {
-        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pageSize, pageNumber * pageSize}, eventRowMapper);
+    public List<Event> findEvents(PaginationData pagination) {
+        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
+                pagination.pageNumber * pagination.pageSize}, eventRowMapper);
     }
 
     @Override
@@ -115,9 +112,9 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public List<Comment> findComments(int eventId, int pageNumber, int pageSize) {
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId, pageNumber,
-                pageSize);
+    public List<Comment> findComments(int eventId, PaginationData pagination) {
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
+                pagination.pageNumber, pagination.pageSize);
     }
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {

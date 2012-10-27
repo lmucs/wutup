@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.lmu.cs.wutup.ws.dao.VenueDao;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Service
@@ -33,11 +34,9 @@ public class VenueServiceImpl implements VenueService {
         return venueDao.findVenueById(id);
     }
 
-
-
     @Override
-    public List<Venue> findVenues(String name, Integer eventId, Circle circle, int pageNumber, int pageSize) {
-        return venueDao.findVenues(name, eventId, circle, pageNumber, pageSize);
+    public List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination) {
+        return venueDao.findVenues(name, eventId, circle, pagination);
     }
 
     @Override
@@ -53,23 +52,20 @@ public class VenueServiceImpl implements VenueService {
     @Override
     public void addComment(int venueId, Comment comment) {
         venueDao.addComment(venueId, comment);
-
     }
 
     @Override
     public void updateComment(int commentId, Comment comment) {
         venueDao.updateComment(commentId, comment);
-
     }
 
     @Override
-    public List<Comment> findComments(int venueId, int page, int pageSize) {
-        return venueDao.findComments(venueId, page, pageSize);
+    public List<Comment> findComments(int venueId, PaginationData pagination) {
+        return venueDao.findComments(venueId, pagination);
     }
 
     @Override
     public void deleteComment(int venueId, int commentId) {
         venueDao.deleteComment(venueId, commentId);
-
     }
 }

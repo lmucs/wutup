@@ -25,6 +25,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.service.EventService;
 
@@ -164,16 +165,9 @@ public class EventResourceTest {
     }
 
     @Test
-    public void findingByNameReturnsList() {
-        when(service.findEventsByName("Alice", 1, 10)).thenReturn(sampleEventList);
-        List<Event> result = resource.findEventsByName("Alice", "1", "10");
-        assertThat(result, is(sampleEventList));
-    }
-
-    @Test
-    public void findingByNameWithPageSizeTooHighProducesHttp403() {
+    public void findingAllEventsWithPageSizeTooHighProducesHttp403() {
         try {
-            resource.findEventsByName("Alice", "1", "51");
+            resource.findEvents("1", "51");
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(403));
@@ -181,9 +175,9 @@ public class EventResourceTest {
     }
 
     @Test
-    public void findingByNameWithPageSizeTooLowProducesHttp403() {
+    public void findingAllEventsWithPageSizeTooLowProducesHttp403() {
         try {
-            resource.findEventsByName("Alice", "0", "0");
+            resource.findEvents("0", "0");
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(403));
@@ -213,7 +207,7 @@ public class EventResourceTest {
 
     @Test
     public void findingCommentsByEventIdReturnsList() {
-        when(service.findComments(1, 1, 10)).thenReturn(sampleEventCommentList);
+        when(service.findComments(1, new PaginationData(1, 10))).thenReturn(sampleEventCommentList);
         List<Comment> result = resource.findEventComments("1", "1", "10");
         assertThat(result, is(sampleEventCommentList));
     }

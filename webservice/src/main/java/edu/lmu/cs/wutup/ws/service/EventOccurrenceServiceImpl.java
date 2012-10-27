@@ -11,6 +11,7 @@ import edu.lmu.cs.wutup.ws.dao.EventOccurrenceDao;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
@@ -101,14 +102,12 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public List<Comment> findComments(int eventId, int page, int pageSize) {
-        return eventOccurrenceDao.findComments(eventId, page, pageSize);
+    public List<Comment> findComments(int eventId, PaginationData pagination) {
+        return eventOccurrenceDao.findComments(eventId, pagination);
     }
 
     @Override
     public void deleteComment(int eventId, int commentId) {
         eventOccurrenceDao.deleteComment(eventId, commentId);
-
     }
-
 }

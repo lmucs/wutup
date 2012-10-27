@@ -15,6 +15,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 /**
@@ -97,7 +98,7 @@ public class VenueDaoTest {
     @Ignore
     @Test
     public void findingByNonexistentNameReturnsEmptyList() {
-        List<Venue> venues = venueDao.findVenues("Qwertyuiop", null, null, 0, 10);
+        List<Venue> venues = venueDao.findVenues("Qwertyuiop", null, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(0));
     }
 
@@ -105,11 +106,11 @@ public class VenueDaoTest {
     @Test
     public void findingVenuesViaPaginationWorks() {
         assertThat(venueDao.findNumberOfVenues(), is(8));
-        List<Venue> venues = venueDao.findVenues(null, null, null, 0, 3);
+        List<Venue> venues = venueDao.findVenues(null, null, null, new PaginationData(0, 3));
         assertThat(venues.size(), is(3));
-        venues = venueDao.findVenues(null, null, null, 1, 3);
+        venues = venueDao.findVenues(null, null, null, new PaginationData(1, 3));
         assertThat(venues.size(), is(3));
-        venues = venueDao.findVenues(null, null, null, 2, 3);
+        venues = venueDao.findVenues(null, null, null, new PaginationData(2, 3));
         assertThat(venues.size(), is(2));
     }
 

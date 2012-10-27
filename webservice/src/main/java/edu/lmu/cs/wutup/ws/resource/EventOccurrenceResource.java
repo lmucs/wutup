@@ -36,6 +36,7 @@ import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.EventOccurrenceService;
@@ -69,10 +70,10 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         boolean eventIdQuery = (eventId != null);
         boolean venuesQuery = (venues != null);
 
+        // TODO - REPLACE THESE WITH PAGINATION
         int pageNumber = toInteger("page", pageNumberString);
         int pageSize = toInteger("pageSize", pageSizeString);
 
-        checkPageSizeRange(pageSize);
         validateQuery(attendeesQuery, categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);
 
         // TODO: After updating dao turn into a single call.
@@ -139,9 +140,10 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     public List<User> findAttendeesById(@PathParam("id") String idString, @QueryParam("page") String pageString,
             @QueryParam("pageSize") String pageSizeString) {
         int id = toInteger("id", idString);
+
+        // TODO - REPLACE THE FOLLOWING WITH PaginationData
         int page = toInteger("page", pageString);
         int pageSize = toInteger("pageSize", pageSizeString);
-        checkPageSizeRange(pageSize);
 
         return eventOccurrenceService.findAttendeesByEventOccurrenceId(id, page, pageSize);
     }
@@ -200,11 +202,9 @@ public class EventOccurrenceResource extends AbstractWutupResource {
             @QueryParam("page") String pageString, @QueryParam("pageSize") String pageSizeString) {
         checkRequiredParameter("id", idString);
         int eventOccurrenceId = toInteger("id", idString);
-        int page = toInteger("page", pageString);
-        int pageSize = toInteger("pageSize", pageSizeString);
-        checkPageSizeRange(pageSize);
+        PaginationData pagination = paginationDataFor(pageString, pageSizeString);
 
-        return eventOccurrenceService.findComments(eventOccurrenceId, page, pageSize);
+        return eventOccurrenceService.findComments(eventOccurrenceId, pagination);
     }
 
     @POST
