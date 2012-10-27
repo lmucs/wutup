@@ -34,7 +34,6 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String UPDATE_SQL = "update event set name=ifnull(?, name), description=ifnull(?, description) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT_EVENT + " where e.id=?";
     private static final String FIND_ALL_SQL = SELECT_EVENT + " " + PAGINATION;
-    private static final String FIND_BY_NAME_SQL = SELECT_EVENT + " where e.name=? " + PAGINATION;
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 

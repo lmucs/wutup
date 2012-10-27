@@ -62,7 +62,7 @@ public class VenueResource extends AbstractWutupResource {
             @QueryParam("page") String pageString,
             @QueryParam("pageSize") String pageSizeString) {
 
-        Integer eventId = eventIdString == null ? null : toInteger("event", eventIdString);
+        Integer eventId = toInteger("event", eventIdString);
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
 
@@ -72,9 +72,8 @@ public class VenueResource extends AbstractWutupResource {
     @GET
     @Path("/{id}")
     public Venue findVenueById(@PathParam("id") String idString) {
-        checkRequiredParameter("id", idString);
-        int id = toInteger("id", idString);
 
+        int id = toIntegerRequired("id", idString);
         try {
             return venueService.findVenueById(id);
         } catch (NoSuchVenueException e) {
@@ -85,6 +84,7 @@ public class VenueResource extends AbstractWutupResource {
     @POST
     @Path("/")
     public Response createVenue(final Venue venue, @Context UriInfo uriInfo) {
+
         try {
             venueService.createVenue(venue);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(venue.getId() + "").build();
@@ -97,7 +97,8 @@ public class VenueResource extends AbstractWutupResource {
     @PATCH
     @Path("/{id}")
     public Response updateVenue(@PathParam("id") String idString, Venue venue) {
-        int id = toInteger("id", idString);
+
+        int id = toIntegerRequired("id", idString);
         checkIdAgreement(id, venue.getId());
 
         try {
@@ -112,8 +113,8 @@ public class VenueResource extends AbstractWutupResource {
     @DELETE
     @Path("/{id}")
     public Response deleteEvent(@PathParam("id") String idString) {
-        int id = toInteger("id", idString);
 
+        int id = toIntegerRequired("id", idString);
         try {
             venueService.deleteVenue(id);
             return Response.noContent().build();
@@ -124,10 +125,12 @@ public class VenueResource extends AbstractWutupResource {
 
     @GET
     @Path("/{id}/comments")
-    public List<Comment> findVenueComments(@PathParam("id") String idString, @QueryParam("page") String pageString,
+    public List<Comment> findVenueComments(
+            @PathParam("id") String idString,
+            @QueryParam("page") String pageString,
             @QueryParam("pageSize") String pageSizeString) {
-        checkRequiredParameter("id", idString);
-        int venueId = toInteger("id", idString);
+
+        int venueId = toIntegerRequired("id", idString);
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
 
         return venueService.findComments(venueId, pagination);
@@ -136,8 +139,8 @@ public class VenueResource extends AbstractWutupResource {
     @POST
     @Path("/{id}/comments")
     public void addComment(@PathParam("id") String idString, Comment venueComment) {
-        int venueId = toInteger("id", idString);
 
+        int venueId = toIntegerRequired("id", idString);
         try {
             venueService.addComment(venueId, venueComment);
         } catch (CommentExistsException e) {
@@ -147,10 +150,13 @@ public class VenueResource extends AbstractWutupResource {
 
     @PUT
     @Path("/{id}/comments/{commentid}")
-    public Response updateComment(@PathParam("id") String venueIdString, @PathParam("commentid") String commentIdString,
+    public Response updateComment(
+            @PathParam("id") String venueIdString,
+            @PathParam("commentid") String commentIdString,
             Comment venueComment) {
-        int venueId = toInteger("id", commentIdString);
-        int commentId = toInteger("commentid", commentIdString);
+
+        int venueId = toIntegerRequired("id", commentIdString);
+        int commentId = toIntegerRequired("commentid", commentIdString);
         checkIdAgreement(commentId, venueComment.getId());
 
         try {
@@ -163,9 +169,12 @@ public class VenueResource extends AbstractWutupResource {
 
     @DELETE
     @Path("/{id}/comments/{commentid}")
-    public Response deleteComment(@PathParam("id") String venueIdString, @PathParam("commentid") String commentIdString) {
-        int venueId = toInteger("id", commentIdString);
-        int commentId = toInteger("commentid", commentIdString);
+    public Response deleteComment(
+            @PathParam("id") String venueIdString,
+            @PathParam("commentid") String commentIdString) {
+
+        int venueId = toIntegerRequired("id", commentIdString);
+        int commentId = toIntegerRequired("commentid", commentIdString);
         try {
             venueService.deleteComment(venueId, commentId);
             return Response.noContent().build();

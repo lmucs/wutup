@@ -56,6 +56,14 @@ public abstract class AbstractWutupResource {
     }
 
     /**
+     * Throws a service exception with BAD_REQUEST if the parameter is missing or not readable as an integer.
+     */
+    Integer toIntegerRequired(String name, String value) {
+        checkRequiredParameter(name, value);
+        return toInteger(name, value);
+    }
+
+    /**
      * Throws a service exception with FORBIDDEN if the given value is not in the range low..high.
      */
     void checkRange(String name, int value, int low, int high) {
