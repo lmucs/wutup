@@ -9,8 +9,6 @@ public class PageWrapper extends WebPage {
     public PageWrapper(final PageParameters parameters) {
 	super(parameters);
 
-	//add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
-
         // TODO Add your page's components here
 
     }
