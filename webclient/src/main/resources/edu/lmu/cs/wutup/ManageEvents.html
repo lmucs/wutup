@@ -1,0 +1,65 @@
+<wicket:head>
+	<wicket:link>
+	    <link href="css/manageevents.css" rel="stylesheet" />
+	</wicket:link>
+</wicket:head>
+<wicket:extend>
+    <div id="container" class="container">
+        <div class="row-fluid">
+          <div class="span9">
+              <h2>Manage My Events</h2>
+          </div>
+        </div>
+
+      <!-- Example row of columns -->
+      <div class="row-fluid">
+        <div class="span6">
+          <h2>Calendar</h2>
+          <div id="calendar" style='font-size:13px'></div>
+        </div>
+        <div class="span1"></div>
+        <div class="span4">
+          <h2 style="text-align:right">Map</h2>
+          <div id="map_canvas"></div>
+        </div>
+      </div>
+      
+      <div id="create-event-dialog" title="New Event" class="hidden">
+	    <form>
+            <fieldset>
+                <label for="event-name">Event Name</label>
+                <input type="text" name="event-name" id="event-name" class="text ui-widget-content ui-corner-all" />
+                <label for="event-description">Description</label>
+                <input type="text" name="event-description" id="event-description" value="" class="text ui-widget-content ui-corner-all" />
+                <label for="event-address">Address</label>
+                <input type="text" name="event-address" id="event-address" class="text ui-widget-content ui-corner-all" />
+            </fieldset>
+        </form>
+      </div>  
+
+      <footer>
+        <p>&copy; Wutup 2012</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+    <!-- The javascript -->
+	<wicket:link>
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+	 <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+	 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
+	 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqOg2q0dqSGTw1OkyqWTWsVSOLCsHjXpM&sensor=false"></script>
+	 <script src="lib/fullcalendar/fullcalendar.min.js"></script>
+	 <script src="js/manageEventsMap.js"></script>
+	 <script src="js/manageEventsCalendar.js"></script>
+	</wicket:link>
+     <script>
+          (function () {
+
+  $.get('http://localhost:8080/wutup/events?name=Weekly+Hackathon&page=0&pageSize=5', function(data) {
+    $('#result').html(JSON.stringify(data));
+  });
+
+}());
+          </script> 
+</wicket:extend>
