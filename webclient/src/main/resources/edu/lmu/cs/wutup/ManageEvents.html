@@ -4,44 +4,48 @@
 	</wicket:link>
 </wicket:head>
 <wicket:extend>
-    <div id="container" class="container">
-        <div class="row-fluid">
-          <div class="span9">
-              <h2>Manage My Events</h2>
-          </div>
-        </div>
+	<div id="container" class="container-fluid">
+		<div class="row-fluid">
+			<div class="span9">
+				<h2>Manage My Events</h2>
+			</div>
+		</div>
 
-      <!-- Example row of columns -->
-      <div class="row-fluid">
-        <div class="span6">
-          <h2>Calendar</h2>
-          <div id="calendar" style='font-size:13px'></div>
-        </div>
-        <div class="span1"></div>
-        <div class="span4">
-          <h2 style="text-align:right">Map</h2>
-          <div id="map_canvas"></div>
-        </div>
-      </div>
-      
-      <div id="create-event-dialog" title="New Event" class="hidden">
-	    <form>
-            <fieldset>
-                <label for="event-name">Event Name</label>
-                <input type="text" name="event-name" id="event-name" class="text ui-widget-content ui-corner-all" />
-                <label for="event-description">Description</label>
-                <input type="text" name="event-description" id="event-description" value="" class="text ui-widget-content ui-corner-all" />
-                <label for="event-address">Address</label>
-                <input type="text" name="event-address" id="event-address" class="text ui-widget-content ui-corner-all" />
-            </fieldset>
-        </form>
-      </div>  
+		<!-- Example row of columns -->
+		<div class="row-fluid">
+			<div class="span6">
+				<h2>Calendar</h2>
+				<div id="calendar" style='font-size: 13px'></div>
+			</div>
+			<div class="span1"></div>
+			<div class="span6">
+				<h2 style="text-align: right">Map</h2>
+				<div id="map_canvas"></div>
+			</div>
+		</div>
 
-      <footer>
-        <p>&copy; Wutup 2012</p>
-      </footer>
+		<div id="create-event-dialog" title="New Event" class="hidden">
+			<form>
+				<fieldset>
+					<label for="event-name">Event Name</label> <input type="text"
+						name="event-name" id="event-name"
+						class="text ui-widget-content ui-corner-all" /> <label
+						for="event-description">Description</label> <input type="text"
+						name="event-description" id="event-description" value=""
+						class="text ui-widget-content ui-corner-all" /> <label
+						for="event-address">Address</label> <input type="text"
+						name="event-address" id="event-address"
+						class="text ui-widget-content ui-corner-all" />
+				</fieldset>
+			</form>
+		</div>
 
-    </div> <!-- /container -->
+		<footer>
+			<p>&copy; Wutup 2012</p>
+		</footer>
+
+	</div>
+	<!-- /container -->
 
     <!-- The javascript -->
 	<wicket:link>
