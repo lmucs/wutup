@@ -9,6 +9,7 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import edu.lmu.cs.wutup.ws.exception.MalformedCoordinatesException;
 import edu.lmu.cs.wutup.ws.exception.NoAddressProvidedException;
 import edu.lmu.cs.wutup.ws.model.LatLong;
 import edu.lmu.cs.wutup.ws.service.GeocodeServiceImpl;
@@ -22,16 +23,19 @@ public class GeocodeResource {
     
     @GET
     @Produces({"application/json"})
-    public Response resolveAddressToLatLong(@QueryParam("address") String address) throws NoAddressProvidedException {
-        if (address == null) {
+    public Response resolveAddressToLatLong(@QueryParam("address") String address) {
+        
+        LatLong response;
+        
+        try {
+            // TODO: We need to expect that address has already had spaces replaced with + characters
+            response = geocodeService
+                    .resolveAddressToLatLong(address);
+        } catch (NoAddressProvidedException e) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .build();
         }
-        
-        // TODO: We need to expect that address has already had spaces replaced with + characters
-        LatLong response = geocodeService
-                .resolveAddressToLatLong(address);
         
         if (response == null) {
             return Response
@@ -44,5 +48,33 @@ public class GeocodeResource {
                 .build();
     }
     
+    @GET
+    @Path("/reverse")
+    @Produces({"application/json"})
+    public Response resolveLatLongToAddress(
+            @QueryParam("lat") Double lat,
+            @QueryParam("lng") Double lng) {
+        
+        String response;
+        
+        try {
+            response = geocodeService
+                    .resolveLatLongToAddress(lat, lng);
+        } catch (MalformedCoordinatesException e) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .build();
+        }
+        
+        if (response == null) {
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+        
+        return Response
+                .ok(response)
+                .build();
+    }
     
 }

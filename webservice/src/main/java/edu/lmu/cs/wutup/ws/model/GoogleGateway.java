@@ -19,6 +19,11 @@ public class GoogleGateway {
         return stringifyEntity(executeRequest(constructAddressResolutionUrl(address)));
     }
     
+    public static String geocodeCoordinatesToAddress(Double lat, Double lng) throws ParseException, ClientProtocolException, IOException {
+        return stringifyEntity(executeRequest(constructCoordinateResolutionUrl(lat, lng)));
+    }
+    
+    //TODO: Revise method to account for the response Google hands back for reverse geocoding
     public static JSONObject parseJSONResponseToLocation(JSONObject j) throws JSONException {
         return ((JSONObject) j
                 .getJSONArray("results")
@@ -27,9 +32,16 @@ public class GoogleGateway {
                 .getJSONObject("location");
     }
     
-    private static HttpEntity executeRequest(String address) throws ClientProtocolException, IOException {
+    public static String extractAddressFromJSON(JSONObject j) throws JSONException {
+        return (String) ((JSONObject) j
+                .getJSONArray("results")
+                .get(0))
+                .get("formatted_address");
+    }
+    
+    private static HttpEntity executeRequest(String url) throws ClientProtocolException, IOException {
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet httpget = new HttpGet(address);
+        HttpGet httpget = new HttpGet(url);
         HttpResponse response = httpclient.execute(httpget);
         HttpEntity entity = response.getEntity();
         
@@ -44,5 +56,10 @@ public class GoogleGateway {
     private static String constructAddressResolutionUrl(String address) {
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" + 
                 address.replaceAll("\\s+", "+") + "&sensor=true";
+    }
+    
+    private static String constructCoordinateResolutionUrl(Double lat, Double lng) {
+        return "https://maps.googleapis.com/maps/api/geocode/json?latlng="
+                + lat + "," + lng + "&sensor=true";
     }
 }

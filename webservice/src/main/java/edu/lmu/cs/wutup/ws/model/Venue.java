@@ -14,8 +14,8 @@ public class Venue implements Commentable {
     private Integer id;
     private String name;
     private String address;
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+    private Double longitude;
     private ArrayList<Comment> comments;
 
     private Map<String, String> propertyMap;
