@@ -1,14 +1,14 @@
 package edu.lmu.cs.wutup.ws.service;
 
-import static org.junit.Assert.assertThat;
+import static edu.lmu.cs.wutup.ws.model.GoogleGateway.parseJSONResponseToLocation;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.exception.NoAddressProvidedException;
-import static edu.lmu.cs.wutup.ws.model.GoogleGateway.parseJSONResponseToLocation;
 
 public class GeocodeServiceTest {
 
