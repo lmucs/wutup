@@ -23,8 +23,19 @@ public class GeocodeResource {
     
     @GET
     @Produces({"application/json"})
-    public Response resolveAddressToLatLong(@QueryParam("address") String address) {
+    public Response resolveAddressToLatLong(
+            @QueryParam("address") String address,
+            @QueryParam("lat") Double lat,
+            @QueryParam("lng") Double lng) {
         
+        if (address != null && !address.equals("")) {
+            return resolveAddress(address);
+        } else {
+            return resolveLatLong(lat, lng);
+        }
+    }
+    
+    private Response resolveAddress(String address) {
         LatLong response;
         
         try {
@@ -48,13 +59,7 @@ public class GeocodeResource {
                 .build();
     }
     
-    @GET
-    @Path("/reverse")
-    @Produces({"application/json"})
-    public Response resolveLatLongToAddress(
-            @QueryParam("lat") Double lat,
-            @QueryParam("lng") Double lng) {
-        
+    private Response resolveLatLong(Double lat, Double lng) {
         String response;
         
         try {
