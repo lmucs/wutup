@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.lmu.cs.wutup.ws.model.PaginationData;
+
 /**
  * QueryBuilder is a builder that constructs a SQL query from an initial string and any number of "clauses" or arbitrary
  * strings. Clauses represent conditions based on a particular value; the resulting appended string follows Hibernate's
@@ -71,6 +73,14 @@ public class QueryBuilder {
         }
         return this;
     }
+    
+    public QueryBuilder addPagination(PaginationData p) {
+        assertNotBuilt();
+        String newSuffix = this.afterWhereClauseString == null ? "" : this.afterWhereClauseString + " ";
+        newSuffix += "limit " + p.pageSize + " offset " + p.pageSize * p.pageNumber;
+        this.afterWhereClauseString = newSuffix;
+        return this;
+    }
 
     /**
      * Puts the base string, the clauses, and the parameters all together into a Hibernate query object.
@@ -110,6 +120,10 @@ public class QueryBuilder {
      */
     public Map<String, Object> getParameters() {
         return parameters;
+    }
+    
+    public static String formatForLikeStatement(String s) {
+        return "\'" + s + "%\'";
     }
 
 }

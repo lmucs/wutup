@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Circle;
@@ -74,7 +75,16 @@ public class VenueDaoJdbcImpl implements VenueDao {
 
     @Override
     public List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination) {
-        // QueryBuilder builder = new QueryBuilder();
+        QueryBuilder builder = new QueryBuilder(SELECT_VENUE);
+        
+        if (pagination != null) {
+            builder.addPagination(pagination);
+        }
+        
+        if (name != null) {
+            name = QueryBuilder.formatForLikeStatement(name);
+            builder.clause("lower(v.name) like lower(:venueName)", name);
+        }
         // builder.addTable("venue v");
         // if (eventId != null) {
         //     builder.addTable("join occurrence o on (o.venueId = v.id)");
@@ -93,7 +103,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
         // then send to jdbcTemplate
         //
         // Actually still a stub
-        return null;
+        return jdbcTemplate.query(builder.build(), venueRowMapper);
     }
 
     @Override
