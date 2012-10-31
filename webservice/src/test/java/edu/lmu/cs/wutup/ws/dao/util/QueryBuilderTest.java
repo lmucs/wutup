@@ -38,4 +38,13 @@ public class QueryBuilderTest {
                 .build();
         assertThat(query, equalTo("select * from event limit 3 offset 0"));
     }
+    
+    @Test
+    public void testQueryBuilderAppend() {
+        String query = new QueryBuilder("select * from event")
+                .clause("name = :userName", "'Rich'")
+                .append(" some text to append")
+                .build();
+        assertThat(query, equalTo("select * from event some text to append where name = 'Rich'"));
+    }
 }

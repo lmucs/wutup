@@ -15,6 +15,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
@@ -100,13 +101,13 @@ public class VenueDaoTest {
         List<Venue> venues = venueDao.findVenues("Qwertyuiop", null, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(0));
     }
-    
+
     @Test
     public void findVenueByNameReturnsCorrectResults() {
         List<Venue> venues = venueDao.findVenues("PANT", null, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(1));
         assertThat(venues.get(0).getId(), is(1));
-        
+
         venues = venueDao.findVenues("thE", null, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(2));
         assertThat(venues.get(0).getId(), is(5));
@@ -122,6 +123,22 @@ public class VenueDaoTest {
         assertThat(venues.size(), is(3));
         venues = venueDao.findVenues(null, null, null, new PaginationData(2, 3));
         assertThat(venues.size(), is(2));
+    }
+    
+    @Test
+    public void findingVenuesByEventId() {
+        List<Venue> venues = venueDao.findVenues(null, 8, null, new PaginationData(0, 10));
+        assertThat(venues.size(), is(1));
+        assertThat(venues.get(0).getId(), is(4));
+    }
+
+    @Ignore
+    @Test
+    public void testFindVenuesByCircleSearch() {
+        List<Venue> venues = venueDao.findVenues(null, null, new Circle(34.123408, -118.302409, .0000000001),
+                new PaginationData(0, 10));
+        assertThat(venues.size(), is(1));
+
     }
 
     @After

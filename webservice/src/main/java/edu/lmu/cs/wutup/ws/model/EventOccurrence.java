@@ -13,6 +13,7 @@ import com.google.common.base.Objects;
 public class EventOccurrence implements Commentable {
 
     private Integer id;
+    private Integer eventId;
     private Venue venue;
     private DateTime start;
     private DateTime end;
@@ -24,11 +25,12 @@ public class EventOccurrence implements Commentable {
     }
 
     public EventOccurrence(Integer id, Venue venue) {
-        this(id, venue, new DateTime(), new DateTime().plusDays(1));
+        this(id, null, venue, new DateTime(), new DateTime().plusDays(1));
     }
 
-    public EventOccurrence(Integer id, Venue venue, DateTime start, DateTime end) {
+    public EventOccurrence(Integer id, Integer eventId, Venue venue, DateTime start, DateTime end) {
         this.id = id;
+        this.eventId = eventId;
         this.venue = venue;
         this.start = start;
         this.end = end;
@@ -41,6 +43,15 @@ public class EventOccurrence implements Commentable {
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    @XmlElement(name = "eventId")
+    public int getEventId() {
+        return this.eventId;
+    }
+    
+    public void setEventId(int eventId) {
+        this.eventId = eventId;
     }
 
     @XmlElement(name = "venue")
@@ -113,6 +124,7 @@ public class EventOccurrence implements Commentable {
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("id", this.id)
+                .add("eventId", this.eventId)
                 .add("location", this.venue)
                 .add("start", this.start)
                 .add("end", this.end)

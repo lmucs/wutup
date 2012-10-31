@@ -53,7 +53,7 @@ public class EventDaoTest {
     @Test
     public void deletingDecrementsSize() {
         int initialCount = eventDao.findNumberOfEvents();
-        eventDao.deleteEvent(8);
+        eventDao.deleteEvent(7);
         assertThat(eventDao.findNumberOfEvents(), is(initialCount - 1));
     }
 
