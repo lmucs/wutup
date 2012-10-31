@@ -90,7 +90,7 @@ public class UserDaoTest {
     }
     
     @Test(expected=NoSuchUserException.class)
-    public void findingNonExistantUs9999999erThrowsException() {
+    public void findingNonExistantUserThrowsException() {
         userDao.findUserById(2012);
     }
 

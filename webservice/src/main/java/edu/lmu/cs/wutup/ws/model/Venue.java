@@ -39,7 +39,7 @@ public class Venue implements Commentable {
     }
 
     @XmlElement
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -66,7 +66,7 @@ public class Venue implements Commentable {
     }
 
     @XmlElement
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
@@ -75,7 +75,7 @@ public class Venue implements Commentable {
     }
 
     @XmlElement
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 

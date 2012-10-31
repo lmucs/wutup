@@ -48,9 +48,11 @@ create table venue_property (
 create table occurrence (
   id integer not null,
   venueId integer,
+  eventId integer,
   start datetime,
   end datetime,
   primary key(id),
+  foreign key(eventId) references event(id),
   foreign key(venueId) references venue(id)
 );
 
