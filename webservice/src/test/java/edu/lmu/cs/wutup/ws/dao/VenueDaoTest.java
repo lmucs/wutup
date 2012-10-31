@@ -95,14 +95,24 @@ public class VenueDaoTest {
 
     // TODO LOTS MORE TESTS ON THE VARIOUS FORMS OF GETTERS
 
-    @Ignore
     @Test
     public void findingByNonexistentNameReturnsEmptyList() {
         List<Venue> venues = venueDao.findVenues("Qwertyuiop", null, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(0));
     }
+    
+    @Test
+    public void findVenueByNameReturnsCorrectResults() {
+        List<Venue> venues = venueDao.findVenues("PANT", null, null, new PaginationData(0, 10));
+        assertThat(venues.size(), is(1));
+        assertThat(venues.get(0).getId(), is(1));
+        
+        venues = venueDao.findVenues("thE", null, null, new PaginationData(0, 10));
+        assertThat(venues.size(), is(2));
+        assertThat(venues.get(0).getId(), is(5));
+        assertThat(venues.get(1).getId(), is(6));
+    }
 
-    @Ignore
     @Test
     public void findingVenuesViaPaginationWorks() {
         assertThat(venueDao.findNumberOfVenues(), is(8));

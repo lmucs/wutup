@@ -4,6 +4,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
+import edu.lmu.cs.wutup.ws.model.PaginationData;
+
 public class QueryBuilderTest {
 
     @Test
@@ -27,5 +29,13 @@ public class QueryBuilderTest {
                 .clause("radius = :y", "2")
                 .build();
         assertThat(query, equalTo("select * from event where name = 'Rich' and radius = 2"));
+    }
+    
+    @Test
+    public void addPaginationHasCorrectLimitAndOffset() {
+        String query = new QueryBuilder("select * from event")
+                .addPagination(new PaginationData(0, 3))
+                .build();
+        assertThat(query, equalTo("select * from event limit 3 offset 0"));
     }
 }
