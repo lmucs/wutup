@@ -3,7 +3,6 @@ package edu.lmu.cs.wutup.ws.resource;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class VenueResourceIT {
