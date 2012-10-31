@@ -64,14 +64,12 @@ public class VenueDaoTest {
     @Test
     public void updatesToCreatedVenueCanBeRead() {
         venueDao.createVenue(new Venue(9, "A venue name", "this is an address"));
+        Venue update = new Venue(9, "new name", null);
+        venueDao.updateVenue(update);
         Venue v = venueDao.findVenueById(9);
-        v.setName("Cricket Game");
-        v.setAddress("this is a REAL address");
-        venueDao.updateVenue(v);
-        v = venueDao.findVenueById(9);
         assertThat(v.getId(), is(9));
-        assertThat(v.getName(), is("Cricket Game"));
-        assertThat(v.getAddress(), is("this is a REAL address"));
+        assertThat(v.getName(), is("new name"));
+        assertThat(v.getAddress(), is("this is an address"));
     }
 
     @Test(expected = NoSuchVenueException.class)
@@ -131,7 +129,8 @@ public class VenueDaoTest {
         assertThat(venues.size(), is(1));
         assertThat(venues.get(0).getId(), is(4));
     }
-
+    
+    // Circle search is not implemeneted yet
     @Ignore
     @Test
     public void testFindVenuesByCircleSearch() {

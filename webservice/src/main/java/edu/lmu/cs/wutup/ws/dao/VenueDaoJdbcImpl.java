@@ -28,7 +28,8 @@ public class VenueDaoJdbcImpl implements VenueDao {
 
     private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.venueId = ? " + PAGINATION;
     private static final String CREATE_SQL = "insert into venue (name, address, latitude, longitude) values (?,?,?,?)";
-    private static final String UPDATE_SQL = "update venue set name=?, address=?, latitude=?, longitude=? where id=?";
+    private static final String UPDATE_SQL = "update venue set name=ifnull(?, name), address=ifnull(?, address), "
+            + "latitude=ifnull(?, latitude), longitude=ifnull(?, longitude) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT_VENUE + " where v.id=?";
     private static final String FIND_ALL_SQL = SELECT_VENUE + " " + PAGINATION;
     private static final String FIND_BY_ADDRESS_SQL = SELECT_VENUE + " where v.address=? " + PAGINATION;
@@ -76,42 +77,25 @@ public class VenueDaoJdbcImpl implements VenueDao {
     @Override
     public List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination) {
         QueryBuilder builder = new QueryBuilder(SELECT_VENUE);
-        
+
         if (pagination != null) {
             builder.addPagination(pagination);
         }
-        
+
         if (name != null) {
             name = QueryBuilder.formatForLikeStatement(name);
             builder.clause("lower(v.name) like lower(:venueName)", name);
         }
-        
+
         if (eventId != null) {
             builder.append(" inner join occurrence o on (o.venueId = v.id)");
             builder.clause("o.eventId = :eventIdentifier", eventId);
         }
-        
+
         if (circle != null) {
             // TODO
         }
-        // builder.addTable("venue v");
-        // if (eventId != null) {
-        //     builder.addTable("join occurrence o on (o.venueId = v.id)");
-        //     builder.addTable("join event_occurrence eo on (o.id = eo.occurrenceId)");
-        //     builder.addTable("join event e on eo.eventId = e.id");
-        //     builder.addWhere("e.eventId = :eventId");
-        // }
-        // if (name != null) {
-        //     builder.addWhere("v.name = :name");
-        // }
-        // if (circle != null) {
-        //     builder.addCircleSearch ...
-        // }
-        // builder.addPagination(pageNumber, pageSize);
-        //
-        // then send to jdbcTemplate
-        //
-        // Actually still a stub
+
         return jdbcTemplate.query(builder.build(), venueRowMapper);
     }
 

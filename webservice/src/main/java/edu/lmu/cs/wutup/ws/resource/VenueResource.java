@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -59,8 +60,8 @@ public class VenueResource extends AbstractWutupResource {
             @QueryParam("event") String eventIdString,
             @QueryParam("center") String center,
             @QueryParam("radius") String radiusString,
-            @QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
+            @QueryParam("page") @DefaultValue("0") String pageString,
+            @QueryParam("pageSize") @DefaultValue("20") String pageSizeString) {
 
         Integer eventId = toInteger("event", eventIdString);
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
