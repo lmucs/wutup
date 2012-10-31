@@ -47,5 +47,3 @@ insert into event_category (eventId, categoryId) values (1, 1);
 insert into attendee (occurrenceId, userId) values (1, 1);
 
 insert into event_comment (id, eventId, authorId, text, timestamp) values (1, 1, 1, 'Boo, sux', '2012-03-17');
-
-insert into facebook_access_token (token, expiration) values (12345, 54321);
