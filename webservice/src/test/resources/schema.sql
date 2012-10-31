@@ -111,3 +111,7 @@ create table venue_comment (
   foreign key(authorId) references user(id)
 );
 
+create table facebook_access_token (
+  token integer not null,
+  expiration integer not null
+);
