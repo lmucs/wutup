@@ -3,6 +3,8 @@ package edu.lmu.cs.wutup.ws.model;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.google.common.base.Objects;
+
 @XmlRootElement(name = "category")
 public class Category {
 
@@ -57,5 +59,18 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.id, this.name, this.parentId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Category
+                && Objects.equal(this.id, Category.class.cast(obj).getId())
+                && Objects.equal(this.parentId, Category.class.cast(obj).getParentId())
+                && Objects.equal(this.name, Category.class.cast(obj).getName());
     }
 }
