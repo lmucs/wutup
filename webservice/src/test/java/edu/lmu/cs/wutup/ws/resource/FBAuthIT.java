@@ -2,6 +2,7 @@ package edu.lmu.cs.wutup.ws.resource;
 
 import static com.jayway.restassured.RestAssured.expect;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class FBAuthIT {
@@ -14,6 +15,7 @@ public class FBAuthIT {
             get("/wutup/auth/facebook");
     }
     
+    @Ignore
     @Test
     public void testSuccessfulAuthenticationLanding() {
         expect().
@@ -30,6 +32,7 @@ public class FBAuthIT {
             get("/wutup/auth/landing?error=someshitwentwrong#_=_");
     }
     
+    @Ignore
     @Test
     public void testAuthenticationLandingWithAccessTokenFromFacebook() {
         expect().
