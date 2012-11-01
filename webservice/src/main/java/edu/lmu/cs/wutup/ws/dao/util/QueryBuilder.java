@@ -123,23 +123,20 @@ public class QueryBuilder {
 
     /**
      * Puts the base string, the clauses, and the parameters all together into a Hibernate query object.
-     *
-     * This is a template method; it uses createQuery to instantiate the query object to be built and finishQuery to
-     * perform any final operations before returning the query. Subclasses can override these methods as needed.
      */
+    @SuppressWarnings("unchecked")
     public String build() {
         assertValidQuery();
         stringBuilder.append("select " + (select != null ? select : "*")).append(" from " + from);
 
         if (!joinByTypes.isEmpty()) {
-            // TODO: Ask for help
+            // TODO: Ask for help correcting type-safety warnings below
             Set<String> keySet = joinByTypes.keySet();
             for (Object key : keySet) {
                 ArrayList<String> a = (ArrayList<String>) joinByTypes.getCollection(key);
                 for (int i = 0; i < a.size(); i += 2) {
                     stringBuilder.append(" " + key + " " + a.get(i) + " on (" + a.get(i + 1) + ")");
                 }
-
             }
         }
 
