@@ -76,7 +76,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
 
     @Override
     public List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination) {
-        QueryBuilder builder = new QueryBuilder(SELECT_VENUE);
+        QueryBuilder builder = new QueryBuilder().select("v.*").from("venue v");
 
         if (pagination != null) {
             builder.addPagination(pagination);
@@ -84,12 +84,12 @@ public class VenueDaoJdbcImpl implements VenueDao {
 
         if (name != null) {
             name = QueryBuilder.formatForLikeStatement(name);
-            builder.clause("lower(v.name) like lower(:venueName)", name);
+            builder.where("lower(v.name) like lower(:venueName)", name);
         }
 
         if (eventId != null) {
             builder.append(" inner join occurrence o on (o.venueId = v.id)");
-            builder.clause("o.eventId = :eventIdentifier", eventId);
+            builder.where("o.eventId = :eventIdentifier", eventId);
         }
 
         if (circle != null) {

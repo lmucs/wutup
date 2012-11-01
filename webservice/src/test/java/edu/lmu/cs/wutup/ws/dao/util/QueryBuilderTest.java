@@ -3,7 +3,6 @@ package edu.lmu.cs.wutup.ws.dao.util;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -23,16 +22,16 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void queryWithSingleClauseIsCorrect() {
-        String query = new QueryBuilder().from("event").clause("name = :x", "'Rich'").build();
+    public void queryWithSingleWhereIsCorrect() {
+        String query = new QueryBuilder().from("event").where("name = :x", "'Rich'").build();
         assertThat(query, equalTo("select * from event where name = 'Rich'"));
     }
 
     @Test
-    public void queryWithTwoClausesIsCorrect() {
+    public void queryWithTwoWheresIsCorrect() {
         String query = new QueryBuilder().from("event")
-                .clause("name = :x", "'Rich'")
-                .clause("radius = :y", "2")
+                .where("name = :x", "'Rich'")
+                .where("radius = :y", "2")
                 .build();
         assertThat(query, equalTo("select * from event where name = 'Rich' and radius = 2"));
     }
@@ -45,7 +44,7 @@ public class QueryBuilderTest {
 
     @Test
     public void testQueryBuilderAppend() {
-        String query = new QueryBuilder().from("event").clause("name = :userName", "'Rich'")
+        String query = new QueryBuilder().from("event").where("name = :userName", "'Rich'")
                 .append(" some text to append")
                 .build();
         assertThat(query, equalTo("select * from event where name = 'Rich' some text to append"));

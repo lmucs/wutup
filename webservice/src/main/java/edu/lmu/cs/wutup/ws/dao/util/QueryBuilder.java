@@ -38,25 +38,13 @@ public class QueryBuilder {
     private String queryString;
     private String afterWhereClauseString;
 
+    /**
+     * Produces a new query builder.
+     */
     public QueryBuilder() {
         stringBuilder = new StringBuilder();
         appendBuilder = new StringBuilder();
         // No-arg constructor
-    }
-
-    /**
-     * Produces a new query builder with the given initial string.
-     */
-    public QueryBuilder(final String initialString) {
-        this(initialString, null);
-    }
-
-    /**
-     * Creates a new query builder with the given initial and after-where-clause strings.
-     */
-    public QueryBuilder(final String initialString, final String afterWhereClauseString) {
-        stringBuilder = new StringBuilder(initialString);
-        this.afterWhereClauseString = afterWhereClauseString;
     }
 
     /**
@@ -113,7 +101,7 @@ public class QueryBuilder {
      * and its associated value to the parameter map. For example, calling <code>clause(":x > 5", 10)</code> will add
      * the clause ":x > 5" to clauses, and the mapping <code>["x" => 10]</code> to map.
      */
-    public QueryBuilder clause(String condition, Object paramValue) {
+    public QueryBuilder where(String condition, Object paramValue) {
         assertNotBuilt();
         clauses.add(condition);
         Matcher matcher = PARAMETER_PATTERN.matcher(condition);
@@ -151,11 +139,6 @@ public class QueryBuilder {
         for (String clause : clauses) {
             stringBuilder.append(first ? " where " : " and ").append(clause);
             first = false;
-        }
-
-        // TODO: Remove afterWhereClauseString refs
-        if (afterWhereClauseString != null) {
-            stringBuilder.append(" ").append(afterWhereClauseString);
         }
 
         if (order != null) {
