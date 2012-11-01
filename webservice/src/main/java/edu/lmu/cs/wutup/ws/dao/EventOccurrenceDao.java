@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
@@ -20,6 +21,8 @@ public interface EventOccurrenceDao extends CommentDao {
     List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize);
 
     EventOccurrence findEventOccurrenceById(int id);
+
+    List<EventOccurrence> findAllEventOccurrences(PaginationData pagination);
 
     List<EventOccurrence> findAllEventOccurrencesByAttendees(List<User> attendees, int pageNumber, int pageSize);
 

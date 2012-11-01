@@ -83,8 +83,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
         }
 
         if (name != null) {
-            name = QueryBuilder.formatForLikeStatement(name);
-            builder.where("lower(v.name) like lower(:venueName)", name);
+            builder.like("lower(v.name) like lower(:venueName)", name);
         }
 
         if (eventId != null) {

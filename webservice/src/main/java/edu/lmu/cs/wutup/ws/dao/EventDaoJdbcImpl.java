@@ -16,6 +16,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Comment;
@@ -32,7 +33,6 @@ public class EventDaoJdbcImpl implements EventDao {
 
     private static final String CREATE_SQL = "insert into event (name, description, ownerId) values (?,?,?)";
     private static final String UPDATE_SQL = "update event set name=ifnull(?, name), description=ifnull(?, description) where id=?";
-    private static final String FIND_BY_ID_SQL = SELECT_EVENT + " where e.id=?";
     private static final String FIND_ALL_SQL = SELECT_EVENT + " " + PAGINATION;
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
@@ -45,15 +45,16 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public int createEvent(Event e) {
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_SQL, new int[]{
-                Types.VARCHAR, Types.VARCHAR, Types.INTEGER});;
+                Types.VARCHAR, Types.VARCHAR, Types.INTEGER});
+        ;
         factory.setReturnGeneratedKeys(true);
         factory.setGeneratedKeysColumnNames(new String[]{"id"});
-        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[] {
-                e.getName(), e.getDescription(), e.getCreator().getId()});
+        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{e.getName(),
+                e.getDescription(), e.getCreator().getId()});
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(creator, keyHolder);
-            return (Integer)keyHolder.getKey();
+            return (Integer) keyHolder.getKey();
         } catch (DuplicateKeyException ex) {
             throw new EventExistsException();
         }
@@ -70,7 +71,12 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public Event findEventById(int id) {
         try {
-            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, eventRowMapper);
+            return jdbcTemplate.queryForObject(
+                    new QueryBuilder().select("e.*, u.*")
+                            .from("event e")
+                            .joinOn("user u", "e.ownerId = u.id")
+                            .where("e.id=:id", id)
+                            .build(), eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();
         }

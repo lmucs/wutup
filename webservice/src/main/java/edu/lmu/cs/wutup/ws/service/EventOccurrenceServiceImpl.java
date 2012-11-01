@@ -38,6 +38,11 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
+    public List<EventOccurrence> findAllEventOccurrences(PaginationData pagination) {
+        return eventOccurrenceDao.findAllEventOccurrences(pagination);
+    }
+
+    @Override
     public List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize) {
         return eventOccurrenceDao.findAttendeesByEventOccurrenceId(id, pageNumber, pageSize);
     }
