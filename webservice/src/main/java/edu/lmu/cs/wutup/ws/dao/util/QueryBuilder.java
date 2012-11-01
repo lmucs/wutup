@@ -103,16 +103,18 @@ public class QueryBuilder {
     }
 
     /**
-     * Adds an HQL clause to the list of clauses, finding at most one named parameter within the clause, and adding it
-     * and its associated value to the parameter map. For example, calling <code>clause(":x > 5", 10)</code> will add
-     * the clause ":x > 5" to clauses, and the mapping <code>["x" => 10]</code> to map.
+     * Adds a clause to the list of clauses, finding at most one named parameter within the clause, and adding it and
+     * its associated value to the parameter map. For example, calling <code>clause(":x > 5", 10)</code> will add the
+     * clause ":x > 5" to clauses, and the mapping <code>["x" => 10]</code> to map.
      */
     public QueryBuilder where(String condition, Object paramValue) {
         assertNotBuilt();
-        clauses.add(condition);
-        Matcher matcher = PARAMETER_PATTERN.matcher(condition);
-        if (matcher.find()) {
-            parameters.put(matcher.group(1), paramValue);
+        if (paramValue != null) {
+            clauses.add(condition);
+            Matcher matcher = PARAMETER_PATTERN.matcher(condition);
+            if (matcher.find()) {
+                parameters.put(matcher.group(1), paramValue);
+            }
         }
         return this;
     }
