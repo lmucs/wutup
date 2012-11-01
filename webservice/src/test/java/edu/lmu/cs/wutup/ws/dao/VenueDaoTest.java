@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -100,13 +99,13 @@ public class VenueDaoTest {
         List<Venue> venues = venueDao.findVenues("Qwertyuiop", null, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(0));
     }
-    
+
     @Test
     public void findVenueByNameReturnsCorrectResults() {
         List<Venue> venues = venueDao.findVenues("PANT", null, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(1));
         assertThat(venues.get(0).getId(), is(1));
-        
+
         venues = venueDao.findVenues("thE", null, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(2));
         assertThat(venues.get(0).getId(), is(5));
