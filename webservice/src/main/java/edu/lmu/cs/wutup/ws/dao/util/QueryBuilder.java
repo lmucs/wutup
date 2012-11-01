@@ -80,8 +80,10 @@ public class QueryBuilder {
 
     private void addJoin(String type, String tableName, String joinCondition) {
         assertNotBuilt();
-        joinByTypes.put(type, tableName);
-        joinByTypes.put(type, joinCondition);
+        if (type != null && tableName != null && joinCondition != null) {
+            joinByTypes.put(type, tableName);
+            joinByTypes.put(type, joinCondition);
+        }
     }
 
     public QueryBuilder joinOn(String tableName, String joinCondition) {
@@ -117,7 +119,9 @@ public class QueryBuilder {
 
     public QueryBuilder addPagination(PaginationData p) {
         assertNotBuilt();
-        pagination = "limit " + p.pageSize + " offset " + p.pageSize * p.pageNumber;
+        if (p != null) {
+            pagination = "limit " + p.pageSize + " offset " + p.pageSize * p.pageNumber;
+        }
         return this;
     }
 
@@ -178,7 +182,7 @@ public class QueryBuilder {
         return parameters;
     }
 
-    public static String formatForLikeStatement(String s) {
-        return "\'" + s + "%\'";
+    public QueryBuilder like(String condition, Object paramValue) {
+        return this.where(condition, "\'" + paramValue + "%\'");
     }
 }
