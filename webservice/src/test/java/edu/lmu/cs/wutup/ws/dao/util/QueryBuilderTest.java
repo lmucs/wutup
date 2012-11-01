@@ -23,7 +23,7 @@ public class QueryBuilderTest {
 
     @Test
     public void queryWithSingleWhereIsCorrect() {
-        String query = new QueryBuilder().from("event").where("name = :x", "'Rich'").build();
+        String query = new QueryBuilder().from("event").where("name = :name", "'Rich'").build();
         assertThat(query, equalTo("select * from event where name = 'Rich'"));
     }
 

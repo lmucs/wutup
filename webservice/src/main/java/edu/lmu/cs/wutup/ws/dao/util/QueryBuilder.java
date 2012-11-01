@@ -26,12 +26,13 @@ import edu.lmu.cs.wutup.ws.model.PaginationData;
 public class QueryBuilder {
 
     // Parameters must start with a lowercase ASCII letter.
-    private static final Pattern PARAMETER_PATTERN = Pattern.compile(":([a-z]\\w*)");
+    private static final Pattern PARAMETER_PATTERN = Pattern.compile("(:[a-z]\\w*)");
     private StringBuilder stringBuilder;
     private StringBuilder appendBuilder;
     private String select;
     private String from;
     private String order;
+    private String pagination;
     private Map<String, Object> parameters = new HashMap<String, Object>();
     private Map<String, String> joinOns = new HashMap<String, String>();
     private List<String> clauses = new ArrayList<String>();
@@ -113,9 +114,7 @@ public class QueryBuilder {
 
     public QueryBuilder addPagination(PaginationData p) {
         assertNotBuilt();
-        String newSuffix = this.afterWhereClauseString == null ? "" : this.afterWhereClauseString + " ";
-        newSuffix += "limit " + p.pageSize + " offset " + p.pageSize * p.pageNumber;
-        this.afterWhereClauseString = newSuffix;
+        pagination = "limit " + p.pageSize + " offset " + p.pageSize * p.pageNumber;
         return this;
     }
 
@@ -147,11 +146,14 @@ public class QueryBuilder {
 
         for (Map.Entry<String, Object> e : parameters.entrySet()) {
             String parameterKey = e.getKey();
-            int parameterLength = parameterKey.length() + 1;
-            int parameterStartIndex = stringBuilder.indexOf(parameterKey) - 1;
+            int parameterLength = parameterKey.length();
+            int parameterStartIndex = stringBuilder.indexOf(parameterKey);
             stringBuilder.replace(parameterStartIndex, parameterStartIndex + parameterLength, e.getValue().toString());
         }
 
+        if (pagination != null) {
+            stringBuilder.append(" " + pagination);
+        }
         stringBuilder.append(appendBuilder.toString());
         return stringBuilder.toString();
     }
