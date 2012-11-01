@@ -1,8 +1,6 @@
 package edu.lmu.cs.wutup.ws.dao.util;
 
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +8,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 
 import edu.lmu.cs.wutup.ws.model.PaginationData;
