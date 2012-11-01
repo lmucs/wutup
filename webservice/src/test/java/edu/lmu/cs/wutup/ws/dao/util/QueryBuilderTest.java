@@ -29,10 +29,7 @@ public class QueryBuilderTest {
 
     @Test
     public void queryWithTwoWheresIsCorrect() {
-        String query = new QueryBuilder().from("event")
-                .where("name = :x", "'Rich'")
-                .where("radius = :y", "2")
-                .build();
+        String query = new QueryBuilder().from("event").where("name = :x", "'Rich'").where("radius = :y", "2").build();
         assertThat(query, equalTo("select * from event where name = 'Rich' and radius = 2"));
     }
 
@@ -44,9 +41,29 @@ public class QueryBuilderTest {
 
     @Test
     public void testQueryBuilderAppend() {
-        String query = new QueryBuilder().from("event").where("name = :userName", "'Rich'")
+        String query = new QueryBuilder().from("event")
+                .where("name = :userName", "'Rich'")
                 .append(" some text to append")
                 .build();
         assertThat(query, equalTo("select * from event where name = 'Rich' some text to append"));
+    }
+
+    @Test
+    public void testQueryWithJoin() {
+        String query = new QueryBuilder().from("event")
+                .joinOn("eventOccurrence", "event.id = eventOccurrence.id")
+                .build();
+        assertThat(query, equalTo("select * from event join eventOccurrence on (event.id = eventOccurrence.id)"));
+    }
+
+    @Test
+    public void testQueryWithInnerJoinAndSingleWhere() {
+        String query = new QueryBuilder().from("event")
+                .innerJoinOn("eventOccurrence", "event.id = eventOccurrence.id")
+                .where("name = :name", "'Rich'")
+                .build();
+        assertThat(
+                query,
+                equalTo("select * from event inner join eventOccurrence on (event.id = eventOccurrence.id) where name = 'Rich'"));
     }
 }
