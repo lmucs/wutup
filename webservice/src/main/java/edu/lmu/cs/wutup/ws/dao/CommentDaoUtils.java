@@ -42,6 +42,10 @@ public class CommentDaoUtils {
         }
     }
 
+    public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING) {
+        return jdbcTemplate.query(SQL_STRING, commentRowMapper);
+    }
+
     public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING,
             int objectId, int pageSize, int pageNumber) {
         return jdbcTemplate.query(SQL_STRING, new Object[]{objectId, pageSize, pageNumber * pageSize}, commentRowMapper);

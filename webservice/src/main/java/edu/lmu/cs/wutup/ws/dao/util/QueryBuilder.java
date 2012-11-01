@@ -1,11 +1,17 @@
 package edu.lmu.cs.wutup.ws.dao.util;
 
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.collections.MultiMap;
+import org.apache.commons.collections.map.MultiValueMap;
 
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 
@@ -34,7 +40,7 @@ public class QueryBuilder {
     private String order;
     private String pagination;
     private Map<String, Object> parameters = new HashMap<String, Object>();
-    private Map<String, String> joinOns = new HashMap<String, String>();
+    private MultiValueMap joinByTypes = new MultiValueMap();
     private List<String> clauses = new ArrayList<String>();
     private String queryString;
 
@@ -84,11 +90,23 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder joinOn(String tableName, String joinCondition) {
+    private void addJoin(String type, String tableName, String joinCondition) {
         assertNotBuilt();
-        joinOns.put(tableName, joinCondition);
+        joinByTypes.put(type, tableName);
+        joinByTypes.put(type, joinCondition);
+    }
+
+    public QueryBuilder joinOn(String tableName, String joinCondition) {
+        addJoin("join", tableName, joinCondition);
         return this;
     }
+
+    public QueryBuilder innerJoinOn(String tableName, String joinCondition) {
+        addJoin("inner join", tableName, joinCondition);
+        return this;
+    }
+
+    // TODO: Make more join types
 
     public QueryBuilder order(String newOrder) {
         assertNotBuilt();
@@ -127,9 +145,15 @@ public class QueryBuilder {
         assertValidQuery();
         stringBuilder.append("select " + (select != null ? select : "*")).append(" from " + from);
 
-        if (!joinOns.isEmpty()) {
-            for (Map.Entry<String, String> pairs : joinOns.entrySet()) {
-                stringBuilder.append(" join " + pairs.getKey() + " on (" + pairs.getValue() + ")");
+        if (!joinByTypes.isEmpty()) {
+            // TODO: Ask for help
+            Set<String> keySet = joinByTypes.keySet();
+            for (Object key : keySet) {
+                ArrayList<String> a = (ArrayList<String>)joinByTypes.getCollection(key);
+                for (int i = 0; i < a.size(); i += 2) {
+                    stringBuilder.append(" " + key + " " + a.get(i) + " on (" + a.get(i + 1) + ")");
+                }
+
             }
         }
 
@@ -174,5 +198,4 @@ public class QueryBuilder {
     public static String formatForLikeStatement(String s) {
         return "\'" + s + "%\'";
     }
-
 }
