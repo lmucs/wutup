@@ -122,14 +122,14 @@ public class VenueDaoTest {
         venues = venueDao.findVenues(null, null, null, new PaginationData(2, 3));
         assertThat(venues.size(), is(2));
     }
-    
+
     @Test
     public void findingVenuesByEventId() {
         List<Venue> venues = venueDao.findVenues(null, 8, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(1));
         assertThat(venues.get(0).getId(), is(4));
     }
-    
+
     // Circle search is not implemeneted yet
     @Ignore
     @Test

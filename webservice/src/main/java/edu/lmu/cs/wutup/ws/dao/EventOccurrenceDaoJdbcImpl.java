@@ -24,14 +24,16 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
-    private static final String CREATE_SQL = "insert into eventOccurrence (id, venue) values (?,?)";
-    private static final String UPDATE_SQL = "update eventOccurrence set venue=? where id=?";
-    private static final String FIND_BY_ID_SQL = "select id, name from eventOccurrence where id=?";
-    // private static final String FIND_ALL_SQL = "select id, name from eventOccurrence limit ? offset ?";
-    private static final String DELETE_SQL = "delete from eventOccurrence where id=?";
+    private static final String SELECT = "select o.id, v.name from occurrence o join venue v on (o.venueId=v.id)";
+    private static final String PAGINATION = "limit ? offset ?";
+
+    private static final String CREATE_SQL = "insert into occurrence (id, venue) values (?,?)";
+    private static final String UPDATE_SQL = "update occurrence set venue=? where id=?";
+    private static final String FIND_BY_ID_SQL = SELECT + " where o.id=?";
+    private static final String FIND_ALL_SQL = SELECT + " " + PAGINATION;
+    private static final String DELETE_SQL = "delete from occurrence where id=?";
 
     private static final String SELECT_COMMENT = "select ec.*, u.* from eventoccurence_comment ec join user u on (ec.authorId = u.id)";
-    private static final String PAGINATION = "limit ? offset ?";
     private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
 
     @Autowired
@@ -77,10 +79,12 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         }
     }
 
-    /*
-     * OLD: @Override public List<EventOccurrence> findAllEventOccurrences(int pageNumber, int pageSize) { return
-     * jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pageSize, pageNumber * pageSize}, eventOccurrenceRowMapper); }
-     */
+    @Override
+    public List<EventOccurrence> findAllEventOccurrences(PaginationData pagination) {
+        return jdbcTemplate.query(FIND_ALL_SQL,
+                new Object[]{pagination.pageSize, pagination.pageNumber * pagination.pageSize},
+                eventOccurrenceRowMapper);
+    }
 
     @Override
     public List<EventOccurrence> findAllEventOccurrencesByAttendees(List<User> attendees, int pageNumber, int pageSize) {

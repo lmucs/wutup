@@ -47,8 +47,8 @@ create table venue_property (
 
 create table occurrence (
   id integer not null,
-  venueId integer,
   eventId integer,
+  venueId integer,
   start datetime,
   end datetime,
   primary key(id),
