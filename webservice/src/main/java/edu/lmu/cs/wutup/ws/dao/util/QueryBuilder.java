@@ -16,18 +16,9 @@ import org.apache.commons.collections.map.MultiValueMap;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 /**
- * QueryBuilder is a builder that constructs a SQL query from an initial string and any number of "clauses" or arbitrary
- * strings. Clauses represent conditions based on a particular value; the resulting appended string follows Hibernate's
- * format for supplying parameters (i.e., ":identifier").
- *
- *
- *
- * FIND_BY_ID_SQL = "select id, name from eventOccurrence where id=?"; FIND_ALL_SQL =
- * "select id, name from eventOccurrence limit ? offset ?";
- *
- * SELECT_COMMENT = "select ec.*, u.* from eventoccurence_comment ec join user u on (ec.authorId = u.id)"; private
- * static final String PAGINATION = "limit ? offset ?" FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " +
- * PAGINATION;
+ * QueryBuilder is a builder that constructs a SQL query. Where clauses represent conditions based on a particular
+ * value; the resulting appended string follows Hibernate's format for supplying parameters (i.e., ":identifier"). The
+ * functionality of this class is similar to that of Querydsl.
  */
 public class QueryBuilder {
 
@@ -106,8 +97,6 @@ public class QueryBuilder {
         return this;
     }
 
-    // TODO: Make more join types
-
     public QueryBuilder order(String newOrder) {
         assertNotBuilt();
         order = newOrder;
@@ -149,7 +138,7 @@ public class QueryBuilder {
             // TODO: Ask for help
             Set<String> keySet = joinByTypes.keySet();
             for (Object key : keySet) {
-                ArrayList<String> a = (ArrayList<String>)joinByTypes.getCollection(key);
+                ArrayList<String> a = (ArrayList<String>) joinByTypes.getCollection(key);
                 for (int i = 0; i < a.size(); i += 2) {
                     stringBuilder.append(" " + key + " " + a.get(i) + " on (" + a.get(i + 1) + ")");
                 }
