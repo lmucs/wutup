@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -52,8 +53,8 @@ public class EventResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<Event> findEvents(@QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
+    public List<Event> findEvents(@QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
+            @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         // TODO - STUB - NEEDS TO TAKE MORE PARAMETERS IN THE FUTURE
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
