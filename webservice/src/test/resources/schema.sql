@@ -49,10 +49,15 @@ create table occurrence (
   id integer not null,
   eventId integer,
   venueId integer,
+  eventId integer,
   start datetime,
   end datetime,
   primary key(id),
+<<<<<<< HEAD
   foreign key(eventId) references event(id)
+=======
+  foreign key(eventId) references event(id),
+>>>>>>> ac4473557dbf239171bd1a8d5448ef17bdc54604
   foreign key(venueId) references venue(id)
 );
 
@@ -112,4 +117,3 @@ create table venue_comment (
   foreign key(venueId) references venue(id),
   foreign key(authorId) references user(id)
 );
-

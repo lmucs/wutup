@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -49,7 +50,7 @@ public class VenueResource extends AbstractWutupResource {
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for venue %d";
     private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists for venue %d";
 
-    @Autowired
+    @Autowired 
     VenueService venueService;
 
     @GET
@@ -59,8 +60,8 @@ public class VenueResource extends AbstractWutupResource {
             @QueryParam("event") String eventIdString,
             @QueryParam("center") String center,
             @QueryParam("radius") String radiusString,
-            @QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
+            @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         Integer eventId = toInteger("event", eventIdString);
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
@@ -112,7 +113,7 @@ public class VenueResource extends AbstractWutupResource {
 
     @DELETE
     @Path("/{id}")
-    public Response deleteEvent(@PathParam("id") String idString) {
+    public Response deleteVenue(@PathParam("id") String idString) {
 
         int id = toIntegerRequired("id", idString);
         try {

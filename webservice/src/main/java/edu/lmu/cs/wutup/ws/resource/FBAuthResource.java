@@ -1,5 +1,8 @@
 package edu.lmu.cs.wutup.ws.resource;
 
+import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getAccessToken;
+import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getUserNameFromFB;
+
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Random;
@@ -10,17 +13,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl;
 
 @Component
 @Path("/auth")
 public class FBAuthResource {
-    
-    @Autowired
-    FBAuthServiceImpl FBAuth;
 
     @GET
     @Path("/facebook")
@@ -40,7 +37,8 @@ public class FBAuthResource {
 
     @GET
     @Path("/landing")
-    public Response handleFacebookAuthenticationResponse(@DefaultValue("") @QueryParam("state") String state,
+    public Response handleFacebookAuthenticationResponse(
+            @DefaultValue("") @QueryParam("state") String state,
             @DefaultValue("") @QueryParam("code") String code,
             @DefaultValue("") @QueryParam("error_reason") String errorReason,
             @DefaultValue("") @QueryParam("error") String error,
@@ -51,9 +49,14 @@ public class FBAuthResource {
         }
 
         try {
-            return Response.ok(FBAuth.getAccessToken(code)).build();
+            return Response
+                    .ok(getUserNameFromFB(getAccessToken(code)))
+                    .build();
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            e.printStackTrace();
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .build();
         }
     }
 }

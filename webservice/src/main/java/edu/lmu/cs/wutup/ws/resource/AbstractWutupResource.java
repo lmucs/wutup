@@ -30,6 +30,9 @@ public abstract class AbstractWutupResource {
 
     private static final Pattern CENTER_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?");
     private static final Pattern RADIUS_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
+    
+    protected static final String DEFAULT_PAGE = "0";
+    protected static final String DEFAULT_PAGE_SIZE = "20";
 
     /**
      * Throws a service exception with BAD_REQUEST is the value is null (corresponds to a missing required HTTP
