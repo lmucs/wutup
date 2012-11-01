@@ -7,6 +7,8 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.lang.Math;
+
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 

@@ -27,7 +27,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     private static final String PAGINATION = "limit ? offset ?";
 
     private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.venueId = ? " + PAGINATION;
-    private static final String CREATE_SQL = "insert into venue (name, address, latitude, longitude) values (?,?,?,?)";
+    private static final String CREATE_SQL = "insert into venue (id, name, address, latitude, longitude) values (?,?,?,?,?)";
     private static final String UPDATE_SQL = "update venue set name=ifnull(?, name), address=ifnull(?, address), "
             + "latitude=ifnull(?, latitude), longitude=ifnull(?, longitude) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT_VENUE + " where v.id=?";
@@ -42,7 +42,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     @Override
     public void createVenue(Venue loc) {
         try {
-            jdbcTemplate.update(CREATE_SQL, loc.getName(), loc.getAddress(), loc.getLatitude(), loc.getLongitude());
+            jdbcTemplate.update(CREATE_SQL, loc.getId(), loc.getName(), loc.getAddress(), loc.getLatitude(), loc.getLongitude());
         } catch (DuplicateKeyException ex) {
             throw new VenueExistsException();
         }
@@ -91,9 +91,9 @@ public class VenueDaoJdbcImpl implements VenueDao {
             builder.joinOn("occurrence o", "o.venueId = v.id");
             builder.where("o.eventId = :eventIdentifier", eventId);
         }
-
+        
         if (circle != null) {
-            // TODO
+            builder.where(createCircleSearchClause(circle), circle.radius);
         }
 
         return jdbcTemplate.query(builder.build(), venueRowMapper);
@@ -123,6 +123,10 @@ public class VenueDaoJdbcImpl implements VenueDao {
     public List<Comment> findComments(int venueId, PaginationData pagination) {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, venueId,
                 pagination.pageNumber, pagination.pageSize);
+    }
+    
+    private static String createCircleSearchClause(Circle c) {
+        return "get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, " + c.centerLongitude + ") <= :radius";
     }
 
     private static RowMapper<Venue> venueRowMapper = new RowMapper<Venue>() {
