@@ -2,7 +2,6 @@ package edu.lmu.cs.wutup.ws.dao.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -29,11 +28,10 @@ public class QueryBuilder {
     // Parameters must start with a lowercase ASCII letter.
     private static final Pattern PARAMETER_PATTERN = Pattern.compile(":([a-z]\\w*)");
     private StringBuilder stringBuilder;
+    private StringBuilder appendBuilder;
     private String select;
     private String from;
     private String order;
-    private Integer limit;
-    private Integer offset;
     private Map<String, Object> parameters = new HashMap<String, Object>();
     private Map<String, String> joinOns = new HashMap<String, String>();
     private List<String> clauses = new ArrayList<String>();
@@ -42,6 +40,7 @@ public class QueryBuilder {
 
     public QueryBuilder() {
         stringBuilder = new StringBuilder();
+        appendBuilder = new StringBuilder();
         // No-arg constructor
     }
 
@@ -81,7 +80,7 @@ public class QueryBuilder {
      */
     public QueryBuilder append(String text) {
         assertNotBuilt();
-        stringBuilder.append(text);
+        appendBuilder.append(text);
         return this;
     }
 
@@ -106,18 +105,6 @@ public class QueryBuilder {
     public QueryBuilder order(String newOrder) {
         assertNotBuilt();
         order = newOrder;
-        return this;
-    }
-
-    public QueryBuilder limit(int newLimit) {
-        assertNotBuilt();
-        limit = newLimit;
-        return this;
-    }
-
-    public QueryBuilder offset(int newOffset) {
-        assertNotBuilt();
-        offset = newOffset;
         return this;
     }
 
@@ -175,16 +162,6 @@ public class QueryBuilder {
             stringBuilder.append(" order by " + order);
         }
 
-        if (limit != null) {
-            stringBuilder.append(" limit " + limit);
-            if (offset == null) {
-                offset = 0;
-            }
-        }
-        if (offset != null) {
-            stringBuilder.append(" offset " + offset);
-        }
-
         for (Map.Entry<String, Object> e : parameters.entrySet()) {
             String parameterKey = e.getKey();
             int parameterLength = parameterKey.length() + 1;
@@ -192,6 +169,7 @@ public class QueryBuilder {
             stringBuilder.replace(parameterStartIndex, parameterStartIndex + parameterLength, e.getValue().toString());
         }
 
+        stringBuilder.append(appendBuilder.toString());
         return stringBuilder.toString();
     }
 
