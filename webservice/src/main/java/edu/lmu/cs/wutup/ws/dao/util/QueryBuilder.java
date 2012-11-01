@@ -37,7 +37,6 @@ public class QueryBuilder {
     private Map<String, String> joinOns = new HashMap<String, String>();
     private List<String> clauses = new ArrayList<String>();
     private String queryString;
-    private String afterWhereClauseString;
 
     /**
      * Produces a new query builder.

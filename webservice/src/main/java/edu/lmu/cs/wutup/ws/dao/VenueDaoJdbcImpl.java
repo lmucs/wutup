@@ -88,7 +88,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
         }
 
         if (eventId != null) {
-            builder.append(" inner join occurrence o on (o.venueId = v.id)");
+            builder.joinOn("occurrence o", "o.venueId = v.id");
             builder.where("o.eventId = :eventIdentifier", eventId);
         }
 
