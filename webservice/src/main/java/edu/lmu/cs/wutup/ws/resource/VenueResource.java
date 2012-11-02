@@ -73,7 +73,6 @@ public class VenueResource extends AbstractWutupResource {
     @GET
     @Path("/{id}")
     public Venue findVenueById(@PathParam("id") String idString) {
-
         int id = toIntegerRequired("id", idString);
         try {
             return venueService.findVenueById(id);
@@ -85,7 +84,7 @@ public class VenueResource extends AbstractWutupResource {
     @POST
     @Path("/")
     public Response createVenue(final Venue venue, @Context UriInfo uriInfo) {
-
+        venue.setId(null);
         try {
             venueService.createVenue(venue);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(venue.getId() + "").build();

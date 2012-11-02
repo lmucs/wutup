@@ -46,7 +46,7 @@ public class VenueResourceIT {
             body(containsString("\"latitude\":34.1019444")).
             body(containsString("\"longitude\":-118.3261111")).
         when().
-            get("wutup/venues?name=PA");
+            get("wutup/venues?name=Pan");
     }
     
     @Test
@@ -114,5 +114,45 @@ public class VenueResourceIT {
             statusCode(409).
         when().
             patch("/wutup/venues/3");
+    }
+    
+    @Test
+    public void testFindVenuesbyIncompleteCircleSearchResponds400() {
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(400).
+        when().
+            get("/wutup/venues?radius=3.14");
+        
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(400).
+        when().
+            get("/wutup/venues?center=-24.5,100.02");
+        
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(400).
+        when().
+            get("/wutup/venues?center=-22.0001&radius=50.0");
+            
+    }
+    
+    @Test
+    public void testFindVenuesByCircleSearch() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"id\":1")).
+            body(containsString("\"name\":\"Pantages Theater\"")).
+            body(containsString("\"address\":\"6233 Hollywood Bl, Los Angeles, CA\"")).
+            body(containsString("\"latitude\":34.1019444")).
+            body(containsString("\"longitude\":-118.3261111")).
+        when().
+            get("/wutup/venues/?center=34.1019444,-118.3261111&radius=0.01");
     }
 }
