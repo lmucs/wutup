@@ -62,6 +62,13 @@ public class VenueDaoTest {
     }
 
     @Test
+    public void createdVenueWithoutIdHasCorrectIdGenerated() {
+        Venue v = new Venue(null, "I'm a venue!", "Nowhere, CA, 94041", 26.0000, -118.3432, null);
+        venueDao.createVenue(v);
+        assertThat(v.getId(), is(11));
+    }
+
+    @Test
     public void updatesToCreatedVenueCanBeRead() {
         venueDao.createVenue(new Venue(9, "A venue name", "this is an address"));
         Venue update = new Venue(9, "new name", null);
@@ -137,11 +144,11 @@ public class VenueDaoTest {
         assertThat(venues.size(), is(1));
         assertThat(venues.get(0).getId(), is(10));
     }
-    
+
     @Test
     public void testFindVenuesWithCircleNowhereNearVenues() {
-        List<Venue> venues = venueDao.findVenues(null, null, new Circle(37.149885, 60.000001, 100),
-                new PaginationData(0, 10));
+        List<Venue> venues = venueDao.findVenues(null, null, new Circle(37.149885, 60.000001, 100), new PaginationData(
+                0, 10));
         assertThat(venues.size(), is(0));
     }
 

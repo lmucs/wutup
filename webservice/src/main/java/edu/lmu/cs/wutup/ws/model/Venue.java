@@ -28,7 +28,7 @@ public class Venue implements Commentable {
         this(id, name, address, 0.0, 0.0, null);
     }
 
-    public Venue(Integer id, String name, String address, double latitude, double longitude,
+    public Venue(Integer id, String name, String address, Double latitude, Double longitude,
             Map<String, String> propertyMap) {
         this.id = id;
         this.name = name;

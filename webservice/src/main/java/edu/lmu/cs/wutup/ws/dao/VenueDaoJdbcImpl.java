@@ -1,5 +1,7 @@
 package edu.lmu.cs.wutup.ws.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -8,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
@@ -28,6 +33,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
 
     private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.venueId = ? " + PAGINATION;
     private static final String CREATE_SQL = "insert into venue (id, name, address, latitude, longitude) values (?,?,?,?,?)";
+    private static final String CREATE_WITH_AUTO_GENERATE_ID = "insert into venue (name, address, latitude, longitude) values (?,?,?,?)";
     private static final String UPDATE_SQL = "update venue set name=ifnull(?, name), address=ifnull(?, address), "
             + "latitude=ifnull(?, latitude), longitude=ifnull(?, longitude) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT_VENUE + " where v.id=?";
@@ -40,9 +46,16 @@ public class VenueDaoJdbcImpl implements VenueDao {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public void createVenue(Venue loc) {
+    public void createVenue(Venue v) {
         try {
-            jdbcTemplate.update(CREATE_SQL, loc.getId(), loc.getName(), loc.getAddress(), loc.getLatitude(), loc.getLongitude());
+            if (v.getId() == null) {
+                KeyHolder keyHolder = new GeneratedKeyHolder();
+                createVenueWithGeneratedId(v, keyHolder);
+                v.setId(keyHolder.getKey().intValue());
+            } else {
+                jdbcTemplate.update(CREATE_SQL, v.getId(), v.getName(), v.getAddress(), v.getLatitude(),
+                        v.getLongitude());
+            }
         } catch (DuplicateKeyException ex) {
             throw new VenueExistsException();
         }
@@ -90,7 +103,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
             builder.joinOn("occurrence o", "o.venueId = v.id");
             builder.where("o.eventId = :eventIdentifier", eventId);
         }
-        
+
         if (circle != null) {
             builder.where(createCircleSearchClause(circle), circle.radius);
         }
@@ -123,9 +136,27 @@ public class VenueDaoJdbcImpl implements VenueDao {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, venueId,
                 pagination.pageNumber, pagination.pageSize);
     }
-    
+
+    private void createVenueWithGeneratedId(Venue v, KeyHolder keyHolder) {
+        final String name = v.getName();
+        final String address = v.getAddress();
+        final Double latitude = v.getLatitude();
+        final Double longitude = v.getLongitude();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps = connection.prepareStatement(CREATE_WITH_AUTO_GENERATE_ID, new String[]{"id"});
+                ps.setString(1, name);
+                ps.setString(2, address);
+                ps.setDouble(3, latitude);
+                ps.setDouble(4, longitude);
+                return ps;
+            }
+        }, keyHolder);
+    }
+
     private static String createCircleSearchClause(Circle c) {
-        return "get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, " + c.centerLongitude + ") <= :radius";
+        return "get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, " + c.centerLongitude
+                + ") <= :radius";
     }
 
     private static RowMapper<Venue> venueRowMapper = new RowMapper<Venue>() {
