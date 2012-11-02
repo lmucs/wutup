@@ -17,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl;
@@ -74,7 +75,7 @@ public class FBAuthResource {
         
         try {
 //            return Response
-//                    .ok(postUserEvent(getAccessToken(fbCode)))
+//                    .ok(postUserEvent(getAccessToken(fbCode), "Brous house", new DateTime("2012-11-02"), null, null, null, null, null))
 //                    .build();
             
             return Response
