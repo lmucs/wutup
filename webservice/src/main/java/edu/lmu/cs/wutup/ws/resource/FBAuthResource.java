@@ -1,9 +1,13 @@
 package edu.lmu.cs.wutup.ws.resource;
 
+import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.postUserEvent;
+import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getUserEvents;
+
 import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getAccessToken;
 import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getUserNameFromFB;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Random;
 
@@ -14,6 +18,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import org.springframework.stereotype.Component;
+
+import edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl;
 
 @Component
 @Path("/auth")
@@ -50,13 +56,40 @@ public class FBAuthResource {
 
         try {
             return Response
-                    .ok(getUserNameFromFB(getAccessToken(code)))
+                    .seeOther(new URI("http://localhost:8080/wutup/auth/test?code=" + code))
                     .build();
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            return Response
+                    .serverError()
+                    .build();
+
+        }
+    }
+    
+    @GET
+    @Path("/test")
+    public Response testingResource(@QueryParam("code") String fbCode) {
+        
+        try {
+//            return Response
+//                    .ok(postUserEvent(getAccessToken(fbCode)))
+//                    .build();
+            
+            return Response
+                    .ok(getUserNameFromFB(getAccessToken(fbCode)))
+                    .build();
+
+//            return Response
+//                    .ok(getUserEvents(getAccessToken(fbCode)))
+//                    .build();
         } catch (Exception e) {
             e.printStackTrace();
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
                     .build();
         }
+        
     }
 }

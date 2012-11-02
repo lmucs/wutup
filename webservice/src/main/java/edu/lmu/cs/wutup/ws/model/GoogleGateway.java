@@ -10,11 +10,11 @@ import org.codehaus.jettison.json.JSONObject;
 public class GoogleGateway extends AbstractGateway {
 
     public static String geocodeAddressToLatLong(String address) throws ClientProtocolException, IOException {
-        return stringifyEntity(executeRequest(constructAddressResolutionUrl(address)));
+        return stringifyEntity(executeGetRequest(constructAddressResolutionUrl(address)));
     }
     
     public static String geocodeCoordinatesToAddress(Double lat, Double lng) throws ParseException, ClientProtocolException, IOException {
-        return stringifyEntity(executeRequest(constructCoordinateResolutionUrl(lat, lng)));
+        return stringifyEntity(executeGetRequest(constructCoordinateResolutionUrl(lat, lng)));
     }
     
     //TODO: Revise method to account for the response Google hands back for reverse geocoding
