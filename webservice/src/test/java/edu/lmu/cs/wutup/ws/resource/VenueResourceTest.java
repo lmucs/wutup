@@ -65,6 +65,15 @@ public class VenueResourceTest {
         verify(service).deleteComment(1, 1);
         assertThat(response.getStatus(), is(204));
     }
+    
+    @Test
+    public void creatingVenueNullsOutIdAndResponds201WithLocation() {
+        Response response = resource.createVenue(sampleVenue, sampleUriInfo);
+        verify(service).createVenue(sampleVenue);
+        assertThat(response.getStatus(), is(201));
+        assertThat(response.getMetadata().getFirst("Location").toString(),
+                is("http://example.com/" + sampleVenue.getId()));
+    }
 
     @Test
     public void findingCommentsByVenueIdReturnsList() {

@@ -45,7 +45,7 @@ public class UserResource extends AbstractWutupResource {
     @Path("/")
     public Response createUser(User u, @Context UriInfo uriInfo) {
         // User id will be automatically generated
-        u.nullOutId();
+        u.setId(null);
         try {
             userService.createUser(u);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(u.getId() + "").build();
