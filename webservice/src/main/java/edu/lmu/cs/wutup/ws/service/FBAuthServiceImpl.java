@@ -53,11 +53,11 @@ public class FBAuthServiceImpl {
         return acquireUserEvents(accessToken);
     }
     
-    public static String postUserEvent(String accessToken, String userFBId, String name, DateTime start,
+    public static String postUserEvent(String accessToken, String name, DateTime start,
             DateTime end, String description, String location, String FBLocationId, String privacyType) {
         
         try {
-            return createUserEvent(accessToken, userFBId, name, start, end, description, location, FBLocationId, privacyType);
+            return createUserEvent(accessToken, getUserIdFromFB(accessToken), name, start, end, description, location, FBLocationId, privacyType);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
