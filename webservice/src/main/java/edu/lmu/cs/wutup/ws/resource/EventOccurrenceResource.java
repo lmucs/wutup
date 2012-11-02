@@ -92,7 +92,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         } else if (venuesQuery) {
             return eventOccurrenceService.findAllEventOccurrencesByVenues(venues, pageNumber, pageSize);
         } else {
-            throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
+            return eventOccurrenceService.findAllEventOccurrences(new PaginationData(pageNumber, pageSize));
         }
     }
 

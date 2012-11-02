@@ -54,11 +54,18 @@ public class VenueDaoTest {
     }
 
     @Test
-    public void createdVenueCanBeFound() {
+    public void createdVenueWithIdSpecifiedCanBeFound() {
         venueDao.createVenue(new Venue(9, "A venue name", "this is an address"));
         Venue e = venueDao.findVenueById(9);
         assertThat(e.getId(), is(9));
         assertThat(e.getName(), is("A venue name"));
+    }
+
+    @Test
+    public void createdVenueWithoutIdHasCorrectIdGenerated() {
+        Venue v = new Venue(null, "I'm a venue!", "Nowhere, CA, 94041", 26.0000, -118.3432, null);
+        venueDao.createVenue(v);
+        assertThat(v.getId(), is(11));
     }
 
     @Test
@@ -89,7 +96,7 @@ public class VenueDaoTest {
 
     @Test
     public void countOfInitialDataSetIsAsExpected() {
-        assertThat(venueDao.findNumberOfVenues(), is(8));
+        assertThat(venueDao.findNumberOfVenues(), is(9));
     }
 
     // TODO LOTS MORE TESTS ON THE VARIOUS FORMS OF GETTERS
@@ -114,30 +121,35 @@ public class VenueDaoTest {
 
     @Test
     public void findingVenuesViaPaginationWorks() {
-        assertThat(venueDao.findNumberOfVenues(), is(8));
+        assertThat(venueDao.findNumberOfVenues(), is(9));
         List<Venue> venues = venueDao.findVenues(null, null, null, new PaginationData(0, 3));
         assertThat(venues.size(), is(3));
         venues = venueDao.findVenues(null, null, null, new PaginationData(1, 3));
         assertThat(venues.size(), is(3));
         venues = venueDao.findVenues(null, null, null, new PaginationData(2, 3));
-        assertThat(venues.size(), is(2));
+        assertThat(venues.size(), is(3));
     }
-    
+
     @Test
     public void findingVenuesByEventId() {
         List<Venue> venues = venueDao.findVenues(null, 8, null, new PaginationData(0, 10));
         assertThat(venues.size(), is(1));
         assertThat(venues.get(0).getId(), is(4));
     }
-    
-    // Circle search is not implemeneted yet
-    @Ignore
+
     @Test
     public void testFindVenuesByCircleSearch() {
-        List<Venue> venues = venueDao.findVenues(null, null, new Circle(34.123408, -118.302409, .0000000001),
+        List<Venue> venues = venueDao.findVenues(null, null, new Circle(-34.149885, 62.000001, 100),
                 new PaginationData(0, 10));
         assertThat(venues.size(), is(1));
+        assertThat(venues.get(0).getId(), is(10));
+    }
 
+    @Test
+    public void testFindVenuesWithCircleNowhereNearVenues() {
+        List<Venue> venues = venueDao.findVenues(null, null, new Circle(37.149885, 60.000001, 100), new PaginationData(
+                0, 10));
+        assertThat(venues.size(), is(0));
     }
 
     @After

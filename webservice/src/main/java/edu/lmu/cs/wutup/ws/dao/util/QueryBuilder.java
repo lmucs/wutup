@@ -1,8 +1,6 @@
 package edu.lmu.cs.wutup.ws.dao.util;
 
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,24 +8,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 /**
- * QueryBuilder is a builder that constructs a SQL query from an initial string and any number of "clauses" or arbitrary
- * strings. Clauses represent conditions based on a particular value; the resulting appended string follows Hibernate's
- * format for supplying parameters (i.e., ":identifier").
- *
- *
- *
- * FIND_BY_ID_SQL = "select id, name from eventOccurrence where id=?"; FIND_ALL_SQL =
- * "select id, name from eventOccurrence limit ? offset ?";
- *
- * SELECT_COMMENT = "select ec.*, u.* from eventoccurence_comment ec join user u on (ec.authorId = u.id)"; private
- * static final String PAGINATION = "limit ? offset ?" FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " +
- * PAGINATION;
+ * QueryBuilder is a builder that constructs a SQL query. Where clauses represent conditions based on a particular
+ * value; the resulting appended string follows Hibernate's format for supplying parameters (i.e., ":identifier"). The
+ * functionality of this class is similar to that of Querydsl.
  */
 public class QueryBuilder {
 
@@ -92,8 +80,10 @@ public class QueryBuilder {
 
     private void addJoin(String type, String tableName, String joinCondition) {
         assertNotBuilt();
-        joinByTypes.put(type, tableName);
-        joinByTypes.put(type, joinCondition);
+        if (type != null && tableName != null && joinCondition != null) {
+            joinByTypes.put(type, tableName);
+            joinByTypes.put(type, joinCondition);
+        }
     }
 
     public QueryBuilder joinOn(String tableName, String joinCondition) {
@@ -106,8 +96,6 @@ public class QueryBuilder {
         return this;
     }
 
-    // TODO: Make more join types
-
     public QueryBuilder order(String newOrder) {
         assertNotBuilt();
         order = newOrder;
@@ -115,45 +103,46 @@ public class QueryBuilder {
     }
 
     /**
-     * Adds an HQL clause to the list of clauses, finding at most one named parameter within the clause, and adding it
-     * and its associated value to the parameter map. For example, calling <code>clause(":x > 5", 10)</code> will add
-     * the clause ":x > 5" to clauses, and the mapping <code>["x" => 10]</code> to map.
+     * Adds a clause to the list of clauses, finding at most one named parameter within the clause, and adding it and
+     * its associated value to the parameter map. For example, calling <code>clause(":x > 5", 10)</code> will add the
+     * clause ":x > 5" to clauses, and the mapping <code>["x" => 10]</code> to map.
      */
     public QueryBuilder where(String condition, Object paramValue) {
         assertNotBuilt();
-        clauses.add(condition);
-        Matcher matcher = PARAMETER_PATTERN.matcher(condition);
-        if (matcher.find()) {
-            parameters.put(matcher.group(1), paramValue);
+        if (paramValue != null) {
+            clauses.add(condition);
+            Matcher matcher = PARAMETER_PATTERN.matcher(condition);
+            if (matcher.find()) {
+                parameters.put(matcher.group(1), paramValue);
+            }
         }
         return this;
     }
 
     public QueryBuilder addPagination(PaginationData p) {
         assertNotBuilt();
-        pagination = "limit " + p.pageSize + " offset " + p.pageSize * p.pageNumber;
+        if (p != null) {
+            pagination = "limit " + p.pageSize + " offset " + p.pageSize * p.pageNumber;
+        }
         return this;
     }
 
     /**
      * Puts the base string, the clauses, and the parameters all together into a Hibernate query object.
-     *
-     * This is a template method; it uses createQuery to instantiate the query object to be built and finishQuery to
-     * perform any final operations before returning the query. Subclasses can override these methods as needed.
      */
+    @SuppressWarnings("unchecked")
     public String build() {
         assertValidQuery();
         stringBuilder.append("select " + (select != null ? select : "*")).append(" from " + from);
 
         if (!joinByTypes.isEmpty()) {
-            // TODO: Ask for help
+            // TODO: Ask for help correcting type-safety warnings below
             Set<String> keySet = joinByTypes.keySet();
             for (Object key : keySet) {
-                ArrayList<String> a = (ArrayList<String>)joinByTypes.getCollection(key);
+                ArrayList<String> a = (ArrayList<String>) joinByTypes.getCollection(key);
                 for (int i = 0; i < a.size(); i += 2) {
                     stringBuilder.append(" " + key + " " + a.get(i) + " on (" + a.get(i + 1) + ")");
                 }
-
             }
         }
 
@@ -195,7 +184,7 @@ public class QueryBuilder {
         return parameters;
     }
 
-    public static String formatForLikeStatement(String s) {
-        return "\'" + s + "%\'";
+    public QueryBuilder like(String condition, Object paramValue) {
+        return this.where(condition, "\'" + paramValue + "%\'");
     }
 }

@@ -1,3 +1,6 @@
+create alias get_distance_miles for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDistanceInMiles";
+create alias get_distance_km for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDistanceInKilometers";
+
 insert into user (id, firstName, lastName, email, nickname) values (1, 'Honda', 'Prius', '40mpg@gmail.com', 'hybrid');
 insert into user (id, firstName, lastName, email, nickname) values (2, 'Ned', 'Stark', 'naked@winterfell.com', 'headless');
 insert into user (id, firstName, lastName, email, nickname) values (3, 'Jack', 'Handy', 'jh1942@lion.lmu.edu', 'DeepThoughts');
@@ -25,6 +28,7 @@ insert into venue (id, name, address, latitude, longitude) values (5, 'The Roxy'
 insert into venue (id, name, address, latitude, longitude) values (6, 'The Viper Room', '8852 West Sunset Bl, West Hollywood, CA 90069', 34.090512, -118.384657);
 insert into venue (id, name, address, latitude, longitude) values (7, 'House of Blues Sunset Strip', '8430 Sunset Bl, West Hollywood, CA', 34.094950, -118.373779);
 insert into venue (id, name, address, latitude, longitude) values (8, 'Carousel Restaurant', '304 N Brand Bl, Glendale, CA 91203', 34.149885, -118.255108);
+insert into venue (id, name, address, latitude, longitude) values (10, 'Far Away Palace', '71 Longa way, SomeTown, ZX 90145', -34.149885, 62.000001);
 
 insert into venue_property (venueId, key, value) values (1, 'seating capacity', '2703');
 insert into venue_property (venueId, key, value) values (1, 'since', '1930-06-04');
