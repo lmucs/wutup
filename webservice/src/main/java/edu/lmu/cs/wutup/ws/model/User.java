@@ -39,12 +39,8 @@ public class User {
         return this.id;
     }
 
-    public void setId(int i) {
+    public void setId(Integer i) {
         this.id = i;
-    }
-    
-    public void nullOutId() {
-        this.id = null;
     }
 
     @XmlElement(name = "firstname")
