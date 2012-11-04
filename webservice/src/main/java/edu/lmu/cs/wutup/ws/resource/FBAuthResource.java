@@ -56,8 +56,11 @@ public class FBAuthResource {
         }
 
         try {
+//            return Response
+//                    .seeOther(new URI("http://localhost:8080/wutup/auth/test?code=" + code))
+//                    .build();
             return Response
-                    .seeOther(new URI("http://localhost:8080/wutup/auth/test?code=" + code))
+                    .seeOther(new URI("http://localhost:9090/wutup/"))
                     .build();
 
         } catch (URISyntaxException e) {
