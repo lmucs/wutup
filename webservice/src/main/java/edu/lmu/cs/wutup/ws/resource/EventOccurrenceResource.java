@@ -60,65 +60,33 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public Response getEventOccurrences(
-            @QueryParam("category") String categories,
-            @QueryParam("lat") Double latitude,
-            @QueryParam("lng") Double longitude,
-            @QueryParam("radius") Double radius,
-            @QueryParam("start") String start,
-            @QueryParam("end") String end,
-            @QueryParam("eventId") Integer eventId, 
+    public Response getEventOccurrences(@QueryParam("category") String categories, @QueryParam("lat") Double latitude,
+            @QueryParam("lng") Double longitude, @QueryParam("radius") Double radius,
+            @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") Integer eventId,
             @QueryParam("venue") String venues,
-            @QueryParam("pageNumber") @DefaultValue("0") String pageNumberString,
-            @QueryParam("pageSize") @DefaultValue("20") String pageSizeString) {
+            @QueryParam("pageNumber") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
+            @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
+        PaginationData pagination = paginationDataFor(pageNumberString, pageSizeString);
+
+/*The following block makes at least one query required... I think a good idea once all is working
         boolean categoriesQuery = categories != null;
         boolean centerAndRadiusQuery = (latitude != null) && (longitude != null) && (radius != null);
         boolean dateRangeQuery = (start != null) && (end != null);
         boolean eventIdQuery = (eventId != null);
         boolean venuesQuery = (venues != null);
 
+        validateQuery(categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);*/
+/*
         try {
+            // TODO: I think this is built into datetime
             DateTime startTime = eventOccurrenceService.parseStringToDateTime(start);
             DateTime endTime = eventOccurrenceService.parseStringToDateTime(end);
         } catch (MalformedDateTimeStringException e) {
-            return Response.
-                    status(Response.Status.BAD_REQUEST).
-                    build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
-
-        // TODO - REPLACE THESE WITH PAGINATION
-        int pageNumber = toInteger("page", pageNumberString);
-        int pageSize = toInteger("pageSize", pageSizeString);
-
-        // Deprecated? - searching event occurrences based on attendees probably isn't worthwhile
-        //     If it is, though, what would be the best way to implement it?
-        //if (attendeesQuery) {
-        //    return eventOccurrenceService.findAllEventOccurrencesByAttendees(attendees, pageNumber, pageSize);
-        //}
-
-        // TODO: After updating dao turn into a single call.
-//        if (categoriesQuery) {
-//            return eventOccurrenceService.findAllEventOccurrencesByCategories(categories, pageNumber, pageSize);
-//        } else if (centerAndRadiusQuery) {
-//            return eventOccurrenceService.findAllEventOccurrencesByCenterAndRadius(latitude, longitude, radius,
-//                    pageNumber, pageSize);
-//        } else if (dateRangeQuery) {
-//            validateInterval(start, end);
-//            return eventOccurrenceService.findAllEventOccurrencesByDateRange(start, end, pageNumber, pageSize);
-//        } else if (eventIdQuery) {
-//            return eventOccurrenceService.findAllEventOccurrencesByEventId(eventId, pageNumber, pageSize);
-//        } else if (venuesQuery) {
-//            return eventOccurrenceService.findAllEventOccurrencesByVenues(venues, pageNumber, pageSize);
-//        } else {
-//            return Response.
-//                    ok(eventOccurrenceService.findAllEventOccurrences(new PaginationData(pageNumber, pageSize))).
-//                    build();
-//        }
-
-        return Response.
-                ok(eventOccurrenceService.findAllEventOccurrences(new PaginationData(pageNumber, pageSize))).
-                build();
+*/
+        return Response.ok(eventOccurrenceService.findAllEventOccurrences(pagination)).build();
     }
 
     @POST
@@ -162,15 +130,14 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/{id}/attendees")
-    public List<User> findAttendeesById(@PathParam("id") String idString, @QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
+    public List<User> findAttendeesById(@PathParam("id") String idString,
+            @QueryParam("pageNumber") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
+            @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
+
+        PaginationData pagination = paginationDataFor(pageNumberString, pageSizeString);
         int id = toInteger("id", idString);
 
-        // TODO - REPLACE THE FOLLOWING WITH PaginationData
-        int page = toInteger("page", pageString);
-        int pageSize = toInteger("pageSize", pageSizeString);
-
-        return eventOccurrenceService.findAttendeesByEventOccurrenceId(id, page, pageSize);
+        return eventOccurrenceService.findAttendeesByEventOccurrenceId(id, pagination);
     }
 
     @POST
@@ -224,7 +191,8 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     @GET
     @Path("/{id}/comments")
     public List<Comment> findEventOccurrenceComments(@PathParam("id") String idString,
-            @QueryParam("page") String pageString, @QueryParam("pageSize") String pageSizeString) {
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE_SIZE) String pageString,
+            @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
         checkRequiredParameter("id", idString);
         int eventOccurrenceId = toInteger("id", idString);
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
@@ -274,8 +242,8 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         }
     }
 
-    private void validateQuery(boolean attendeesQuery, boolean categoriesQuery, boolean centerAndRadiusQuery,
-            boolean dateRangeQuery, boolean eventIdQuery, boolean venuesQuery) {
+    private void validateQuery(boolean categoriesQuery, boolean centerAndRadiusQuery, boolean dateRangeQuery,
+            boolean eventIdQuery, boolean venuesQuery) {
         if (!(categoriesQuery || centerAndRadiusQuery || dateRangeQuery || eventIdQuery || venuesQuery)) {
             throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
         }
