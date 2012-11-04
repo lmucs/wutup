@@ -27,7 +27,7 @@
 		<div class="row-fluid">
 			<div class="span">
 				<h2>Event Info</h2>
-				<div class="well well-large">Here is where teh infoz goez.</div>
+				<div id="result" class="well well-large">THIS IS A WELL</div>
 
 			</div>
 		</div>
@@ -53,17 +53,12 @@
 		<script src="js/dashboardMap.js"></script>
 		<script src="js/dashboardCalendar.js"></script>
 	</wicket:link>
+<script>(function() {
 
-</wicket:extend>
-<script>
-	(function() {
+		$.get('http://localhost:8080/wutup/events/2', function(data) {
+				$('#result').html(JSON.stringify(data));
+				});
 
-		$
-				.get(
-						'http://localhost:8080/wutup/events?name=Weekly+Hackathon&page=0&pageSize=5',
-						function(data) {
-							$('#result').html(JSON.stringify(data));
-						});
-
-	}());
+		}());
 </script>
+</wicket:extend>
