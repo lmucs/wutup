@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.EventOccurrenceDao;
+import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
@@ -114,5 +115,18 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     @Override
     public void deleteComment(int eventId, int commentId) {
         eventOccurrenceDao.deleteComment(eventId, commentId);
+    }
+
+    @Override
+    public DateTime parseStringToDateTime(String time) throws MalformedDateTimeStringException {
+        if (time == null) {
+            return null;
+        }
+
+        try {
+            return new DateTime(time);
+        } catch (IllegalArgumentException e) {
+            throw new MalformedDateTimeStringException();
+        }
     }
 }

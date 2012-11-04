@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -29,16 +30,15 @@ import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
+import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.EventOccurrenceService;
 
 @Component
@@ -60,45 +60,65 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<EventOccurrence>  getEventOccurrences(/*List<User> attendees, List<Category> categories, Double latitude,
-            Double longitude, Double radius, DateTime start, DateTime end, Integer eventId, List<Venue> venues,
-            @QueryParam("pageNumber") String pageNumberString, @QueryParam("pageSize") String pageSizeString*/) {
-        /*boolean attendeesQuery = attendees != null;
+    public Response getEventOccurrences(
+            @QueryParam("category") String categories,
+            @QueryParam("lat") Double latitude,
+            @QueryParam("lng") Double longitude,
+            @QueryParam("radius") Double radius,
+            @QueryParam("start") String start,
+            @QueryParam("end") String end,
+            @QueryParam("eventId") Integer eventId, 
+            @QueryParam("venue") String venues,
+            @QueryParam("pageNumber") @DefaultValue("0") String pageNumberString,
+            @QueryParam("pageSize") @DefaultValue("20") String pageSizeString) {
+
         boolean categoriesQuery = categories != null;
         boolean centerAndRadiusQuery = (latitude != null) && (longitude != null) && (radius != null);
         boolean dateRangeQuery = (start != null) && (end != null);
         boolean eventIdQuery = (eventId != null);
         boolean venuesQuery = (venues != null);
 
+        try {
+            DateTime startTime = eventOccurrenceService.parseStringToDateTime(start);
+            DateTime endTime = eventOccurrenceService.parseStringToDateTime(end);
+        } catch (MalformedDateTimeStringException e) {
+            return Response.
+                    status(Response.Status.BAD_REQUEST).
+                    build();
+        }
+
         // TODO - REPLACE THESE WITH PAGINATION
         int pageNumber = toInteger("page", pageNumberString);
-        int pageSize = toInteger("pageSize", pageSizeString);*/
-        
-        int pageNumber = 0;
-        int pageSize = 20;
-        
-        /*
+        int pageSize = toInteger("pageSize", pageSizeString);
 
-        validateQuery(attendeesQuery, categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);
+        // Deprecated? - searching event occurrences based on attendees probably isn't worthwhile
+        //     If it is, though, what would be the best way to implement it?
+        //if (attendeesQuery) {
+        //    return eventOccurrenceService.findAllEventOccurrencesByAttendees(attendees, pageNumber, pageSize);
+        //}
 
         // TODO: After updating dao turn into a single call.
-        if (attendeesQuery) {
-            return eventOccurrenceService.findAllEventOccurrencesByAttendees(attendees, pageNumber, pageSize);
-        } else if (categoriesQuery) {
-            return eventOccurrenceService.findAllEventOccurrencesByCategories(categories, pageNumber, pageSize);
-        } else if (centerAndRadiusQuery) {
-            return eventOccurrenceService.findAllEventOccurrencesByCenterAndRadius(latitude, longitude, radius,
-                    pageNumber, pageSize);
-        } else if (dateRangeQuery) {
-            validateInterval(start, end);
-            return eventOccurrenceService.findAllEventOccurrencesByDateRange(start, end, pageNumber, pageSize);
-        } else if (eventIdQuery) {
-            return eventOccurrenceService.findAllEventOccurrencesByEventId(eventId, pageNumber, pageSize);
-        } else if (venuesQuery) {
-            return eventOccurrenceService.findAllEventOccurrencesByVenues(venues, pageNumber, pageSize);
-        } else {*/
-            return eventOccurrenceService.findAllEventOccurrences(new PaginationData(pageNumber, pageSize));
-        //}
+//        if (categoriesQuery) {
+//            return eventOccurrenceService.findAllEventOccurrencesByCategories(categories, pageNumber, pageSize);
+//        } else if (centerAndRadiusQuery) {
+//            return eventOccurrenceService.findAllEventOccurrencesByCenterAndRadius(latitude, longitude, radius,
+//                    pageNumber, pageSize);
+//        } else if (dateRangeQuery) {
+//            validateInterval(start, end);
+//            return eventOccurrenceService.findAllEventOccurrencesByDateRange(start, end, pageNumber, pageSize);
+//        } else if (eventIdQuery) {
+//            return eventOccurrenceService.findAllEventOccurrencesByEventId(eventId, pageNumber, pageSize);
+//        } else if (venuesQuery) {
+//            return eventOccurrenceService.findAllEventOccurrencesByVenues(venues, pageNumber, pageSize);
+//        } else {
+//            return Response.
+//                    ok(eventOccurrenceService.findAllEventOccurrences(new PaginationData(pageNumber, pageSize))).
+//                    build();
+//        }
+
+        return Response.
+                ok(eventOccurrenceService.findAllEventOccurrences(new PaginationData(pageNumber, pageSize))).
+                build();
     }
 
     @POST

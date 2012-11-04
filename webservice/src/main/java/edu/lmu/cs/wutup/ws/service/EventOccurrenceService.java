@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -40,4 +41,6 @@ public interface EventOccurrenceService extends CommentService {
     void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
 
     void unregisterAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
+
+    DateTime parseStringToDateTime(String time) throws MalformedDateTimeStringException;
 }
