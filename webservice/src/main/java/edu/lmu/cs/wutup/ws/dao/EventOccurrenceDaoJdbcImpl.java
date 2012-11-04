@@ -163,9 +163,6 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     private RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
         public EventOccurrence mapRow(ResultSet rs, int rowNum) throws SQLException {
-            System.out.println("********* Column 1: " + rs.getInt("id"));
-            System.out.println("********* Column 2: " + rs.getString("name"));
-            System.out.println("********* Column 3: " + rs.getInt("venueId"));
             return new EventOccurrence(rs.getInt("id"), rs.getInt("eventId"), venueService.findVenueById(rs.getInt("venueId")));
         }
     };
