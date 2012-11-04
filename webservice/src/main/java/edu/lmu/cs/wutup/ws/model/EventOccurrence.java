@@ -27,6 +27,10 @@ public class EventOccurrence implements Commentable {
     public EventOccurrence(Integer id, Venue venue) {
         this(id, null, venue, new DateTime(), new DateTime().plusDays(1));
     }
+    
+    public EventOccurrence(Integer id, Integer eventId, Venue venue) {
+        this(id, eventId, venue, new DateTime(), new DateTime().plusDays(1));
+    }
 
     public EventOccurrence(Integer id, Integer eventId, Venue venue, DateTime start, DateTime end) {
         this.id = id;

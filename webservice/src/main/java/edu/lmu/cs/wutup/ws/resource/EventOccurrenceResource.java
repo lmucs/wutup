@@ -43,8 +43,8 @@ import edu.lmu.cs.wutup.ws.service.EventOccurrenceService;
 
 @Component
 @Scope(BeanDefinition.SCOPE_SINGLETON)
-@Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-@Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+@Consumes({MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_JSON})
 @Path("/occurrences")
 public class EventOccurrenceResource extends AbstractWutupResource {
 
@@ -60,10 +60,10 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<EventOccurrence> getEventOccurrences(List<User> attendees, List<Category> categories, Double latitude,
+    public List<EventOccurrence>  getEventOccurrences(/*List<User> attendees, List<Category> categories, Double latitude,
             Double longitude, Double radius, DateTime start, DateTime end, Integer eventId, List<Venue> venues,
-            @QueryParam("pageNumber") String pageNumberString, @QueryParam("pageSize") String pageSizeString) {
-        boolean attendeesQuery = attendees != null;
+            @QueryParam("pageNumber") String pageNumberString, @QueryParam("pageSize") String pageSizeString*/) {
+        /*boolean attendeesQuery = attendees != null;
         boolean categoriesQuery = categories != null;
         boolean centerAndRadiusQuery = (latitude != null) && (longitude != null) && (radius != null);
         boolean dateRangeQuery = (start != null) && (end != null);
@@ -72,7 +72,12 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
         // TODO - REPLACE THESE WITH PAGINATION
         int pageNumber = toInteger("page", pageNumberString);
-        int pageSize = toInteger("pageSize", pageSizeString);
+        int pageSize = toInteger("pageSize", pageSizeString);*/
+        
+        int pageNumber = 0;
+        int pageSize = 20;
+        
+        /*
 
         validateQuery(attendeesQuery, categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);
 
@@ -91,9 +96,9 @@ public class EventOccurrenceResource extends AbstractWutupResource {
             return eventOccurrenceService.findAllEventOccurrencesByEventId(eventId, pageNumber, pageSize);
         } else if (venuesQuery) {
             return eventOccurrenceService.findAllEventOccurrencesByVenues(venues, pageNumber, pageSize);
-        } else {
+        } else {*/
             return eventOccurrenceService.findAllEventOccurrences(new PaginationData(pageNumber, pageSize));
-        }
+        //}
     }
 
     @POST

@@ -20,11 +20,12 @@ import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
+import edu.lmu.cs.wutup.ws.service.VenueService;
 
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
-    private static final String SELECT = "select o.id, v.name from occurrence o join venue v on (o.venueId=v.id)";
+    private static final String SELECT = "select o.id, v.name, o.venueId, o.eventId from occurrence o join venue v on (o.venueId=v.id)";
     private static final String PAGINATION = "limit ? offset ?";
 
     private static final String CREATE_SQL = "insert into occurrence (id, venue) values (?,?)";
@@ -38,6 +39,9 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    VenueService venueService;
 
     @Override
     public void createEventOccurrence(EventOccurrence e) {
@@ -157,22 +161,13 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 pagination.pageNumber, pagination.pageSize);
     }
 
-    private static RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
+    private RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
         public EventOccurrence mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new EventOccurrence(rs.getInt("id"), VenueParser(rs.getString("venue")));
+            System.out.println("********* Column 1: " + rs.getInt("id"));
+            System.out.println("********* Column 2: " + rs.getString("name"));
+            System.out.println("********* Column 3: " + rs.getInt("venueId"));
+            return new EventOccurrence(rs.getInt("id"), rs.getInt("eventId"), venueService.findVenueById(rs.getInt("venueId")));
         }
     };
-
-    private static Venue VenueParser(String venue) {
-        String[] venueAttributes = venue.split(",");
-        // TODO: Ask Dr. Toal if this is good enough
-        try {
-            return new Venue(Integer.parseInt(venueAttributes[0]), venueAttributes[1], venueAttributes[2],
-                    Double.parseDouble(venueAttributes[3]), Double.parseDouble(venueAttributes[4]), null);
-        } catch (Exception e) {
-            // Do we have a log to write to?
-            return new Venue();
-        }
-    }
 
 }
