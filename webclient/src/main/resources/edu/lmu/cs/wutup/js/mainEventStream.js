@@ -1,33 +1,26 @@
-onload= function () {
+onload = function () {
 
-    var totalRows=12;
+    initializeEventQueue("mainEventStreamContainer", "mainEventStream", 12);
+    initializeEventQueue("tabHosting", "hostingEventStream", 2);
+    initializeEventQueue("tabAttending", "attendingEventStream", 7);
+    initializeEventQueue("tabInvitedTo", "invitedToEventStream", 16);
 
-    var root=document.getElementById("mainEventStreamContainer");
+}
+
+var initializeEventQueue = function (goesHere, id, rows) {
+    var totalEvents = rows;
+
+    var root=document.getElementById(goesHere);
     var table=document.createElement("table");
     table.className="table table-hover";
-    table.id = "mainEventStream";
-
-    var tableHead = document.createElement("thead");
-    var headRow = document.createElement("tr");
-    var eventPicture = document.createElement("th");
-    eventPicture.innerHTML = "eventPicture";
-    var eventDetails = document.createElement("th");
-    eventDetails.innerHTML = "eventDetails";
-    eventDetails.colSpan = "2";
-    var eventTime = document.createElement("th");
-    eventTime.innerHTML = "eventTime";
-    
-    headRow.appendChild(eventPicture);
-    headRow.appendChild(eventDetails);
-    headRow.appendChild(eventTime);
-    tableHead.appendChild(headRow);
-    table.appendChild(tableHead);
+    table.id = id;
+    table.style.attribute = "value";
 
     var tableBody=document.createElement('tbody');
-    var row, pictureCell, picture, detailsCell, eventTitle, eventDescription, timeCell;
+    var event, pictureCell, picture, detailsCell, eventTitle, eventDescription, timeCell;
     
-    for (var i = 0; i < totalRows; i++) {
-        row = document.createElement("tr");
+    for (var i = 0; i < totalEvents; i++) {
+        event = document.createElement("tr");
 
         pictureCell = document.createElement('td');
         
@@ -41,7 +34,8 @@ onload= function () {
 
         detailsCell = document.createElement("td");
         detailsCell.colSpan = "2";
-        eventTitle = document.createElement("p");
+        eventTitle = document.createElement("a");
+        eventTitle.href = "http://www.noahsplacepettingzoo.com/llama.html";
         eventTitle.innerHTML = "Llama Petting Zoo";
         eventDescription = document.createElement("p");
         eventDescription.innerHTML = "IT'S GOING TO BE A LLAMA PALOOZA";
@@ -51,11 +45,11 @@ onload= function () {
         timeCell = document.createElement("td");
         timeCell.innerHTML = "time goes here";
         
-        row.appendChild(pictureCell);
-        row.appendChild(detailsCell);
-        row.appendChild(timeCell);
+        event.appendChild(pictureCell);
+        event.appendChild(detailsCell);
+        event.appendChild(timeCell);
 
-        tableBody.appendChild(row);
+        tableBody.appendChild(event);
     }
 
     table.appendChild(tableBody);

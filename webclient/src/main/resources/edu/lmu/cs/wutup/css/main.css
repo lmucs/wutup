@@ -174,7 +174,12 @@ body {
     background-color: #A50001;
 }
 
-table, td, th
-{
-background-color: #ffffff;
+table, td, th {
+    background-color: #ffffff;
+}
+
+.tab-content {  
+    height: 154px !important;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }

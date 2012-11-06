@@ -7,11 +7,7 @@
             </div>
             <div class="span6">
                 <h2>Find Out What's Up On Wutup!</h2>
-                <form style="display: inline" action="manageevents.html"
-                    method="get">
-                    <button id="create event" class="btn btn-large btn-success">
-                        Create An Event</button>
-                </form>
+
 
                 <div class="well well-large">
                     <p>Yo! Wutup is a social event management service that allows
@@ -34,10 +30,20 @@
 
             <div class="span4">
             
-               <div class = "row-fluid">
-                    <a href="#" class="thumbnail" id="profilePicture">
-                        <img src="http://placehold.it/125x150" alt="">
-                    </a>
+                <div class = "row-fluid">
+                    <div class = "span4">
+                        <a href="#" class="thumbnail" id="profilePicture">
+                            <img src="http://placehold.it/125x150" alt="">
+                        </a>
+                    </div>
+                    <div class = "span4">
+                        <div id="nickname">Shelby Tsukamoto</div>
+                    </div>
+                    <div class = "span4 offset">
+                        <form style="display: inline" action="manageevents.html" method="get">
+                            <button id="create event" class="btn btn-large btn-success">Create An Event</button>
+                        </form>
+                    </div>
                 </div>
                 
                 <br />
@@ -59,52 +65,15 @@
                         
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabHosting">
-
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Picture</th>
-                                            <th colspan="2">Event Details</th>
-                                            <th>Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><img src="http://24.media.tumblr.com/tumblr_lurm27QJ2X1r6d623o1_500.jpg" alt="Llamas" height="42" width="42"></td>
-                                            <td colspan="2">
-                                                <p>
-                                                Llama Petting Zoo <br />
-                                                IT'S A LLAMA PALOOZA
-                                                </p>
-                                            </td>
-                                            <td>12:00 PM</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td><img src="http://3.bp.blogspot.com/-SPvWJhZG-Vc/TVXG9WtSq4I/AAAAAAAADRA/o_oXALCKl4Y/s1600/Thai%2Bsugar%2Bsculpture.jpg" alt="Candy" height="42" width="42"></td>
-                                            <td colspan="2">
-                                                <p>
-                                                    Candy Sculpture Class <br />
-                                                    LET'S MAKE SOME SWEET UNICORNS
-                                                </p>
-                                            </td>
-                                            <td>2:00 PM</td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-
+                                <!-- tabHosting table -->
                             </div>
 
                             <div class="tab-pane" id="tabAttending">
-                                <p>
-                                    I am attending the Cat Carnival, the Llama Palooza,
-                                    and the Meerkat Manor Party.
-                                </p>
+                                <!-- tabAttending table -->
                             </div>
 
                             <div class="tab-pane" id="tabInvitedTo">
-                                <p>I am invited to Boring Meeting. Yippee...</p>
+                                <!-- tabInvitedTo table -->
                             </div>
                         </div>
                     </div>
