@@ -14,6 +14,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.model.Category;
@@ -23,18 +24,12 @@ import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
-import edu.lmu.cs.wutup.ws.service.VenueService;
 
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
-    private static final String SELECT = "select o.id, o.start, o.end, o.venueId, v.name as venueName, v.address, v.latitude, v.longitude, "
-            + " o.eventId, e.name as eventName, e.description, address, "
-            + " u.id as userId, u.firstName, u.lastName, u.email, u.nickname "
-            + " from occurrence o "
-            + " join venue v on (o.venueId = v.id) "
-            + " join event e on (o.eventId = e.id) "
-            + " join user u on (e.ownerId = u.id)";
+    private static final String SELECT = getSelectQuery().build();
+
     private static final String PAGINATION = "limit ? offset ?";
     private static final String CREATE_SQL = "insert into occurrence (id,eventId,venueId) values (?,?,?)";
     private static final String UPDATE_SQL = "update occurrence set venue=? where id=?";
@@ -48,9 +43,6 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    VenueService venueService;
 
     @Override
     public int createEventOccurrence(EventOccurrence e) {
@@ -150,11 +142,6 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     private RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
         public EventOccurrence mapRow(ResultSet rs, int rowNum) throws SQLException {
-
-            // o.id, o.start, o.end, o.venueId, v.name as venueName, v.address, v.latitude, v.longitude, "
-            // + " o.eventId, e.name as eventName, e.description, address, "
-            // + " u.id, u.firstName, u.lastName, u.email, u.nickname" +
-
             int occurrenceId = rs.getInt("id");
             DateTime start = new DateTime(rs.getDate("start"));
             DateTime end = new DateTime(rs.getDate("end"));
@@ -178,4 +165,14 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             return new EventOccurrence(occurrenceId, event, venue, start, end);
         }
     };
+
+    private static QueryBuilder getSelectQuery() {
+        return new QueryBuilder().select("o.id", "o.start", "o.end", "o.venueId", "v.name as venueName", "v.address",
+                "v.latitude", "v.longitude", "o.eventId", "e.name as eventName", "e.description", "address",
+                "u.id as userId", "u.firstName", "u.lastName", "u.email", "u.nickname")
+                .from("occurrence o")
+                .joinOn("venue v", "(o.venueId = v.id)")
+                .joinOn("event e", "(o.eventId = e.id)")
+                .joinOn("user u", "(e.ownerId = u.id)");
+    }
 }
