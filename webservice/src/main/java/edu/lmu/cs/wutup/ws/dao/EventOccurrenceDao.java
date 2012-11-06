@@ -8,7 +8,6 @@ import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 public interface EventOccurrenceDao extends CommentDao {
 
@@ -18,24 +17,15 @@ public interface EventOccurrenceDao extends CommentDao {
 
     void deleteEventOccurrence(int id);
 
-    List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize);
+    List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination);
 
     EventOccurrence findEventOccurrenceById(int id);
 
     List<EventOccurrence> findAllEventOccurrences(PaginationData pagination);
 
-    List<EventOccurrence> findAllEventOccurrencesByAttendees(List<User> attendees, int pageNumber, int pageSize);
-
-    List<EventOccurrence> findAllEventOccurrencesByCategories(List<Category> categories, int pageNumber, int pageSize);
-
-    List<EventOccurrence> findAllEventOccurrencesByCenterAndRadius(double latitude, double longitude, double radius,
-            int pageNumber, int pageSize);
-
-    List<EventOccurrence> findAllEventOccurrencesByDateRange(DateTime start, DateTime end, int pageNumber, int pageSize);
-
-    List<EventOccurrence> findAllEventOccurrencesByEventId(int eventId, int pageNumber, int pageSize);
-
-    List<EventOccurrence> findAllEventOccurrencesByVenues(List<Venue> venues, int pageNumber, int pageSize);
+    List<EventOccurrence> findEventOccurrencesByQuery(List<User> attendees, List<Category> categories, Double latitude,
+            Double longitude, Double radius, DateTime start, DateTime end, Integer eventId, String venues,
+            PaginationData pagination);
 
     void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
 

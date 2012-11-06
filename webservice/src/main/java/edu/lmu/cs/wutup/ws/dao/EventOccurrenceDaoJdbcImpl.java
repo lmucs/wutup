@@ -19,7 +19,6 @@ import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.VenueService;
 
 @Repository
@@ -39,7 +38,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    
+
     @Autowired
     VenueService venueService;
 
@@ -69,7 +68,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public List<User> findAttendeesByEventOccurrenceId(int id, int pageNumber, int pageSize) {
+    public List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination) {
         return new java.util.ArrayList<User>();
         // TODO
     }
@@ -91,42 +90,13 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public List<EventOccurrence> findAllEventOccurrencesByAttendees(List<User> attendees, int pageNumber, int pageSize) {
-        return new java.util.ArrayList<EventOccurrence>();
-        // TODO
-    }
-
-    @Override
-    public List<EventOccurrence> findAllEventOccurrencesByCategories(List<Category> categories, int pageNumber,
-            int pageSize) {
-        return new java.util.ArrayList<EventOccurrence>();
-        // TODO
-    }
-
-    @Override
-    public List<EventOccurrence> findAllEventOccurrencesByCenterAndRadius(double latitude, double longitude,
-            double radius, int pageNumber, int pageSize) {
-        return new java.util.ArrayList<EventOccurrence>();
-        // TODO
-    }
-
-    @Override
-    public List<EventOccurrence> findAllEventOccurrencesByDateRange(DateTime start, DateTime end, int pageNumber,
-            int pageSize) {
-        return new java.util.ArrayList<EventOccurrence>();
-        // TODO
-    }
-
-    @Override
-    public List<EventOccurrence> findAllEventOccurrencesByEventId(int eventId, int pageNumber, int pageSize) {
-        return new java.util.ArrayList<EventOccurrence>();
-        // TODO
-    }
-
-    @Override
-    public List<EventOccurrence> findAllEventOccurrencesByVenues(List<Venue> venues, int pageNumber, int pageSize) {
-        return new java.util.ArrayList<EventOccurrence>();
-        // TODO
+    public List<EventOccurrence> findEventOccurrencesByQuery(List<User> attendees, List<Category> categories, Double latitude,
+            Double longitude, Double radius, DateTime start, DateTime end, Integer eventId, String venues,
+            PaginationData pagination) {
+        // TODO: change this
+        return jdbcTemplate.query(FIND_ALL_SQL,
+                new Object[]{pagination.pageSize, pagination.pageNumber * pagination.pageSize},
+                eventOccurrenceRowMapper);
     }
 
     @Override
