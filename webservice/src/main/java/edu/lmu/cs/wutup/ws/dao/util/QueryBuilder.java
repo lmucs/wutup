@@ -66,9 +66,13 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder select(String fields) {
+    public QueryBuilder select(String... fields) {
         assertNotBuilt();
-        select = fields;
+        select = "";
+        for (String field : fields) {
+            select += field + ", ";
+        }
+        select = select.substring(0, select.length() - 2);
         return this;
     }
 
