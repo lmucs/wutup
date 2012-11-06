@@ -1,7 +1,10 @@
 package edu.lmu.cs.wutup.ws.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -9,16 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
+import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.VenueService;
 
 @Repository
@@ -26,12 +35,13 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     private static final String SELECT = "select o.id, v.name, o.venueId, o.eventId from occurrence o join venue v on (o.venueId=v.id)";
     private static final String PAGINATION = "limit ? offset ?";
-
-    private static final String CREATE_SQL = "insert into occurrence (id, venue) values (?,?)";
+    private static final String CREATE_SQL = "insert into occurrence (id,eventId,venueId) values (?,?,?)";
+    private static final String CREATE_WITH_AUTO_GENERATE_ID = "insert into occurrence (eventId,venueId) values (?,?)";
     private static final String UPDATE_SQL = "update occurrence set venue=? where id=?";
     private static final String FIND_BY_ID_SQL = SELECT + " where o.id=?";
     private static final String FIND_ALL_SQL = SELECT + " " + PAGINATION;
     private static final String DELETE_SQL = "delete from occurrence where id=?";
+    private static final String COUNT_SQL = "select count(*) from occurrence";
 
     private static final String SELECT_COMMENT = "select ec.*, u.* from eventoccurence_comment ec join user u on (ec.authorId = u.id)";
     private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
@@ -43,9 +53,17 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     VenueService venueService;
 
     @Override
-    public void createEventOccurrence(EventOccurrence e) {
+    public int createEventOccurrence(EventOccurrence e) {
         try {
-            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getVenue());
+            if (e.getId() == null) {
+                KeyHolder keyHolder = new GeneratedKeyHolder();
+                createEventOccurrenceWithGeneratedId(e, keyHolder);
+                e.setId(keyHolder.getKey().intValue());
+                return (Integer) keyHolder.getKey();
+            } else {
+                jdbcTemplate.update(CREATE_SQL, e.getId(), e.getEventId(), e.getVenue().getId());
+                return e.getId();
+            }
         } catch (DuplicateKeyException ex) {
             throw new EventOccurrenceExistsException();
         }
@@ -84,19 +102,21 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public List<EventOccurrence> findAllEventOccurrences(PaginationData pagination) {
-        return jdbcTemplate.query(FIND_ALL_SQL,
-                new Object[]{pagination.pageSize, pagination.pageNumber * pagination.pageSize},
-                eventOccurrenceRowMapper);
+        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
+                pagination.pageNumber * pagination.pageSize}, eventOccurrenceRowMapper);
     }
 
     @Override
-    public List<EventOccurrence> findEventOccurrencesByQuery(List<User> attendees, List<Category> categories, Double latitude,
-            Double longitude, Double radius, DateTime start, DateTime end, Integer eventId, String venues,
-            PaginationData pagination) {
+    public List<EventOccurrence> findEventOccurrencesByQuery(List<User> attendees, List<Category> categories,
+            Double latitude, Double longitude, Double radius, DateTime start, DateTime end, Integer eventId,
+            String venues, PaginationData pagination) {
         // TODO: change this
-        return jdbcTemplate.query(FIND_ALL_SQL,
-                new Object[]{pagination.pageSize, pagination.pageNumber * pagination.pageSize},
-                eventOccurrenceRowMapper);
+        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
+                pagination.pageNumber * pagination.pageSize}, eventOccurrenceRowMapper);
+    }
+
+    public int findNumberOfEventOccurrences() {
+        return jdbcTemplate.queryForInt(COUNT_SQL);
     }
 
     @Override
@@ -133,8 +153,24 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     private RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
         public EventOccurrence mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new EventOccurrence(rs.getInt("id"), rs.getInt("eventId"), venueService.findVenueById(rs.getInt("venueId")));
+            return new EventOccurrence(rs.getInt("id"), rs.getInt("eventId"),
+                    venueService.findVenueById(rs.getInt("venueId")));
         }
     };
 
+    private void createEventOccurrenceWithGeneratedId(EventOccurrence e, KeyHolder keyHolder) {
+        final Integer eventId = e.getEventId();
+        final Venue venue = e.getVenue();
+        final DateTime start = e.getStart();
+        final DateTime end = e.getEnd();
+
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement ps = connection.prepareStatement(CREATE_WITH_AUTO_GENERATE_ID, new String[]{"id"});
+                ps.setString(1, eventId + "");
+                ps.setString(2, venue.getId() + "");
+                return ps;
+            }
+        }, keyHolder);
+    }
 }

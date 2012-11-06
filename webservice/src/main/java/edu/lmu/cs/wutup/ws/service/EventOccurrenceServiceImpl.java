@@ -23,8 +23,8 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     EventOccurrenceDao eventOccurrenceDao;
 
     @Override
-    public void createEventOccurrence(EventOccurrence e) {
-        eventOccurrenceDao.createEventOccurrence(e);
+    public int createEventOccurrence(EventOccurrence e) {
+        return eventOccurrenceDao.createEventOccurrence(e);
     }
 
     @Override

@@ -79,7 +79,6 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         validateQuery(categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);*/
 /*
         try {
-            // TODO: I think this is built into datetime
             DateTime startTime = eventOccurrenceService.parseStringToDateTime(start);
             DateTime endTime = eventOccurrenceService.parseStringToDateTime(end);
         } catch (MalformedDateTimeStringException e) {
@@ -89,12 +88,24 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         return Response.ok(eventOccurrenceService.findAllEventOccurrences(pagination)).build();
     }
 
+    /*
+     *
+    public Response createEvent(Event event, @Context UriInfo uriInfo) {
+        try {
+            int newId = eventService.createEvent(event);
+            URI newLocation = uriInfo.getAbsolutePathBuilder().path(newId + "").build();
+            return Response.created(newLocation).build();
+        } catch (EventExistsException e) {
+            throw new ServiceException(CONFLICT, EVENT_ALREADY_EXISTS, event.getId());
+        }
+    }
+     */
     @POST
     @Path("/")
     public Response createEventOccurrence(EventOccurrence eventOccurrence, @Context UriInfo uriInfo) {
         try {
-            eventOccurrenceService.createEventOccurrence(eventOccurrence);
-            URI newLocation = uriInfo.getAbsolutePathBuilder().path(eventOccurrence.getId() + "").build();
+            int newId = eventOccurrenceService.createEventOccurrence(eventOccurrence);
+            URI newLocation = uriInfo.getAbsolutePathBuilder().path(newId + "").build();
             return Response.created(newLocation).build();
         } catch (EventOccurrenceExistsException e) {
             throw new ServiceException(CONFLICT, EVENT_OCCURRENCE_ALREADY_EXISTS, eventOccurrence.getId());

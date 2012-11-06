@@ -39,7 +39,11 @@ insert into venue_property (venueId, key, value) values (5, 'fax', '310-278-2447
 insert into venue_property (venueId, key, value) values (5, 'twitter', '@theroxy');
 insert into venue_property (venueId, key, value) values (7, 'url', 'http://www.houseofblues.com/');
 
-insert into occurrence (id, eventId, venueId, start, end) values (1, 8, 4, '2012-03-15 20:00:00', '2012-03-16 02:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (1, 2, 1, '2012-01-15 20:00:00', '2012-01-16 02:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (2, 6, 2, '2012-02-15 20:00:00', '2012-02-16 02:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (3, 5, 3, '2012-03-15 20:00:00', '2012-03-16 02:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (4, 8, 4, '2012-04-15 20:00:00', '2012-04-16 02:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (5, 3, 5, '2012-05-15 20:00:00', '2012-05-16 02:30:00');
 
 insert into category (id, name, parentId) values (1, 'Theater', null);
 insert into category (id, name, parentId) values (2, 'Club', null);

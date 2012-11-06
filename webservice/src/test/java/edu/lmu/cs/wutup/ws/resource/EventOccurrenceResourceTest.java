@@ -54,7 +54,7 @@ public class EventOccurrenceResourceTest {
     public void eventOccurrenceCreationCreatesEventOccurrenceWithLocationHeader() {
         Response response = resource.createEventOccurrence(sampleEventOccurrence, sampleUriInfo);
         verify(service).createEventOccurrence(sampleEventOccurrence);
-        assertThat(response.getMetadata().getFirst("Location").toString(), is("http://example.com/1"));
+        assertThat(response.getMetadata().getFirst("Location").toString(), is("http://example.com/0"));
         assertThat(response.getStatus(), is(201));
     }
 

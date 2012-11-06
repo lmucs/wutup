@@ -11,7 +11,7 @@ import edu.lmu.cs.wutup.ws.model.User;
 
 public interface EventOccurrenceDao extends CommentDao {
 
-    void createEventOccurrence(EventOccurrence e);
+    int createEventOccurrence(EventOccurrence e);
 
     void updateEventOccurrence(EventOccurrence e);
 
@@ -26,6 +26,8 @@ public interface EventOccurrenceDao extends CommentDao {
     List<EventOccurrence> findEventOccurrencesByQuery(List<User> attendees, List<Category> categories, Double latitude,
             Double longitude, Double radius, DateTime start, DateTime end, Integer eventId, String venues,
             PaginationData pagination);
+
+    int findNumberOfEventOccurrences();
 
     void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
 

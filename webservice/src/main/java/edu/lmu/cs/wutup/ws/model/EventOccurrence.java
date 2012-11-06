@@ -27,7 +27,7 @@ public class EventOccurrence implements Commentable {
     public EventOccurrence(Integer id, Venue venue) {
         this(id, null, venue, new DateTime(), new DateTime().plusDays(1));
     }
-    
+
     public EventOccurrence(Integer id, Integer eventId, Venue venue) {
         this(id, eventId, venue, new DateTime(), new DateTime().plusDays(1));
     }
@@ -41,19 +41,19 @@ public class EventOccurrence implements Commentable {
     }
 
     @XmlElement(name = "id")
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
     public void setId(int id) {
         this.id = id;
     }
-    
+
     @XmlElement(name = "eventId")
     public int getEventId() {
         return this.eventId;
     }
-    
+
     public void setEventId(int eventId) {
         this.eventId = eventId;
     }
