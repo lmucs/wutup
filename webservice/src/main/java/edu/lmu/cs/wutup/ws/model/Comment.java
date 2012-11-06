@@ -1,6 +1,7 @@
 package edu.lmu.cs.wutup.ws.model;
 
 import org.joda.time.DateTime;
+import java.sql.Timestamp;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import com.google.common.base.Objects;
@@ -11,7 +12,7 @@ public class Comment {
     private Integer id;
     private User author;
     private String body;
-    private DateTime timestamp;
+    private DateTime postDate;
 
     public Comment() {
         // No-arg constructor required for annotations
@@ -21,7 +22,7 @@ public class Comment {
         this.id = id;
         this.body = body;
         this.author = author;
-        this.timestamp = timestamp;
+        this.postDate = timestamp;
     }
 
     @XmlElement(name = "id")
@@ -51,13 +52,17 @@ public class Comment {
         this.body = body;
     }
 
-    @XmlElement(name = "timestamp")
-    public DateTime getTimestamp() {
-        return timestamp;
+    @XmlElement(name = "postdate")
+    public DateTime getPostDate() {
+        return postDate;
     }
 
-    public void setTimestamp(DateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setPostDate(DateTime date) {
+        this.postDate = date;
+    }
+    
+    public Timestamp getTimestamp() {
+        return new Timestamp(this.postDate.getMillis());
     }
 
     @Override
@@ -76,7 +81,7 @@ public class Comment {
                 .add("id", this.id)
                 .add("body", this.body)
                 .add("owner", this.author)
-                .add("timestamp", this.timestamp)
+                .add("postDate", this.postDate)
                 .toString();
     }
 }

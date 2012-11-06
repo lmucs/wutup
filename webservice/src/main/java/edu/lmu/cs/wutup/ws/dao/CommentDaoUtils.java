@@ -16,9 +16,9 @@ import edu.lmu.cs.wutup.ws.model.User;
 
 public class CommentDaoUtils {
 
-    public static void addComment(JdbcTemplate jdbcTemplate, String object, Integer objectId, Comment comment) {
-        int rowsUpdated = jdbcTemplate.update("insert into " + object
-                + "_comments (eventid, authorid, text, timestamp) values (?,?,?,?)", objectId, comment.getAuthor()
+    public static void addComment(JdbcTemplate jdbcTemplate, String objectName, Integer objectId, Comment comment) {
+        int rowsUpdated = jdbcTemplate.update("insert into " + objectName
+                + "_comment (subjectId, authorid, text, timestamp) values (?,?,?,?)", objectId, comment.getAuthor()
                 .getId(), comment.getBody(), comment.getTimestamp());
         if (rowsUpdated == 0) {
             throw new CommentExistsException();
@@ -26,16 +26,16 @@ public class CommentDaoUtils {
 
     }
 
-    public static void updateComment(JdbcTemplate jdbcTemplate, String object, int commentId, Comment c) {
-        int rowsUpdated = jdbcTemplate.update("update " + object + "_comments set text=?, timestamp=? where id=?",
+    public static void updateComment(JdbcTemplate jdbcTemplate, String objectName, int commentId, Comment c) {
+        int rowsUpdated = jdbcTemplate.update("update " + objectName + "_comments set text=?, timestamp=? where id=?",
                 c.getBody(), c.getTimestamp(), c.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchCommentException();
         }
     }
 
-    public static void deleteComment(JdbcTemplate jdbcTemplate, String object, int objectId, int commentId) {
-        int rowsUpdated = jdbcTemplate.update("delete from " + object + "_comments where eventId=? and id=?", objectId,
+    public static void deleteComment(JdbcTemplate jdbcTemplate, String objectName, int subjectId, int commentId) {
+        int rowsUpdated = jdbcTemplate.update("delete from " + objectName + "_comments where subjectId=? and id=?", subjectId,
                 commentId);
         if (rowsUpdated == 0) {
             throw new NoSuchCommentException();
@@ -47,7 +47,7 @@ public class CommentDaoUtils {
     }
 
     public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING,
-            int objectId, int pageSize, int pageNumber) {
+            int objectId, int pageNumber, int pageSize) {
         return jdbcTemplate.query(SQL_STRING, new Object[]{objectId, pageSize, pageNumber * pageSize}, commentRowMapper);
     }
 

@@ -37,7 +37,7 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.subjectId = ? order by ec.timestamp asc " + PAGINATION;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -100,6 +100,7 @@ public class EventDaoJdbcImpl implements EventDao {
     public int findNumberOfEvents() {
         return jdbcTemplate.queryForInt(COUNT_SQL);
     }
+    
 
     @Override
     public void addComment(Integer eventId, Comment comment) {
