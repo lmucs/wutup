@@ -20,7 +20,6 @@ import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
-import edu.lmu.cs.wutup.ws.service.VenueServiceImpl;
 
 /**
  * Unit tests on the JDBC Dao using a programmatically-configured embedded database. The database is setup and torn down
@@ -35,9 +34,9 @@ public class EventOccurrenceDaoTest {
     private Event eventOne = new Event(1, "Party", "A hoedown!", dondi);
     private Event eventTwo = new Event(2, "Party", "Another hoedown!", dondi);
 
-
     Venue keck = new Venue(1, "Pantages Theater", "6233 Hollywood Bl, Los Angeles, CA", 34.1019444, -118.3261111, null);
-    Venue uhall = new Venue(2, "Hollywood Bowl", "2301 North Highland Ave, Hollywood, CA", 34.1127863, -118.3392439, null);
+    Venue uhall = new Venue(2, "Hollywood Bowl", "2301 North Highland Ave, Hollywood, CA", 34.1127863, -118.3392439,
+            null);
 
     @Before
     public void setUp() {
