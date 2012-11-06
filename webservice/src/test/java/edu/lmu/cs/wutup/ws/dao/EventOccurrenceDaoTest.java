@@ -15,9 +15,12 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
+import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
+import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
+import edu.lmu.cs.wutup.ws.service.VenueServiceImpl;
 
 /**
  * Unit tests on the JDBC Dao using a programmatically-configured embedded database. The database is setup and torn down
@@ -27,6 +30,11 @@ public class EventOccurrenceDaoTest {
 
     private EmbeddedDatabase database;
     private EventOccurrenceDaoJdbcImpl eventOccurrenceDao = new EventOccurrenceDaoJdbcImpl();
+
+    private User dondi = new User(1, "dondi@example.com");
+    private Event eventOne = new Event(1, "Party", "A hoedown!", dondi);
+    private Event eventTwo = new Event(2, "Party", "Another hoedown!", dondi);
+
 
     Venue keck = new Venue(1, "Pantages Theater", "6233 Hollywood Bl, Los Angeles, CA", 34.1019444, -118.3261111, null);
     Venue uhall = new Venue(2, "Hollywood Bowl", "2301 North Highland Ave, Hollywood, CA", 34.1127863, -118.3392439, null);
@@ -42,7 +50,7 @@ public class EventOccurrenceDaoTest {
 
     @Test
     public void creatingIncrementsSize() {
-        EventOccurrence e = new EventOccurrence(6, 2, keck);
+        EventOccurrence e = new EventOccurrence(6, eventOne, keck);
 
         int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
         eventOccurrenceDao.createEventOccurrence(e);
@@ -57,30 +65,29 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test
-    @Ignore
     public void createdEventOccurrenceCanBeFound() {
-        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(9, 4, keck));
+        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(9, eventTwo, keck));
         EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(9);
         assertThat(e.getId(), is(9));
-        assertThat(e.getEventId(), is(4));
+        assertThat(e.getEvent(), is(eventTwo));
     }
 
     @Test
     @Ignore
     public void updatesToCreatedEventOccurrenceCanBeRead() {
-        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(9, 5, keck));
+        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(9, eventOne, keck));
         EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(9);
-        e.setEventId(1);
+        e.setEvent(eventTwo);
         eventOccurrenceDao.updateEventOccurrence(e);
         e = eventOccurrenceDao.findEventOccurrenceById(9);
         assertThat(e.getId(), is(9));
-        assertThat(e.getEventId(), is(1));
+        assertThat(e.getEvent(), is(eventTwo));
     }
 
     @Test(expected = NoSuchEventOccurrenceException.class)
     @Ignore
     public void updatingNonExistentEventOccurrenceThrowsException() {
-        eventOccurrenceDao.updateEventOccurrence(new EventOccurrence(1000, 2, keck));
+        eventOccurrenceDao.updateEventOccurrence(new EventOccurrence(1000, eventTwo, keck));
     }
 
     @Test(expected = NoSuchEventOccurrenceException.class)

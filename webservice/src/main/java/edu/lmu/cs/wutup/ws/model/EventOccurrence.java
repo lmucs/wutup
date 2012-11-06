@@ -13,7 +13,7 @@ import com.google.common.base.Objects;
 public class EventOccurrence implements Commentable {
 
     private Integer id;
-    private Integer eventId;
+    private Event event;
     private Venue venue;
     private DateTime start;
     private DateTime end;
@@ -28,13 +28,13 @@ public class EventOccurrence implements Commentable {
         this(id, null, venue, new DateTime(), new DateTime().plusDays(1));
     }
 
-    public EventOccurrence(Integer id, Integer eventId, Venue venue) {
-        this(id, eventId, venue, new DateTime(), new DateTime().plusDays(1));
+    public EventOccurrence(Integer id, Event event, Venue venue) {
+        this(id, event, venue, new DateTime(), new DateTime().plusDays(1));
     }
 
-    public EventOccurrence(Integer id, Integer eventId, Venue venue, DateTime start, DateTime end) {
+    public EventOccurrence(Integer id, Event event, Venue venue, DateTime start, DateTime end) {
         this.id = id;
-        this.eventId = eventId;
+        this.event = event;
         this.venue = venue;
         this.start = start;
         this.end = end;
@@ -49,13 +49,13 @@ public class EventOccurrence implements Commentable {
         this.id = id;
     }
 
-    @XmlElement(name = "eventId")
-    public int getEventId() {
-        return this.eventId;
+    @XmlElement
+    public Event getEvent() {
+        return this.event;
     }
 
-    public void setEventId(int eventId) {
-        this.eventId = eventId;
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     @XmlElement(name = "venue")
@@ -128,7 +128,7 @@ public class EventOccurrence implements Commentable {
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("id", this.id)
-                .add("eventId", this.eventId)
+                .add("event", this.event)
                 .add("location", this.venue)
                 .add("start", this.start)
                 .add("end", this.end)

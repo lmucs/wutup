@@ -1,12 +1,14 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.google.common.base.Objects;
 
 @XmlRootElement(name = "user")
-public class User {
+public class User implements Serializable {
 
     private Integer id;
     private String firstName;

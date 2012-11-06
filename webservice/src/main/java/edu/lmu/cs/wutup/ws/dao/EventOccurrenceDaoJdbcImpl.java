@@ -24,6 +24,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
@@ -33,7 +34,14 @@ import edu.lmu.cs.wutup.ws.service.VenueService;
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
-    private static final String SELECT = "select o.id, v.name, o.venueId, o.eventId from occurrence o join venue v on (o.venueId=v.id)";
+    private static final String SELECT =
+        "select o.id, o.start, o.end, o.venueId, v.name as venueName, v.address, v.latitude, v.longitude, "
+        + " o.eventId, e.name as eventName, e.description, address, "
+        + " u.id as userId, u.firstName, u.lastName, u.email, u.nickname "
+        + " from occurrence o "
+        + " join venue v on (o.venueId = v.id) "
+        + " join event e on (o.eventId = e.id) "
+        + " join user u on (e.ownerId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
     private static final String CREATE_SQL = "insert into occurrence (id,eventId,venueId) values (?,?,?)";
     private static final String CREATE_WITH_AUTO_GENERATE_ID = "insert into occurrence (eventId,venueId) values (?,?)";
@@ -61,7 +69,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 e.setId(keyHolder.getKey().intValue());
                 return (Integer) keyHolder.getKey();
             } else {
-                jdbcTemplate.update(CREATE_SQL, e.getId(), e.getEventId(), e.getVenue().getId());
+                jdbcTemplate.update(CREATE_SQL, e.getId(), e.getEvent().getId(), e.getVenue().getId());
                 return e.getId();
             }
         } catch (DuplicateKeyException ex) {
@@ -153,13 +161,37 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     private RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
         public EventOccurrence mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new EventOccurrence(rs.getInt("id"), rs.getInt("eventId"),
-                    venueService.findVenueById(rs.getInt("venueId")));
+
+//           o.id, o.start, o.end, o.venueId, v.name as venueName, v.address, v.latitude, v.longitude, "
+      //  + " o.eventId, e.name as eventName, e.description, address, "
+      //  + " u.id, u.firstName, u.lastName, u.email, u.nickname" +
+
+            int occurrenceId = rs.getInt("id");
+            DateTime start = new DateTime(rs.getDate("start"));
+            DateTime end = new DateTime(rs.getDate("end"));
+            int venueId = rs.getInt("venueId");
+            String venueName = rs.getString("venueName");
+            String address = rs.getString("address");
+            Double latitude = rs.getDouble("latitude");
+            Double longitude = rs.getDouble("longitude");
+            int eventId = rs.getInt("eventId");
+            String eventName = rs.getString("eventName");
+            String description = rs.getString("description");
+            int userId = rs.getInt("userId");
+            String firstName = rs.getString("firstName");
+            String lastName = rs.getString("lastName");
+            String nickname = rs.getString("nickname");
+            String email = rs.getString("email");
+
+            User user = new User(userId, firstName, lastName, nickname, email);
+            Event event = new Event(eventId, eventName, description, user);
+            Venue venue = new Venue(venueId, venueName, address, latitude, longitude, null);
+            return new EventOccurrence(occurrenceId, event, venue, start, end);
         }
     };
 
     private void createEventOccurrenceWithGeneratedId(EventOccurrence e, KeyHolder keyHolder) {
-        final Integer eventId = e.getEventId();
+        final Event event = e.getEvent();
         final Venue venue = e.getVenue();
         final DateTime start = e.getStart();
         final DateTime end = e.getEnd();
@@ -167,7 +199,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         jdbcTemplate.update(new PreparedStatementCreator() {
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement ps = connection.prepareStatement(CREATE_WITH_AUTO_GENERATE_ID, new String[]{"id"});
-                ps.setString(1, eventId + "");
+                ps.setString(1, event.getId() + "");
                 ps.setString(2, venue.getId() + "");
                 return ps;
             }
