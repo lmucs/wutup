@@ -168,7 +168,13 @@ body {
 	background-color: #500001 \9;
 }
 
-.red .active a,
-.red .active a:hover {
-    background-color: #500001;
+.nav .active a,
+.nav .active a:hover {
+    color: #ffffff;
+    background-color: #A50001;
+}
+
+table, td, th
+{
+background-color: #ffffff;
 }
