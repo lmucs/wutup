@@ -57,7 +57,7 @@ public class EventServiceTest {
     }
 
     @Test
-    public void findingDelgatesToDao() {
+    public void findingDelegatesToDao() {
         when(dao.findEventById(7)).thenReturn(sampleEvent);
         assertThat(service.findEventById(7), equalTo(sampleEvent));
 

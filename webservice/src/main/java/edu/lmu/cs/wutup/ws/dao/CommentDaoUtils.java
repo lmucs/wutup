@@ -27,7 +27,7 @@ public class CommentDaoUtils {
     }
 
     public static void updateComment(JdbcTemplate jdbcTemplate, String objectName, int commentId, Comment c) {
-        int rowsUpdated = jdbcTemplate.update("update " + objectName + "_comments set text=?, timestamp=? where id=?",
+        int rowsUpdated = jdbcTemplate.update("update " + objectName + "_comment set text=?, timestamp=? where id=?",
                 c.getBody(), c.getTimestamp(), c.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchCommentException();
@@ -35,7 +35,7 @@ public class CommentDaoUtils {
     }
 
     public static void deleteComment(JdbcTemplate jdbcTemplate, String objectName, int subjectId, int commentId) {
-        int rowsUpdated = jdbcTemplate.update("delete from " + objectName + "_comments where subjectId=? and id=?", subjectId,
+        int rowsUpdated = jdbcTemplate.update("delete from " + objectName + "_comment where subjectId=? and id=?", subjectId,
                 commentId);
         if (rowsUpdated == 0) {
             throw new NoSuchCommentException();

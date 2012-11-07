@@ -130,6 +130,14 @@ public class EventDaoTest {
         int afterCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
         assertThat(afterCount, is(initialCount + 1));
     }
+    
+    @Test
+    public void deleteCommentDecrementsSize() {
+        int initialCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
+        eventDao.deleteComment(1, 1);
+        int afterCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
+        assertThat(afterCount, is(initialCount - 1));
+    }
 
     @Test
     public void addedCommentForEventCanBeFound() {
