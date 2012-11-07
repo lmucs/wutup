@@ -7,12 +7,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.dao.EventDao;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 public class EventServiceTest {
 
@@ -20,6 +25,8 @@ public class EventServiceTest {
     EventDao dao;
 
     Event sampleEvent = new Event(1, "Alice");
+    List<Comment> sampleComments = new ArrayList<Comment>();
+    PaginationData samplePagination = new PaginationData(0, 10);
 
     @Before
     public void setUp() {
@@ -56,6 +63,12 @@ public class EventServiceTest {
 
         // TODO service.findEventsByName(null, 10, 50);
         // TODO verify(dao).findAllEvents(10, 50);
+    }
+    
+    @Test
+    public void findingEventCommentsDelegatesToDao() {
+        when(dao.findComments(1, samplePagination)).thenReturn(sampleComments);
+        assertThat(service.findComments(1, samplePagination), equalTo(sampleComments));
     }
 
     @Test

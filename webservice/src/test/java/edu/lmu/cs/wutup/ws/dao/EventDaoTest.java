@@ -114,8 +114,7 @@ public class EventDaoTest {
         events = eventDao.findEvents(new PaginationData(2, 3));
         assertThat(events.size(), is(2));
     }
-    
-    
+
     @Test
     public void findingCommentsWorks() {
         List<Comment> comments = eventDao.findComments(1, new PaginationData(0, 10));
@@ -123,7 +122,7 @@ public class EventDaoTest {
         assertThat(comments.get(0).getId(), is(1));
         assertThat(comments.get(0).getBody(), is("Boo, sux"));
     }
-    
+
     @Test
     public void addCommentsIncrementsEventCommentSize() {
         int initialCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
@@ -131,7 +130,7 @@ public class EventDaoTest {
         int afterCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
         assertThat(afterCount, is(initialCount + 1));
     }
-    
+
     @Test
     public void addedCommentForEventCanBeFound() {
         eventDao.addComment(1, new Comment(null, "Hello", new DateTime(), sam));
@@ -139,7 +138,7 @@ public class EventDaoTest {
         assertThat(comments.get(0).getBody(), is("Hello"));
         assertThat(comments.get(0).getId(), is(2));
     }
-
+    
     @After
     public void tearDownDatabase() {
         database.shutdown();

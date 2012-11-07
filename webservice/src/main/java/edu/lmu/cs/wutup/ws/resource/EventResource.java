@@ -118,8 +118,8 @@ public class EventResource extends AbstractWutupResource {
     @Path("/{id}/comments")
     public List<Comment> findEventComments(
             @PathParam("id") String idString,
-            @QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
+            @QueryParam("page") @DefaultValue("0") String pageString,
+            @QueryParam("pageSize") @DefaultValue("10") String pageSizeString) {
 
         checkRequiredParameter("id", idString);
         int eventId = toInteger("id", idString);
