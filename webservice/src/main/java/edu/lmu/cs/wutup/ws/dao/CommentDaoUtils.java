@@ -3,25 +3,39 @@ package edu.lmu.cs.wutup.ws.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
-import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
+import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.User;
 
 public class CommentDaoUtils {
 
-    public static void addComment(JdbcTemplate jdbcTemplate, String objectName, Integer objectId, Comment comment) {
-        int rowsUpdated = jdbcTemplate.update("insert into " + objectName
-                + "_comment (subjectId, authorid, text, timestamp) values (?,?,?,?)", objectId, comment.getAuthor()
-                .getId(), comment.getBody(), comment.getTimestamp());
-        if (rowsUpdated == 0) {
-            throw new CommentExistsException();
+    public static Integer addComment(JdbcTemplate jdbcTemplate, String objectName, Integer objectId, Comment comment) {
+        String create_sql = "insert into " + objectName + "_comment(subjectId, authorId, text, timestamp) values(?,?,?,?)";
+        PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(create_sql, new int[]{
+                Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.TIMESTAMP});
+        factory.setReturnGeneratedKeys(true);
+        factory.setGeneratedKeysColumnNames(new String[]{"id"});
+        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{objectId,
+                comment.getAuthor().getId(), comment.getBody(), comment.getTimestamp()});
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        try {
+            jdbcTemplate.update(creator, keyHolder);
+            return (Integer) keyHolder.getKey();
+        } catch (DuplicateKeyException ex) {
+            throw new EventExistsException();
         }
 
     }
@@ -35,8 +49,8 @@ public class CommentDaoUtils {
     }
 
     public static void deleteComment(JdbcTemplate jdbcTemplate, String objectName, int subjectId, int commentId) {
-        int rowsUpdated = jdbcTemplate.update("delete from " + objectName + "_comment where subjectId=? and id=?", subjectId,
-                commentId);
+        int rowsUpdated = jdbcTemplate.update("delete from " + objectName + "_comment where subjectId=? and id=?",
+                subjectId, commentId);
         if (rowsUpdated == 0) {
             throw new NoSuchCommentException();
         }

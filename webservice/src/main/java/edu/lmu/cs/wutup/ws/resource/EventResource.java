@@ -130,11 +130,15 @@ public class EventResource extends AbstractWutupResource {
 
     @POST
     @Path("/{id}/comments")
-    public void addComment(@PathParam("id") String idString, Comment eventComment) {
+    public Response addComment(@PathParam("id") String idString, Comment eventComment, 
+            @Context UriInfo uriInfo) {
+        
         int eventId = toInteger("id", idString);
 
         try {
-            eventService.addComment(eventId, eventComment);
+            Integer newCommentId = eventService.addComment(eventId, eventComment);
+            URI newLocation = uriInfo.getAbsolutePathBuilder().path(newCommentId + "").build();
+            return Response.created(newLocation).build();
         } catch (CommentExistsException e) {
             throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, eventComment.getId());
         }

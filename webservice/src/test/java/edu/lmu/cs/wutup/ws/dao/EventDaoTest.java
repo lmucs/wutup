@@ -147,6 +147,17 @@ public class EventDaoTest {
         assertThat(comments.get(0).getId(), is(2));
     }
     
+    @Test
+    public void updatesToEventCommentsCanBeRead() {
+        Comment initialComment = eventDao.findComments(1, new PaginationData(0, 10)).get(0);
+        initialComment.setBody("OLI OLI OXENFREE");
+        eventDao.updateComment(1, initialComment);
+        Comment updatedComment = eventDao.findComments(1, new PaginationData(0, 10)).get(0);
+        assertThat(updatedComment.getBody(), is("OLI OLI OXENFREE"));
+        assertThat(updatedComment.getId(), is(1));
+        assertThat(updatedComment.getAuthor(), is(initialComment.getAuthor()));
+    }
+    
     @After
     public void tearDownDatabase() {
         database.shutdown();

@@ -46,7 +46,6 @@ public class EventDaoJdbcImpl implements EventDao {
     public int createEvent(Event e) {
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_SQL, new int[]{
                 Types.VARCHAR, Types.VARCHAR, Types.INTEGER});
-        ;
         factory.setReturnGeneratedKeys(true);
         factory.setGeneratedKeysColumnNames(new String[]{"id"});
         PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{e.getName(),
@@ -103,8 +102,8 @@ public class EventDaoJdbcImpl implements EventDao {
     
 
     @Override
-    public void addComment(Integer eventId, Comment comment) {
-        CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
+    public Integer addComment(Integer eventId, Comment comment) {
+        return CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
     }
 
     @Override

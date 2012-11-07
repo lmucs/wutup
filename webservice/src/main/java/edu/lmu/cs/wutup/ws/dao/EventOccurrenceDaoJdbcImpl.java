@@ -120,8 +120,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     /* Begins the Comment Methods */
     @Override
-    public void addComment(Integer eventId, Comment comment) {
-        CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
+    public Integer addComment(Integer eventId, Comment comment) {
+        return CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
     }
 
     @Override

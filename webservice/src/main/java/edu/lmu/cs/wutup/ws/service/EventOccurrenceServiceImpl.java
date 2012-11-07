@@ -71,8 +71,8 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public void addComment(int eventId, Comment comment) {
-        eventOccurrenceDao.addComment(eventId, comment);
+    public Integer addComment(int eventId, Comment comment) {
+        return eventOccurrenceDao.addComment(eventId, comment);
     }
 
     @Override

@@ -50,8 +50,8 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public void addComment(int venueId, Comment comment) {
-        venueDao.addComment(venueId, comment);
+    public Integer addComment(int venueId, Comment comment) {
+        return venueDao.addComment(venueId, comment);
     }
 
     @Override

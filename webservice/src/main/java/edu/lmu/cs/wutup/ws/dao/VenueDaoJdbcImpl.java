@@ -117,8 +117,8 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     @Override
-    public void addComment(Integer venueId, Comment comment) {
-        CommentDaoUtils.addComment(jdbcTemplate, "venue", venueId, comment);
+    public Integer addComment(Integer venueId, Comment comment) {
+        return CommentDaoUtils.addComment(jdbcTemplate, "venue", venueId, comment);
     }
 
     @Override

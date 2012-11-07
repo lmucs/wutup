@@ -7,7 +7,7 @@ import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 public interface CommentDao {
 
-    void addComment(Integer eventId, Comment comment);
+    Integer addComment(Integer eventId, Comment comment);
 
     void updateComment(Integer commentId, Comment comment);
 

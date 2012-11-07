@@ -7,7 +7,7 @@ import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 public interface CommentService {
 
-    public void addComment(int objectId, Comment comment);
+    public Integer addComment(int objectId, Comment comment);
 
     public void updateComment(int objectId, Comment comment);
 
