@@ -1,15 +1,15 @@
 onload = function () {
 
-    initializeEventQueue("mainEventStreamContainer", "mainEventStream", 10, true);
+    initializeEventQueue("mainEventStreamContainer", "mainEventStream", 10);
     initializeEventQueue("tabHosting", "hostingEventStream", 2);
     initializeEventQueue("tabAttending", "attendingEventStream", 7);
     initializeEventQueue("tabInvitedTo", "invitedToEventStream", 16);
 
 }
 
-var initializeEventQueue = function (goesHere, id, rows, insertButtons) {
+var initializeEventQueue = function (goesHere, id, rows) {
 
-    var usesButtons = insertButtons || false;
+    var isMainEventStream = (id === "mainEventStream") ? true : false;
     var totalEvents = rows;
 
     var root=document.getElementById(goesHere);
@@ -24,12 +24,35 @@ var initializeEventQueue = function (goesHere, id, rows, insertButtons) {
     var detailsCell, eventTitle, eventDescription;
     var timeCell;
     
+    var navigation, previousDate, previousDateIcon, nextDate, nextDateIcon;
+ 
+    if (isMainEventStream) {
+            navigation = document.createElement("tr");
+            previousDate = document.createElement("btn");
+            previousDate.className = "btn";
+            previousDateIcon = document.createElement("i");
+            previousDateIcon.className = "icon-backward";
+            previousDate.appendChild(previousDateIcon);
+
+            nextDate = document.createElement("btn");
+            nextDate.className = "btn";
+            nextDateIcon = document.createElement("i");
+            nextDateIcon.className = "icon-forward";
+            nextDate.appendChild(nextDateIcon);
+            
+            navigation.appendChild(previousDate);
+            navigation.appendChild(nextDate);
+            
+            tableBody.appendChild(navigation);
+    }
+ 
     for (var i = 0; i < totalEvents; i++) {
     
         event = document.createElement("tr");
     
-        if (usesButtons) {
+        if (isMainEventStream) {
             
+
             buttonCell = document.createElement("td");
 
             acceptRow = document.createElement("tr");

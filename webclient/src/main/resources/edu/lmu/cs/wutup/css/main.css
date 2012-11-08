@@ -3,7 +3,7 @@ body {
 }
 
 #container {
-	padding-top: 30px;
+	padding-top: 70px;
 	padding-bottom: 40px;
 }
 
@@ -168,10 +168,26 @@ body {
 	background-color: #500001 \9;
 }
 
-.nav .active a,
-.nav .active a:hover {
-    color: #ffffff;
+.nav-tabs {
     background-color: #A50001;
+    color: #ffffff;
+}
+
+.nav a:link
+{
+    color: #ffffff;
+}
+
+
+.nav .active a 
+{
+    color: #000000;
+    background-color: #ffffff;
+}
+
+.nav a:hover
+{
+    color: #000000;
 }
 
 table, td, th {
@@ -182,4 +198,23 @@ table, td, th {
     height: 154px !important;
     overflow-x: hidden;
     overflow-y: scroll;
+}
+
+.left-column-container {
+    background-color: #ffffff;
+    padding: 20px 20px;
+    border: 1;
+}
+
+.left-column-header {
+    background-color: #A50001;
+    color: #ffffff;
+}
+
+.btn-small {
+    height:auto;
+*    font:76%/150% "Lucida Grande", Geneva,Verdana, Arial, Helvetica, sans-serif;
+    width:40px;
+    text-align:center;
+    white-space:nowrap;
 }

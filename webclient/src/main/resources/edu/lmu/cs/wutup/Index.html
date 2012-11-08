@@ -1,5 +1,6 @@
 <wicket:extend>
     <div id="container" class="container-fluid">
+
         <div class="row-fluid" id="call-to-action">
             <div class="span5 hero-unit">
                 <h1>Latest News</h1>
@@ -25,10 +26,10 @@
         </div>
 
  
+        
         <div class="row-fluid">
 
-
-            <div class="span4">
+            <div d="left-coloumn-container" class="span4 container-fluid left-column-container">
             
                 <div class = "row-fluid">
                     <div class = "span4">
@@ -39,7 +40,7 @@
                     <div class = "span4">
                         <div id="nickname">Shelby Tsukamoto</div>
                     </div>
-                    <div class = "span4 offset">
+                    <div class = "span4" align="right">
                         <form style="display: inline" action="manageevents.html" method="get">
                             <button id="create event" class="btn btn-large btn-success">Create An Event</button>
                         </form>
@@ -47,12 +48,14 @@
                 </div>
                 
                 <br />
+                <div class="row-fluid left-column-header"><h3>Calendar</h3></div>
+                <br />
                 
                 <div class = "row-fluid">
                     <div id="calendar" style='font-size: 13px'></div>
                 </div>
 
-               <br />
+                <br />
 
                 <div class = "row-fluid">
                     <div class="tabbable">
@@ -79,15 +82,17 @@
                     </div>
                 </div>
             </div>  
+            
+
     
            
             <div class="span6 offset1">
-            <div id="mainEventStreamContainer" />
+                <div id="mainEventStreamContainer" />
             </div>
 
         </div>
 
-        </div>
+    </div>
 
         <footer>
             <p>&copy; Wutup 2012</p>
