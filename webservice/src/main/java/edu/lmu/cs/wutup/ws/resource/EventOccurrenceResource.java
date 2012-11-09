@@ -32,6 +32,7 @@ import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
@@ -39,6 +40,7 @@ import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.EventOccurrenceService;
 
 @Component
@@ -88,18 +90,6 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         return Response.ok(eventOccurrenceService.findAllEventOccurrences(pagination)).build();
     }
 
-    /*
-     *
-    public Response createEvent(Event event, @Context UriInfo uriInfo) {
-        try {
-            int newId = eventService.createEvent(event);
-            URI newLocation = uriInfo.getAbsolutePathBuilder().path(newId + "").build();
-            return Response.created(newLocation).build();
-        } catch (EventExistsException e) {
-            throw new ServiceException(CONFLICT, EVENT_ALREADY_EXISTS, event.getId());
-        }
-    }
-     */
     @POST
     @Path("/")
     public Response createEventOccurrence(EventOccurrence eventOccurrence, @Context UriInfo uriInfo) {
@@ -112,13 +102,14 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/{id}")
     public Response updateEventOccurrence(@PathParam("id") String idString, EventOccurrence eventOccurrence) {
-        int id = toInteger("id", idString);
+        int id = toIntegerRequired("id", idString);
         checkIdAgreement(id, eventOccurrence.getId());
 
         try {
+            eventOccurrence.setId(id);
             eventOccurrenceService.updateEventOccurrence(eventOccurrence);
             return Response.noContent().build();
         } catch (NoSuchEventOccurrenceException e) {
