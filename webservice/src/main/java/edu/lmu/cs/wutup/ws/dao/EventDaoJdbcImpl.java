@@ -37,7 +37,7 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.subjectId = ? order by ec.timestamp asc " + PAGINATION;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -46,7 +46,6 @@ public class EventDaoJdbcImpl implements EventDao {
     public int createEvent(Event e) {
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_SQL, new int[]{
                 Types.VARCHAR, Types.VARCHAR, Types.INTEGER});
-        ;
         factory.setReturnGeneratedKeys(true);
         factory.setGeneratedKeysColumnNames(new String[]{"id"});
         PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{e.getName(),
@@ -100,10 +99,11 @@ public class EventDaoJdbcImpl implements EventDao {
     public int findNumberOfEvents() {
         return jdbcTemplate.queryForInt(COUNT_SQL);
     }
+    
 
     @Override
-    public void addComment(Integer eventId, Comment comment) {
-        CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
+    public Integer addComment(Integer eventId, Comment comment) {
+        return CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
     }
 
     @Override

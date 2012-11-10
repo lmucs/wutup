@@ -23,8 +23,8 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     EventOccurrenceDao eventOccurrenceDao;
 
     @Override
-    public void createEventOccurrence(EventOccurrence e) {
-        eventOccurrenceDao.createEventOccurrence(e);
+    public int createEventOccurrence(EventOccurrence e) {
+        return eventOccurrenceDao.createEventOccurrence(e);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public void addComment(int eventId, Comment comment) {
-        eventOccurrenceDao.addComment(eventId, comment);
+    public Integer addComment(int eventId, Comment comment) {
+        return eventOccurrenceDao.addComment(eventId, comment);
     }
 
     @Override

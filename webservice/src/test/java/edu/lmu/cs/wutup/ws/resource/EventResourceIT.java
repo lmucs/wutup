@@ -87,6 +87,19 @@ public class EventResourceIT {
         .when()
             .get("/wutup/events/8");
     }
+    
+    @Test
+    public void endpointGetEventCommentsFindsExistingComments() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":1")).
+            body(containsString("\"body\":\"Boo, sux\"")).
+        when().
+            get("/wutup/events/1/comments");
+    }
 
     @Test
     public void endpointPostJsonCorrectlyCreatesEventAndProduces201() {

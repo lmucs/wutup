@@ -12,7 +12,7 @@ import edu.lmu.cs.wutup.ws.model.User;
 
 public interface EventOccurrenceService extends CommentService {
 
-    void createEventOccurrence(EventOccurrence e);
+    int createEventOccurrence(EventOccurrence e);
 
     void updateEventOccurrence(EventOccurrence e);
 

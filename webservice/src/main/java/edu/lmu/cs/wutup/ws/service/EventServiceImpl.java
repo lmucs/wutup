@@ -44,8 +44,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void addComment(int eventId, Comment comment) {
-        eventDao.addComment(eventId, comment);
+    public Integer addComment(int eventId, Comment comment) {
+        return eventDao.addComment(eventId, comment);
 
     }
 

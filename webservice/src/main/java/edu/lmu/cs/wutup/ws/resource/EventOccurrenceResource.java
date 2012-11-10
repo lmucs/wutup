@@ -32,6 +32,7 @@ import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
@@ -39,6 +40,7 @@ import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.EventOccurrenceService;
 
 @Component
@@ -79,7 +81,6 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         validateQuery(categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);*/
 /*
         try {
-            // TODO: I think this is built into datetime
             DateTime startTime = eventOccurrenceService.parseStringToDateTime(start);
             DateTime endTime = eventOccurrenceService.parseStringToDateTime(end);
         } catch (MalformedDateTimeStringException e) {
@@ -93,21 +94,22 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     @Path("/")
     public Response createEventOccurrence(EventOccurrence eventOccurrence, @Context UriInfo uriInfo) {
         try {
-            eventOccurrenceService.createEventOccurrence(eventOccurrence);
-            URI newLocation = uriInfo.getAbsolutePathBuilder().path(eventOccurrence.getId() + "").build();
+            int newId = eventOccurrenceService.createEventOccurrence(eventOccurrence);
+            URI newLocation = uriInfo.getAbsolutePathBuilder().path(newId + "").build();
             return Response.created(newLocation).build();
         } catch (EventOccurrenceExistsException e) {
             throw new ServiceException(CONFLICT, EVENT_OCCURRENCE_ALREADY_EXISTS, eventOccurrence.getId());
         }
     }
 
-    @PUT
+    @PATCH
     @Path("/{id}")
     public Response updateEventOccurrence(@PathParam("id") String idString, EventOccurrence eventOccurrence) {
-        int id = toInteger("id", idString);
+        int id = toIntegerRequired("id", idString);
         checkIdAgreement(id, eventOccurrence.getId());
 
         try {
+            eventOccurrence.setId(id);
             eventOccurrenceService.updateEventOccurrence(eventOccurrence);
             return Response.noContent().build();
         } catch (NoSuchEventOccurrenceException e) {

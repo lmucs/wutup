@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
@@ -113,6 +115,49 @@ public class EventDaoTest {
         assertThat(events.size(), is(2));
     }
 
+    @Test
+    public void findingCommentsWorks() {
+        List<Comment> comments = eventDao.findComments(1, new PaginationData(0, 10));
+        assertThat(comments.size(), is(1));
+        assertThat(comments.get(0).getId(), is(1));
+        assertThat(comments.get(0).getBody(), is("Boo, sux"));
+    }
+
+    @Test
+    public void addCommentsIncrementsEventCommentSize() {
+        int initialCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
+        eventDao.addComment(1, new Comment(null, "Hello", new DateTime(), sam));
+        int afterCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
+        assertThat(afterCount, is(initialCount + 1));
+    }
+    
+    @Test
+    public void deleteCommentDecrementsSize() {
+        int initialCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
+        eventDao.deleteComment(1, 1);
+        int afterCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
+        assertThat(afterCount, is(initialCount - 1));
+    }
+
+    @Test
+    public void addedCommentForEventCanBeFound() {
+        eventDao.addComment(1, new Comment(null, "Hello", new DateTime(), sam));
+        List<Comment> comments = eventDao.findComments(1, new PaginationData(1, 1));
+        assertThat(comments.get(0).getBody(), is("Hello"));
+        assertThat(comments.get(0).getId(), is(2));
+    }
+    
+    @Test
+    public void updatesToEventCommentsCanBeRead() {
+        Comment initialComment = eventDao.findComments(1, new PaginationData(0, 10)).get(0);
+        initialComment.setBody("OLI OLI OXENFREE");
+        eventDao.updateComment(1, initialComment);
+        Comment updatedComment = eventDao.findComments(1, new PaginationData(0, 10)).get(0);
+        assertThat(updatedComment.getBody(), is("OLI OLI OXENFREE"));
+        assertThat(updatedComment.getId(), is(1));
+        assertThat(updatedComment.getAuthor(), is(initialComment.getAuthor()));
+    }
+    
     @After
     public void tearDownDatabase() {
         database.shutdown();

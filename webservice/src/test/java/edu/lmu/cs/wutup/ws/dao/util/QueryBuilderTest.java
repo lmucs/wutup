@@ -22,6 +22,12 @@ public class QueryBuilderTest {
     }
 
     @Test
+    public void queryWithMultipleSelectIsCorrect() {
+        String query = new QueryBuilder().select("owner", "name", "description").from("event").build();
+        assertThat(query, equalTo("select owner, name, description from event"));
+    }
+
+    @Test
     public void queryWithSingleWhereIsCorrect() {
         String query = new QueryBuilder().from("event").where("name = :name", "'Rich'").build();
         assertThat(query, equalTo("select * from event where name = 'Rich'"));

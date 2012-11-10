@@ -82,33 +82,33 @@ create table attendee (
 
 create table event_comment (
   id integer auto_increment not null,
-  eventId integer,
+  subjectId integer,
   authorId integer,
   text varchar(2048),
   timestamp datetime,
   primary key(id),
-  foreign key(eventId) references event(id),
+  foreign key(subjectId) references event(id),
   foreign key(authorId) references user(id)
 );
 
 create table occurrence_comment (
   id integer auto_increment not null,
-  occurrenceId integer,
+  subjectId integer,
   authorId integer,
   text varchar(2048),
   timestamp datetime,
   primary key(id),
-  foreign key(occurrenceId) references occurrence(id),
+  foreign key(subjectId) references occurrence(id),
   foreign key(authorId) references user(id)
 );
 
 create table venue_comment (
   id integer auto_increment not null,
-  venueId integer,
+  subjectId integer,
   authorId integer,
   text varchar(2048),
   timestamp datetime,
   primary key(id),
-  foreign key(venueId) references venue(id),
+  foreign key(subjectId) references venue(id),
   foreign key(authorId) references user(id)
 );

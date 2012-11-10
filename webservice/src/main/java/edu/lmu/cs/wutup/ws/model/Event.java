@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -8,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.google.common.base.Objects;
 
 @XmlRootElement
-public class Event implements Commentable {
+public class Event implements Commentable, Serializable {
 
     private Integer id;
     private String name;
