@@ -200,7 +200,7 @@ table, td, th {
     overflow-y: scroll;
 }
 
-.left-column-container {
+#left-column-container {
     background-color: #ffffff;
     padding: 20px 20px;
     border: 1;
@@ -213,7 +213,6 @@ table, td, th {
 
 .btn-small {
     height:auto;
-*    font:76%/150% "Lucida Grande", Geneva,Verdana, Arial, Helvetica, sans-serif;
     width:40px;
     text-align:center;
     white-space:nowrap;

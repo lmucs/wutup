@@ -1,5 +1,12 @@
 <wicket:extend>
     <div id="container" class="container-fluid">
+    
+    <script language = "Javascript">
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var year = date.getFullYear();
+    </script>
 
         <div class="row-fluid" id="call-to-action">
             <div class="span5 hero-unit">
@@ -29,7 +36,7 @@
         
         <div class="row-fluid">
 
-            <div d="left-coloumn-container" class="span4 container-fluid left-column-container">
+            <div id="left-column-container" class="span4 container-fluid">
             
                 <div class = "row-fluid">
                     <div class = "span4">
@@ -68,15 +75,15 @@
                         
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabHosting">
-                                <!-- tabHosting table -->
+                                <table class="table table-hover" id="hostingEventStream"></table>
                             </div>
 
                             <div class="tab-pane" id="tabAttending">
-                                <!-- tabAttending table -->
+                                <table class="table table-hover" id="attendingEventStream"></table>
                             </div>
 
                             <div class="tab-pane" id="tabInvitedTo">
-                                <!-- tabInvitedTo table -->
+                                <table class="table table-hover" id="invitedToEventStream"></table>
                             </div>
                         </div>
                     </div>
@@ -87,7 +94,22 @@
     
            
             <div class="span6 offset1">
-                <div id="mainEventStreamContainer" />
+
+                <div class="row-fluid left-column-header" id="mainEventStreamNavigator">
+                    <btn class="btn"><i class="icon-backward"></i></btn>
+                    <h3 style="display: inline-block; ">
+                        <script language = "Javascript">
+                            var date = new Date();
+                            var day = date.getDate();
+                            var month = date.getMonth();
+                            var year = date.getFullYear();
+                            document.write(month + " " + day + " " + year);
+                        </script>
+                    </h3>
+                    <btn class="btn"><i class="icon-forward"></i></btn>
+                </div>
+
+                <table class="table table-hover" id="mainEventStream"></table>
             </div>
 
         </div>
@@ -109,7 +131,7 @@
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script src="lib/fullcalendar/fullcalendar.min.js"></script>
     <script src="js/indexCalendar.js"></script>
-    <script src="js/mainEventStream.js"></script>
+    <script src="js/eventStreamBuilder.js"></script>
     </wicket:link>
 
 </wicket:extend>
