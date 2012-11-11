@@ -36,6 +36,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -62,21 +63,26 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public Response getEventOccurrences(@QueryParam("category") String categories, @QueryParam("lat") Double latitude,
-            @QueryParam("lng") Double longitude, @QueryParam("radius") Double radius,
-            @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") Integer eventId,
+    public List<EventOccurrence> getEventOccurrences(
+            @QueryParam("category") String categories,
+            @QueryParam("center") String center,
+            @QueryParam("radius") String radiusString,
+            @QueryParam("start") String start,
+            @QueryParam("end") String end,
+            @QueryParam("eventId") Integer eventId,
             @QueryParam("venue") String venues,
             @QueryParam("pageNumber") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         PaginationData pagination = paginationDataFor(pageNumberString, pageSizeString);
+        Circle circle = fromCenterAndRadiusParameters(center, radiusString);
 
 /*The following block makes at least one query required... I think a good idea once all is working
         boolean categoriesQuery = categories != null;
         boolean centerAndRadiusQuery = (latitude != null) && (longitude != null) && (radius != null);
         boolean dateRangeQuery = (start != null) && (end != null);
         boolean eventIdQuery = (eventId != null);
-        boolean venuesQuery = (venues != null);
+        boolean venuesQuery = (venue != null);
 
         validateQuery(categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);*/
 /*
@@ -87,7 +93,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 */
-        return Response.ok(eventOccurrenceService.findAllEventOccurrences(pagination)).build();
+        return eventOccurrenceService.findAllEventOccurrences(pagination);
     }
 
     @POST
