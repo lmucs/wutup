@@ -4,11 +4,11 @@ $(document).ready(function() {
   var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
   var browserSupportFlag =  new Boolean();
   var infowindow;
-  var myOptions = {
+  var mapOptions = {
     zoom: 10,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
-  var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
   // Trying W3C Geolocation 
   if(navigator.geolocation) {
@@ -33,7 +33,7 @@ $(document).ready(function() {
     handleNoGeolocation(browserSupportFlag);
   }
 
-  function handleNoGeolocation(errorFlag) {
+  var handleNoGeolocation = function(errorFlag) {
     if (errorFlag == true) {
       alert("Geolocation service failed.");
       initialLocation = newyork;
@@ -49,14 +49,14 @@ $(document).ready(function() {
     map.setCenter(initialLocation);
   }
 
-  function populateMap(gMap, events) {
+  var populateMap = function(gMap, events) {
   	map = gMap;
   	for (var i = 0; i < events.length; i++) {
   		createMarker(events[i]);
   	}
   }
   
-  function createMarker (occurrence) {
+  var createMarker = function(occurrence) {
 	  var marker = new google.maps.Marker( {
 			map: map,
 			position: new google.maps.LatLng(occurrence.venue.latitude,occurrence.venue.longitude),
@@ -96,7 +96,7 @@ $(document).ready(function() {
 			},
 			theme:true,
 			editable: false,
-          disableDragging: true,
+            disableDragging: true,
 		    dayClick: function(date, allDay, jsEvent, view) {
 	            if (allDay) {
 	                calendar.fullCalendar('gotoDate', date.getFullYear(), date.getMonth(), date.getDate());
