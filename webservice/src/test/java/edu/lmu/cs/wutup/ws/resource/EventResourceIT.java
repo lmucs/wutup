@@ -4,6 +4,7 @@ import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class EventResourceIT {
@@ -90,6 +91,7 @@ public class EventResourceIT {
     
     @Test
     public void endpointGetEventCommentsFindsExistingComments() {
+        Long knownTimestamp = new DateTime(2012, 3, 17, 0, 0).getMillis();
         given().
             header("Accept", "application/json").
         expect().
@@ -97,6 +99,7 @@ public class EventResourceIT {
             contentType("application/json").
             body(containsString("\"id\":1")).
             body(containsString("\"body\":\"Boo, sux\"")).
+            body(containsString("\"postdate\":" + knownTimestamp)).
         when().
             get("/wutup/events/1/comments");
     }

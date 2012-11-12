@@ -29,7 +29,7 @@ public class CommentDaoUtils {
         factory.setReturnGeneratedKeys(true);
         factory.setGeneratedKeysColumnNames(new String[]{"id"});
         PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{objectId,
-                comment.getAuthor().getId(), comment.getBody(), comment.getTimestamp()});
+                comment.getAuthor().getId(), comment.getBody(), new Timestamp(comment.getPostDate().getMillis())});
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(creator, keyHolder);
@@ -42,7 +42,7 @@ public class CommentDaoUtils {
 
     public static void updateComment(JdbcTemplate jdbcTemplate, String objectName, int commentId, Comment c) {
         int rowsUpdated = jdbcTemplate.update("update " + objectName + "_comment set text=?, timestamp=? where id=?",
-                c.getBody(), c.getTimestamp(), c.getId());
+                c.getBody(), new Timestamp(c.getPostDate().getMillis()), c.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchCommentException();
         }

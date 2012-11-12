@@ -18,11 +18,11 @@ public class Comment {
         // No-arg constructor required for annotations
     }
 
-    public Comment(Integer id, String body, DateTime timestamp, User author) {
+    public Comment(Integer id, String body, DateTime date, User author) {
         this.id = id;
         this.body = body;
         this.author = author;
-        this.postDate = timestamp;
+        this.postDate = date;
     }
 
     @XmlElement(name = "id")
@@ -59,10 +59,6 @@ public class Comment {
 
     public void setPostDate(DateTime date) {
         this.postDate = date;
-    }
-    
-    public Timestamp getTimestamp() {
-        return new Timestamp(this.postDate.getMillis());
     }
 
     @Override
