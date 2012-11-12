@@ -16,10 +16,12 @@ $(document).ready(function() {
         selectHelper: true,
         select: function(start, end, allDay) {
             if (!allDay) {
-                $('#create-event-dialog').removeClass('hidden');
+                $('#event-dialog').removeClass('hidden');
                 $('#event-name').val("");
                 $('#event-description').val("");
-                $('#create-event-dialog').dialog({
+                $('#event-address').val("");
+                $('#event-dialog').attr('title', 'Edit Event');
+                $('#event-dialog').dialog({
                     show: "fade",
                     hide: "explode",
                     modal: true,
@@ -34,6 +36,7 @@ $(document).ready(function() {
                             calendar.fullCalendar('renderEvent', {
                                 title: $("#event-name").val(),
                                 description: $("#event-description").val(),
+                                address: $("#event-address").val(),
                                 start: start,
                                 end: end,
                                 allDay: false
@@ -58,10 +61,12 @@ $(document).ready(function() {
             }
         },
         eventClick: function(calEvent, jsEvent, view) {
+        	$('#event-dialog').removeClass('hidden');
             $("#event-name").val(calEvent.title);
             $("#event-description").val(calEvent.description);
             $("#event-address").val(calEvent.address);
-            $('#create-event-dialog').dialog({
+            $('#event-dialog').attr('title', 'Edit Event');
+            $('#event-dialog').dialog({
                     show: "blind",
                     hide: "explode",
                     modal: true,
@@ -76,6 +81,7 @@ $(document).ready(function() {
                             calendar.fullCalendar('renderEvent', {
                                 title: $("#event-name").val(),
                                 description: $("#event-description").val(),
+                                address: $("#event-address").val(),
                                 start: start,
                                 end: end,
                                 allDay: false

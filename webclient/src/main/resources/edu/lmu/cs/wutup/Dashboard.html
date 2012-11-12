@@ -50,15 +50,6 @@
 		<script
 			src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqOg2q0dqSGTw1OkyqWTWsVSOLCsHjXpM&sensor=false"></script>
 		<script src="lib/fullcalendar/fullcalendar.min.js"></script>
-		<script src="js/dashboardMap.js"></script>
-		<script src="js/dashboardCalendar.js"></script>
+		<script src="js/dashboard.js"></script>
 	</wicket:link>
-<script>(function() {
-
-		$.get('http://localhost:8080/wutup/events/2', function(data) {
-				$('#result').html(JSON.stringify(data));
-				});
-
-		}());
-</script>
 </wicket:extend>

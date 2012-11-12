@@ -1,6 +1,3 @@
-create alias get_distance_miles for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDistanceInMiles";
-create alias get_distance_km for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDistanceInKilometers";
-
 insert into user (id, firstName, lastName, email, nickname) values (1, 'Honda', 'Prius', '40mpg@gmail.com', 'hybrid');
 insert into user (id, firstName, lastName, email, nickname) values (2, 'Ned', 'Stark', 'naked@winterfell.com', 'headless');
 insert into user (id, firstName, lastName, email, nickname) values (3, 'Jack', 'Handy', 'jh1942@lion.lmu.edu', 'DeepThoughts');
@@ -44,6 +41,11 @@ insert into occurrence (id, eventId, venueId, start, end) values (2, 6, 2, '2012
 insert into occurrence (id, eventId, venueId, start, end) values (3, 5, 3, '2012-03-15 20:00:00', '2012-03-16 02:30:00');
 insert into occurrence (id, eventId, venueId, start, end) values (4, 8, 4, '2012-04-15 20:00:00', '2012-04-16 02:30:00');
 insert into occurrence (id, eventId, venueId, start, end) values (5, 3, 5, '2012-05-15 20:00:00', '2012-05-16 02:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (6, 2, 1, '2012-11-15 01:00:00', '2012-11-15 15:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (7, 6, 2, '2012-11-16 02:00:00', '2012-11-16 16:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (8, 5, 3, '2012-11-17 03:00:00', '2012-11-17 17:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (9, 8, 4, '2012-11-18 04:00:00', '2012-11-18 18:30:00');
+insert into occurrence (id, eventId, venueId, start, end) values (10, 3, 5, '2012-11-19 05:00:00', '2012-11-19 19:30:00');
 
 insert into category (id, name, parentId) values (1, 'Theater', null);
 insert into category (id, name, parentId) values (2, 'Club', null);
@@ -54,4 +56,4 @@ insert into event_category (eventId, categoryId) values (1, 1);
 
 insert into attendee (occurrenceId, userId) values (1, 1);
 
-insert into event_comment (id, subjectId, authorId, text, timestamp) values (1, 1, 1, 'Boo, sux', '2012-03-17');
+insert into event_comment (id, subjectId, authorId, text, timestamp) values (1, 1, 1, 'Boo, sux', '2012-03-17T00:00:00');
