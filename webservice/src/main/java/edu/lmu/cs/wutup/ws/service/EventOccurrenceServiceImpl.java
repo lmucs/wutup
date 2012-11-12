@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.ws.service;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.lmu.cs.wutup.ws.dao.EventOccurrenceDao;
 import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.model.Category;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Service
 @Transactional
@@ -53,11 +56,10 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public List<EventOccurrence> findEventOccurrencesByQuery(List<User> attendees, List<Category> categories,
-            Double latitude, Double longitude, Double radius, DateTime start, DateTime end, Integer eventId,
-            String venues, PaginationData pagination) {
-        return eventOccurrenceDao.findEventOccurrencesByQuery(attendees, categories, latitude, longitude, radius,
-                start, end, eventId, venues, pagination);
+    public List<EventOccurrence> findEventOccurrencesByQuery(List<Category> categories, Circle circle,
+            Interval interval, Integer eventId, List<Venue> venues, PaginationData pagination) {
+        return eventOccurrenceDao.findEventOccurrencesByQuery(categories, circle,
+                interval, eventId, venues, pagination);
     }
 
     @Override

@@ -7,8 +7,6 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import java.lang.Math;
-
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
@@ -32,7 +30,7 @@ public abstract class AbstractWutupResource {
 
     private static final Pattern CENTER_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?");
     private static final Pattern RADIUS_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
-    
+
     protected static final String DEFAULT_PAGE = "0";
     protected static final String DEFAULT_PAGE_SIZE = "20";
 

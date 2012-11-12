@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -18,6 +19,7 @@ import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.model.Category;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
@@ -96,9 +98,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public List<EventOccurrence> findEventOccurrencesByQuery(List<User> attendees, List<Category> categories,
-            Double latitude, Double longitude, Double radius, DateTime start, DateTime end, Integer eventId,
-            String venues, PaginationData pagination) {
+    public List<EventOccurrence> findEventOccurrencesByQuery(List<Category> categories, Circle circle,
+            Interval interval, Integer eventId, List<Venue> venues, PaginationData pagination) {
         // TODO: change this
         return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
                 pagination.pageNumber * pagination.pageSize}, eventOccurrenceRowMapper);

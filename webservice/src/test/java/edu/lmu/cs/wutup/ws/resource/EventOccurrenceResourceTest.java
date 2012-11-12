@@ -16,12 +16,15 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.model.Category;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -136,6 +139,17 @@ public class EventOccurrenceResourceTest {
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(400));
         }
+    }
+
+    @Test
+    public void findingEventOccurrenceReturnsAllOccurrencesAsList() {
+        when(
+                service.findEventOccurrencesByQuery(new ArrayList<Category>(), new Circle(1.0, 1.0, 1.0), new Interval(
+                        1L, 1L), new Integer(42), new ArrayList<Venue>(), new PaginationData(0, 5))).thenReturn(
+                sampleEventOccurrenceList);
+        List<EventOccurrence> result = resource.getEventOccurrences(new ArrayList<Category>(), "1.0,1.0", "1.0", "",
+                "", new Integer(42), new ArrayList<Venue>(), "0", "5");
+        assertThat(result, is(sampleEventOccurrenceList));
     }
 
     @Test
