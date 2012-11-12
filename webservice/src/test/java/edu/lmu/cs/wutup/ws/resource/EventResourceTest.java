@@ -189,8 +189,7 @@ public class EventResourceTest {
     public void canAddCommentsToEvent() {
         Response response = resource.addComment("1", sampleEventComment, sampleUriInfo);
         verify(service).addComment(1, sampleEventComment);
-        assertThat(response.getMetadata().getFirst("Location").toString(), startsWith("http://example.com/"));
-        assertThat(response.getStatus(), is(201));
+        assertThat(response.getStatus(), is(204));
     }
 
     @Test

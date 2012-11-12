@@ -9,6 +9,11 @@ drop table if exists attendee;
 drop table if exists event_comment;
 drop table if exists occurrence_comment;
 drop table if exists venue_comment;
+drop alias if exists get_distance_miles;
+drop alias if exists get_distance_km;
+
+create alias get_distance_miles for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDistanceInMiles";
+create alias get_distance_km for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDistanceInKilometers";
 
 create table user (
   id integer auto_increment not null,
