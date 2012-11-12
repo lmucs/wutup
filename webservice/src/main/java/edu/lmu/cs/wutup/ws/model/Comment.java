@@ -1,9 +1,10 @@
 package edu.lmu.cs.wutup.ws.model;
 
-import org.joda.time.DateTime;
-import java.sql.Timestamp;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.joda.time.DateTime;
+
 import com.google.common.base.Objects;
 
 @XmlRootElement(name = "comment")

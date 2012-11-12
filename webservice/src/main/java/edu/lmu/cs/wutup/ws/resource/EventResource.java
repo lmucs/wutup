@@ -136,9 +136,8 @@ public class EventResource extends AbstractWutupResource {
         int eventId = toInteger("id", idString);
 
         try {
-            Integer newCommentId = eventService.addComment(eventId, eventComment);
-            URI newLocation = uriInfo.getAbsolutePathBuilder().path(newCommentId + "").build();
-            return Response.created(newLocation).build();
+            eventService.addComment(eventId, eventComment);
+            return Response.noContent().build();
         } catch (CommentExistsException e) {
             throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, eventComment.getId());
         }

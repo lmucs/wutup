@@ -103,6 +103,32 @@ public class EventResourceIT {
         when().
             get("/wutup/events/1/comments");
     }
+    
+    @Test
+    public void endpointAddCommentToEventCanBeFound() {
+        DateTime publishDate = new DateTime(2012, 12, 21, 0, 0);
+        given().
+            contentType("application/json").
+            body("{\"body\":\"Hello, there!\",\"author\":{\"id\":3,\"email\":\"jh1942@lion.lmu.edu\"," +
+            		"\"nickname\":\"DeepThoughts\",\"firstname\":\"Jack\",\"lastname\":\"Handy\"},\"postdate\":" + publishDate.getMillis() + "}").
+        expect().
+            statusCode(204).
+        when().
+            post("/wutup/events/4/comments");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"body\":\"Hello, there!\"")).
+            body(containsString("\"author\":{\"id\":3,\"email\":\"jh1942@lion.lmu.edu\",\"nickname\":\"DeepThoughts\"," +
+            		"\"firstname\":\"Jack\",\"lastname\":\"Handy\"}")).
+            body(containsString("\"postdate\":" + publishDate.getMillis())).
+            body(containsString("\"id\":2")).
+        when().
+            get("/wutup/events/4/comments");
+        
+    }
 
     @Test
     public void endpointPostJsonCorrectlyCreatesEventAndProduces201() {

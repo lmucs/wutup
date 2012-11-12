@@ -1,6 +1,3 @@
-create alias get_distance_miles for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDistanceInMiles";
-create alias get_distance_km for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDistanceInKilometers";
-
 insert into user (id, firstName, lastName, email, nickname) values (1, 'Honda', 'Prius', '40mpg@gmail.com', 'hybrid');
 insert into user (id, firstName, lastName, email, nickname) values (2, 'Ned', 'Stark', 'naked@winterfell.com', 'headless');
 insert into user (id, firstName, lastName, email, nickname) values (3, 'Jack', 'Handy', 'jh1942@lion.lmu.edu', 'DeepThoughts');

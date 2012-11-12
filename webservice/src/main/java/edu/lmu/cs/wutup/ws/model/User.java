@@ -81,10 +81,6 @@ public class User implements Serializable {
         this.nickname = nickname;
     }
 
-    public String getFullName() {
-        return this.firstName + " " + this.lastName;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hashCode(id, email);
@@ -106,8 +102,9 @@ public class User implements Serializable {
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("id", this.id)
-                .add("name", this.getFullName())
                 .add("email", this.email)
+                .add("firstname", this.firstName)
+                .add("lastname", this.lastName)
                 .add("nickname", this.nickname)
                 .toString();
     }
