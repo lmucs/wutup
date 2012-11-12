@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.ws.resource;
 import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -128,6 +129,36 @@ public class EventResourceIT {
         when().
             get("/wutup/events/4/comments");
         
+    }
+    
+    @Test
+    public void endpointDeleteEventCommentCanNoLongerBeFound() {
+        Long knownTimestamp = new DateTime(2012, 3, 17, 0, 0).getMillis();
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":1")).
+            body(containsString("\"body\":\"Boo, sux\"")).
+            body(containsString("\"postdate\":" + knownTimestamp)).
+        when().
+            get("/wutup/events/1/comments");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(204).
+        when().
+            delete("/wutup/events/1/comments/1");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(equalTo("[]")).
+        when().
+            get("/wutup/events/1/comments");
     }
 
     @Test
