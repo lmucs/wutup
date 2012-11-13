@@ -4,6 +4,7 @@ import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 
+import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -42,17 +43,34 @@ public class EventOccurrenceResourceIT {
     public void endpointGetWithUnusedIdProduces404() {
         expect().statusCode(404).when().get("/wutup/Occurrences/100");
     }
-
+/*
     @Test
     @Ignore
-    public void endpointPostJsonCorrectlyCreatesEventOccurrenceAndProduces201() {
+    public void endpointPostJsonWithIdCorrectlyCreatesEventOccurrenceAndProduces201() {
         given().contentType("application/json")
-                .body("{\"eventId\":4,\"venue\":{\"id\":1}}")
+                .body("{\"eventId\":4,\"venue\":{\"id\":1},\"start\":\"2012-01-15 20:00:00\",\"end\":\"2012-01-16 08:23:30\"}")
                 .expect()
                 .statusCode(201)
                 .header("Location", "http://localhost:8080/wutup/occurrences/6")
                 .contentType("application/json")
                 .when()
+                .post("/wutup/occurrences");
+    }
+*/
+    @Test
+    @Ignore
+    public void endpointPostJsonWithoutIdCorrectlyCreatesEventOccurrenceAndProduces201() {
+        DateTime sampleStartDate = new DateTime(2012, 12, 21, 12, 30);
+        DateTime sampleEndDate = new DateTime(2012, 12, 21, 16, 35);
+
+        given().contentType("application/json")
+        .body("{\"event\":{\"id\":4},\"venue\":{\"id\":2},\"start\":" + sampleStartDate.getMillis()
+                + ",\"end\":" + sampleEndDate.getMillis() + "}")
+        .expect()
+                .statusCode(201)
+                .header("Location", "http://localhost:8080/wutup/occurrences/11")
+                .contentType("application/json")
+        .when()
                 .post("/wutup/occurrences");
     }
 }

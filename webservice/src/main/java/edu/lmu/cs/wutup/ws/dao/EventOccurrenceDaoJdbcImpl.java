@@ -2,6 +2,7 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -33,7 +34,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static final String SELECT = getSelectQuery().build();
 
     private static final String PAGINATION = "limit ? offset ?";
-    private static final String CREATE_SQL = "insert into occurrence (id,eventId,venueId) values (?,?,?)";
+    private static final String CREATE_SQL = "insert into occurrence (id,eventId,venueId,start,end) values (?,?,?,?,?)";
     private static final String UPDATE_SQL = "update occurrence set venue=? where id=?";
     private static final String FIND_BY_ID_SQL = SELECT + " where o.id=?";
     private static final String FIND_ALL_SQL = SELECT + " " + PAGINATION;
@@ -53,7 +54,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 KeyHolder keyHolder = new GeneratedKeyHolder();
                 e.setId(keyHolder.getKey().intValue());
             }
-            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getEvent().getId(), e.getVenue().getId());
+            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getEvent().getId(), e.getVenue().getId(), new Timestamp(
+                    e.getStart().getMillis()), new Timestamp(e.getEnd().getMillis()));
             return e.getId();
         } catch (DuplicateKeyException ex) {
             throw new EventOccurrenceExistsException();
