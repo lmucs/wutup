@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.ws.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -34,8 +37,9 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static final String SELECT = getSelectQuery().build();
 
     private static final String PAGINATION = "limit ? offset ?";
-    private static final String CREATE_SQL = "insert into occurrence (id,eventId,venueId,start,end) values (?,?,?,?,?)";
-    private static final String UPDATE_SQL = "update occurrence set venueid=ifnull(?, venueid), eventid=ifnull(?, eventid), start=ifnull(?, start), end=ifnull(?, end) where id=?";
+    private static final String CREATE_SQL = "insert into occurrence (eventId,venueId,start,end) values (?,?,?,?)";
+    private static final String UPDATE_SQL = "update occurrence set venueid=ifnull(?, venueid), eventid=ifnull(?, eventid), "
+            + "start=ifnull(?, start), end=ifnull(?, end) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT + " where o.id=?";
     private static final String FIND_ALL_SQL = SELECT + " " + PAGINATION;
     private static final String DELETE_SQL = "delete from occurrence where id=?";
@@ -49,14 +53,16 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public int createEventOccurrence(EventOccurrence e) {
+        PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_SQL, new int[]{
+                Types.INTEGER, Types.INTEGER, Types.TIMESTAMP, Types.TIMESTAMP});
+        factory.setReturnGeneratedKeys(true);
+        factory.setGeneratedKeysColumnNames(new String[]{"id"});
+        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{e.getEvent().getId(),
+                e.getVenue().getId(), new Timestamp(e.getStart().getMillis()), new Timestamp(e.getEnd().getMillis())});
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
-            if (e.getId() == null) {
-                KeyHolder keyHolder = new GeneratedKeyHolder();
-                e.setId(keyHolder.getKey().intValue());
-            }
-            jdbcTemplate.update(CREATE_SQL, e.getId(), e.getEvent().getId(), e.getVenue().getId(), new Timestamp(
-                    e.getStart().getMillis()), new Timestamp(e.getEnd().getMillis()));
-            return e.getId();
+            jdbcTemplate.update(creator, keyHolder);
+            return (Integer) keyHolder.getKey();
         } catch (DuplicateKeyException ex) {
             throw new EventOccurrenceExistsException();
         }

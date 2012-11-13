@@ -65,21 +65,21 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test
-    public void createdEventOccurrenceCanBeFound() {
-        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(11, eventTwo, keck));
-        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(11);
-        assertThat(e.getId(), is(11));
+    public void createdEventOccurrenceWithoutIdCanBeFound() {
+        int newId = eventOccurrenceDao.createEventOccurrence(new EventOccurrence(eventTwo, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime("2012-11-13T11:30:00Z")));
+        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(newId);
+        assertThat(e.getId(), is(newId));
         assertThat(e.getEvent(), is(eventTwo));
     }
 
     @Test
     public void updatesToCreatedEventOccurrenceCanBeRead() {
-        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(120, eventOne, keck));
-        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(120);
+        int newId = eventOccurrenceDao.createEventOccurrence(new EventOccurrence(eventOne, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime("2012-11-13T11:30:00Z")));
+        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(newId);
         e.setEvent(eventTwo);
         eventOccurrenceDao.updateEventOccurrence(e);
-        e = eventOccurrenceDao.findEventOccurrenceById(120);
-        assertThat(e.getId(), is(120));
+        e = eventOccurrenceDao.findEventOccurrenceById(newId);
+        assertThat(e.getId(), is(newId));
         assertThat(e.getEvent(), is(eventTwo));
     }
 
