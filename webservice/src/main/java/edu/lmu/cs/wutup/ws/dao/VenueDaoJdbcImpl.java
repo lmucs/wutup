@@ -28,10 +28,10 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 public class VenueDaoJdbcImpl implements VenueDao {
 
     private static final String SELECT_VENUE = "select v.* from venue v ";
-    private static final String SELECT_COMMENT = "select ec.*, u.* from venue_comment ec join user u on (ec.authorId = u.id)";
+    private static final String SELECT_COMMENT = "select vc.*, u.* from venue_comment vc join user u on (vc.authorId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
 
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.venueId = ? " + PAGINATION;
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where vc.subjectId = ? " + PAGINATION;
     private static final String CREATE_SQL = "insert into venue (id, name, address, latitude, longitude) values (?,?,?,?,?)";
     private static final String CREATE_WITH_AUTO_GENERATE_ID = "insert into venue (name, address, latitude, longitude) values (?,?,?,?)";
     private static final String UPDATE_SQL = "update venue set name=ifnull(?, name), address=ifnull(?, address), "
@@ -165,11 +165,5 @@ public class VenueDaoJdbcImpl implements VenueDao {
                     rs.getDouble("longitude"), null);
         }
     };
-
-    // private static RowMapper<ResultSet> venuePropertiesRowMapper = new RowMapper<ResultSet>() {
-    // public ResultSet mapRow(ResultSet rs, int rowNum) throws SQLException {
-    // return new ResultSet(rs.getString(0), rs.getString(1));
-    // }
-    // };
 
 }

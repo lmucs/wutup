@@ -57,3 +57,5 @@ insert into event_category (eventId, categoryId) values (1, 1);
 insert into attendee (occurrenceId, userId) values (1, 1);
 
 insert into event_comment (id, subjectId, authorId, text, timestamp) values (1, 1, 1, 'Boo, sux', '2012-03-17T00:00:00');
+
+insert into venue_comment (id, subjectId, authorId, text, timestamp) values (1, 10, 1, 'This venue sux.', '2012-03-30T12:34:56');
