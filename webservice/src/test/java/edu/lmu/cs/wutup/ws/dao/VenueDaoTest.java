@@ -132,7 +132,7 @@ public class VenueDaoTest {
     @Test
     public void findingVenuesByEventId() {
         List<Venue> venues = venueDao.findVenues(null, 8, null, new PaginationData(0, 10));
-        assertThat(venues.size(), is(1));
+        assertThat(venues.size(), is(2));
         assertThat(venues.get(0).getId(), is(4));
     }
 
