@@ -35,7 +35,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     private static final String PAGINATION = "limit ? offset ?";
     private static final String CREATE_SQL = "insert into occurrence (id,eventId,venueId,start,end) values (?,?,?,?,?)";
-    private static final String UPDATE_SQL = "update occurrence set venue=? where id=?";
+    private static final String UPDATE_SQL = "update occurrence set venueid=ifnull(?, venueid), eventid=ifnull(?, eventid), start=ifnull(?, start), end=ifnull(?, end) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT + " where o.id=?";
     private static final String FIND_ALL_SQL = SELECT + " " + PAGINATION;
     private static final String DELETE_SQL = "delete from occurrence where id=?";
@@ -64,7 +64,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public void updateEventOccurrence(EventOccurrence e) {
-        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getVenue(), e.getId());
+        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getVenue().getId(), e.getEvent().getId(), new Timestamp(
+                e.getStart().getMillis()), new Timestamp(e.getEnd().getMillis()), e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventOccurrenceException();
         }

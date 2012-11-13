@@ -10,7 +10,6 @@ import org.junit.Test;
 
 public class EventOccurrenceResourceIT {
 
-    @Ignore
     @Test
     public void endpointGetFindsAllEventOccurrences() {
         given().header("Accept", "application/json")
@@ -20,8 +19,6 @@ public class EventOccurrenceResourceIT {
                 .body(containsString("\"id\":1"))
                 .body(containsString("\"event\":{\"id\":8"))
                 .body(containsString("\"venue\":{\"id\":4"))
-                .body(containsString("\"start\":1352065446376"))
-                .body(containsString("\"end\":1352151846433"))
                 .body(containsString("\"comments\":null"))
                 .when()
                 .get("/wutup/occurrences/");
@@ -43,20 +40,7 @@ public class EventOccurrenceResourceIT {
     public void endpointGetWithUnusedIdProduces404() {
         expect().statusCode(404).when().get("/wutup/Occurrences/100");
     }
-/*
-    @Test
-    @Ignore
-    public void endpointPostJsonWithIdCorrectlyCreatesEventOccurrenceAndProduces201() {
-        given().contentType("application/json")
-                .body("{\"eventId\":4,\"venue\":{\"id\":1},\"start\":\"2012-01-15 20:00:00\",\"end\":\"2012-01-16 08:23:30\"}")
-                .expect()
-                .statusCode(201)
-                .header("Location", "http://localhost:8080/wutup/occurrences/6")
-                .contentType("application/json")
-                .when()
-                .post("/wutup/occurrences");
-    }
-*/
+
     @Test
     @Ignore
     public void endpointPostJsonWithoutIdCorrectlyCreatesEventOccurrenceAndProduces201() {
@@ -64,13 +48,13 @@ public class EventOccurrenceResourceIT {
         DateTime sampleEndDate = new DateTime(2012, 12, 21, 16, 35);
 
         given().contentType("application/json")
-        .body("{\"event\":{\"id\":4},\"venue\":{\"id\":2},\"start\":" + sampleStartDate.getMillis()
-                + ",\"end\":" + sampleEndDate.getMillis() + "}")
+            .body("{\"event\":{\"id\":1},\"venue\":{\"id\":1},\"start\":" + sampleStartDate.getMillis()
+                    + ",\"end\":" + sampleEndDate.getMillis() + "}")
         .expect()
-                .statusCode(201)
-                .header("Location", "http://localhost:8080/wutup/occurrences/11")
-                .contentType("application/json")
+            .statusCode(201)
+            .header("Location", "http://localhost:8080/wutup/occurrences/11")
+            .contentType("application/json")
         .when()
-                .post("/wutup/occurrences");
+            .post("/wutup/occurrences");
     }
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -50,7 +49,8 @@ public class EventOccurrenceDaoTest {
 
     @Test
     public void creatingIncrementsSize() {
-        EventOccurrence e = new EventOccurrence(2000, eventOne, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime("2012-11-13T09:40:50Z"));
+        EventOccurrence e = new EventOccurrence(2000, eventOne, keck, new DateTime("2012-11-13T08:30:00Z"),
+                new DateTime("2012-11-13T09:40:50Z"));
 
         int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
         eventOccurrenceDao.createEventOccurrence(e);
@@ -73,25 +73,22 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test
-    @Ignore
     public void updatesToCreatedEventOccurrenceCanBeRead() {
-        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(9, eventOne, keck));
-        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(9);
+        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(120, eventOne, keck));
+        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(120);
         e.setEvent(eventTwo);
         eventOccurrenceDao.updateEventOccurrence(e);
-        e = eventOccurrenceDao.findEventOccurrenceById(9);
-        assertThat(e.getId(), is(9));
+        e = eventOccurrenceDao.findEventOccurrenceById(120);
+        assertThat(e.getId(), is(120));
         assertThat(e.getEvent(), is(eventTwo));
     }
 
     @Test(expected = NoSuchEventOccurrenceException.class)
-    @Ignore
     public void updatingNonExistentEventOccurrenceThrowsException() {
         eventOccurrenceDao.updateEventOccurrence(new EventOccurrence(1000, eventTwo, keck));
     }
 
     @Test(expected = NoSuchEventOccurrenceException.class)
-    @Ignore
     public void deletingNonExistentEventThrowsException() {
         eventOccurrenceDao.deleteEventOccurrence(1000);
     }
@@ -110,15 +107,14 @@ public class EventOccurrenceDaoTest {
     // list of events.
 
     @Test
-    @Ignore
-    public void findingEventsViaPaginationWorks() {
-        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(5));
+    public void findingEventOccurrencesViaPaginationWorks() {
+        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
         List<EventOccurrence> eventOccurrences = eventOccurrenceDao.findAllEventOccurrences(new PaginationData(0, 3));
         assertThat(eventOccurrences.size(), is(3));
         eventOccurrences = eventOccurrenceDao.findAllEventOccurrences(new PaginationData(1, 3));
         assertThat(eventOccurrences.size(), is(3));
-        eventOccurrences = eventOccurrenceDao.findAllEventOccurrences(new PaginationData(2, 3));
-        assertThat(eventOccurrences.size(), is(2));
+        eventOccurrences = eventOccurrenceDao.findAllEventOccurrences(new PaginationData(3, 3));
+        assertThat(eventOccurrences.size(), is(1));
     }
 
     @After
