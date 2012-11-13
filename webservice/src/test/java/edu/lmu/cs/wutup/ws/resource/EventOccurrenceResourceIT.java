@@ -42,7 +42,6 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    @Ignore
     public void endpointPostJsonWithoutIdCorrectlyCreatesEventOccurrenceAndProduces201() {
         DateTime sampleStartDate = new DateTime(2012, 12, 21, 12, 30);
         DateTime sampleEndDate = new DateTime(2012, 12, 21, 16, 35);
