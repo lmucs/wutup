@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.model.Circle;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
@@ -132,7 +134,7 @@ public class VenueDaoTest {
     @Test
     public void findingVenuesByEventId() {
         List<Venue> venues = venueDao.findVenues(null, 8, null, new PaginationData(0, 10));
-        assertThat(venues.size(), is(1));
+        assertThat(venues.size(), is(2));
         assertThat(venues.get(0).getId(), is(4));
     }
 
@@ -149,6 +151,21 @@ public class VenueDaoTest {
         List<Venue> venues = venueDao.findVenues(null, null, new Circle(37.149885, 60.000001, 100), new PaginationData(
                 0, 10));
         assertThat(venues.size(), is(0));
+    }
+    
+    @Test
+    public void testGetVenueComments() {
+        List<Comment> comments = venueDao.findComments(10, new PaginationData(0, 10));
+        DateTime knownCommentTime = new DateTime(2012, 3, 30, 12, 34, 56);
+        assertThat(comments.size(), is(1));
+        assertThat(comments.get(0).getId(), is(1));
+        assertThat(comments.get(0).getBody(), is("This venue sux."));
+        assertThat(comments.get(0).getAuthor().getId(), is(1));
+        assertThat(comments.get(0).getAuthor().getEmail(), is("40mpg@gmail.com"));
+        assertThat(comments.get(0).getAuthor().getFirstName(), is("Honda"));
+        assertThat(comments.get(0).getAuthor().getLastName(), is("Prius"));
+        assertThat(comments.get(0).getAuthor().getNickname(), is("hybrid"));
+        assertThat(comments.get(0).getPostDate().getMillis(), is(knownCommentTime.getMillis()));
     }
 
     @After
