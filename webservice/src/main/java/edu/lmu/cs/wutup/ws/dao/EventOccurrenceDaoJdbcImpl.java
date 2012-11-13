@@ -34,14 +34,10 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
-    private static final String SELECT = getSelectQuery().build();
-
     private static final String PAGINATION = "limit ? offset ?";
     private static final String CREATE_SQL = "insert into occurrence (eventId,venueId,start,end) values (?,?,?,?)";
     private static final String UPDATE_SQL = "update occurrence set venueid=ifnull(?, venueid), eventid=ifnull(?, eventid), "
             + "start=ifnull(?, start), end=ifnull(?, end) where id=?";
-    private static final String FIND_BY_ID_SQL = SELECT + " where o.id=?";
-    private static final String FIND_ALL_SQL = SELECT + " " + PAGINATION;
     private static final String DELETE_SQL = "delete from occurrence where id=?";
     private static final String COUNT_SQL = "select count(*) from occurrence";
 
@@ -94,24 +90,23 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     @Override
     public EventOccurrence findEventOccurrenceById(int id) {
         try {
-            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, eventOccurrenceRowMapper);
+            return jdbcTemplate.queryForObject(getSelectQuery().where("o.id = :id", id).build(),
+                    eventOccurrenceRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventOccurrenceException();
         }
     }
 
     @Override
-    public List<EventOccurrence> findAllEventOccurrences(PaginationData pagination) {
-        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
-                pagination.pageNumber * pagination.pageSize}, eventOccurrenceRowMapper);
-    }
-
-    @Override
-    public List<EventOccurrence> findEventOccurrencesByQuery(List<Category> categories, Circle circle,
-            Interval interval, Integer eventId, List<Venue> venues, PaginationData pagination) {
+    public List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
+            Integer eventId, List<Venue> venues, PaginationData pagination) {
+        ;
         // TODO: change this
-        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
-                pagination.pageNumber * pagination.pageSize}, eventOccurrenceRowMapper);
+
+        return jdbcTemplate.query(getSelectQuery().whereCircle(circle)
+                .where("o.eventid = :eventid", eventId)
+                .addPagination(pagination)
+                .build(), eventOccurrenceRowMapper);
     }
 
     public int findNumberOfEventOccurrences() {
@@ -176,7 +171,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         }
     };
 
-    private static QueryBuilder getSelectQuery() {
+    private QueryBuilder getSelectQuery() {
         return new QueryBuilder().select("o.id", "o.start", "o.end", "o.venueId", "v.name as venueName", "v.address",
                 "v.latitude", "v.longitude", "o.eventId", "e.name as eventName", "e.description", "address",
                 "u.id as userId", "u.firstName", "u.lastName", "u.email", "u.nickname")

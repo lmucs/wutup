@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections.map.MultiValueMap;
 
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 /**
@@ -121,6 +122,15 @@ public class QueryBuilder {
             }
         }
         return this;
+    }
+
+    public QueryBuilder whereCircle(Circle c) {
+        if (c != null) {
+            return where("get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, " + c.centerLongitude
+                    + ") <= :radius", c.radius);
+        } else {
+            return this;
+        }
     }
 
     public QueryBuilder addPagination(PaginationData p) {

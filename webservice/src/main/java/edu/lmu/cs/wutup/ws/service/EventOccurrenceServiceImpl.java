@@ -41,11 +41,6 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public List<EventOccurrence> findAllEventOccurrences(PaginationData pagination) {
-        return eventOccurrenceDao.findAllEventOccurrences(pagination);
-    }
-
-    @Override
     public List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination) {
         return eventOccurrenceDao.findAttendeesByEventOccurrenceId(id, pagination);
     }
@@ -56,10 +51,9 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public List<EventOccurrence> findEventOccurrencesByQuery(List<Category> categories, Circle circle,
-            Interval interval, Integer eventId, List<Venue> venues, PaginationData pagination) {
-        return eventOccurrenceDao.findEventOccurrencesByQuery(categories, circle,
-                interval, eventId, venues, pagination);
+    public List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
+            Integer eventId, List<Venue> venues, PaginationData pagination) {
+        return eventOccurrenceDao.findEventOccurrences(categories, circle, interval, eventId, venues, pagination);
     }
 
     @Override
