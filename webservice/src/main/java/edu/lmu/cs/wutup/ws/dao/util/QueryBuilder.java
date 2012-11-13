@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.dao.util;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.map.MultiValueMap;
+import org.joda.time.Interval;
 
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -126,8 +128,17 @@ public class QueryBuilder {
 
     public QueryBuilder whereCircle(Circle c) {
         if (c != null) {
-            return where("get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, " + c.centerLongitude
-                    + ") <= :radius", c.radius);
+            return this.where("get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, "
+                    + c.centerLongitude + ") <= :radius", c.radius);
+        } else {
+            return this;
+        }
+    }
+
+    public QueryBuilder whereInterval(Interval i) {
+        if (i != null) {
+            return this.where("start > :start", new Timestamp(i.getStartMillis())).where("end < :end",
+                    new Timestamp(i.getEndMillis()));
         } else {
             return this;
         }

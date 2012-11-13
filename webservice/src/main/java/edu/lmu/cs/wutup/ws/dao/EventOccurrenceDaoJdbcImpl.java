@@ -105,6 +105,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
         return jdbcTemplate.query(getSelectQuery().whereCircle(circle)
                 .where("o.eventid = :eventid", eventId)
+                .whereInterval(interval)
                 .addPagination(pagination)
                 .build(), eventOccurrenceRowMapper);
     }
