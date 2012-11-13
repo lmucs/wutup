@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -49,7 +50,7 @@ public class EventOccurrenceDaoTest {
 
     @Test
     public void creatingIncrementsSize() {
-        EventOccurrence e = new EventOccurrence(6, eventOne, keck);
+        EventOccurrence e = new EventOccurrence(2000, eventOne, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime("2012-11-13T09:40:50Z"));
 
         int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
         eventOccurrenceDao.createEventOccurrence(e);
@@ -65,9 +66,9 @@ public class EventOccurrenceDaoTest {
 
     @Test
     public void createdEventOccurrenceCanBeFound() {
-        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(9, eventTwo, keck));
-        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(9);
-        assertThat(e.getId(), is(9));
+        eventOccurrenceDao.createEventOccurrence(new EventOccurrence(11, eventTwo, keck));
+        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(11);
+        assertThat(e.getId(), is(11));
         assertThat(e.getEvent(), is(eventTwo));
     }
 
@@ -102,7 +103,7 @@ public class EventOccurrenceDaoTest {
 
     @Test
     public void countOfInitialDataSetIsAsExpected() {
-        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(5));
+        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
     }
 
     // TODO - when general finding is implemented, do tests that find events and events that return an empty
