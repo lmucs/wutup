@@ -51,7 +51,7 @@ create table venue_property (
 );
 
 create table occurrence (
-  id integer not null,
+  id integer auto_increment not null,
   eventId integer,
   venueId integer,
   start datetime,

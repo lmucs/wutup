@@ -50,7 +50,7 @@ public class EventOccurrenceDaoTest {
 
     @Test
     public void creatingIncrementsSize() {
-        EventOccurrence e = new EventOccurrence(12, eventOne, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime("2012-11-13T09:40:50Z"));
+        EventOccurrence e = new EventOccurrence(2000, eventOne, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime("2012-11-13T09:40:50Z"));
 
         int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
         eventOccurrenceDao.createEventOccurrence(e);
