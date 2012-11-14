@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class EventOccurrenceDaoTest {
     private EventOccurrenceDaoJdbcImpl eventOccurrenceDao = new EventOccurrenceDaoJdbcImpl();
 
     private User dondi = new User(1, "dondi@example.com");
-    private User sampleUser = new User(3503, "John", "Lennon", "jlennon@gmail.com", "John" );
+    private User sampleUser = new User(3503, "John", "Lennon", "jlennon@gmail.com", "John");
     private DateTime sampleDateTime = new DateTime(2012, 10, 31, 23, 56, 0);
     private Event eventOne = new Event(1, "Party", "A hoedown!", dondi);
     private Event eventTwo = new Event(2, "Party", "Another hoedown!", dondi);
@@ -70,15 +71,28 @@ public class EventOccurrenceDaoTest {
 
     @Test
     public void createdEventOccurrenceWithoutIdCanBeFound() {
-        int newId = eventOccurrenceDao.createEventOccurrence(new EventOccurrence(eventTwo, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime("2012-11-13T11:30:00Z")));
+        int newId = eventOccurrenceDao.createEventOccurrence(new EventOccurrence(eventTwo, keck, new DateTime(
+                "2012-11-13T08:30:00Z"), new DateTime("2012-11-13T11:30:00Z")));
         EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(newId);
         assertThat(e.getId(), is(newId));
         assertThat(e.getEvent(), is(eventTwo));
     }
 
     @Test
+    public void findEventsViaDateTimeInterval() {
+        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, new Interval(
+                new DateTime("2012-01-15T08:30:00"), new DateTime("2012-01-16T11:30:00")), null, null,
+                new PaginationData(0, 5));
+
+        assertThat(occurrences.size(), is(1));
+        EventOccurrence e = occurrences.get(0);
+        assertThat(e.getId(), is(1));
+    }
+
+    @Test
     public void updatesToCreatedEventOccurrenceCanBeRead() {
-        int newId = eventOccurrenceDao.createEventOccurrence(new EventOccurrence(eventOne, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime("2012-11-13T11:30:00Z")));
+        int newId = eventOccurrenceDao.createEventOccurrence(new EventOccurrence(eventOne, keck, new DateTime(
+                "2012-11-13T08:30:00Z"), new DateTime("2012-11-13T11:30:00Z")));
         EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(newId);
         e.setEvent(eventTwo);
         eventOccurrenceDao.updateEventOccurrence(e);
@@ -113,20 +127,23 @@ public class EventOccurrenceDaoTest {
     @Test
     public void findingEventOccurrencesViaPaginationWorks() {
         assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
-        List<EventOccurrence> eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(0, 3));
+        List<EventOccurrence> eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null,
+                new PaginationData(0, 3));
         assertThat(eventOccurrences.size(), is(3));
-        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(1, 3));
+        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(1,
+                3));
         assertThat(eventOccurrences.size(), is(3));
-        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(3, 3));
+        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(3,
+                3));
         assertThat(eventOccurrences.size(), is(1));
     }
-    
+
     @Test
     public void findMaxKeyValueForOccurrenceCommentsWorks() {
         int maxValue = eventOccurrenceDao.findMaxKeyValueForComments();
         assertThat(maxValue, is(2));
     }
-    
+
     @Test
     public void findCommentsSortsByPostDate() {
         List<Comment> comments = eventOccurrenceDao.findComments(1, new PaginationData(0, 10));
@@ -137,7 +154,7 @@ public class EventOccurrenceDaoTest {
             timestamp = nextTimestamp;
         }
     }
-    
+
     @Test
     public void foundCommentsCanBeRead() {
         DateTime knownCommentTime = new DateTime(2012, 4, 18, 0, 0, 0);
@@ -152,7 +169,7 @@ public class EventOccurrenceDaoTest {
         assertThat(comments.get(1).getPostDate().getMillis(), is(knownCommentTime.getMillis()));
         assertThat(comments.get(1).getId(), is(2));
     }
-    
+
     @Test
     public void addCommentIncrementsSize() {
         int initialCount = eventOccurrenceDao.findComments(1, new PaginationData(0, 10)).size();
@@ -160,7 +177,7 @@ public class EventOccurrenceDaoTest {
         int afterCount = eventOccurrenceDao.findComments(1, new PaginationData(0, 10)).size();
         assertThat(afterCount, is(initialCount + 1));
     }
-    
+
     @Test
     public void createdVenueCommentAutoGeneratesId() {
         int maxKeyValue = eventOccurrenceDao.findMaxKeyValueForComments();
@@ -168,7 +185,7 @@ public class EventOccurrenceDaoTest {
         int nextKeyValue = eventOccurrenceDao.findMaxKeyValueForComments();
         assertThat(nextKeyValue, is(maxKeyValue + 1));
     }
-    
+
     @Test
     public void addedCommentCanBeFound() {
         Comment c = new Comment(null, "tsk tsk", sampleDateTime, sampleUser);
@@ -178,7 +195,7 @@ public class EventOccurrenceDaoTest {
         assertThat(comments.size(), is(1));
         assertThat(comments.get(0).getId(), is(maxKeyValue + 1));
     }
-    
+
     @Test
     public void deleteCommentDecrementsSize() {
         int initialCount = eventOccurrenceDao.findComments(1, new PaginationData(0, 10)).size();

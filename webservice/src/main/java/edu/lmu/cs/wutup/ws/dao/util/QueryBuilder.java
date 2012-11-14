@@ -136,12 +136,17 @@ public class QueryBuilder {
     }
 
     public QueryBuilder whereInterval(Interval i) {
+        //WHERE StartDate Between getdate() and getdate()-3
+        assertNotBuilt();
         if (i != null) {
-            return this.where("start > :start", new Timestamp(i.getStartMillis())).where("end < :end",
-                    new Timestamp(i.getEndMillis()));
-        } else {
-            return this;
+            clauses.add("start between ':start1' and ':end1'");
+            clauses.add("end between ':start2' and ':end2'");
+            parameters.put(":start1", new Timestamp(i.getStartMillis()));
+            parameters.put(":end1", new Timestamp(i.getEndMillis()));
+            parameters.put(":start2", new Timestamp(i.getStartMillis()));
+            parameters.put(":end2", new Timestamp(i.getEndMillis()));
         }
+        return this;
     }
 
     public QueryBuilder addPagination(PaginationData p) {

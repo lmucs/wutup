@@ -82,12 +82,6 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     @Override
-    public List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination) {
-        return new java.util.ArrayList<User>();
-        // TODO
-    }
-
-    @Override
     public EventOccurrence findEventOccurrenceById(int id) {
         try {
             return jdbcTemplate.queryForObject(getSelectQuery().where("o.id = :id", id).build(),
@@ -100,7 +94,6 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     @Override
     public List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
             Integer eventId, List<Venue> venues, PaginationData pagination) {
-        ;
         // TODO: change this
 
         return jdbcTemplate.query(getSelectQuery().whereCircle(circle)
@@ -112,6 +105,12 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     public int findNumberOfEventOccurrences() {
         return jdbcTemplate.queryForInt(COUNT_SQL);
+    }
+
+    @Override
+    public List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination) {
+        return new java.util.ArrayList<User>();
+        // TODO
     }
 
     @Override
@@ -145,7 +144,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
                 pagination.pageNumber, pagination.pageSize);
     }
-    
+
     @Override
     public int findMaxKeyValueForComments() {
         return CommentDaoUtils.findMaxKeyValueForComments(jdbcTemplate, "occurrence");
@@ -182,8 +181,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 "v.latitude", "v.longitude", "o.eventId", "e.name as eventName", "e.description", "address",
                 "u.id as userId", "u.firstName", "u.lastName", "u.email", "u.nickname")
                 .from("occurrence o")
-                .joinOn("venue v", "(o.venueId = v.id)")
-                .joinOn("event e", "(o.eventId = e.id)")
-                .joinOn("user u", "(e.ownerId = u.id)");
+                .joinOn("venue v", "o.venueId = v.id")
+                .joinOn("event e", "o.eventId = e.id")
+                .joinOn("user u", "e.ownerId = u.id");
     }
 }
