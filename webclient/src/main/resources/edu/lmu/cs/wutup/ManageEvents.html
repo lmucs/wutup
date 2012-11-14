@@ -15,7 +15,7 @@
 		<div class="row-fluid">
 			<div class="span6">
 				<h2>Calendar</h2>
-				<div id="calendar" style='font-size: 13px'></div>
+				<div id="calendar" style='font-size: 18px'></div>
 			</div>
 			<div class="span1"></div>
 			<div class="span6">
@@ -54,16 +54,6 @@
 	 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
 	 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqOg2q0dqSGTw1OkyqWTWsVSOLCsHjXpM&sensor=false&libraries=places"></script>
 	 <script src="lib/fullcalendar/fullcalendar.min.js"></script>
-	 <script src="js/manageEventsMap.js"></script>
-	 <script src="js/manageEventsCalendar.js"></script>
+	 <script src="js/manageEvents.js"></script>
 	</wicket:link>
-     <script>
-          (function () {
-
-  $.get('http://localhost:8080/wutup/events?name=Weekly+Hackathon&page=0&pageSize=5', function(data) {
-    $('#result').html(JSON.stringify(data));
-  });
-
-}());
-          </script> 
 </wicket:extend>
