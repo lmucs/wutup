@@ -69,7 +69,7 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test
-    public void createdEventOccurrenceWithoutIdCanBeFound() {
+    public void createEventOccurrenceWithoutIdCanBeFound() {
         int newId = eventOccurrenceDao.createEventOccurrence(new EventOccurrence(eventTwo, keck, new DateTime(
                 "2012-11-13T08:30:00Z"), new DateTime("2012-11-13T11:30:00Z")));
         EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(newId);
@@ -105,12 +105,12 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test(expected = NoSuchEventOccurrenceException.class)
-    public void deletingNonExistentEventThrowsException() {
+    public void deleteNonExistentEventThrowsException() {
         eventOccurrenceDao.deleteEventOccurrence(1000);
     }
 
     @Test(expected = NoSuchEventOccurrenceException.class)
-    public void findingNonExistentEventThrowsException() {
+    public void findNonExistentEventThrowsException() {
         eventOccurrenceDao.findEventOccurrenceById(1000);
     }
 
@@ -119,11 +119,8 @@ public class EventOccurrenceDaoTest {
         assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
     }
 
-    // TODO - when general finding is implemented, do tests that find events and events that return an empty
-    // list of events.
-
     @Test
-    public void findingEventOccurrencesViaPaginationWorks() {
+    public void findEventOccurrencesViaPaginationWorks() {
         assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
         List<EventOccurrence> eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null,
                 new PaginationData(0, 3));
@@ -134,6 +131,28 @@ public class EventOccurrenceDaoTest {
         eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(3,
                 3));
         assertThat(eventOccurrences.size(), is(1));
+    }
+
+    @Test
+    public void findAttendeesViaPaginationWorks() {
+        List<User> attendees = eventOccurrenceDao.findAttendeesByEventOccurrenceId(1, new PaginationData(0, 2));
+        assertThat(attendees.size(), is(2));
+        assertThat(attendees.get(1).getId(), is(2));
+    }
+
+    @Test
+    public void unregisterAttendeeDecrementsAttendeeSize() {
+        eventOccurrenceDao.unregisterAttendeeForEventOccurrence(1, 1);
+        List<User> attendees = eventOccurrenceDao.findAttendeesByEventOccurrenceId(1, new PaginationData(0, 1));
+        assertThat(attendees.size(), is(1));
+    }
+
+    @Test
+    public void registerAttendeeCanBeFound() {
+        eventOccurrenceDao.registerAttendeeForEventOccurrence(2, 2);
+        List<User> attendees = eventOccurrenceDao.findAttendeesByEventOccurrenceId(1, new PaginationData(0, 2));
+        assertThat(attendees.size(), is(2));
+        assertThat(attendees.get(1).getId(), is(2));
     }
 
     @Test
