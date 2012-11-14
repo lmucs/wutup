@@ -109,11 +109,11 @@ public class EventOccurrenceDaoTest {
     @Test
     public void findingEventOccurrencesViaPaginationWorks() {
         assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
-        List<EventOccurrence> eventOccurrences = eventOccurrenceDao.findAllEventOccurrences(new PaginationData(0, 3));
+        List<EventOccurrence> eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(0, 3));
         assertThat(eventOccurrences.size(), is(3));
-        eventOccurrences = eventOccurrenceDao.findAllEventOccurrences(new PaginationData(1, 3));
+        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(1, 3));
         assertThat(eventOccurrences.size(), is(3));
-        eventOccurrences = eventOccurrenceDao.findAllEventOccurrences(new PaginationData(3, 3));
+        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(3, 3));
         assertThat(eventOccurrences.size(), is(1));
     }
 

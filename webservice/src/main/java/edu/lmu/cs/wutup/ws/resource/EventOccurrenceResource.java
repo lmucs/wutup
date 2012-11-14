@@ -65,7 +65,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<EventOccurrence> getEventOccurrences(@QueryParam("category") List<Category> categories,
+    public List<EventOccurrence> findEventOccurrences(@QueryParam("category") List<Category> categories,
             @QueryParam("center") String center, @QueryParam("radius") String radiusString,
             @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") Integer eventId,
             @QueryParam("venue") List<Venue> venues,
@@ -78,8 +78,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
         validateQuery(categories, circle, interval, eventId, venues);
 
-        return eventOccurrenceService.findEventOccurrencesByQuery(categories, circle, interval, eventId, venues,
-                pagination);
+        return eventOccurrenceService.findEventOccurrences(categories, circle, interval, eventId, venues, pagination);
     }
 
     @POST
