@@ -31,7 +31,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     private static final String SELECT_COMMENT = "select vc.*, u.* from venue_comment vc join user u on (vc.authorId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
 
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where vc.subjectId = ? " + PAGINATION;
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where vc.subjectId = ? order by vc.timestamp " + PAGINATION;
     private static final String CREATE_SQL = "insert into venue (id, name, address, latitude, longitude) values (?,?,?,?,?)";
     private static final String CREATE_WITH_AUTO_GENERATE_ID = "insert into venue (name, address, latitude, longitude) values (?,?,?,?)";
     private static final String UPDATE_SQL = "update venue set name=ifnull(?, name), address=ifnull(?, address), "
@@ -135,6 +135,11 @@ public class VenueDaoJdbcImpl implements VenueDao {
     public List<Comment> findComments(int venueId, PaginationData pagination) {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, venueId,
                 pagination.pageNumber, pagination.pageSize);
+    }
+    
+    @Override
+    public int findMaxKeyValueOfVenueComments() {
+        return CommentDaoUtils.findMaxKeyValueForComments(jdbcTemplate, "venue");
     }
 
     private void createVenueWithGeneratedId(Venue v, KeyHolder keyHolder) {

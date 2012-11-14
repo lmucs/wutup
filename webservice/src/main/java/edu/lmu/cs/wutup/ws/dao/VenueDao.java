@@ -19,5 +19,7 @@ public interface VenueDao extends CommentDao {
     void deleteVenue(int venueId);
 
     int findNumberOfVenues();
+    
+    int findMaxKeyValueOfVenueComments();
 
 }

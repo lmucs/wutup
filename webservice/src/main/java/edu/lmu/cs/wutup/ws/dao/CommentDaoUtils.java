@@ -64,6 +64,10 @@ public class CommentDaoUtils {
             int objectId, int pageNumber, int pageSize) {
         return jdbcTemplate.query(SQL_STRING, new Object[]{objectId, pageSize, pageNumber * pageSize}, commentRowMapper);
     }
+    
+    public static int findMaxKeyValueForComments(JdbcTemplate jdbcTemplate, String objectName) {
+        return jdbcTemplate.queryForInt("select max(id) from " + objectName + "_comment");
+    }
 
     public static RowMapper<Comment> commentRowMapper = new RowMapper<Comment>() {
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
