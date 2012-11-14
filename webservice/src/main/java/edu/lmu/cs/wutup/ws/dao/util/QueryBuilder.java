@@ -158,7 +158,7 @@ public class QueryBuilder {
     }
 
     /**
-     * Puts the base string, the clauses, and the parameters all together into a Hibernate query object.
+     * Puts the base string, the clauses, and the parameters all together into a query object.
      */
     @SuppressWarnings("unchecked")
     public String build() {

@@ -20,7 +20,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
+import edu.lmu.cs.wutup.ws.exception.AttendeeExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchAttendeeException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
@@ -34,23 +36,20 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
-    private static final String PAGINATION = "limit ? offset ?";
-    private static final String CREATE_SQL = "insert into occurrence (eventId,venueId,start,end) values (?,?,?,?)";
-    private static final String UPDATE_SQL = "update occurrence set venueid=ifnull(?, venueid), eventid=ifnull(?, eventid), "
-            + "start=ifnull(?, start), end=ifnull(?, end) where id=?";
-    private static final String DELETE_SQL = "delete from occurrence where id=?";
-    private static final String COUNT_SQL = "select count(*) from occurrence";
+    private static final String CREATE_OCCURRENCE_SQL = "insert into occurrence (eventId,venueId,start,end) values (?,?,?,?)";
+    private static final String UPDATE_OCCURRENCE_SQL = "update occurrence set venueid=ifnull(?, venueid), "
+            + "eventid=ifnull(?, eventid), start=ifnull(?, start), end=ifnull(?, end) where id=?";
+    private static final String DELETE_OCCURRENCE_SQL = "delete from occurrence where id=?";
 
-    private static final String SELECT_COMMENT = "select oc.*, u.* from occurrence_comment oc join user u on (oc.authorId = u.id)";
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where oc.subjectId = ? order by oc.timestamp "
-            + PAGINATION;
+    private static final String CREATE_ATTENDEE_SQL = "insert into attendee (occurrenceId,userId) values (?,?)";
+    private static final String DELETE_ATTENDEE_SQL = "delete from attendee where occurrenceId=? and userId=?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
     public int createEventOccurrence(EventOccurrence e) {
-        PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_SQL, new int[]{
+        PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_OCCURRENCE_SQL, new int[]{
                 Types.INTEGER, Types.INTEGER, Types.TIMESTAMP, Types.TIMESTAMP});
         factory.setReturnGeneratedKeys(true);
         factory.setGeneratedKeysColumnNames(new String[]{"id"});
@@ -67,8 +66,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public void updateEventOccurrence(EventOccurrence e) {
-        int rowsUpdated = jdbcTemplate.update(UPDATE_SQL, e.getVenue().getId(), e.getEvent().getId(), new Timestamp(
-                e.getStart().getMillis()), new Timestamp(e.getEnd().getMillis()), e.getId());
+        int rowsUpdated = jdbcTemplate.update(UPDATE_OCCURRENCE_SQL, e.getVenue().getId(), e.getEvent().getId(),
+                new Timestamp(e.getStart().getMillis()), new Timestamp(e.getEnd().getMillis()), e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventOccurrenceException();
         }
@@ -76,7 +75,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public void deleteEventOccurrence(int id) {
-        int rowsUpdated = jdbcTemplate.update(DELETE_SQL, id);
+        int rowsUpdated = jdbcTemplate.update(DELETE_OCCURRENCE_SQL, id);
         if (rowsUpdated == 0) {
             throw new NoSuchEventOccurrenceException();
         }
@@ -115,24 +114,32 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     public int findNumberOfEventOccurrences() {
-        return jdbcTemplate.queryForInt(COUNT_SQL);
+        return jdbcTemplate.queryForInt(new QueryBuilder().select("count(*)").from("occurrence").build());
     }
 
     @Override
     public List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination) {
-        return new java.util.ArrayList<User>();
-        // TODO
-        // occurrenceid userid attendee
+        QueryBuilder query = new QueryBuilder().from("attendee a")
+                .joinOn("user u", "a.userId = u.id")
+                .where("a.occurrenceId = :oId", id);
+        return jdbcTemplate.query(query.addPagination(pagination).build(), userRowMapper);
     }
 
     @Override
     public void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId) {
-        // TODO
+        try {
+            jdbcTemplate.update(CREATE_ATTENDEE_SQL, eventOccurrenceId, attendeeId);
+        } catch (DuplicateKeyException ex) {
+            throw new AttendeeExistsException();
+        }
     }
 
     @Override
     public void unregisterAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId) {
-        // TODO
+        int rowsUpdated = jdbcTemplate.update(DELETE_ATTENDEE_SQL, eventOccurrenceId, attendeeId);
+        if (rowsUpdated == 0) {
+            throw new NoSuchAttendeeException();
+        }
     }
 
     /* Begins the Comment Methods */
@@ -153,8 +160,13 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public List<Comment> findComments(int eventId, PaginationData pagination) {
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
-                pagination.pageNumber, pagination.pageSize);
+        QueryBuilder query = new QueryBuilder().select("oc.*, u.*")
+                .from("occurrence_comment oc")
+                .joinOn("user u", "oc.authorId = u.id")
+                .where("oc.subjectId = :subjectId", eventId)
+                .order("oc.timestamp")
+                .addPagination(pagination);
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build());
     }
 
     @Override
@@ -185,6 +197,14 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             Event event = new Event(eventId, eventName, description, user);
             Venue venue = new Venue(venueId, venueName, address, latitude, longitude, null);
             return new EventOccurrence(occurrenceId, event, venue, start, end);
+        }
+    };
+
+    // TODO: Factor out repeated code from UserDaoJdbcImpl
+    private static RowMapper<User> userRowMapper = new RowMapper<User>() {
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new User(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"),
+                    rs.getString("email"), rs.getString("nickname"));
         }
     };
 
