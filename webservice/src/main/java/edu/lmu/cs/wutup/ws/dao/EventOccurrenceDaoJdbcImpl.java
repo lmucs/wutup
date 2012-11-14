@@ -42,7 +42,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static final String COUNT_SQL = "select count(*) from occurrence";
 
     private static final String SELECT_COMMENT = "select oc.*, u.* from occurrence_comment oc join user u on (oc.authorId = u.id)";
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where oc.subjectId = ? order by oc.timestamp " + PAGINATION;
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where oc.subjectId = ? order by oc.timestamp "
+            + PAGINATION;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -94,13 +95,23 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     @Override
     public List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
             Integer eventId, List<Venue> venues, PaginationData pagination) {
-        // TODO: change this
-
-        return jdbcTemplate.query(getSelectQuery().whereCircle(circle)
+        QueryBuilder query = getSelectQuery().whereCircle(circle)
                 .where("o.eventid = :eventid", eventId)
-                .whereInterval(interval)
-                .addPagination(pagination)
-                .build(), eventOccurrenceRowMapper);
+                .whereInterval(interval);
+
+        if (categories != null) {
+            for (int i = 0; i < categories.size(); i++) {
+                // TODO
+                query.where(null, categories.get(i));
+            }
+        }
+        if (venues != null) {
+            for (int i = 0; i < venues.size(); i++) {
+                query.where("v.id = :vId" + i, venues.get(i).getId());
+            }
+        }
+
+        return jdbcTemplate.query(query.addPagination(pagination).build(), eventOccurrenceRowMapper);
     }
 
     public int findNumberOfEventOccurrences() {
@@ -111,6 +122,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     public List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination) {
         return new java.util.ArrayList<User>();
         // TODO
+        // occurrenceid userid attendee
     }
 
     @Override

@@ -56,7 +56,6 @@ public class EventOccurrenceDaoTest {
     public void creatingIncrementsSize() {
         EventOccurrence e = new EventOccurrence(2000, eventOne, keck, new DateTime("2012-11-13T08:30:00Z"),
                 new DateTime("2012-11-13T09:40:50Z"));
-
         int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
         eventOccurrenceDao.createEventOccurrence(e);
         assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(initialCount + 1));
@@ -83,7 +82,6 @@ public class EventOccurrenceDaoTest {
         List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, new Interval(
                 new DateTime("2012-01-15T08:30:00"), new DateTime("2012-01-16T11:30:00")), null, null,
                 new PaginationData(0, 5));
-
         assertThat(occurrences.size(), is(1));
         EventOccurrence e = occurrences.get(0);
         assertThat(e.getId(), is(1));
