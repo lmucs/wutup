@@ -127,8 +127,8 @@ public class VenueResource extends AbstractWutupResource {
     @Path("/{id}/comments")
     public List<Comment> findVenueComments(
             @PathParam("id") String idString,
-            @QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)String pageString,
+            @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         int venueId = toIntegerRequired("id", idString);
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);

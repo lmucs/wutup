@@ -40,18 +40,18 @@ public class UserResourceIT {
         .expect()
             .statusCode(204)
         .when()
-            .patch("wutup/users/1");
+            .patch("wutup/users/7");
         
         expect()
             .statusCode(200)
             .contentType("application/json")
-            .body(containsString("\"id\":1"))
-            .body(containsString("\"nickname\":\"hybrid\""))
+            .body(containsString("\"id\":7"))
+            .body(containsString("\"nickname\":\"gaah\""))
             .body(containsString("\"email\":\"test@user.com\""))
-            .body(containsString("\"firstname\":\"Honda\""))
-            .body(containsString("\"lastname\":\"Prius\""))
+            .body(containsString("\"firstname\":\"Olga\""))
+            .body(containsString("\"lastname\":\"Shoopa\""))
         .when()
-            .get("/wutup/users/1");
+            .get("/wutup/users/7");
     }
 
     @Test
@@ -68,7 +68,7 @@ public class UserResourceIT {
     public void updateUserResourceReturns204OnSuccess() {
         given()
             .contentType("application/json")
-            .body("{\"id\":2,\"firstname\":\"Ted\",\"lastname\":\"Stark\""
+            .body("{\"id\":2,\"firstname\":\"Ned\",\"lastname\":\"Stark\""
                     + ",\"nickname\":\"headless\",\"email\":\"naked@winterfell.com\"}")
         .expect()
             .statusCode(204)
