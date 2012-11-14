@@ -159,7 +159,7 @@ public class VenueDaoTest {
     
     @Test
     public void testGetMaxKeyValueForVenueComments() {
-        int maxValue = venueDao.findMaxKeyValueOfVenueComments();
+        int maxValue = venueDao.findMaxKeyValueForComments();
         assertThat(maxValue, is(2));
     }
     
@@ -201,7 +201,7 @@ public class VenueDaoTest {
     @Test
     public void createdVenueCommentCanBeFound() {
         Comment newComment = new Comment(null, "Ole!", sampleDateTime, sampleUser);
-        int lastGeneratedIdValue = venueDao.findMaxKeyValueOfVenueComments();
+        int lastGeneratedIdValue = venueDao.findMaxKeyValueForComments();
         venueDao.addComment(10, newComment);
         List<Comment> comments = venueDao.findComments(10, new PaginationData(0, 10));
         assertThat(comments.get(1).getId(), is(lastGeneratedIdValue + 1));

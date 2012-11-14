@@ -138,7 +138,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
     
     @Override
-    public int findMaxKeyValueOfVenueComments() {
+    public int findMaxKeyValueForComments() {
         return CommentDaoUtils.findMaxKeyValueForComments(jdbcTemplate, "venue");
     }
 
@@ -170,5 +170,4 @@ public class VenueDaoJdbcImpl implements VenueDao {
                     rs.getDouble("longitude"), null);
         }
     };
-
 }

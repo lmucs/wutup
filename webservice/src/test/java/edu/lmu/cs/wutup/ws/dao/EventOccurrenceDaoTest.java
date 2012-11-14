@@ -2,6 +2,7 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -31,6 +33,8 @@ public class EventOccurrenceDaoTest {
     private EventOccurrenceDaoJdbcImpl eventOccurrenceDao = new EventOccurrenceDaoJdbcImpl();
 
     private User dondi = new User(1, "dondi@example.com");
+    private User sampleUser = new User(3503, "John", "Lennon", "jlennon@gmail.com", "John" );
+    private DateTime sampleDateTime = new DateTime(2012, 10, 31, 23, 56, 0);
     private Event eventOne = new Event(1, "Party", "A hoedown!", dondi);
     private Event eventTwo = new Event(2, "Party", "Another hoedown!", dondi);
 
@@ -115,6 +119,64 @@ public class EventOccurrenceDaoTest {
         assertThat(eventOccurrences.size(), is(3));
         eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(3, 3));
         assertThat(eventOccurrences.size(), is(1));
+    }
+    
+    @Test
+    public void findMaxKeyValueForOccurrenceCommentsWorks() {
+        int maxValue = eventOccurrenceDao.findMaxKeyValueForComments();
+        assertThat(maxValue, is(2));
+    }
+    
+    @Test
+    public void findCommentsSortsByPostDate() {
+        List<Comment> comments = eventOccurrenceDao.findComments(1, new PaginationData(0, 10));
+        long timestamp = comments.get(0).getPostDate().getMillis();
+        for (int i = 1; i < comments.size(); i++) {
+            long nextTimestamp = comments.get(i).getPostDate().getMillis();
+            assertTrue(nextTimestamp >= timestamp);
+            timestamp = nextTimestamp;
+        }
+    }
+    
+    @Test
+    public void foundCommentsCanBeRead() {
+        DateTime knownCommentTime = new DateTime(2012, 4, 18, 0, 0, 0);
+        List<Comment> comments = eventOccurrenceDao.findComments(1, new PaginationData(0, 10));
+        assertThat(comments.size(), is(2));
+        assertThat(comments.get(0).getAuthor(), is(sampleUser));
+        assertThat(comments.get(0).getBody(), is("Aww yeah."));
+        assertThat(comments.get(0).getPostDate().getMillis(), is(knownCommentTime.getMillis()));
+        assertThat(comments.get(0).getId(), is(1));
+        assertThat(comments.get(1).getAuthor(), is(sampleUser));
+        assertThat(comments.get(1).getBody(), is("Aww no."));
+        assertThat(comments.get(1).getPostDate().getMillis(), is(knownCommentTime.getMillis()));
+        assertThat(comments.get(1).getId(), is(2));
+    }
+    
+    @Test
+    public void addCommentIncrementsSize() {
+        int initialCount = eventOccurrenceDao.findComments(1, new PaginationData(0, 10)).size();
+        eventOccurrenceDao.addComment(1, new Comment(null, "AMERICA!", sampleDateTime, sampleUser));
+        int afterCount = eventOccurrenceDao.findComments(1, new PaginationData(0, 10)).size();
+        assertThat(afterCount, is(initialCount + 1));
+    }
+    
+    @Test
+    public void addedCommentCanBeFound() {
+        Comment c = new Comment(null, "tsk tsk", sampleDateTime, sampleUser);
+        int maxKeyValue = eventOccurrenceDao.findMaxKeyValueForComments();
+        eventOccurrenceDao.addComment(2, c);
+        List<Comment> comments = eventOccurrenceDao.findComments(2, new PaginationData(0, 10));
+        assertThat(comments.size(), is(1));
+        assertThat(comments.get(0).getId(), is(maxKeyValue + 1));
+    }
+    
+    @Test
+    public void deleteCommentDecrementsSize() {
+        int initialCount = eventOccurrenceDao.findComments(1, new PaginationData(0, 10)).size();
+        eventOccurrenceDao.deleteComment(1, 1);
+        int afterCount = eventOccurrenceDao.findComments(1, new PaginationData(0, 10)).size();
+        assertThat(afterCount, is(initialCount - 1));
     }
 
     @After

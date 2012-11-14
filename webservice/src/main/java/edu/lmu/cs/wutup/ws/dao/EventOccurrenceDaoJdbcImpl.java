@@ -41,8 +41,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static final String DELETE_SQL = "delete from occurrence where id=?";
     private static final String COUNT_SQL = "select count(*) from occurrence";
 
-    private static final String SELECT_COMMENT = "select ec.*, u.* from eventoccurence_comment ec join user u on (ec.authorId = u.id)";
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.eventId = ? " + PAGINATION;
+    private static final String SELECT_COMMENT = "select oc.*, u.* from occurrence_comment oc join user u on (oc.authorId = u.id)";
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where oc.subjectId = ? order by oc.timestamp " + PAGINATION;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -127,23 +127,28 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     /* Begins the Comment Methods */
     @Override
     public Integer addComment(Integer eventId, Comment comment) {
-        return CommentDaoUtils.addComment(jdbcTemplate, "event", eventId, comment);
+        return CommentDaoUtils.addComment(jdbcTemplate, "occurrence", eventId, comment);
     }
 
     @Override
     public void updateComment(Integer commentId, Comment c) {
-        CommentDaoUtils.updateComment(jdbcTemplate, "event", commentId, c);
+        CommentDaoUtils.updateComment(jdbcTemplate, "occurrence", commentId, c);
     }
 
     @Override
     public void deleteComment(int eventId, int commentId) {
-        CommentDaoUtils.deleteComment(jdbcTemplate, "event", eventId, commentId);
+        CommentDaoUtils.deleteComment(jdbcTemplate, "occurrence", eventId, commentId);
     }
 
     @Override
     public List<Comment> findComments(int eventId, PaginationData pagination) {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
                 pagination.pageNumber, pagination.pageSize);
+    }
+    
+    @Override
+    public int findMaxKeyValueForComments() {
+        return CommentDaoUtils.findMaxKeyValueForComments(jdbcTemplate, "occurrence");
     }
 
     private RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
