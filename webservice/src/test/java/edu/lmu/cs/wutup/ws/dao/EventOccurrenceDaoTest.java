@@ -162,6 +162,14 @@ public class EventOccurrenceDaoTest {
     }
     
     @Test
+    public void createdVenueCommentAutoGeneratesId() {
+        int maxKeyValue = eventOccurrenceDao.findMaxKeyValueForComments();
+        eventOccurrenceDao.addComment(10, new Comment(null, "Boo", sampleDateTime, sampleUser));
+        int nextKeyValue = eventOccurrenceDao.findMaxKeyValueForComments();
+        assertThat(nextKeyValue, is(maxKeyValue + 1));
+    }
+    
+    @Test
     public void addedCommentCanBeFound() {
         Comment c = new Comment(null, "tsk tsk", sampleDateTime, sampleUser);
         int maxKeyValue = eventOccurrenceDao.findMaxKeyValueForComments();

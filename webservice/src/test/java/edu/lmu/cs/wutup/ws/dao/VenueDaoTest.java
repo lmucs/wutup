@@ -199,6 +199,14 @@ public class VenueDaoTest {
     }
     
     @Test
+    public void createdVenueCommentAutoGeneratesId() {
+        int maxKeyValue = venueDao.findMaxKeyValueForComments();
+        venueDao.addComment(10, new Comment(null, "Boo", sampleDateTime, sampleUser));
+        int nextKeyValue = venueDao.findMaxKeyValueForComments();
+        assertThat(nextKeyValue, is(maxKeyValue + 1));
+    }
+    
+    @Test
     public void createdVenueCommentCanBeFound() {
         Comment newComment = new Comment(null, "Ole!", sampleDateTime, sampleUser);
         int lastGeneratedIdValue = venueDao.findMaxKeyValueForComments();
