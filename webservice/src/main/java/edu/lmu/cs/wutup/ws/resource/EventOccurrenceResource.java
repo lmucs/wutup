@@ -247,8 +247,8 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         }
 
         try {
-            DateTime startTime = eventOccurrenceService.parseStringToDateTime(start);
-            DateTime endTime = eventOccurrenceService.parseStringToDateTime(end);
+            DateTime startTime = new DateTime(Long.parseLong(start));
+            DateTime endTime = new DateTime(Long.parseLong(end));
             return new Interval(startTime, endTime);
         } catch (MalformedDateTimeStringException e) {
             throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
