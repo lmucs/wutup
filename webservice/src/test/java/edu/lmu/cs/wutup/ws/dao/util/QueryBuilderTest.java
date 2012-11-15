@@ -19,7 +19,7 @@ public class QueryBuilderTest {
     }
 
     @Test
-    public void queryWithSpecificSelectIsCorrect() {
+    public void queryWithOneSelectIsCorrect() {
         String query = new QueryBuilder().select("owner").from("event").build();
         assertThat(query, equalTo("select owner from event"));
     }

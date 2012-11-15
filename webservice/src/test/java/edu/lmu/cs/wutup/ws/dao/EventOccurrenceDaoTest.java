@@ -62,19 +62,19 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test
-    public void deletingDecrementsSize() {
-        int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
-        eventOccurrenceDao.deleteEventOccurrence(initialCount - 1);
-        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(initialCount - 1));
-    }
-
-    @Test
     public void createEventOccurrenceWithoutIdCanBeFound() {
         int newId = eventOccurrenceDao.createEventOccurrence(new EventOccurrence(eventTwo, keck, new DateTime(
                 "2012-11-13T08:30:00Z"), new DateTime("2012-11-13T11:30:00Z")));
         EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(newId);
         assertThat(e.getId(), is(newId));
         assertThat(e.getEvent(), is(eventTwo));
+    }
+
+    @Test
+    public void deletingDecrementsSize() {
+        int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
+        eventOccurrenceDao.deleteEventOccurrence(initialCount - 1);
+        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(initialCount - 1));
     }
 
     @Test
