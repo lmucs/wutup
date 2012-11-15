@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class EventOccurrenceResourceIT {
@@ -40,7 +39,6 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    @Ignore
     public void endpointGetWithTimeIntervalQueryFindsExistingEventOccurrences() {
         given().
             header("Accept", "application/json").
@@ -49,7 +47,7 @@ public class EventOccurrenceResourceIT {
             contentType("application/json").
             body(containsString("[{\"id\":1,\"event\":{\"id\":2")).
         when().
-            get("/wutup/occurrences?start=1326369600&end=1327060800");
+            get("/wutup/occurrences?start=1325764800000&end=1338465600000");
     }
 
     @Test
