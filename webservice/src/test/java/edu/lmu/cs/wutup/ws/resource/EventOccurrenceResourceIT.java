@@ -5,34 +5,63 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 
 import org.joda.time.DateTime;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class EventOccurrenceResourceIT {
 
     @Test
     public void endpointGetFindsAllEventOccurrences() {
-        given().header("Accept", "application/json")
-                .expect()
-                .statusCode(200)
-                .contentType("application/json")
-                .body(containsString("\"id\":1"))
-                .body(containsString("\"event\":{\"id\":8"))
-                .body(containsString("\"venue\":{\"id\":4"))
-                .body(containsString("\"comments\":null"))
-                .when()
-                .get("/wutup/occurrences/");
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":1")).
+            body(containsString("\"event\":{\"id\":8")).
+            body(containsString("\"venue\":{\"id\":4")).
+            body(containsString("\"comments\":null")).
+        when().
+            get("/wutup/occurrences/");
+    }
+
+    @Test
+    public void endpointGetWithEventIdQueryFindsExistingEventOccurrences() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("[{\"id\":1,\"event\":{\"id\":2")).
+            body(containsString("{\"id\":6,\"event\":{\"id\":2")).
+        when().
+            get("/wutup/occurrences?eventId=2");
+    }
+
+    @Test
+    @Ignore
+    public void endpointGetWithTimeIntervalQueryFindsExistingEventOccurrences() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("[{\"id\":1,\"event\":{\"id\":2")).
+        when().
+            get("/wutup/occurrences?start=1326369600&end=1327060800");
     }
 
     @Test
     public void endpointGetHasJsonAsDefaultAcceptHeader() {
-        expect().statusCode(200)
-                .contentType("application/json")
-                .body(containsString("\"id\":3"))
-                .body(containsString("\"event\":{\"id\":5"))
-                .body(containsString("\"venue\":{\"id\":3"))
-                .body(containsString("\"comments\":null"))
-                .when()
-                .get("/wutup/occurrences/3");
+        expect().
+            statusCode(200).
+            contentType("application/json")
+            .body(containsString("\"id\":3"))
+            .body(containsString("\"event\":{\"id\":5"))
+            .body(containsString("\"venue\":{\"id\":3"))
+            .body(containsString("\"comments\":null"))
+        .when()
+            .get("/wutup/occurrences/3");
     }
 
     @Test

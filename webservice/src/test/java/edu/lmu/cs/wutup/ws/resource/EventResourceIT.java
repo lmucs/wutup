@@ -89,7 +89,7 @@ public class EventResourceIT {
         .when()
             .get("/wutup/events/8");
     }
-    
+
     // *********************** Comment Testing ***********************
 
     @Test
@@ -162,7 +162,7 @@ public class EventResourceIT {
         when().
             get("/wutup/events/1/comments");
     }
-    
+
     @Test
     public void deleteNonExistantCommentResponds404() {
         given().
