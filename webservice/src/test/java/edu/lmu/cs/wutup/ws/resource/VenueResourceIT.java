@@ -190,4 +190,28 @@ public class VenueResourceIT {
         when().
             get("wutup/venues/6/comments");
     }
+    
+    @Test
+    public void addedVenueCommentCanBeFound() {
+        DateTime publishDate = new DateTime(2012, 11, 14, 13, 56, 21);
+        given().
+            contentType("application/json").
+            body("{\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"}," +
+            		"\"body\":\"Hey everybody!\",\"postdate\":" + publishDate.getMillis() + "}").
+		expect().
+		    statusCode(204).
+	    when().
+	        post("wutup/venues/4/comments");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":3,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
+            		"\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"Hey everybody!\",\"postdate\":" + publishDate.getMillis() + "}")).
+        when().
+            get("/wutup/venues/4/comments");
+        
+    }
 }

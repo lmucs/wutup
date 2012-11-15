@@ -3,10 +3,12 @@ package edu.lmu.cs.wutup.ws.resource;
 import static com.jayway.restassured.RestAssured.expect;
 import static org.hamcrest.Matchers.containsString;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class GeocodeResourceIT {
     @Test
+    @Ignore
     public void geocodeAddressToLatLong() {
         expect().
             statusCode(200).
