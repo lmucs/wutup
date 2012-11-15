@@ -4,12 +4,11 @@ import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
 
-import org.junit.Ignore;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class EventOccurrenceResourceIT {
 
-    @Ignore
     @Test
     public void endpointGetFindsAllEventOccurrences() {
         given().header("Accept", "application/json")
@@ -19,8 +18,6 @@ public class EventOccurrenceResourceIT {
                 .body(containsString("\"id\":1"))
                 .body(containsString("\"event\":{\"id\":8"))
                 .body(containsString("\"venue\":{\"id\":4"))
-                .body(containsString("\"start\":1352065446376"))
-                .body(containsString("\"end\":1352151846433"))
                 .body(containsString("\"comments\":null"))
                 .when()
                 .get("/wutup/occurrences/");
@@ -44,15 +41,18 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    @Ignore
-    public void endpointPostJsonCorrectlyCreatesEventOccurrenceAndProduces201() {
+    public void endpointPostJsonWithoutIdCorrectlyCreatesEventOccurrenceAndProduces201() {
+        DateTime sampleStartDate = new DateTime(2012, 12, 21, 12, 30);
+        DateTime sampleEndDate = new DateTime(2012, 12, 21, 16, 35);
+
         given().contentType("application/json")
-                .body("{\"eventId\":4,\"venue\":{\"id\":1}}")
-                .expect()
-                .statusCode(201)
-                .header("Location", "http://localhost:8080/wutup/occurrences/6")
-                .contentType("application/json")
-                .when()
-                .post("/wutup/occurrences");
+            .body("{\"event\":{\"id\":1},\"venue\":{\"id\":1},\"start\":" + sampleStartDate.getMillis()
+                    + ",\"end\":" + sampleEndDate.getMillis() + "}")
+        .expect()
+            .statusCode(201)
+            .header("Location", "http://localhost:8080/wutup/occurrences/11")
+            .contentType("application/json")
+        .when()
+            .post("/wutup/occurrences");
     }
 }

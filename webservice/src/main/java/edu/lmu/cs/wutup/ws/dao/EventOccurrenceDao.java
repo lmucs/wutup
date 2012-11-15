@@ -2,12 +2,14 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import edu.lmu.cs.wutup.ws.model.Category;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 
 public interface EventOccurrenceDao extends CommentDao {
 
@@ -21,11 +23,8 @@ public interface EventOccurrenceDao extends CommentDao {
 
     EventOccurrence findEventOccurrenceById(int id);
 
-    List<EventOccurrence> findAllEventOccurrences(PaginationData pagination);
-
-    List<EventOccurrence> findEventOccurrencesByQuery(List<User> attendees, List<Category> categories, Double latitude,
-            Double longitude, Double radius, DateTime start, DateTime end, Integer eventId, String venues,
-            PaginationData pagination);
+    List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
+            Integer eventId, List<Venue> venues, PaginationData pagination);
 
     int findNumberOfEventOccurrences();
 

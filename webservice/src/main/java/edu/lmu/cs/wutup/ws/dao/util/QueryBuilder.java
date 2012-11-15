@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.dao.util;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.map.MultiValueMap;
+import org.joda.time.Interval;
 
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 /**
@@ -123,6 +126,29 @@ public class QueryBuilder {
         return this;
     }
 
+    public QueryBuilder whereCircle(Circle c) {
+        if (c != null) {
+            return this.where("get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, "
+                    + c.centerLongitude + ") <= :radius", c.radius);
+        } else {
+            return this;
+        }
+    }
+
+    public QueryBuilder whereInterval(Interval i) {
+        //WHERE StartDate Between getdate() and getdate()-3
+        assertNotBuilt();
+        if (i != null) {
+            clauses.add("start between ':start1' and ':end1'");
+            clauses.add("end between ':start2' and ':end2'");
+            parameters.put(":start1", new Timestamp(i.getStartMillis()));
+            parameters.put(":end1", new Timestamp(i.getEndMillis()));
+            parameters.put(":start2", new Timestamp(i.getStartMillis()));
+            parameters.put(":end2", new Timestamp(i.getEndMillis()));
+        }
+        return this;
+    }
+
     public QueryBuilder addPagination(PaginationData p) {
         assertNotBuilt();
         if (p != null) {
@@ -132,7 +158,7 @@ public class QueryBuilder {
     }
 
     /**
-     * Puts the base string, the clauses, and the parameters all together into a Hibernate query object.
+     * Puts the base string, the clauses, and the parameters all together into a query object.
      */
     @SuppressWarnings("unchecked")
     public String build() {

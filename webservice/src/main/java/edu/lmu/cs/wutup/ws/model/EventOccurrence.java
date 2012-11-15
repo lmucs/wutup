@@ -32,6 +32,10 @@ public class EventOccurrence implements Commentable {
         this(id, event, venue, new DateTime(), new DateTime().plusDays(1));
     }
 
+    public EventOccurrence(Event event, Venue venue, DateTime start, DateTime end) {
+        this(null, event, venue, start, end);
+    }
+
     public EventOccurrence(Integer id, Event event, Venue venue, DateTime start, DateTime end) {
         this.id = id;
         this.event = event;
@@ -45,7 +49,7 @@ public class EventOccurrence implements Commentable {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

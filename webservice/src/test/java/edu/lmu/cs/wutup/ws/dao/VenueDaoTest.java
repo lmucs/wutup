@@ -2,9 +2,11 @@ package edu.lmu.cs.wutup.ws.dao;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +17,9 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.model.Circle;
+import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
+import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 /**
@@ -26,6 +30,8 @@ public class VenueDaoTest {
 
     private EmbeddedDatabase database;
     private VenueDaoJdbcImpl venueDao = new VenueDaoJdbcImpl();
+    private User sampleUser = new User(3503, "John", "Lennon", "jlennon@gmail.com", "John" );
+    private DateTime sampleDateTime = new DateTime(2012, 10, 31, 23, 56, 0);
 
     @Before
     public void setUp() {
@@ -132,7 +138,7 @@ public class VenueDaoTest {
     @Test
     public void findingVenuesByEventId() {
         List<Venue> venues = venueDao.findVenues(null, 8, null, new PaginationData(0, 10));
-        assertThat(venues.size(), is(1));
+        assertThat(venues.size(), is(2));
         assertThat(venues.get(0).getId(), is(4));
     }
 
@@ -149,6 +155,86 @@ public class VenueDaoTest {
         List<Venue> venues = venueDao.findVenues(null, null, new Circle(37.149885, 60.000001, 100), new PaginationData(
                 0, 10));
         assertThat(venues.size(), is(0));
+    }
+    
+    @Test
+    public void testGetMaxKeyValueForVenueComments() {
+        int maxValue = venueDao.findMaxKeyValueForComments();
+        assertThat(maxValue, is(3));
+    }
+    
+    @Test
+    public void testGetVenueCommentsIsSortedByPostDate() {
+        List<Comment> comments = venueDao.findComments(10, new PaginationData(0, 10));
+        long timestamp = comments.get(0).getPostDate().getMillis();
+        for (int i = 1; i < comments.size(); i++) {
+            long nextTimestamp = comments.get(i).getPostDate().getMillis();
+            assertTrue(nextTimestamp >= timestamp);
+            timestamp = nextTimestamp;
+        }
+    }
+    
+    @Test
+    public void testGetVenueComments() {
+        List<Comment> comments = venueDao.findComments(10, new PaginationData(0, 10));
+        DateTime knownCommentTime = new DateTime(2012, 3, 30, 12, 34, 56);
+        assertThat(comments.size(), is(2));
+        assertThat(comments.get(0).getId(), is(1));
+        assertThat(comments.get(0).getBody(), is("This venue sux."));
+        assertThat(comments.get(0).getAuthor().getId(), is(1));
+        assertThat(comments.get(0).getAuthor().getEmail(), is("40mpg@gmail.com"));
+        assertThat(comments.get(0).getAuthor().getFirstName(), is("Honda"));
+        assertThat(comments.get(0).getAuthor().getLastName(), is("Prius"));
+        assertThat(comments.get(0).getAuthor().getNickname(), is("hybrid"));
+        assertThat(comments.get(0).getPostDate().getMillis(), is(knownCommentTime.getMillis()));
+        assertThat(comments.get(1).getId(), is(2));
+    }
+    
+    @Test
+    public void createVenueCommentIncrementsSize() {
+        int initialSize = venueDao.findComments(10, new PaginationData(0, 10)).size();
+        venueDao.addComment(10, new Comment(null, "Boo", sampleDateTime, sampleUser));
+        int afterSize = venueDao.findComments(10, new PaginationData(0, 10)).size();
+        assertThat(afterSize, is(initialSize + 1));
+    }
+    
+    @Test
+    public void createdVenueCommentAutoGeneratesId() {
+        int maxKeyValue = venueDao.findMaxKeyValueForComments();
+        venueDao.addComment(10, new Comment(null, "Boo", sampleDateTime, sampleUser));
+        int nextKeyValue = venueDao.findMaxKeyValueForComments();
+        assertThat(nextKeyValue, is(maxKeyValue + 1));
+    }
+    
+    @Test
+    public void createdVenueCommentCanBeFound() {
+        Comment newComment = new Comment(null, "Ole!", sampleDateTime, sampleUser);
+        int lastGeneratedIdValue = venueDao.findMaxKeyValueForComments();
+        venueDao.addComment(10, newComment);
+        List<Comment> comments = venueDao.findComments(10, new PaginationData(0, 10));
+        assertThat(comments.get(1).getId(), is(lastGeneratedIdValue + 1));
+        assertThat(comments.get(1).getAuthor(), is(sampleUser));
+        assertThat(comments.get(1).getBody(), is("Ole!"));
+        assertThat(comments.get(1).getPostDate().getMillis(), is(sampleDateTime.getMillis()));
+    }
+    
+    @Test
+    public void deleteVenueCommentDecrementsSize() {
+        int initialSize = venueDao.findComments(10, new PaginationData(0, 10)).size();
+        venueDao.deleteComment(10, 2);
+        int afterSize = venueDao.findComments(10, new PaginationData(0, 10)).size();
+        assertThat(afterSize, is(initialSize - 1));
+    }
+    
+    @Test
+    public void deletedVenueCommentCanNoLongerBeFound() {
+        List<Comment> beforeDeletion = venueDao.findComments(6, new PaginationData(0, 10));
+        assertThat(beforeDeletion.get(0).getId(), is(3));
+        assertThat(beforeDeletion.get(0).getBody(), is("pizza pizza"));
+        assertThat(beforeDeletion.size(), is(1));
+        venueDao.deleteComment(6, 3);
+        List<Comment> comments = venueDao.findComments(6, new PaginationData(0, 10));
+        assertThat(comments.size(), is(0));
     }
 
     @After

@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -32,10 +33,10 @@ import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
-import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
@@ -54,6 +55,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     private static final String EVENT_OCCURRENCE_NOT_FOUND = "Event occurrence %d does not exist";
     private static final String EVENT_OCCURRENCE_ALREADY_EXISTS = "Event occurrence %d already exists";
     private static final String EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD = "Event occurrence query parameters improperly formed";
+    private static final String CONDITIONAL_PARAMETER_MISSING = "The %s parameter must be present if the %s parameter is supplied";
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for event %d";
     private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists for event %d";
     private static final String USER_NOT_FOUND = "User %d does not exist";
@@ -63,37 +65,20 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<EventOccurrence> getEventOccurrences(
-            @QueryParam("category") String categories,
-            @QueryParam("center") String center,
-            @QueryParam("radius") String radiusString,
-            @QueryParam("start") String start,
-            @QueryParam("end") String end,
-            @QueryParam("eventId") Integer eventId,
-            @QueryParam("venue") String venues,
+    public List<EventOccurrence> findEventOccurrences(@QueryParam("category") List<Category> categories,
+            @QueryParam("center") String center, @QueryParam("radius") String radiusString,
+            @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") Integer eventId,
+            @QueryParam("venue") List<Venue> venues,
             @QueryParam("pageNumber") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         PaginationData pagination = paginationDataFor(pageNumberString, pageSizeString);
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
+        Interval interval = makeIntervalFromStartAndEndTime(start, end);
 
-/*The following block makes at least one query required... I think a good idea once all is working
-        boolean categoriesQuery = categories != null;
-        boolean centerAndRadiusQuery = (latitude != null) && (longitude != null) && (radius != null);
-        boolean dateRangeQuery = (start != null) && (end != null);
-        boolean eventIdQuery = (eventId != null);
-        boolean venuesQuery = (venue != null);
+        validateQuery(categories, circle, interval, eventId, venues);
 
-        validateQuery(categoriesQuery, centerAndRadiusQuery, dateRangeQuery, eventIdQuery, venuesQuery);*/
-/*
-        try {
-            DateTime startTime = eventOccurrenceService.parseStringToDateTime(start);
-            DateTime endTime = eventOccurrenceService.parseStringToDateTime(end);
-        } catch (MalformedDateTimeStringException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-*/
-        return eventOccurrenceService.findAllEventOccurrences(pagination);
+        return eventOccurrenceService.findEventOccurrences(categories, circle, interval, eventId, venues, pagination);
     }
 
     @POST
@@ -250,9 +235,29 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         }
     }
 
-    private void validateQuery(boolean categoriesQuery, boolean centerAndRadiusQuery, boolean dateRangeQuery,
-            boolean eventIdQuery, boolean venuesQuery) {
-        if (!(categoriesQuery || centerAndRadiusQuery || dateRangeQuery || eventIdQuery || venuesQuery)) {
+    private Interval makeIntervalFromStartAndEndTime(String start, String end) {
+        if (start == null && end == null) {
+            return null;
+        }
+        if (end == null) {
+            throw new ServiceException(BAD_REQUEST, CONDITIONAL_PARAMETER_MISSING, "end time", "start time");
+        }
+        if (start == null) {
+            throw new ServiceException(BAD_REQUEST, CONDITIONAL_PARAMETER_MISSING, "start time", "end time");
+        }
+
+        try {
+            DateTime startTime = eventOccurrenceService.parseStringToDateTime(start);
+            DateTime endTime = eventOccurrenceService.parseStringToDateTime(end);
+            return new Interval(startTime, endTime);
+        } catch (MalformedDateTimeStringException e) {
+            throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
+        }
+    }
+
+    private void validateQuery(List<Category> categories, Circle circle, Interval interval, Integer eventId,
+            List<Venue> venues) {
+        if (!(categories != null || circle != null || interval != null || eventId != null || venues != null)) {
             throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
         }
     }

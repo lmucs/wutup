@@ -2,7 +2,9 @@ package edu.lmu.cs.wutup.ws.resource;
 
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class VenueResourceIT {
@@ -155,4 +157,124 @@ public class VenueResourceIT {
         when().
             get("/wutup/venues/?center=34.1019444,-118.3261111&radius=0.01");
     }
+    
+    // **************************** COMMENT TESTING ****************************
+    
+    @Test
+    public void testfindVenueCommentCanBeRead() {
+        DateTime postDateOne = new DateTime(2012, 3, 30, 12, 34, 56);
+        DateTime postDateTwo = new DateTime(2012, 12, 25, 7, 0, 0);
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"id\":1")).
+            body(containsString("\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"}")).
+            body(containsString("\"body\":\"This venue sux.\"")).
+            body(containsString("\"postdate\":" + postDateOne.getMillis())).
+            body(containsString("\"id\":2")).
+            body(containsString("\"author\":{\"id\":2,\"email\":\"naked@winterfell.com\",\"nickname\":\"headless\",\"firstname\":\"Ned\",\"lastname\":\"Stark\"}")).
+            body(containsString("\"body\":\"My life is a sham\"")).
+            body(containsString("\"postdate\":" + postDateTwo.getMillis())).
+        when().
+            get("wutup/venues/10/comments");
+    }
+    
+    @Test
+    public void testFindVenueCommentsOnVenueWithNoComments() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(equalTo("[]")).
+        when().
+            get("wutup/venues/2/comments");
+    }
+    
+    @Test
+    public void addedVenueCommentCanBeFound() {
+        DateTime publishDate = new DateTime(2012, 11, 14, 13, 56, 21);
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(equalTo("[]")).
+        when().
+            get("/wutup/venues/4/comments");
+        
+        given().
+            contentType("application/json").
+            body("{\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"}," +
+            		"\"body\":\"Hey everybody!\",\"postdate\":" + publishDate.getMillis() + "}").
+		expect().
+		    statusCode(204).
+	    when().
+	        post("wutup/venues/4/comments");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":4,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
+            		"\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"Hey everybody!\",\"postdate\":" + publishDate.getMillis() + "}")).
+        when().
+            get("/wutup/venues/4/comments");
+        
+    }
+    
+    @Test
+    public void deleteVenueCommentCanNoLongerBeFound() {
+        DateTime knownPublishDate = new DateTime(2012, 12, 25, 7, 0, 0);
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":3,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
+                    "\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"pizza pizza\",\"postdate\":" + knownPublishDate.getMillis() + "}")).
+        when().
+            get("/wutup/venues/6/comments");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(204).
+        when().
+            delete("/wutup/venues/6/comments/3");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(equalTo("[]")).
+        when().
+            get("/wutup/venues/6/comments");
+    }
+    
+    @Test
+    public void deleteNonExistantVenueCommentResponds404() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(404).
+        when().
+            delete("/wutup/venues/6/comments/5");
+    }
+    
+    @Test
+    public void addCommentToNonExistantVenueResponds404() {
+        DateTime publishDate = new DateTime(2012, 11, 14, 13, 56, 21);
+        given().
+            contentType("application/json").
+            body("{\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"}," +
+                    "\"body\":\"Hey everybody!\",\"postdate\":" + publishDate.getMillis() + "}").
+        expect().
+            statusCode(404).
+        when().
+            post("wutup/venues/666/comments");
+    }
+    
 }
