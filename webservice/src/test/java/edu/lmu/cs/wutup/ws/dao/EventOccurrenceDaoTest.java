@@ -158,7 +158,7 @@ public class EventOccurrenceDaoTest {
     @Test
     public void findMaxKeyValueForOccurrenceCommentsWorks() {
         int maxValue = eventOccurrenceDao.findMaxKeyValueForComments();
-        assertThat(maxValue, is(2));
+        assertThat(maxValue, is(3));
     }
 
     @Test
