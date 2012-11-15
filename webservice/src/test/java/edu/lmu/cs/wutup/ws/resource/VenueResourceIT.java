@@ -254,4 +254,27 @@ public class VenueResourceIT {
             get("/wutup/venues/6/comments");
     }
     
+    @Test
+    public void deleteNonExistantVenueCommentResponds404() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(404).
+        when().
+            delete("/wutup/venues/6/comments/5");
+    }
+    
+    @Test
+    public void addCommentToNonExistantVenueResponds404() {
+        DateTime publishDate = new DateTime(2012, 11, 14, 13, 56, 21);
+        given().
+            contentType("application/json").
+            body("{\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"}," +
+                    "\"body\":\"Hey everybody!\",\"postdate\":" + publishDate.getMillis() + "}").
+        expect().
+            statusCode(404).
+        when().
+            post("wutup/venues/666/comments");
+    }
+    
 }
