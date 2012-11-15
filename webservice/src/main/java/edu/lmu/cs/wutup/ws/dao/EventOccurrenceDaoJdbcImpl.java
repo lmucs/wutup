@@ -177,8 +177,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
         public EventOccurrence mapRow(ResultSet rs, int rowNum) throws SQLException {
             int occurrenceId = rs.getInt("id");
-            DateTime start = new DateTime(rs.getDate("start"));
-            DateTime end = new DateTime(rs.getDate("end"));
+            DateTime start = new DateTime(rs.getTimestamp("start"));
+            DateTime end = new DateTime(rs.getTimestamp("end"));
             int venueId = rs.getInt("venueId");
             String venueName = rs.getString("venueName");
             String address = rs.getString("address");
