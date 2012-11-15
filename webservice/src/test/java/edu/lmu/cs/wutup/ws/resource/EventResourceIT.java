@@ -89,6 +89,8 @@ public class EventResourceIT {
         .when()
             .get("/wutup/events/8");
     }
+    
+    // *********************** Comment Testing ***********************
 
     @Test
     public void endpointGetEventCommentsFindsExistingComments() {
@@ -159,6 +161,16 @@ public class EventResourceIT {
             body(equalTo("[]")).
         when().
             get("/wutup/events/1/comments");
+    }
+    
+    @Test
+    public void deleteNonExistantCommentResponds404() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(404).
+        when().
+            delete("/wutup/events/1/comments/56");
     }
 
     @Test
