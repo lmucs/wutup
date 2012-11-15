@@ -65,3 +65,4 @@ insert into occurrence_comment(id, subjectId, authorId, text, timestamp) values 
 
 insert into venue_comment (id, subjectId, authorId, text, timestamp) values (1, 10, 1, 'This venue sux.', '2012-03-30T12:34:56');
 insert into venue_comment (id, subjectId, authorId, text, timestamp) values (2, 10, 2, 'My life is a sham', '2012-12-25T07:00:00');
+insert into venue_comment (id, subjectId, authorId, text, timestamp) values (3, 6, 1, 'pizza pizza', '2012-12-25T07:00:00');

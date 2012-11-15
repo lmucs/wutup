@@ -160,7 +160,7 @@ public class VenueDaoTest {
     @Test
     public void testGetMaxKeyValueForVenueComments() {
         int maxValue = venueDao.findMaxKeyValueForComments();
-        assertThat(maxValue, is(2));
+        assertThat(maxValue, is(3));
     }
     
     @Test
@@ -224,6 +224,17 @@ public class VenueDaoTest {
         venueDao.deleteComment(10, 2);
         int afterSize = venueDao.findComments(10, new PaginationData(0, 10)).size();
         assertThat(afterSize, is(initialSize - 1));
+    }
+    
+    @Test
+    public void deletedVenueCommentCanNoLongerBeFound() {
+        List<Comment> beforeDeletion = venueDao.findComments(6, new PaginationData(0, 10));
+        assertThat(beforeDeletion.get(0).getId(), is(3));
+        assertThat(beforeDeletion.get(0).getBody(), is("pizza pizza"));
+        assertThat(beforeDeletion.size(), is(1));
+        venueDao.deleteComment(6, 3);
+        List<Comment> comments = venueDao.findComments(6, new PaginationData(0, 10));
+        assertThat(comments.size(), is(0));
     }
 
     @After

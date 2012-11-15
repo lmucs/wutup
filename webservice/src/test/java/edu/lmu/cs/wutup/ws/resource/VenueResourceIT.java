@@ -188,12 +188,21 @@ public class VenueResourceIT {
             statusCode(200).
             body(equalTo("[]")).
         when().
-            get("wutup/venues/6/comments");
+            get("wutup/venues/2/comments");
     }
     
     @Test
     public void addedVenueCommentCanBeFound() {
         DateTime publishDate = new DateTime(2012, 11, 14, 13, 56, 21);
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(equalTo("[]")).
+        when().
+            get("/wutup/venues/4/comments");
+        
         given().
             contentType("application/json").
             body("{\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"}," +
@@ -208,10 +217,41 @@ public class VenueResourceIT {
         expect().
             statusCode(200).
             contentType("application/json").
-            body(containsString("\"id\":3,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
+            body(containsString("\"id\":4,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
             		"\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"Hey everybody!\",\"postdate\":" + publishDate.getMillis() + "}")).
         when().
             get("/wutup/venues/4/comments");
         
     }
+    
+    @Test
+    public void deleteVenueCommentCanNoLongerBeFound() {
+        DateTime knownPublishDate = new DateTime(2012, 12, 25, 7, 0, 0);
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":3,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
+                    "\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"pizza pizza\",\"postdate\":" + knownPublishDate.getMillis() + "}")).
+        when().
+            get("/wutup/venues/6/comments");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(204).
+        when().
+            delete("/wutup/venues/6/comments/3");
+        
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(equalTo("[]")).
+        when().
+            get("/wutup/venues/6/comments");
+    }
+    
 }

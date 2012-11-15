@@ -173,7 +173,7 @@ public class VenueResource extends AbstractWutupResource {
             @PathParam("id") String venueIdString,
             @PathParam("commentid") String commentIdString) {
 
-        int venueId = toIntegerRequired("id", commentIdString);
+        int venueId = toIntegerRequired("id", venueIdString);
         int commentId = toIntegerRequired("commentid", commentIdString);
         try {
             venueService.deleteComment(venueId, commentId);
