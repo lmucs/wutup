@@ -2,30 +2,45 @@ package edu.lmu.cs.wutup.android.maps;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 
 public class EventPlotter extends ItemizedOverlay<OverlayItem> {
-	
-	private ArrayList<OverlayItem> events = new ArrayList<OverlayItem>();
+    
+        private Context context;
+	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 
-	public EventPlotter(Drawable arg0) {
-		super(arg0);
-		// TODO Auto-generated constructor stub
+	public EventPlotter(Drawable defaultMarker, Context context) {
+		super(boundCenterBottom(defaultMarker));
+		this.context = context;
+	}
+	
+	public void addOverlay(OverlayItem overlay) {
+	    mOverlays.add(overlay);
+	    populate();
 	}
 
 	@Override
-	protected OverlayItem createItem(int arg0) {
-		// TODO Auto-generated method stub
-		return null;
+	protected OverlayItem createItem(int i) {
+	  return mOverlays.get(i);
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+	  return mOverlays.size();
 	}
 
+	@Override
+	protected boolean onTap(int index) {
+	  OverlayItem item = mOverlays.get(index);
+	  AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+	  dialog.setTitle(item.getTitle());
+	  dialog.setMessage(item.getSnippet());
+	  dialog.show();
+	  return true;
+	}
 }

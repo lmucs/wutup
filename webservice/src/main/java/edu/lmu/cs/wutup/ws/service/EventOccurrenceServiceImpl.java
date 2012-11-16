@@ -2,14 +2,12 @@ package edu.lmu.cs.wutup.ws.service;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.EventOccurrenceDao;
-import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
@@ -85,18 +83,5 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     @Override
     public void deleteComment(int eventId, int commentId) {
         eventOccurrenceDao.deleteComment(eventId, commentId);
-    }
-
-    @Override
-    public DateTime parseStringToDateTime(String time) throws MalformedDateTimeStringException {
-        if (time == null) {
-            return null;
-        }
-
-        try {
-            return new DateTime(time);
-        } catch (IllegalArgumentException e) {
-            throw new MalformedDateTimeStringException();
-        }
     }
 }
