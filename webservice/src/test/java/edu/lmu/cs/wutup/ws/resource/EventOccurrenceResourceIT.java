@@ -10,7 +10,7 @@ import org.junit.Test;
 public class EventOccurrenceResourceIT {
 
     @Test
-    public void endpointGetFindsAllEventOccurrences() {
+    public void getOccurrencesReturnsAllEventOccurrences() {
         given().
             header("Accept", "application/json").
         expect().
@@ -25,7 +25,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void endpointGetWithEventIdQueryFindsExistingEventOccurrences() {
+    public void getWithEventIdQueryFindsEventOccurrences() {
         given().
             header("Accept", "application/json").
         expect().
@@ -38,7 +38,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void endpointGetWithTimeIntervalQueryFindsExistingEventOccurrences() {
+    public void getWithTimeIntervalQueryFindsEventOccurrences() {
         given().
             header("Accept", "application/json").
         expect().
@@ -50,7 +50,23 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void endpointGetHasJsonAsDefaultAcceptHeader() {
+    public void getWithCircleQueryFindsEventOccurrences() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"event\":{\"id\":6")).
+            body(containsString("\"venue\":{\"id\":2")).
+            body(containsString("\"name\":\"Hollywood Bowl\"")).
+            body(containsString("\"address\":\"2301 North Highland Ave, Hollywood, CA\"")).
+            body(containsString("\"latitude\":34.1127863")).
+            body(containsString("\"longitude\":-118.3392439")).
+        when().
+            get("/wutup/occurrences/?center=34.1127863,-118.3392439&radius=0.01");
+    }
+
+    @Test
+    public void getHasJsonAsDefaultAcceptHeader() {
         expect().
             statusCode(200).
             contentType("application/json")
@@ -63,12 +79,43 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void endpointGetWithUnusedIdProduces404() {
+    public void getWithUnusedIdProduces404() {
         expect().statusCode(404).when().get("/wutup/Occurrences/100");
     }
 
     @Test
-    public void endpointPostJsonWithoutIdCorrectlyCreatesEventOccurrenceAndProduces201() {
+    public void patchToEventOccurrencesWithMismatchedIdsResponds409() {
+        given().
+            contentType("application/json").
+            body("{\"id\":27,\"start\":1325764800000}").
+        expect().
+            statusCode(409).
+        when().
+            patch("/wutup/occurrences/3");
+    }
+
+    @Test
+    public void patchToExistingEventOccurrenceCanBeRetrieved() {
+
+        given().
+            contentType("application/json").
+            body("{\"event\":{\"id\":1}}").
+        expect().
+            statusCode(204).
+        when().
+            patch("/wutup/occurrences/1");
+
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"event\":{\"id\":1")).
+        when().
+            get("/wutup/occurrences/1");
+    }
+
+    @Test
+    public void postJsonWithoutIdCorrectlyCreatesEventOccurrenceAndProduces201() {
         DateTime sampleStartDate = new DateTime(2012, 12, 21, 12, 30);
         DateTime sampleEndDate = new DateTime(2012, 12, 21, 16, 35);
 

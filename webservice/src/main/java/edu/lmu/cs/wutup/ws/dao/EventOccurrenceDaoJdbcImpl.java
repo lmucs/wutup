@@ -66,8 +66,11 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public void updateEventOccurrence(EventOccurrence e) {
-        int rowsUpdated = jdbcTemplate.update(UPDATE_OCCURRENCE_SQL, e.getVenue().getId(), e.getEvent().getId(),
-                new Timestamp(e.getStart().getMillis()), new Timestamp(e.getEnd().getMillis()), e.getId());
+        Integer venueId = e.getVenue() != null ? e.getVenue().getId() : null;
+        Integer eventId = e.getEvent() != null ? e.getEvent().getId() : null;
+        Timestamp start = e.getStart() != null ? new Timestamp(e.getStart().getMillis()) : null;
+        Timestamp end = e.getEnd() != null ? new Timestamp(e.getEnd().getMillis()) : null;
+        int rowsUpdated = jdbcTemplate.update(UPDATE_OCCURRENCE_SQL, venueId, eventId, start, end, e.getId());
         if (rowsUpdated == 0) {
             throw new NoSuchEventOccurrenceException();
         }
