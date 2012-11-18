@@ -21,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -50,8 +51,10 @@ public class VenueResource extends AbstractWutupResource {
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for venue %d";
     private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists for venue %d";
 
-    @Autowired 
+    @Autowired
     VenueService venueService;
+
+    Logger logger = Logger.getLogger(getClass());
 
     @GET
     @Path("/")
@@ -84,6 +87,7 @@ public class VenueResource extends AbstractWutupResource {
     @POST
     @Path("/")
     public Response createVenue(final Venue venue, @Context UriInfo uriInfo) {
+        logger.debug("Creating venue");
         venue.setId(null);
         try {
             venueService.createVenue(venue);

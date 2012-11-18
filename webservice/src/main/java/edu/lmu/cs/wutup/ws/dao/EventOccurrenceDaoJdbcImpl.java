@@ -36,10 +36,10 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 @Repository
 public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
-    private static final String CREATE_OCCURRENCE_SQL = "insert into event_occurrence (eventId,venueId,start,end) values (?,?,?,?)";
-    private static final String UPDATE_OCCURRENCE_SQL = "update event_occurrence set venueid=ifnull(?, venueid), "
+    private static final String CREATE_OCCURRENCE_SQL = "insert into occurrence (eventId,venueId,start,end) values (?,?,?,?)";
+    private static final String UPDATE_OCCURRENCE_SQL = "update occurrence set venueid=ifnull(?, venueid), "
             + "eventid=ifnull(?, eventid), start=ifnull(?, start), end=ifnull(?, end) where id=?";
-    private static final String DELETE_OCCURRENCE_SQL = "delete from event_occurrence where id=?";
+    private static final String DELETE_OCCURRENCE_SQL = "delete from occurrence where id=?";
 
     private static final String CREATE_ATTENDEE_SQL = "insert into attendee (occurrenceId,userId) values (?,?)";
     private static final String DELETE_ATTENDEE_SQL = "delete from attendee where occurrenceId=? and userId=?";
