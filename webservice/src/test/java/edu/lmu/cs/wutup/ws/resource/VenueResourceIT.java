@@ -106,7 +106,7 @@ public class VenueResourceIT {
         when().
             get("/wutup/venues/3");
     }
-    
+
     @Test
     public void patchToVenueWithMismatchedIdsResponds409Conflict() {
         given().
@@ -117,7 +117,7 @@ public class VenueResourceIT {
         when().
             patch("/wutup/venues/3");
     }
-    
+
     @Test
     public void testFindVenuesbyIncompleteCircleSearchResponds400() {
         given().
@@ -142,7 +142,7 @@ public class VenueResourceIT {
             get("/wutup/venues?center=-22.0001&radius=50.0");
             
     }
-    
+
     @Test
     public void testFindVenuesByCircleSearch() {
         given().
@@ -158,6 +158,31 @@ public class VenueResourceIT {
             get("/wutup/venues/?center=34.1019444,-118.3261111&radius=0.01");
     }
     
+    @Test
+    public void testPostToVenuesWithId() {
+        given().
+            contentType("application/json").
+            body("{\"id\":26,\"name\":\"Test Venue\",\"address\":\"6555 Test St, Los Angeles, CA\",\"latitude\":34.1019444,\"longitude\":-188.3261111}").
+        expect().
+            statusCode(201).
+            header("Location", "http://localhost:8080/wutup/venues/11").
+        when().
+            post("/wutup/venues");
+    }
+    
+    @Test
+    public void testPostToVenuesWithoutId() {
+        given().
+            contentType("application/json").
+            body("{\"name\":\"Test Venue\",\"address\":\"6555 Test St, Los Angeles, CA\",\"latitude\":34.1019444,\"longitude\":-188.3261111}").
+        expect().
+            statusCode(201).
+            header("Location", "http://localhost:8080/wutup/venues/12").
+        when().
+            post("/wutup/venues");
+    }
+
+
     // **************************** COMMENT TESTING ****************************
     
     @Test
