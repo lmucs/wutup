@@ -20,7 +20,7 @@ $(document).ready(function() {
       $.get('http://localhost:8080/wutup/occurrences?page=0&pageSize=20', function(occurrences){
     	  var calendarEvents = parseOccurrencesForCalendar(occurrences);
 	      createCalendar(calendarEvents);
-    	  populateMap(map, occurrences);
+    	  populateMap(map, calendarEvents);
       });
 
     }, function() {
@@ -64,16 +64,20 @@ $(document).ready(function() {
 			animation: google.maps.Animation.DROP
 		});
 		google.maps.event.addListener(marker, 'click', function() {
-			if (infowindow) infowindow.close();
-			infowindow = new google.maps.InfoWindow({
-					content: occurrence.event.name + '</br>'
-			});
-			infowindow.open(map, marker);
+			displayInfoWindow(occurrence);
 		    displayEventInfo(occurrence);
 	    });
 		return marker;
   }
 
+  var displayInfoWindow = function(occurrence) {
+	  if (infowindow) infowindow.close();
+		infowindow = new google.maps.InfoWindow({
+				content: occurrence.event.name + '</br>',
+				position: new google.maps.LatLng(occurrence.venue.latitude,occurrence.venue.longitude)
+		});
+		infowindow.open(map);
+  };
 
   
   var displayEventInfo = function(occurrence) {
@@ -120,7 +124,8 @@ $(document).ready(function() {
 	                calendar.fullCalendar('changeView', 'agendaDay');
 	            }
 		    },
-		    eventClick: function( event, jsEvent, view ) { 
+		    eventClick: function( event, jsEvent, view ) { //'event' is used here instead of 'occurrence' due to fullcalendar.js documentation 
+		    	displayInfoWindow(event);
 		    	displayEventInfo(event);
 		    },
 			events: calendarEvents
