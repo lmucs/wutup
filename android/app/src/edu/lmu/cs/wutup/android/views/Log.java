@@ -10,11 +10,12 @@ public class Log extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     
-        super.onCreate(savedInstanceState);        
-        //TextView log = (TextView) this.findViewById(R.id.log);        
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.log_view);
         
-        //log.setText(R.string.content_log);
+        TextView log = (TextView) this.findViewById(R.id.log_text);       
+        log.append("blarkar");
+        log.append("narnar");
         
     }
 

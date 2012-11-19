@@ -15,6 +15,8 @@ public class Manager extends Activity {
         setContentView(R.layout.manager);
         
         startActivity(new Intent(this, Map.class));
+        
+        
     }
     
     @Override
