@@ -99,7 +99,7 @@ $(document).ready(function() {
 	};
 
 	var createCalendar = function(calendarEvents) {
-		var calendar = $('.calendar').fullCalendar({
+		var calendar = $('#calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
 				center: 'title',
