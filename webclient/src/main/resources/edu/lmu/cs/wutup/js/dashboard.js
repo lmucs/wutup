@@ -22,7 +22,7 @@ $(document).ready(function() {
 	      createCalendar(calendarEvents);
     	  populateMap(map, occurrences);
       });
-     
+
     }, function() {
       handleNoGeolocation(browserSupportFlag);
     });
@@ -55,7 +55,7 @@ $(document).ready(function() {
   		createMarker(events[i]);
   	}
   }
-  
+
   var createMarker = function(occurrence) {
 	  var marker = new google.maps.Marker( {
 			map: map,
@@ -69,11 +69,19 @@ $(document).ready(function() {
 					content: occurrence.event.name + '</br>'
 			});
 			infowindow.open(map, marker);
-		    $("#result").html(occurrence.event.name);
+		    displayEventInfo(occurrence);
 	    });
 		return marker;
   }
-  
+
+  var displayEventInfo = function(occurrence) {
+	  $("#result").html( function() {
+			 return "<h3>" + occurrence.event.name + "</h3>" +
+			  "<p>" + occurrence.event.description + "</p>";
+	  });
+	  
+  }
+
   var parseOccurrencesForCalendar = function(occurrences) {
 		var calendarEvents = [];
 		for (var i = 0; i < occurrences.length; i++) {
@@ -81,17 +89,20 @@ $(document).ready(function() {
 					    { title: occurrences[i].event.name,
 						  start: new Date(occurrences[i].start),
 						  end  : new Date(occurrences[i].end),
+						  event: occurrences[i].event,
+						  venue: occurrences[i].venue,
 						  allDay: false
 						  
 						});
 		}
 		return calendarEvents;
 	};
+
 	var createCalendar = function(calendarEvents) {
 		var calendar = $('.calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
-				center: '',
+				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
 			},
 			theme:true,
@@ -102,6 +113,9 @@ $(document).ready(function() {
 	                calendar.fullCalendar('gotoDate', date.getFullYear(), date.getMonth(), date.getDate());
 	                calendar.fullCalendar('changeView', 'agendaDay');
 	            }
+		    },
+		    eventClick: function( event, jsEvent, view ) { 
+		    	displayEventInfo(event);
 		    },
 			events: calendarEvents
 		});
