@@ -1,4 +1,4 @@
-package edu.lmu.cs.wutup.android.maps;
+package edu.lmu.cs.wutup.android.manager;
 
 import java.util.ArrayList;
 

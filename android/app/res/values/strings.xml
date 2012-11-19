@@ -1,8 +1,11 @@
 <resources>
 
-    <string name="app_name">WutUp</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="app_name">WutUp</string><string name="title_manager">Manager</string>
+    
+    <string name="title_map">Map View</string><string name="title_log">Log View</string><string name="content_log">nothing logged</string>
+    <string name="place_holder_text">This is place holder text!</string>
+    
+    
+    
 
 </resources>
