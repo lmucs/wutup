@@ -164,10 +164,10 @@ public class VenueDaoJdbcImpl implements VenueDao {
     @Override
     public Map<String, String> findProperties(int venueId) {
         QueryBuilder builder = new QueryBuilder().select("*").from("venue_property").where("venueId = :id", venueId);
-        List<String[]> keysToValues = jdbcTemplate.query(builder.build(), propertyRowMapper);
+        List<String[]> keyValuePairs = jdbcTemplate.query(builder.build(), propertyRowMapper);
         Map<String, String> properties = new HashMap<String, String>();
-        for (int i = 0; i < keysToValues.size(); i++) {
-            properties.put(keysToValues.get(i)[0], keysToValues.get(i)[1]);
+        for (int i = 0; i < keyValuePairs.size(); i++) {
+            properties.put(keyValuePairs.get(i)[0], keyValuePairs.get(i)[1]);
         }
         return properties;
     }
