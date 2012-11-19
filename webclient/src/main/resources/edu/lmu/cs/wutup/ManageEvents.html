@@ -15,9 +15,9 @@
 		<div class="row-fluid">
 			<div class="span6">
 				<h2>Calendar</h2>
-				<div id="calendar" style='font-size: 13px'></div>
+				<div id="calendar" style='font-size: 18px'></div>
 			</div>
-			<div class="span1"></div>
+			<div class="span1 hidden-desktop"></div>
 			<div class="span6">
 				<h2 style="text-align: right">Map</h2>
 				<div id="map_canvas"></div>
@@ -29,12 +29,15 @@
 				<fieldset>
 					<label for="event-name">Event Name</label> <input type="text"
 						name="event-name" id="event-name"
-						class="text ui-widget-content ui-corner-all" /> <label
-						for="event-description">Description</label> <input type="text"
+						class="text ui-widget-content ui-corner-all" /> 
+					<label for="event-description">Description</label> <input type="text"
 						name="event-description" id="event-description" value=""
-						class="text ui-widget-content ui-corner-all" /> <label
-						for="event-address">Address</label> <input type="text"
-						name="event-address" id="event-address"
+						class="text ui-widget-content ui-corner-all" />
+					<label for="venue-name">Venue Name</label> <input type="text"
+						name="venue-name" id="venue-name"
+						class="text ui-widget-content ui-corner-all" />
+				    <label for="venue-address">Address</label> <input type="text"
+						name="venue-address" id="venue-address"
 						class="text ui-widget-content ui-corner-all" />
 				</fieldset>
 			</form>
@@ -54,16 +57,6 @@
 	 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
 	 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqOg2q0dqSGTw1OkyqWTWsVSOLCsHjXpM&sensor=false&libraries=places"></script>
 	 <script src="lib/fullcalendar/fullcalendar.min.js"></script>
-	 <script src="js/manageEventsMap.js"></script>
-	 <script src="js/manageEventsCalendar.js"></script>
+	 <script src="js/manageEvents.js"></script>
 	</wicket:link>
-     <script>
-          (function () {
-
-  $.get('http://localhost:8080/wutup/events?name=Weekly+Hackathon&page=0&pageSize=5', function(data) {
-    $('#result').html(JSON.stringify(data));
-  });
-
-}());
-          </script> 
 </wicket:extend>
