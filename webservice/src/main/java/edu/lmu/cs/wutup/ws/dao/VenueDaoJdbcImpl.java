@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -31,16 +33,16 @@ public class VenueDaoJdbcImpl implements VenueDao {
     private static final String SELECT_COMMENT = "select vc.*, u.* from venue_comment vc join user u on (vc.authorId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
 
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where vc.subjectId = ? order by vc.timestamp " + PAGINATION;
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where vc.subjectId = ? order by vc.timestamp "
+            + PAGINATION;
     private static final String CREATE_SQL = "insert into venue (id, name, address, latitude, longitude) values (?,?,?,?,?)";
     private static final String CREATE_WITH_AUTO_GENERATE_ID = "insert into venue (name, address, latitude, longitude) values (?,?,?,?)";
     private static final String UPDATE_SQL = "update venue set name=ifnull(?, name), address=ifnull(?, address), "
             + "latitude=ifnull(?, latitude), longitude=ifnull(?, longitude) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT_VENUE + " where v.id=?";
-    private static final String FIND_ALL_SQL = SELECT_VENUE + " " + PAGINATION;
-    private static final String FIND_BY_ADDRESS_SQL = SELECT_VENUE + " where v.address=? " + PAGINATION;
     private static final String DELETE_SQL = "delete from venue where id=?";
     private static final String COUNT_SQL = "select count(*) from venue";
+    private static final String ADD_PROPERTY = "insert into venue_property(venueId, key, value) values(?,?,?)";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -136,7 +138,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, venueId,
                 pagination.pageNumber, pagination.pageSize);
     }
-    
+
     @Override
     public int findMaxKeyValueForComments() {
         return CommentDaoUtils.findMaxKeyValueForComments(jdbcTemplate, "venue");
@@ -159,6 +161,22 @@ public class VenueDaoJdbcImpl implements VenueDao {
         }, keyHolder);
     }
 
+    @Override
+    public Map<String, String> findProperties(int venueId) {
+        QueryBuilder builder = new QueryBuilder().select("*").from("venue_property").where("venueId = :id", venueId);
+        List<String[]> keysToValues = jdbcTemplate.query(builder.build(), propertyRowMapper);
+        Map<String, String> properties = new HashMap<String, String>();
+        for (int i = 0; i < keysToValues.size(); i++) {
+            properties.put(keysToValues.get(i)[0], keysToValues.get(i)[1]);
+        }
+        return properties;
+    }
+
+    @Override
+    public void addProperty(int venueId, String propertyName, String value) {
+        jdbcTemplate.update(ADD_PROPERTY, venueId, propertyName, value);
+    }
+
     private static String createCircleSearchClause(Circle c) {
         return "get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, " + c.centerLongitude
                 + ") <= :radius";
@@ -170,4 +188,11 @@ public class VenueDaoJdbcImpl implements VenueDao {
                     rs.getDouble("longitude"), null);
         }
     };
+
+    private static RowMapper<String[]> propertyRowMapper = new RowMapper<String[]>() {
+        public String[] mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new String[]{rs.getString("key"), rs.getString("value")};
+        }
+    };
+
 }
