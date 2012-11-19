@@ -74,13 +74,19 @@ $(document).ready(function() {
 		return marker;
   }
 
+
+  
   var displayEventInfo = function(occurrence) {
 	  $("#result").html( function() {
 			 return "<h3>" + occurrence.event.name + "</h3>" +
-			  "<p>" + occurrence.event.description + "</p>";
+			  "<p>" + occurrence.event.description + "</p>" +
+			  "<h4>" + occurrence.venue.name + "</h4>" +
+			  "<p><b>Address:</b> " + occurrence.venue.address + "</p>" +
+              "<p><b>Start:</b> " + occurrence.start + "</p>" +
+              "<p><b>End:</b> " + occurrence.end + "</p>";
 	  });
 	  
-  }
+  };
 
   var parseOccurrencesForCalendar = function(occurrences) {
 		var calendarEvents = [];
