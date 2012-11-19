@@ -17,7 +17,7 @@
 				<h2>Calendar</h2>
 				<div id="calendar" style='font-size: 18px'></div>
 			</div>
-			<div class="span1"></div>
+			<div class="span1 hidden-desktop"></div>
 			<div class="span6">
 				<h2 style="text-align: right">Map</h2>
 				<div id="map_canvas"></div>
@@ -29,12 +29,15 @@
 				<fieldset>
 					<label for="event-name">Event Name</label> <input type="text"
 						name="event-name" id="event-name"
-						class="text ui-widget-content ui-corner-all" /> <label
-						for="event-description">Description</label> <input type="text"
+						class="text ui-widget-content ui-corner-all" /> 
+					<label for="event-description">Description</label> <input type="text"
 						name="event-description" id="event-description" value=""
-						class="text ui-widget-content ui-corner-all" /> <label
-						for="event-address">Address</label> <input type="text"
-						name="event-address" id="event-address"
+						class="text ui-widget-content ui-corner-all" />
+					<label for="venue-name">Venue Name</label> <input type="text"
+						name="venue-name" id="venue-name"
+						class="text ui-widget-content ui-corner-all" />
+				    <label for="venue-address">Address</label> <input type="text"
+						name="venue-address" id="venue-address"
 						class="text ui-widget-content ui-corner-all" />
 				</fieldset>
 			</form>
