@@ -165,7 +165,16 @@ public class VenueDaoTest {
         assertThat(properties.get("Parking"), is("Valet only"));
         assertThat(properties.get("Ages"), is("18+"));
     }
-    
+
+    @Test
+    public void testAddToProperties() {
+        int initialSize = venueDao.findProperties(2).size();
+        venueDao.addProperty(2, "Weekend Hours", "7:00AM to 12:00AM");
+        Map<String, String> properties = venueDao.findProperties(2);
+        assertThat(properties.size(), is(initialSize + 1));
+        assertThat(properties.get("Weekend Hours"), is("7:00AM to 12:00AM"));
+    }
+
     @Test
     public void testGetMaxKeyValueForVenueComments() {
         int maxValue = venueDao.findMaxKeyValueForComments();

@@ -23,5 +23,5 @@ public interface VenueDao extends CommentDao {
     
     Map<String, String> findProperties(int venueId);
     
-    void addProperty(String propertyName, String value);
+    void addProperty(int venueId, String propertyName, String value);
 }

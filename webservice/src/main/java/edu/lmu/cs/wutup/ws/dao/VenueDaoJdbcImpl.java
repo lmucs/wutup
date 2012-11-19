@@ -40,10 +40,9 @@ public class VenueDaoJdbcImpl implements VenueDao {
     private static final String UPDATE_SQL = "update venue set name=ifnull(?, name), address=ifnull(?, address), "
             + "latitude=ifnull(?, latitude), longitude=ifnull(?, longitude) where id=?";
     private static final String FIND_BY_ID_SQL = SELECT_VENUE + " where v.id=?";
-    private static final String FIND_ALL_SQL = SELECT_VENUE + " " + PAGINATION;
-    private static final String FIND_BY_ADDRESS_SQL = SELECT_VENUE + " where v.address=? " + PAGINATION;
     private static final String DELETE_SQL = "delete from venue where id=?";
     private static final String COUNT_SQL = "select count(*) from venue";
+    private static final String ADD_PROPERTY = "insert into venue_property(venueId, key, value) values(?,?,?)";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -174,8 +173,8 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     @Override
-    public void addProperty(String propertyName, String value) {
-        // TODO Auto-generated method stub
+    public void addProperty(int venueId, String propertyName, String value) {
+        jdbcTemplate.update(ADD_PROPERTY, venueId, propertyName, value);
     }
 
     private static String createCircleSearchClause(Circle c) {
