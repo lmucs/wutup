@@ -29,6 +29,8 @@ public class MainActivity extends MapActivity {
 		GeoPoint point = new GeoPoint(33947006,-118212891);
 		OverlayItem overlayitem = new OverlayItem(point, "Hola, Mundo!", "I'm in Mexico City!");
 	
+		
+		
 		itemizedoverlay.addOverlay(overlayitem);
 		mapOverlays.add(itemizedoverlay);
 	}
