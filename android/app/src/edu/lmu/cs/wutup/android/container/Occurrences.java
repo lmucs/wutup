@@ -1,4 +1,4 @@
-package edu.lmu.cs.wutup.android.manager;
+package edu.lmu.cs.wutup.android.container;
 
 import java.util.ArrayList;
 

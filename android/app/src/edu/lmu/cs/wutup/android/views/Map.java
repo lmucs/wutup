@@ -15,7 +15,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
-import edu.lmu.cs.wutup.andoird.communication.GetOccurrences;
+import edu.lmu.cs.wutup.android.communication.GetOccurrences;
 import edu.lmu.cs.wutup.android.manager.EventPlotter;
 import edu.lmu.cs.wutup.android.manager.R;
 

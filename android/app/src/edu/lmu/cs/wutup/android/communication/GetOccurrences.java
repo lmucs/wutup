@@ -1,4 +1,4 @@
-package edu.lmu.cs.wutup.andoird.communication;
+package edu.lmu.cs.wutup.android.communication;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
-import edu.lmu.cs.wutup.android.manager.Occurrences;
+import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.model.Occurrence;
 
 public class GetOccurrences extends AsyncTask<Void, Integer, Void>{
