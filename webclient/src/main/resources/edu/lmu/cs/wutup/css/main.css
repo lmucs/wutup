@@ -1,9 +1,9 @@
 body {
+    padding-top: 70px;
 	background: url('../img/noisy_grid.png');
 }
 
 #container {
-	padding-top: 70px;
 	padding-bottom: 40px;
 }
 
@@ -200,6 +200,13 @@ table, td, th {
     overflow-y: scroll;
 }
 
+#eventDescription {  
+    height: 200px !important;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+
 #left-sidebar {
     background-color: #ffffff;
     padding: 20px 20px;
@@ -231,4 +238,11 @@ table, td, th {
 #map_canvas.eventMap {
 	width: 100%;
 	height: 350px;
+}
+
+.event-button {
+    height:auto;
+    width:100px;
+    text-align:center;
+    white-space:nowrap;
 }

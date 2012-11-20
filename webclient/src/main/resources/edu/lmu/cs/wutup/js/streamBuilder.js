@@ -1,13 +1,13 @@
 var initializeEventQueue = function (id, rows, names) {
 
-    var isMainEventStream = (id === "mainEventStream") ? true : false;
+    var isMainEventStream = (id === "currentEventStream") ? true : false;
     var totalEvents = rows;
 
     var table=document.getElementById(id);
     table.style.attribute = "value";
 
     var tableBody=document.createElement('tbody');
-    var event, buttonCell, acceptRow, acceptButton, declineRow, declineButton, maybeRow, maybeButton;
+    var event, buttonCell, attendRow, attendButton, declineRow, declineButton, maybeRow, maybeButton;
     var pictureCell, picture;
     var detailsCell, eventTitle, eventDescription;
     var timeCell;
@@ -28,12 +28,12 @@ var initializeEventQueue = function (id, rows, names) {
 
             buttonCell = document.createElement("td");
 
-            acceptRow = document.createElement("tr");
-            acceptButton = document.createElement("btn");
-            acceptButton.id = id + "-acceptButton";
-            acceptButton.className = "btn btn-small";
-            acceptButton.innerHTML = "Accept";
-            acceptRow.appendChild(acceptButton);
+            attendRow = document.createElement("tr");
+            attendButton = document.createElement("btn");
+            attendButton.id = id + "-attendButton";
+            attendButton.className = "btn btn-small";
+            attendButton.innerHTML = "Attend";
+            attendRow.appendChild(attendButton);
 
             declineRow = document.createElement("tr");
             declineButton = document.createElement("btn");
@@ -49,7 +49,7 @@ var initializeEventQueue = function (id, rows, names) {
             maybeButton.innerHTML = "Maybe";
             maybeRow.appendChild(maybeButton);
             
-            buttonCell.appendChild(acceptRow);
+            buttonCell.appendChild(attendRow);
             buttonCell.appendChild(declineRow);
             buttonCell.appendChild(maybeRow);
             
