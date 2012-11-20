@@ -55,7 +55,7 @@ public class Map extends MapActivity {
 	    
 	    switch (item.getItemId()) {
 	    
-	        case R.id.log:    startActivity(new Intent(this, Log.class));
+	        case R.id.log:    startActivity(new Intent(this, TextDump.class));
         	                  return true;
         	                      
         	case R.id.list:   return true;

@@ -1,7 +1,9 @@
 package edu.lmu.cs.wutup.android.manager;
 
+import java.util.ArrayList;
+
 import edu.lmu.cs.wutup.android.manager.R;
-import edu.lmu.cs.wutup.android.views.Log;
+import edu.lmu.cs.wutup.android.model.Occurrence;
 import edu.lmu.cs.wutup.android.views.Map;
 import android.app.Activity;
 import android.content.Intent;
@@ -10,12 +12,18 @@ import android.view.Menu;
 
 public class Manager extends Activity {
     
+    
+    
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.manager);
         
         startActivity(new Intent(this, Map.class));
         
+        
+    }
+    
+    private void populateOccurrences() {
         
     }
     
