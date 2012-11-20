@@ -109,11 +109,11 @@ public class EventDaoTest {
     @Test
     public void findingEventsViaPaginationWorks() {
         assertThat(eventDao.findNumberOfEvents(), is(8));
-        List<Event> events = eventDao.findEvents(null, null, null, null, new PaginationData(0, 3));
+        List<Event> events = eventDao.findEvents(null, null, null, null, null, new PaginationData(0, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findEvents(null, null, null, null, new PaginationData(1, 3));
+        events = eventDao.findEvents(null, null, null, null, null, new PaginationData(1, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findEvents(null, null, null, null, new PaginationData(2, 3));
+        events = eventDao.findEvents(null, null, null, null, null, new PaginationData(2, 3));
         assertThat(events.size(), is(2));
     }
 

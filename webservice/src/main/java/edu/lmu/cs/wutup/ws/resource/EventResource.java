@@ -57,15 +57,15 @@ public class EventResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<Event> findEvents(@QueryParam("owner") User owner, @QueryParam("category") List<Category> categories,
-            @QueryParam("venue") List<Venue> venues, @QueryParam("center") String center,
-            @QueryParam("radius") String radiusString,
+    public List<Event> findEvents(@QueryParam("name") String name, @QueryParam("owner") User owner,
+            @QueryParam("category") List<Category> categories, @QueryParam("venue") List<Venue> venues,
+            @QueryParam("center") String center, @QueryParam("radius") String radiusString,
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
-        return eventService.findEvents(owner, categories, venues, circle, pagination);
+        return eventService.findEvents(name, owner, categories, venues, circle, pagination);
     }
 
     @GET
