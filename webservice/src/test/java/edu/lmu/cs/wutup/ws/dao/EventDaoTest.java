@@ -102,19 +102,21 @@ public class EventDaoTest {
     }
 
     // TODO - when general finding is implemented, do tests that find events and events that return an empty
-    // list of events.
+    // list of events. Using:
+    // List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
+    // PaginationData pagination);
 
     @Test
     public void findingEventsViaPaginationWorks() {
         assertThat(eventDao.findNumberOfEvents(), is(8));
-        List<Event> events = eventDao.findEvents(new PaginationData(0, 3));
+        List<Event> events = eventDao.findEvents(null, null, null, null, new PaginationData(0, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findEvents(new PaginationData(1, 3));
+        events = eventDao.findEvents(null, null, null, null, new PaginationData(1, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findEvents(new PaginationData(2, 3));
+        events = eventDao.findEvents(null, null, null, null, new PaginationData(2, 3));
         assertThat(events.size(), is(2));
     }
-    
+
     @Test
     public void testGetMaxKeyValueForEventComments() {
         int maxValue = eventDao.findMaxKeyValueForComments();
@@ -137,7 +139,7 @@ public class EventDaoTest {
         int afterCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
         assertThat(afterCount, is(initialCount + 1));
     }
-    
+
     @Test
     public void createdEventCommentAutoGeneratesId() {
         int maxKeyValue = eventDao.findMaxKeyValueForComments();
@@ -145,7 +147,7 @@ public class EventDaoTest {
         int nextKeyValue = eventDao.findMaxKeyValueForComments();
         assertThat(nextKeyValue, is(maxKeyValue + 1));
     }
-    
+
     @Test
     public void deleteCommentDecrementsSize() {
         int initialCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
@@ -164,7 +166,7 @@ public class EventDaoTest {
         // when entering something in h2 through pure sql, the timezone is adjsuted for DST to utc-7:00
         assertThat(comments.get(0).getPostDate().toString(), is("2012-11-11T12:34:00.000-08:00"));
     }
-    
+
     @Test
     public void updatesToEventCommentsCanBeRead() {
         Comment initialComment = eventDao.findComments(1, new PaginationData(0, 10)).get(0);
@@ -175,7 +177,7 @@ public class EventDaoTest {
         assertThat(updatedComment.getId(), is(1));
         assertThat(updatedComment.getAuthor(), is(initialComment.getAuthor()));
     }
-    
+
     @After
     public void tearDownDatabase() {
         database.shutdown();

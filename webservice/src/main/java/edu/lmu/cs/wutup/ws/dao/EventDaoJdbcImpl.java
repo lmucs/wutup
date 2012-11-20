@@ -19,10 +19,13 @@ import org.springframework.stereotype.Repository;
 import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
+import edu.lmu.cs.wutup.ws.model.Category;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Repository
 public class EventDaoJdbcImpl implements EventDao {
@@ -37,7 +40,8 @@ public class EventDaoJdbcImpl implements EventDao {
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.subjectId = ? order by ec.timestamp asc " + PAGINATION;
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT
+            + " where ec.subjectId = ? order by ec.timestamp asc " + PAGINATION;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -82,7 +86,9 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public List<Event> findEvents(PaginationData pagination) {
+    public List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
+            PaginationData pagination) {
+        // TODO: Update SQL to query with all supplied parameters
         return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
                 pagination.pageNumber * pagination.pageSize}, eventRowMapper);
     }
@@ -99,7 +105,6 @@ public class EventDaoJdbcImpl implements EventDao {
     public int findNumberOfEvents() {
         return jdbcTemplate.queryForInt(COUNT_SQL);
     }
-    
 
     @Override
     public Integer addComment(Integer eventId, Comment comment) {
@@ -121,7 +126,7 @@ public class EventDaoJdbcImpl implements EventDao {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
                 pagination.pageNumber, pagination.pageSize);
     }
-    
+
     @Override
     public int findMaxKeyValueForComments() {
         return CommentDaoUtils.findMaxKeyValueForComments(jdbcTemplate, "event");
