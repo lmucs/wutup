@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+       
+    <item android:id="@+id/log"
+          android:title="Switch to log view." />
+    
+    <item android:id="@+id/list"
+          android:title="Switch to list view." />
+    
+    <item android:id="@+id/search"
+          android:title="Modify search parameters." />
+    
+</menu>

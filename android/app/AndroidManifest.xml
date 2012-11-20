@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="edu.lmu.cs.wutup.android.maps"
+          package="edu.lmu.cs.wutup.android.manager"
           android:versionCode="1"
           android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion   ="8"
+    <uses-sdk android:minSdkVersion="8"
               android:targetSdkVersion="15" />
     
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -14,14 +14,25 @@
                  
         <uses-library android:name="com.google.android.maps" />
         
-        <activity android:name =".MainActivity"
-                  android:label="@string/title_activity_main"
-                  android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name ="edu.lmu.cs.wutup.android.manager.Manager"
+                  android:label="@string/title_manager" >
                   
             <intent-filter>
                 <action   android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            
+        </activity>
+        
+        <activity android:name ="edu.lmu.cs.wutup.android.views.Map"
+                  android:label="@string/title_map"
+                  android:theme="@android:style/Theme.NoTitleBar">
+            
+        </activity>
+        
+        <activity android:name ="edu.lmu.cs.wutup.android.views.Log"
+                  android:label="@string/title_log"
+                  android:theme="@android:style/Theme.NoTitleBar">
             
         </activity>
         
