@@ -333,7 +333,7 @@ public class VenueResourceIT {
             header("Accept", "application/json").
         expect().
             statusCode(200).
-            body(containsString("\"fax\":null")).
+            body(equalTo("{\"twitter\":\"@theroxy\"}")).
         when().
             get("/wutup/venues/5/properties");
     }
