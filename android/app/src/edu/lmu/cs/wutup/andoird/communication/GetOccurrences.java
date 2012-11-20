@@ -12,17 +12,16 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
-import edu.lmu.cs.wutup.android.model.Event;
 import edu.lmu.cs.wutup.android.model.Occurrence;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
-public class GetOccurrences extends AsyncTask<Void, Void, ArrayList<Occurrence>>{
+public class GetOccurrences extends AsyncTask<Void, Integer, ArrayList<Occurrence>>{
     
     private HttpClient client = new DefaultHttpClient();
     
@@ -31,51 +30,34 @@ public class GetOccurrences extends AsyncTask<Void, Void, ArrayList<Occurrence>>
     @Override
     protected ArrayList<Occurrence> doInBackground(Void... params) {
         
-        refreshOccurences();
-        
+        retrieveOccurences();
         
         return occurrences;
+        
     }
     
-    private void refreshOccurences() {
+    private void retrieveOccurences() {
         
         try {
             
-            URI addressOfOccurrences;            
-            HttpGet requestForOccurences;
-            HttpResponse responceToRequestForOccurences;
+            URI addressOfOccurrences = new URI("http://wutup.cs.lmu.edu:8080/wutup/occurrences");            
+            HttpGet requestForOccurences = new HttpGet(addressOfOccurrences);
+            HttpResponse responceToRequestForOccurences = client.execute(requestForOccurences);
             
-            InputStream occurenceStream = null;
-            BufferedInputStream occurenceBuffer = null;
-            
-            ObjectMapper occurenceObjectMapper;
-            ObjectReader occurenceObjectReader;
+            InputStream occurenceStream = responceToRequestForOccurences.getEntity().getContent();;
+            BufferedInputStream occurenceBuffer = new BufferedInputStream(occurenceStream);       
                         
             try {
                 
-                addressOfOccurrences = new URI("http://wutup.cs.lmu.edu:8080/wutup/occurrences"); // could be outside try finally
-                requestForOccurences = new HttpGet(addressOfOccurrences);
-                responceToRequestForOccurences = client.execute(requestForOccurences);
-                
-                occurenceStream = responceToRequestForOccurences.getEntity().getContent();
-                occurenceBuffer = new BufferedInputStream(occurenceStream);
-                
-                occurenceObjectMapper = new ObjectMapper();
-                occurenceObjectReader = occurenceObjectMapper.reader(Occurrence.class);
+                ObjectMapper occurenceObjectMapper = new ObjectMapper();
+                ObjectReader occurenceObjectReader = occurenceObjectMapper.reader(Occurrence.class);
                 
                 MappingIterator<Occurrence> occurenceIterator = occurenceObjectReader.readValues(occurenceBuffer);
                 fillOccurrences(occurenceIterator);
                 
             } finally {
-                
-                if (occurenceStream != null) {
-                    occurenceStream.close();
-                }
-                
-                if (occurenceBuffer != null) {
-                    occurenceBuffer.close();
-                }
-                
+                occurenceStream.close();
+                occurenceBuffer.close();
             }
             
         } catch (URISyntaxException uriSyntaxException) {
