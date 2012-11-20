@@ -184,7 +184,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     public void updatePropertyValue(int venueId, String propertyName, String value) {
         int rowsUpdated = jdbcTemplate.update(UPDATE_PROPERTY_VALUE, value, venueId, propertyName);
         if (rowsUpdated == 0) {
-            throw new NoSuchPropertyException();
+            addProperty(venueId, propertyName, value);
         }
     }
 

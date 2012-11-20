@@ -276,12 +276,12 @@ public class VenueResourceIT {
     }
 
     @Test
-    public void testUpdateNonExistantPropertyResponds409() {
+    public void testUpdateNonExistantPropertyResponds204() {
         given().
             contentType("application/json").
             body("{\"ID Required\":\"No\"}").
         expect().
-            statusCode(409).
+            statusCode(204).
         when().
             post("/wutup/venues/7/properties");
     }
@@ -334,6 +334,25 @@ public class VenueResourceIT {
         expect().
             statusCode(200).
             body(equalTo("{\"twitter\":\"@theroxy\"}")).
+        when().
+            get("/wutup/venues/5/properties");
+    }
+    
+    @Test
+    public void testCreatingProperty() {
+        given().
+            contentType("application/json").
+            body("{\"Food\":\"No\"}").
+        expect().
+            statusCode(204).
+        when().
+            post("/wutup/venues/5/properties");
+
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"Food\":\"No\"")).
         when().
             get("/wutup/venues/5/properties");
     }
