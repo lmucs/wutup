@@ -9,7 +9,7 @@ body {
 
 #map_canvas {
 	width: 100%;
-	height: 730px;
+	height: 350px;
 }
 
 #map_canvas img {
@@ -200,7 +200,7 @@ table, td, th {
     overflow-y: scroll;
 }
 
-.left-sidebar {
+#left-sidebar {
     background-color: #ffffff;
     padding: 20px 20px;
     border: 1;
@@ -208,7 +208,7 @@ table, td, th {
 
 .header {
     background-color: #A50001;
-    color: #ffffff; ;
+    color: #ffffff;
 }
 
 .btn-small {
@@ -221,4 +221,14 @@ table, td, th {
 .section {
     padding-top: 15px;
     padding-bottom: 15px;
+}
+
+#event-header table, #event-header td, #event-header th {
+    background-color: #A50001;
+    color: #ffffff;
+}
+
+#map_canvas.eventMap {
+	width: 100%;
+	height: 350px;
 }

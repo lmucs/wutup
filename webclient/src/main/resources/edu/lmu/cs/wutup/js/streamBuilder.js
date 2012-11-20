@@ -1,21 +1,9 @@
-onload = function () {
-
-    initializeEventQueue("mainEventStreamContainer", "mainEventStream", 10);
-    initializeEventQueue("tabHosting", "hostingEventStream", 2);
-    initializeEventQueue("tabAttending", "attendingEventStream", 7);
-    initializeEventQueue("tabInvitedTo", "invitedToEventStream", 16);
-
-}
-
-var initializeEventQueue = function (goesHere, id, rows) {
+var initializeEventQueue = function (id, rows, names) {
 
     var isMainEventStream = (id === "mainEventStream") ? true : false;
     var totalEvents = rows;
 
-    var root=document.getElementById(goesHere);
-    var table=document.createElement("table");
-    table.className="table table-hover";
-    table.id = id;
+    var table=document.getElementById(id);
     table.style.attribute = "value";
 
     var tableBody=document.createElement('tbody');
@@ -24,27 +12,12 @@ var initializeEventQueue = function (goesHere, id, rows) {
     var detailsCell, eventTitle, eventDescription;
     var timeCell;
     
-    var navigation, previousDate, previousDateIcon, nextDate, nextDateIcon;
+    var navigation, previousDateCell, previousDate, previousDateIcon, nextDateCell, nextDate, nextDateIcon, todayDateCell, todayDate;
  
-    if (isMainEventStream) {
-            navigation = document.createElement("tr");
-            previousDate = document.createElement("btn");
-            previousDate.className = "btn";
-            previousDateIcon = document.createElement("i");
-            previousDateIcon.className = "icon-backward";
-            previousDate.appendChild(previousDateIcon);
-
-            nextDate = document.createElement("btn");
-            nextDate.className = "btn";
-            nextDateIcon = document.createElement("i");
-            nextDateIcon.className = "icon-forward";
-            nextDate.appendChild(nextDateIcon);
-            
-            navigation.appendChild(previousDate);
-            navigation.appendChild(nextDate);
-            
-            tableBody.appendChild(navigation);
-    }
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth();
+    var year = date.getFullYear();
  
     for (var i = 0; i < totalEvents; i++) {
     
@@ -97,8 +70,8 @@ var initializeEventQueue = function (goesHere, id, rows) {
         detailsCell = document.createElement("td");
         detailsCell.colSpan = "2";
         eventTitle = document.createElement("a");
-        eventTitle.href = "http://www.noahsplacepettingzoo.com/llama.html";
-        eventTitle.innerHTML = "Llama Petting Zoo";
+        eventTitle.href = "edu.lmu.cs.wutup.EventPage";
+        eventTitle.innerHTML = names[i];
         eventDescription = document.createElement("p");
         eventDescription.innerHTML = "IT'S GOING TO BE A LLAMA PALOOZA";
         detailsCell.appendChild(eventTitle);
@@ -116,7 +89,47 @@ var initializeEventQueue = function (goesHere, id, rows) {
     }
 
     table.appendChild(tableBody);
-    root.appendChild(table);
+}
+
+var initializeGuestList = function (id, rows, names) {
+
+    var totalAttendees = rows;
+
+    var table=document.getElementById(id);
+    table.style.attribute = "value";
+
+    var tableBody=document.createElement('tbody');
+    var attendee;
+    var profilePictureCell, profilePicture;
+    var guestNameCell;
+    var navigation, previousDateCell, previousDate, previousDateIcon, nextDateCell, nextDate, nextDateIcon, todayDateCell, todayDate;
+ 
+    for (var i = 0; i < totalAttendees; i++) {
+    
+        attendee = document.createElement("tr");
+
+        profilePictureCell = document.createElement('td');
+        
+        profilePicture = document.createElement("img");
+        profilePicture.src = "http://24.media.tumblr.com/tumblr_lurm27QJ2X1r6d623o1_500.jpg";
+        profilePicture.alt = "Llamas";
+        profilePicture.height = "50";
+        profilePicture.width = "50";
+
+        profilePictureCell.appendChild(profilePicture);
+
+        guestNameCell = document.createElement("td");
+        guestNameCell.innerHTML = names[i];
+        
+        
+        attendee.appendChild(profilePictureCell);
+        attendee.appendChild(guestNameCell);
+
+        tableBody.appendChild(attendee);
+    }
+
+    table.appendChild(tableBody);
+
 }
 
 
