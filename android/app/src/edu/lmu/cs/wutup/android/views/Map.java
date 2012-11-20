@@ -65,14 +65,9 @@ public class Map extends MapActivity {
 	
 	private OverlayItem makeOverlayItem(Occurrence occurrence){
 	    	    
-	    
-	    Log.i("overlay", "blarkar");
-	    
 	    Event event = occurrence.getEvent();
 	    Venue venue = occurrence.getVenue();
 	    
-	    Log.i("overlay", "" + venue.getLatitude());
-	    Log.i("overlay", "" + venue.getLongitude());
 	    GeoPoint position = new GeoPoint(venue.getLatitude(), venue.getLongitude());
 	    
 	    return new OverlayItem(position, event.getName(), event.getDescription());	    
@@ -81,9 +76,11 @@ public class Map extends MapActivity {
 	private void plotOccurrences() {
 	    
 	    occurrenceOverlay.clearOverlay();
+	    Log.i("overlay", "Cleared occurrence overlay.");
 	    
 	    for (Occurrence occurrence : Occurrences.get()) {
 	        occurrenceOverlay.addOverlay(makeOverlayItem(occurrence));
+	        Log.i("overlay", "Plotted occurrence " + occurrence.getId() + ".");
 	    }
 	      
 	}	
