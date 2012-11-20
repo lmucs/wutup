@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -173,6 +174,40 @@ public class VenueDaoTest {
         Map<String, String> properties = venueDao.findProperties(2);
         assertThat(properties.size(), is(initialSize + 1));
         assertThat(properties.get("Weekend Hours"), is("7:00AM to 12:00AM"));
+    }
+
+    @Test
+    public void testUpdatePropertyValue() {
+        Map<String, String> properties = venueDao.findProperties(2);
+        assertThat(properties.size(), is(2));
+        assertThat(properties.get("Parking"), is("Valet only"));
+        venueDao.updatePropertyValue(2, "Parking", "Free parking for all!");
+        properties = venueDao.findProperties(2);
+        assertThat(properties.size(), is(2));
+        assertThat(properties.get("Parking"), is("Free parking for all!"));
+    }
+
+    @Test
+    public void testDeletePropertyValueDecrementsMapSize() {
+        int initialSize = venueDao.findProperties(2).size();
+        venueDao.deleteProperty(2, "Parking");
+        Map<String, String> properties = venueDao.findProperties(2);
+        assertThat(properties.size(), is(initialSize - 1));
+    }
+
+    @Test
+    public void testDeletedPropertyCanNoLongerBeFound() {
+        Map<String, String> properties = venueDao.findProperties(2);
+        assertThat(properties.size(), is(2));
+        assertThat(properties.get("Parking"), is("Valet only"));
+        venueDao.deleteProperty(2, "Parking");
+        properties = venueDao.findProperties(2);
+        assertTrue(properties.get("Parking") == null);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testPropertyNamesAreUniqueToVenue() {
+        venueDao.addProperty(2, "Parking", "Should fail");
     }
 
     @Test

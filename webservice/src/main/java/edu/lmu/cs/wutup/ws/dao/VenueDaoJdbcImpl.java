@@ -43,6 +43,8 @@ public class VenueDaoJdbcImpl implements VenueDao {
     private static final String DELETE_SQL = "delete from venue where id=?";
     private static final String COUNT_SQL = "select count(*) from venue";
     private static final String ADD_PROPERTY = "insert into venue_property(venueId, key, value) values(?,?,?)";
+    private static final String UPDATE_PROPERTY_VALUE = "update venue_property set value=? where venueId=? and key=?";
+    private static final String DELETE_PROPERTY = "delete from venue_property where venueId=? and key=?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -164,10 +166,10 @@ public class VenueDaoJdbcImpl implements VenueDao {
     @Override
     public Map<String, String> findProperties(int venueId) {
         QueryBuilder builder = new QueryBuilder().select("*").from("venue_property").where("venueId = :id", venueId);
-        List<String[]> keysToValues = jdbcTemplate.query(builder.build(), propertyRowMapper);
+        List<String[]> keyValuePairs = jdbcTemplate.query(builder.build(), propertyRowMapper);
         Map<String, String> properties = new HashMap<String, String>();
-        for (int i = 0; i < keysToValues.size(); i++) {
-            properties.put(keysToValues.get(i)[0], keysToValues.get(i)[1]);
+        for (int i = 0; i < keyValuePairs.size(); i++) {
+            properties.put(keyValuePairs.get(i)[0], keyValuePairs.get(i)[1]);
         }
         return properties;
     }
@@ -175,6 +177,18 @@ public class VenueDaoJdbcImpl implements VenueDao {
     @Override
     public void addProperty(int venueId, String propertyName, String value) {
         jdbcTemplate.update(ADD_PROPERTY, venueId, propertyName, value);
+    }
+
+    @Override
+    public void updatePropertyValue(int venueId, String propertyName, String value) {
+        jdbcTemplate.update(UPDATE_PROPERTY_VALUE, value, venueId, propertyName);
+
+    }
+
+    @Override
+    public void deleteProperty(int venueId, String propertyName) {
+        jdbcTemplate.update(DELETE_PROPERTY, venueId, propertyName);
+
     }
 
     private static String createCircleSearchClause(Circle c) {
@@ -194,5 +208,4 @@ public class VenueDaoJdbcImpl implements VenueDao {
             return new String[]{rs.getString("key"), rs.getString("value")};
         }
     };
-
 }

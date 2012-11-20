@@ -1,6 +1,7 @@
 package edu.lmu.cs.wutup.ws.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,5 +68,27 @@ public class VenueServiceImpl implements VenueService {
     @Override
     public void deleteComment(int venueId, int commentId) {
         venueDao.deleteComment(venueId, commentId);
+    }
+
+    @Override
+    public Map<String, String> findProperties(int venueId) {
+        return venueDao.findProperties(venueId);
+    }
+
+    @Override
+    public void addProperty(int venueId, String propertyName, String value) {
+        venueDao.addProperty(venueId, propertyName, value);
+    }
+
+    @Override
+    public void updatePropertyValue(int venueId, String propertyName, String value) {
+        venueDao.updatePropertyValue(venueId,  propertyName,  value);
+        
+    }
+
+    @Override
+    public void deleteProperty(int venueId, String propertyName) {
+        venueDao.deleteProperty(venueId, propertyName);
+        
     }
 }
