@@ -8,8 +8,8 @@ public class Venue {
     private Integer id;
     private String name;
     private String address;
-    private Double latitude;
-    private Double longitude;
+    private int latitude;
+    private int longitude;
     private ArrayList<Comment> comments;
     private HashMap<String, String> propertyMap;
     
@@ -31,17 +31,17 @@ public class Venue {
     public void setAddress(String address) {
         this.address = address;
     }
-    public Double getLatitude() {
+    public int getLatitude() {
         return latitude;
     }
     public void setLatitude(Double latitude) {
-        this.latitude = latitude;
+        this.latitude = (int) Math.round(latitude * Math.pow(10, 6));
     }
-    public Double getLongitude() {
+    public int getLongitude() {
         return longitude;
     }
     public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+        this.longitude = (int) Math.round(longitude * Math.pow(10, 6));
     }
     public ArrayList<Comment> getComments() {
         return comments;

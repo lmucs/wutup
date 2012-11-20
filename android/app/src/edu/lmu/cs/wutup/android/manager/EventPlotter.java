@@ -11,12 +11,18 @@ import com.google.android.maps.OverlayItem;
 
 public class EventPlotter extends ItemizedOverlay<OverlayItem> {
     
-        private Context context;
+        private Context mContext;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 
+	public EventPlotter(Drawable defaultMarker) {
+	    super(boundCenterBottom(defaultMarker));
+	    populate();
+	}
+	
 	public EventPlotter(Drawable defaultMarker, Context context) {
-		super(boundCenterBottom(defaultMarker));
-		this.context = context;
+	    super(boundCenterBottom(defaultMarker));
+	    mContext = context;
+	    populate();
 	}
 	
 	public void addOverlay(OverlayItem overlay) {
@@ -37,7 +43,7 @@ public class EventPlotter extends ItemizedOverlay<OverlayItem> {
 	@Override
 	protected boolean onTap(int index) {
 	  OverlayItem item = mOverlays.get(index);
-	  AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+	  AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
 	  dialog.setTitle(item.getTitle());
 	  dialog.setMessage(item.getSnippet());
 	  dialog.show();
