@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -19,20 +18,20 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
+import edu.lmu.cs.wutup.android.manager.Occurrences;
 import edu.lmu.cs.wutup.android.model.Occurrence;
 
-public class GetOccurrences extends AsyncTask<Void, Integer, ArrayList<Occurrence>>{
+public class GetOccurrences extends AsyncTask<Void, Integer, Void>{
     
     private HttpClient client = new DefaultHttpClient();
     
-    private ArrayList<Occurrence> occurrences = new ArrayList<Occurrence>();
-
     @Override
-    protected ArrayList<Occurrence> doInBackground(Void... params) {
+    protected Void doInBackground(Void... params) {
         
         retrieveOccurences();
         
-        return occurrences;
+        return null;
+
         
     }
     
@@ -71,14 +70,14 @@ public class GetOccurrences extends AsyncTask<Void, Integer, ArrayList<Occurrenc
     
     private void fillOccurrences(MappingIterator<Occurrence> occurenceIterator) {
         
-        occurrences.clear();
+        Occurrences.clear();
         Log.i("occurence", "Cleared occurences.");
         
         while (occurenceIterator.hasNext()) {
             
             Occurrence occurrence = (Occurrence) occurenceIterator.next();
             
-            occurrences.add(occurrence);
+            Occurrences.add(occurrence);
             Log.i("occurence", "Added occurence " + occurrence.getId() + ".");
             
         }

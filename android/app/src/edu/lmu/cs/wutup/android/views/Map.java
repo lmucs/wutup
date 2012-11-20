@@ -15,6 +15,7 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+import edu.lmu.cs.wutup.andoird.communication.GetOccurrences;
 import edu.lmu.cs.wutup.android.manager.EventPlotter;
 import edu.lmu.cs.wutup.android.manager.R;
 
@@ -25,9 +26,11 @@ public class Map extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 		
-		MapView mapView = (MapView) findViewById(R.id.map);
-		mapView.setBuiltInZoomControls(true);
+		new GetOccurrences().execute();
 		
+//		MapView mapView = (MapView) findViewById(R.id.map);
+//		mapView.setBuiltInZoomControls(true);
+//		
 //		List<Overlay> mapOverlays = mapView.getOverlays();
 //		Drawable drawable = this.getResources().getDrawable(R.drawable.androidmarker);
 //		EventPlotter itemizedoverlay = new EventPlotter(drawable, this);
@@ -37,6 +40,10 @@ public class Map extends MapActivity {
 //			
 //		itemizedoverlay.addOverlay(overlayitem);
 //		mapOverlays.add(itemizedoverlay);
+	}
+	
+	private void plotOccurrences(){
+	    
 	}
 
 	@Override
