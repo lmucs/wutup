@@ -81,8 +81,11 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public List<Event> findEvents(String name, User owner, List<Category> categories, List<Venue> venues,
             Circle circle, PaginationData pagination) {
-        QueryBuilder query = getSelectQuery().where("e.name = :name", name).whereCircle(circle);
+        QueryBuilder query = getSelectQuery().whereCircle(circle);
 
+        if (name != null) {
+            query.where("e.name = :name", "\'" + name + "\'");
+        }
         if (owner != null) {
             query.where("e.ownerId = :id", owner.getId());
         }
