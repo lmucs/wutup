@@ -30,12 +30,6 @@
             
         </activity>
         
-        <activity android:name ="edu.lmu.cs.wutup.android.views.TextDump"
-                  android:label="@string/title_log"
-                  android:theme="@android:style/Theme.NoTitleBar">
-            
-        </activity>
-        
     </application>
 
 </manifest>
