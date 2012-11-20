@@ -30,6 +30,8 @@ insert into venue (id, name, address, latitude, longitude) values (10, 'Far Away
 insert into venue_property (venueId, key, value) values (1, 'seating capacity', '2703');
 insert into venue_property (venueId, key, value) values (1, 'since', '1930-06-04');
 insert into venue_property (venueId, key, value) values (1, 'cross street', 'Argyle');
+insert into venue_property (venueId, key, value) values (2, 'Ages', '18+');
+insert into venue_property (venueId, key, value) values (2, 'Parking', 'Valet only');
 insert into venue_property (venueId, key, value) values (3, 'cuisine', 'mediterranean');
 insert into venue_property (venueId, key, value) values (3, 'parking', 'street');
 insert into venue_property (venueId, key, value) values (5, 'fax', '310-278-2447');
@@ -57,9 +59,6 @@ insert into event_category (eventId, categoryId) values (1, 1);
 insert into attendee (occurrenceId, userId) values (1, 1);
 insert into attendee (occurrenceId, userId) values (1, 2);
 insert into attendee (occurrenceId, userId) values (2, 1);
-
-insert into venue_property(venueId, key, value) values(2, 'Ages', '18+');
-insert into venue_property(venueId, key, value) values(2, 'Parking', 'Valet only');
 
 insert into event_comment (id, subjectId, authorId, text, timestamp) values (1, 1, 1, 'Boo, sux', '2012-03-17T00:00:00');
 
