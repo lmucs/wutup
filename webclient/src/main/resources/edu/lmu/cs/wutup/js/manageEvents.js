@@ -355,7 +355,7 @@ $(document).ready(function () {
                         findOrCreateVenue(venueName, $('#venue-address').val());
                         setTimeout(function(){
                         	createEventOccurrence(eventName, venueName, start, end);
-                        },10000);
+                        },1000);
                         console.log("Client Events Posted Next");
                         console.log(calendar.fullCalendar('clientEvents'));
                         calendar.fullCalendar('unselect');
