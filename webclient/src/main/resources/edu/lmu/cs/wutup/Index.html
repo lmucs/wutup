@@ -9,7 +9,7 @@
     </script>
 
         <div class="row-fluid" id="call-to-action">
-            <div class="span12">
+            <div class="span10">
                 <h2>Find Out What's Up On Wutup!</h2>
 
 
@@ -30,19 +30,18 @@
      </div>
             <div class="container-fluid">
                 <div class ="row-fluid">
-                    <div class ="span4">
-                        <a href="#" class="thumbnail" id="profilePicture">
-                            <img src="http://placehold.it/125x150" alt="">
-                        </a>
-                        <div id="nickname">Shelby Tsukamoto</div>
-                    
-                        <form style="display: inline" action="manageevents.html" method="get">
-                            <button id="create event" class="btn btn-large btn-success">Create An Event</button>
-                        </form>
-                        <h3 class="left-column-header">Calendar</h3>
-	                    <div id="calendar" style='font-size: 13px'></div>
+                    <div class ="span4 left-sidebar">
+                        <div class="section">
+                            <h3 id="nickname" class="header">Wutup Shelby</h3>
+                            <a href="#" class="thumbnail" id="profilePicture">
+                                <img src="http://placehold.it/125x150" alt="">
+                            </a>
+                        
+                        </div>
+
+	                    <div id="calendar" class="section" style='font-size: 13px'></div>
 	                    
-	                    <div class="tabbable">
+	                    <div id="myEvents" class="tabbable section">
 	                        <ul class="nav nav-tabs">  
 	                            <li class="active"> 
 	                            <a href="#tabHosting" data-toggle="tab">Hosting (2)</a> </li>   
@@ -65,22 +64,27 @@
 	                        </div>
 	                    </div>
                    </div>
-                   <div class="span6 offset1">
-		                <div class="row-fluid left-column-header" id="mainEventStreamNavigator">
-		                    <btn class="btn"><i class="icon-backward"></i></btn>
-		                    <h3 style="display: inline-block; ">
-		                        <script language = "Javascript">
-		                            var date = new Date();
-		                            var day = date.getDate();
-		                            var month = date.getMonth();
-		                            var year = date.getFullYear();
-		                            document.write(month + " " + day + " " + year);
-		                        </script>
-		                    </h3>
-		                    <btn class="btn"><i class="icon-forward"></i></btn>
-                    	</div>
-                		<table class="table table-hover" id="mainEventStream"></table>
-            		</div>
+                   <div class="span6">
+                   
+                        <div id="map_canvas" class="section"></div>
+
+                        <div class="section">
+                            <div class="row-fluid header" id="mainEventStreamNavigator">
+                                <btn class="btn"><i class="icon-backward"></i></btn>
+                                <h3 style="display: inline-block; ">
+                                    <script language = "Javascript">
+                                        var date = new Date();
+                                        var day = date.getDate();
+                                        var month = date.getMonth();
+                                        var year = date.getFullYear();
+                                        document.write(month + " " + day + " " + year);
+                                    </script>
+                                </h3>
+                                <btn class="btn"><i class="icon-forward"></i></btn>
+                            </div>
+                            <table class="table table-hover" id="mainEventStream"></table>
+                        </div>
+                    </div>
                </div>
 
 	            </div>
@@ -99,8 +103,10 @@
     <wicket:link>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqOg2q0dqSGTw1OkyqWTWsVSOLCsHjXpM&sensor=false&libraries=places"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script src="lib/fullcalendar/fullcalendar.min.js"></script>
+    <script src="js/manageEventsMap.js"></script>
     <script src="js/indexCalendar.js"></script>
     <script src="js/eventStreamBuilder.js"></script>
     </wicket:link>
