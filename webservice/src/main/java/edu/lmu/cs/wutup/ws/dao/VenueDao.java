@@ -20,8 +20,12 @@ public interface VenueDao extends CommentDao {
     void deleteVenue(int venueId);
 
     int findNumberOfVenues();
-    
+
     Map<String, String> findProperties(int venueId);
-    
+
     void addProperty(int venueId, String propertyName, String value);
+
+    void updatePropertyValue(int venueId, String propertyName, String value);
+
+    void deleteProperty(int venueId, String propertyName);
 }
