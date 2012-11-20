@@ -43,6 +43,8 @@ public class VenueDaoJdbcImpl implements VenueDao {
     private static final String DELETE_SQL = "delete from venue where id=?";
     private static final String COUNT_SQL = "select count(*) from venue";
     private static final String ADD_PROPERTY = "insert into venue_property(venueId, key, value) values(?,?,?)";
+    private static final String UPDATE_PROPERTY_VALUE = "update venue_property set value=? where venueId=? and key=?";
+    private static final String DELETE_PROPERTY = "delete from venue_property where venueId=? and key=?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -177,6 +179,18 @@ public class VenueDaoJdbcImpl implements VenueDao {
         jdbcTemplate.update(ADD_PROPERTY, venueId, propertyName, value);
     }
 
+    @Override
+    public void updatePropertyValue(int venueId, String propertyName, String value) {
+        jdbcTemplate.update(UPDATE_PROPERTY_VALUE, value, venueId, propertyName);
+
+    }
+
+    @Override
+    public void deleteProperty(int venueId, String propertyName) {
+        jdbcTemplate.update(DELETE_PROPERTY, venueId, propertyName);
+
+    }
+
     private static String createCircleSearchClause(Circle c) {
         return "get_distance_miles(v.latitude, " + c.centerLatitude + ", v.longitude, " + c.centerLongitude
                 + ") <= :radius";
@@ -194,5 +208,4 @@ public class VenueDaoJdbcImpl implements VenueDao {
             return new String[]{rs.getString("key"), rs.getString("value")};
         }
     };
-
 }
