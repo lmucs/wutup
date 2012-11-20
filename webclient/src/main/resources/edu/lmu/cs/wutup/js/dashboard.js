@@ -20,9 +20,9 @@ $(document).ready(function() {
       $.get('http://localhost:8080/wutup/occurrences?page=0&pageSize=20', function(occurrences){
     	  var calendarEvents = parseOccurrencesForCalendar(occurrences);
 	      createCalendar(calendarEvents);
-    	  populateMap(map, occurrences);
+    	  populateMap(map, calendarEvents);
       });
-     
+
     }, function() {
       handleNoGeolocation(browserSupportFlag);
     });
@@ -55,7 +55,7 @@ $(document).ready(function() {
   		createMarker(events[i]);
   	}
   }
-  
+
   var createMarker = function(occurrence) {
 	  var marker = new google.maps.Marker( {
 			map: map,
@@ -64,16 +64,34 @@ $(document).ready(function() {
 			animation: google.maps.Animation.DROP
 		});
 		google.maps.event.addListener(marker, 'click', function() {
-			if (infowindow) infowindow.close();
-			infowindow = new google.maps.InfoWindow({
-					content: occurrence.event.name + '</br>'
-			});
-			infowindow.open(map, marker);
-		    $("#result").html(occurrence.event.name);
+			displayInfoWindow(occurrence);
+		    displayEventInfo(occurrence);
 	    });
 		return marker;
   }
+
+  var displayInfoWindow = function(occurrence) {
+	  if (infowindow) infowindow.close();
+		infowindow = new google.maps.InfoWindow({
+				content: occurrence.event.name + '</br>',
+				position: new google.maps.LatLng(occurrence.venue.latitude,occurrence.venue.longitude)
+		});
+		infowindow.open(map);
+  };
+
   
+  var displayEventInfo = function(occurrence) {
+	  $("#result").html( function() {
+			 return "<h3>" + occurrence.event.name + "</h3>" +
+			  "<p>" + occurrence.event.description + "</p>" +
+			  "<h4>" + occurrence.venue.name + "</h4>" +
+			  "<p><b>Address:</b> " + occurrence.venue.address + "</p>" +
+              "<p><b>Start:</b> " + occurrence.start + "</p>" +
+              "<p><b>End:</b> " + occurrence.end + "</p>";
+	  });
+	  
+  };
+
   var parseOccurrencesForCalendar = function(occurrences) {
 		var calendarEvents = [];
 		for (var i = 0; i < occurrences.length; i++) {
@@ -81,17 +99,20 @@ $(document).ready(function() {
 					    { title: occurrences[i].event.name,
 						  start: new Date(occurrences[i].start),
 						  end  : new Date(occurrences[i].end),
+						  event: occurrences[i].event,
+						  venue: occurrences[i].venue,
 						  allDay: false
 						  
 						});
 		}
 		return calendarEvents;
 	};
+
 	var createCalendar = function(calendarEvents) {
-		var calendar = $('.calendar').fullCalendar({
+		var calendar = $('#calendar').fullCalendar({
 			header: {
 				left: 'prev,next today',
-				center: '',
+				center: 'title',
 				right: 'month,agendaWeek,agendaDay'
 			},
 			theme:true,
@@ -102,6 +123,10 @@ $(document).ready(function() {
 	                calendar.fullCalendar('gotoDate', date.getFullYear(), date.getMonth(), date.getDate());
 	                calendar.fullCalendar('changeView', 'agendaDay');
 	            }
+		    },
+		    eventClick: function( event, jsEvent, view ) { //'event' is used here instead of 'occurrence' due to fullcalendar.js documentation 
+		    	displayInfoWindow(event);
+		    	displayEventInfo(event);
 		    },
 			events: calendarEvents
 		});
