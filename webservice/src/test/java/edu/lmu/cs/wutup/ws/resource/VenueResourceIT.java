@@ -169,7 +169,7 @@ public class VenueResourceIT {
         when().
             post("/wutup/venues");
     }
-    
+
     @Test
     public void testPostToVenuesWithoutId() {
         given().
@@ -182,6 +182,61 @@ public class VenueResourceIT {
             post("/wutup/venues");
     }
 
+    // **************************** PROPERTY TESTING ****************************
+    @Test
+    public void testGetVenuePropertiesById() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"Parking\":\"Valet only\"")).
+            body(containsString("\"Ages\":\"18+\"")).
+        when().
+            get("/wutup/venues/2/properties");
+    }
+
+    @Test
+    public void testGetVenuePropertiesWithNonIntegerIdResponsd400() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(400).
+        when().
+            get("/wutup/venues/hoopla/properties");
+    }
+
+    @Test
+    public void testGetVenuePropertiesWithoutIdResponds400() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(404).
+        when().
+            get("/wutup/venues//properties");
+    }
+
+    @Test
+    public void testGetemptyVenuePropertiesResponds200WithEmptyBody() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(equalTo("{}")).
+        when().
+            get("/wutup/venues/6/properties");
+    }
+
+    @Test
+    public void testGetVenuePropertiesWithNonExistantVenueIdResponds200WithEmptyBody() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(equalTo("{}")).
+        when().
+            get("/wutup/venues/8008135/properties");
+    }
+    // **************************** END PROPERTY TESTING ****************************
 
     // **************************** COMMENT TESTING ****************************
     
@@ -302,4 +357,5 @@ public class VenueResourceIT {
             post("wutup/venues/666/comments");
     }
     
+    // ******************** End Comment Testing **********************
 }

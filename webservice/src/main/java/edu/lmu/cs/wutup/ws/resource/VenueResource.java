@@ -4,7 +4,9 @@ import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -185,5 +187,14 @@ public class VenueResource extends AbstractWutupResource {
         } catch (NoSuchCommentException ex) {
             throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, venueId);
         }
+    }
+
+    // Need to go over functionality with class / Dr. Toal
+    // GETting at a non existant venue id and a venue with no properties both respond 200.
+    @GET
+    @Path("/{id}/properties")
+    public Map<String, String> getProperties(@PathParam("id") String venueIdString ) {
+        int venueId = toIntegerRequired("id", venueIdString);
+        return venueService.findProperties(venueId);
     }
 }
