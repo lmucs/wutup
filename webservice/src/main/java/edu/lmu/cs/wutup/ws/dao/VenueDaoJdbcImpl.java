@@ -19,6 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
+import edu.lmu.cs.wutup.ws.exception.NoSuchPropertyException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Circle;
@@ -181,14 +182,18 @@ public class VenueDaoJdbcImpl implements VenueDao {
 
     @Override
     public void updatePropertyValue(int venueId, String propertyName, String value) {
-        jdbcTemplate.update(UPDATE_PROPERTY_VALUE, value, venueId, propertyName);
-
+        int rowsUpdated = jdbcTemplate.update(UPDATE_PROPERTY_VALUE, value, venueId, propertyName);
+        if (rowsUpdated == 0) {
+            throw new NoSuchPropertyException();
+        }
     }
 
     @Override
     public void deleteProperty(int venueId, String propertyName) {
-        jdbcTemplate.update(DELETE_PROPERTY, venueId, propertyName);
-
+        int rowsUpdated = jdbcTemplate.update(DELETE_PROPERTY, venueId, propertyName);
+        if (rowsUpdated == 0) {
+            throw new NoSuchVenueException();
+        }
     }
 
     private static String createCircleSearchClause(Circle c) {

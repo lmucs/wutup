@@ -4,7 +4,6 @@ import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchPropertyException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchResourceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
@@ -49,9 +49,10 @@ import edu.lmu.cs.wutup.ws.service.VenueService;
 public class VenueResource extends AbstractWutupResource {
 
     private static final String VENUE_NOT_FOUND = "Venue %d does not exist";
-    private static final String VENUE_ALREADY_EXISTS = "Venue %d already exists";
+    private static final String VENUE_ALREADY_EXISTS = "Vensue %d already exists";
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for venue %d";
     private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists for venue %d";
+    private static final String PROPERTY_VENUE_ID_CONFLICT = "Property %s does not exist for Venue %d";
 
     @Autowired
     VenueService venueService;
@@ -60,11 +61,8 @@ public class VenueResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<Venue> findVenues(
-            @QueryParam("name") String name,
-            @QueryParam("event") String eventIdString,
-            @QueryParam("center") String center,
-            @QueryParam("radius") String radiusString,
+    public List<Venue> findVenues(@QueryParam("name") String name, @QueryParam("event") String eventIdString,
+            @QueryParam("center") String center, @QueryParam("radius") String radiusString,
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
@@ -131,9 +129,8 @@ public class VenueResource extends AbstractWutupResource {
 
     @GET
     @Path("/{id}/comments")
-    public List<Comment> findVenueComments(
-            @PathParam("id") String idString,
-            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)String pageString,
+    public List<Comment> findVenueComments(@PathParam("id") String idString,
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         int venueId = toIntegerRequired("id", idString);
@@ -156,10 +153,8 @@ public class VenueResource extends AbstractWutupResource {
 
     @PUT
     @Path("/{id}/comments/{commentid}")
-    public Response updateComment(
-            @PathParam("id") String venueIdString,
-            @PathParam("commentid") String commentIdString,
-            Comment venueComment) {
+    public Response updateComment(@PathParam("id") String venueIdString,
+            @PathParam("commentid") String commentIdString, Comment venueComment) {
 
         int venueId = toIntegerRequired("id", commentIdString);
         int commentId = toIntegerRequired("commentid", commentIdString);
@@ -175,9 +170,7 @@ public class VenueResource extends AbstractWutupResource {
 
     @DELETE
     @Path("/{id}/comments/{commentid}")
-    public Response deleteComment(
-            @PathParam("id") String venueIdString,
-            @PathParam("commentid") String commentIdString) {
+    public Response deleteComment(@PathParam("id") String venueIdString, @PathParam("commentid") String commentIdString) {
 
         int venueId = toIntegerRequired("id", venueIdString);
         int commentId = toIntegerRequired("commentid", commentIdString);
@@ -193,8 +186,25 @@ public class VenueResource extends AbstractWutupResource {
     // GETting at a non existant venue id and a venue with no properties both respond 200.
     @GET
     @Path("/{id}/properties")
-    public Map<String, String> getProperties(@PathParam("id") String venueIdString ) {
+    public Map<String, String> getProperties(@PathParam("id") String venueIdString) {
         int venueId = toIntegerRequired("id", venueIdString);
         return venueService.findProperties(venueId);
+    }
+
+    @POST
+    @Path("/{id}/properties")
+    public Response updateProperty(@PathParam("id") String venueIdString, Map<String, String> keyValuePair) {
+        int venueId = toIntegerRequired("id", venueIdString);
+        String key = (String) keyValuePair.keySet().toArray()[0];
+        String value = (String) keyValuePair.values().toArray()[0];
+        try {
+            Venue v = venueService.findVenueById(venueId);
+            venueService.updatePropertyValue(v.getId(), key, value);
+            return Response.noContent().build();
+        } catch (NoSuchPropertyException e) {
+            throw new ServiceException(CONFLICT, PROPERTY_VENUE_ID_CONFLICT, key, venueId);
+        } catch (NoSuchVenueException e) {
+            throw new ServiceException(NOT_FOUND, VENUE_NOT_FOUND, venueId);
+        }
     }
 }

@@ -39,6 +39,7 @@ public class VenueResourceTest {
     String samplePropertyKey = "Sample key";
     String samplePropertyValue = "Sample value";
     Map<String, String> sampleProperties;
+    Map<String, String> updateProperties;
     UriInfo sampleUriInfo;
 
     @Before
@@ -50,6 +51,7 @@ public class VenueResourceTest {
         UriBuilder uriBuilder = UriBuilder.fromUri("http://example.com");
         when(sampleUriInfo.getAbsolutePathBuilder()).thenReturn(uriBuilder);
         sampleProperties = new HashMap<String, String>();
+        updateProperties = new HashMap<String, String>();
         sampleProperties.put(samplePropertyKey, samplePropertyValue);
     }
 
@@ -68,7 +70,7 @@ public class VenueResourceTest {
             assertThat(e.getResponse().getStatus(), is(400));
         }
     }
-    
+
     @Test
     public void getVenuePropertiesWithNoIdProduces400() {
         try {
@@ -78,8 +80,27 @@ public class VenueResourceTest {
             assertThat(e.getResponse().getStatus(), is(400));
         }
     }
-    
-    
+
+    @Test
+    public void updatePropertyWithNoIdProduces400() {
+        try {
+            resource.updateProperty("", sampleProperties);
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(400));
+        }
+    }
+
+    @Test
+    public void updatePropertyWithNonIntegerIdProduces400() {
+        try {
+            resource.updateProperty("abcd", sampleProperties);
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(400));
+        }
+    }
+
     /* Begin Venue Comment Testing */
     @Test
     public void canAddCommentsToVenue() {

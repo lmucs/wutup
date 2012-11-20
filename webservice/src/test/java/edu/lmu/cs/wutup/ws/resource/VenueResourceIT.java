@@ -236,6 +236,86 @@ public class VenueResourceIT {
         when().
             get("/wutup/venues/8008135/properties");
     }
+
+    @Test
+    public void testUpdatePropertyWithNonIntegerIdResponds400() {
+        given().
+            contentType("application/json").
+            body("{\"Parking\":\"NO PARKING\"}").
+        expect().
+            statusCode(400).
+        when().
+            post("/wutup/venues/hoopla/properties");
+    }
+
+    @Test
+    public void testUpdatedPropertyCanBeFound() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"Parking\":\"Valet only\"")).
+        when().
+            get("/wutup/venues/2/properties");
+
+        given().
+            contentType("application/json").
+            body("{\"Parking\":\"Free parking for all!\"}").
+        expect().
+            statusCode(204).
+        when().
+            post("/wutup/venues/2/properties");
+
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"Parking\":\"Free parking for all!\"")).
+        when().
+            get("/wutup/venues/2/properties");
+    }
+
+    @Test
+    public void testUpdateNonExistantPropertyResponds409() {
+        given().
+            contentType("application/json").
+            body("{\"ID Required\":\"No\"}").
+        expect().
+            statusCode(409).
+        when().
+            post("/wutup/venues/7/properties");
+    }
+    
+    @Test
+    public void testUpdatePropertyOnNonExistantResponds404() {
+        given().
+            contentType("application/json").
+            body("{\"Parking\":\"No\"}").
+        expect().
+            statusCode(404).
+        when().
+            post("/wutup/venues/8008135/properties");
+    }
+    
+    @Test
+    public void testUpdatePropertyOnlyUsesFirstKeyValuePair() {
+        given().
+            contentType("application/json").
+            body("{\"fax\":\"Use the damn phone\",\"twitter\":\"@turd\"}").
+        expect().
+            statusCode(204).
+        when().
+            post("/wutup/venues/5/properties");
+
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"twitter\":\"@theroxy\"")).
+            body(containsString("\"fax\":\"Use the damn phone\"")).
+        when().
+            get("/wutup/venues/5/properties");
+    }
     // **************************** END PROPERTY TESTING ****************************
 
     // **************************** COMMENT TESTING ****************************
