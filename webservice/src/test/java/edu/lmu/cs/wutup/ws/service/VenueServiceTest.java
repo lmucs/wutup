@@ -7,6 +7,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,12 +23,17 @@ public class VenueServiceTest {
     VenueDao dao;
 
     Venue sampleVenue = new Venue(1, "Sample Venue", "5639 Topanga Canyon Rd Blubberville, Utah 80832");
+    String samplePropertyKey = "Sample Property Name";
+    String samplePropertyValue = "Sample Property Value";
+    Map<String, String> samplePropertyMap;
 
     @Before
     public void setUp() {
         service = new VenueServiceImpl();
         dao = mock(VenueDao.class);
         service.venueDao = dao;
+        samplePropertyMap = new HashMap<String, String>();
+        samplePropertyMap.put(samplePropertyKey, samplePropertyValue);
     }
 
     @Test
@@ -34,7 +42,7 @@ public class VenueServiceTest {
         verify(dao).createVenue(sampleVenue);
     }
 
-    @Test(expected=VenueExistsException.class)
+    @Test(expected = VenueExistsException.class)
     public void creationPropagatesExistExceptions() {
         doThrow(new VenueExistsException()).when(dao).createVenue(sampleVenue);
         service.createVenue(sampleVenue);
@@ -57,5 +65,29 @@ public class VenueServiceTest {
     public void deletionDelegatesToDao() {
         service.deleteVenue(sampleVenue.getId());
         verify(dao).deleteVenue(sampleVenue.getId());
+    }
+
+    @Test
+    public void addPropertyDelegatesToDao() {
+        service.addProperty(sampleVenue.getId(), samplePropertyKey, samplePropertyValue);
+        verify(dao).addProperty(sampleVenue.getId(), samplePropertyKey, samplePropertyValue);
+    }
+
+    @Test
+    public void getPropertiesDelegatesToDao() {
+        when(dao.findProperties(sampleVenue.getId())).thenReturn(samplePropertyMap);
+        assertThat(service.findProperties(sampleVenue.getId()), equalTo(samplePropertyMap));
+    }
+
+    @Test
+    public void updatePropertyValueDelegatesToDao() {
+        service.updatePropertyValue(sampleVenue.getId(), samplePropertyKey, samplePropertyValue);
+        verify(dao).updatePropertyValue(sampleVenue.getId(), samplePropertyKey, samplePropertyValue);
+    }
+
+    @Test
+    public void deletePropertyDelegatesToDao() {
+        service.deleteProperty(sampleVenue.getId(), samplePropertyKey);
+        verify(dao).deleteProperty(sampleVenue.getId(), samplePropertyKey);
     }
 }
