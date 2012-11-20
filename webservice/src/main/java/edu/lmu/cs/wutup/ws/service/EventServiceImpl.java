@@ -38,9 +38,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
-            PaginationData pagination) {
-        return eventDao.findEvents(owner, categories, venues, circle, pagination);
+    public List<Event> findEvents(String name, User owner, List<Category> categories, List<Venue> venues,
+            Circle circle, PaginationData pagination) {
+        return eventDao.findEvents(name, owner, categories, venues, circle, pagination);
     }
 
     @Override
