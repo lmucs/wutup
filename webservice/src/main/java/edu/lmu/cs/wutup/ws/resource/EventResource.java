@@ -31,9 +31,13 @@ import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
+import edu.lmu.cs.wutup.ws.model.Category;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
+import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 import edu.lmu.cs.wutup.ws.service.EventService;
 
 @Component
@@ -53,12 +57,15 @@ public class EventResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<Event> findEvents(@QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
+    public List<Event> findEvents(@QueryParam("owner") User owner, @QueryParam("category") List<Category> categories,
+            @QueryParam("venue") List<Venue> venues, @QueryParam("center") String center,
+            @QueryParam("radius") String radiusString,
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
-        // TODO - STUB - NEEDS TO TAKE MORE PARAMETERS IN THE FUTURE
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
-        return eventService.findEvents(pagination);
+        Circle circle = fromCenterAndRadiusParameters(center, radiusString);
+        return eventService.findEvents(owner, categories, venues, circle, pagination);
     }
 
     @GET
@@ -116,8 +123,7 @@ public class EventResource extends AbstractWutupResource {
 
     @GET
     @Path("/{id}/comments")
-    public List<Comment> findEventComments(
-            @PathParam("id") String idString,
+    public List<Comment> findEventComments(@PathParam("id") String idString,
             @QueryParam("page") @DefaultValue("0") String pageString,
             @QueryParam("pageSize") @DefaultValue("10") String pageSizeString) {
 
@@ -130,9 +136,8 @@ public class EventResource extends AbstractWutupResource {
 
     @POST
     @Path("/{id}/comments")
-    public Response addComment(@PathParam("id") String idString, Comment eventComment, 
-            @Context UriInfo uriInfo) {
-        
+    public Response addComment(@PathParam("id") String idString, Comment eventComment, @Context UriInfo uriInfo) {
+
         int eventId = toInteger("id", idString);
 
         try {
@@ -145,10 +150,8 @@ public class EventResource extends AbstractWutupResource {
 
     @PUT
     @Path("/{id}/comments/{commentid}")
-    public Response updateComment(
-            @PathParam("id") String eventIdString,
-            @PathParam("commentid") String commentIdString,
-            Comment eventComment) {
+    public Response updateComment(@PathParam("id") String eventIdString,
+            @PathParam("commentid") String commentIdString, Comment eventComment) {
 
         int eventId = toInteger("id", commentIdString);
         int commentId = toInteger("commentid", commentIdString);
@@ -164,9 +167,7 @@ public class EventResource extends AbstractWutupResource {
 
     @DELETE
     @Path("/{id}/comments/{commentid}")
-    public Response deleteComment(
-            @PathParam("id") String eventIdString,
-            @PathParam("commentid") String commentIdString) {
+    public Response deleteComment(@PathParam("id") String eventIdString, @PathParam("commentid") String commentIdString) {
 
         int eventId = toInteger("id", eventIdString);
         int commentId = toInteger("commentid", commentIdString);

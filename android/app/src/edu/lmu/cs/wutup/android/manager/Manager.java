@@ -1,12 +1,10 @@
 package edu.lmu.cs.wutup.android.manager;
 
-import edu.lmu.cs.wutup.android.manager.R;
-import edu.lmu.cs.wutup.android.views.Log;
-import edu.lmu.cs.wutup.android.views.Map;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import edu.lmu.cs.wutup.android.views.Map;
 
 public class Manager extends Activity {
     

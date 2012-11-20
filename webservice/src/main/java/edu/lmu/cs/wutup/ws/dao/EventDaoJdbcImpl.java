@@ -19,25 +19,27 @@ import org.springframework.stereotype.Repository;
 import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
+import edu.lmu.cs.wutup.ws.model.Category;
+import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Repository
 public class EventDaoJdbcImpl implements EventDao {
 
-    private static final String SELECT_EVENT = "select e.*, u.* from event e join user u on (e.ownerId = u.id)";
     private static final String SELECT_COMMENT = "select ec.*, u.* from event_comment ec join user u on (ec.authorId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
 
     private static final String CREATE_SQL = "insert into event (name, description, ownerId) values (?,?,?)";
     private static final String UPDATE_SQL = "update event set name=ifnull(?, name), description=ifnull(?, description) where id=?";
-    private static final String FIND_ALL_SQL = SELECT_EVENT + " " + PAGINATION;
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where ec.subjectId = ? order by ec.timestamp asc " + PAGINATION;
+    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT
+            + " where ec.subjectId = ? order by ec.timestamp asc " + PAGINATION;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -70,21 +72,33 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public Event findEventById(int id) {
         try {
-            return jdbcTemplate.queryForObject(
-                    new QueryBuilder().select("e.*, u.*")
-                            .from("event e")
-                            .joinOn("user u", "e.ownerId = u.id")
-                            .where("e.id=:id", id)
-                            .build(), eventRowMapper);
+            return jdbcTemplate.queryForObject(getSelectQuery().where("e.id=:id", id).build(), eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();
         }
     }
 
     @Override
-    public List<Event> findEvents(PaginationData pagination) {
-        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
-                pagination.pageNumber * pagination.pageSize}, eventRowMapper);
+    public List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
+            PaginationData pagination) {
+        QueryBuilder query = getSelectQuery().whereCircle(circle);
+
+        if (owner != null) {
+            query.where("e.ownerId = :id", owner.getId());
+        }
+        if (categories != null) {
+            // TODO: Implement categories search
+            for (int i = 0; i < categories.size(); i++) {
+                query.where(null, categories.get(i));
+            }
+        }
+        if (venues != null) {
+            for (int i = 0; i < venues.size(); i++) {
+                query.where("v.id = :vId" + i, venues.get(i).getId());
+            }
+        }
+
+        return jdbcTemplate.query(query.addPagination(pagination).build(), eventRowMapper);
     }
 
     @Override
@@ -99,7 +113,6 @@ public class EventDaoJdbcImpl implements EventDao {
     public int findNumberOfEvents() {
         return jdbcTemplate.queryForInt(COUNT_SQL);
     }
-    
 
     @Override
     public Integer addComment(Integer eventId, Comment comment) {
@@ -121,7 +134,7 @@ public class EventDaoJdbcImpl implements EventDao {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
                 pagination.pageNumber, pagination.pageSize);
     }
-    
+
     @Override
     public int findMaxKeyValueForComments() {
         return CommentDaoUtils.findMaxKeyValueForComments(jdbcTemplate, "event");
@@ -134,4 +147,8 @@ public class EventDaoJdbcImpl implements EventDao {
                     rs.getString("nickname")));
         }
     };
+
+    private QueryBuilder getSelectQuery() {
+        return new QueryBuilder().select("e.*", "u.*").from("event e").joinOn("user u", "e.ownerId = u.id");
+    }
 }
