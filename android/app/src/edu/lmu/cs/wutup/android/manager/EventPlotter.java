@@ -29,6 +29,11 @@ public class EventPlotter extends ItemizedOverlay<OverlayItem> {
 	    mOverlays.add(overlay);
 	    populate();
 	}
+	
+	public void clearOverlay() {
+	    mOverlays.clear();
+            populate();
+        }
 
 	@Override
 	protected OverlayItem createItem(int i) {
