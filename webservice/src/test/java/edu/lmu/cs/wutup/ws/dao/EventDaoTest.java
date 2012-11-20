@@ -118,6 +118,12 @@ public class EventDaoTest {
     }
 
     @Test
+    public void findingEventsViaNameWorks() {
+        List<Event> events = eventDao.findEvents("Poker Night", null, null, null, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(1));
+    }
+
+    @Test
     public void testGetMaxKeyValueForEventComments() {
         int maxValue = eventDao.findMaxKeyValueForComments();
         assertThat(maxValue, is(1));
