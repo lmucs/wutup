@@ -285,7 +285,7 @@ public class VenueResourceIT {
         when().
             post("/wutup/venues/7/properties");
     }
-    
+
     @Test
     public void testUpdatePropertyOnNonExistantResponds404() {
         given().
@@ -296,23 +296,44 @@ public class VenueResourceIT {
         when().
             post("/wutup/venues/8008135/properties");
     }
-    
+
     @Test
-    public void testUpdatePropertyOnlyUsesFirstKeyValuePair() {
+    public void testUpdatePropertyOnlyTakesOneKeyValuePair() {
         given().
             contentType("application/json").
             body("{\"fax\":\"Use the damn phone\",\"twitter\":\"@turd\"}").
         expect().
+            statusCode(400).
+        when().
+            post("/wutup/venues/5/properties");
+    }
+
+    @Test
+    public void testUpdatePropertyWithEmptyBodyResponds400() {
+        given().
+            contentType("application/json").
+            body("{}").
+        expect().
+            statusCode(400).
+        when().
+            post("/wutup/venues/5/properties");
+    }
+    
+    @Test
+    public void testDeletePropertyWithNullValue() {
+        given().
+            contentType("application/json").
+            body("{\"fax\":null}").
+        expect().
             statusCode(204).
         when().
             post("/wutup/venues/5/properties");
-
+        
         given().
             header("Accept", "application/json").
         expect().
             statusCode(200).
-            body(containsString("\"twitter\":\"@theroxy\"")).
-            body(containsString("\"fax\":\"Use the damn phone\"")).
+            body(containsString("\"fax\":null")).
         when().
             get("/wutup/venues/5/properties");
     }
