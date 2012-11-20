@@ -168,12 +168,12 @@ public class EventResource extends AbstractWutupResource {
             @PathParam("id") String eventIdString,
             @PathParam("commentid") String commentIdString) {
 
-        int eventId = toInteger("id", commentIdString);
+        int eventId = toInteger("id", eventIdString);
         int commentId = toInteger("commentid", commentIdString);
         try {
             eventService.deleteComment(eventId, commentId);
             return Response.noContent().build();
-        } catch (NoSuchEventException ex) {
+        } catch (NoSuchCommentException ex) {
             throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventId);
         }
     }

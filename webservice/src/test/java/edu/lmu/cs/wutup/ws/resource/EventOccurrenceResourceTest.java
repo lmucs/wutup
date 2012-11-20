@@ -142,13 +142,41 @@ public class EventOccurrenceResourceTest {
     }
 
     @Test
-    public void findingEventOccurrenceReturnsAllOccurrencesAsList() {
+    public void findingEventOccurrencesReturnsAllOccurrencesAsList() {
         when(
-                service.findEventOccurrencesByQuery(new ArrayList<Category>(), new Circle(1.0, 1.0, 1.0), new Interval(
-                        1L, 1L), new Integer(42), new ArrayList<Venue>(), new PaginationData(0, 5))).thenReturn(
+                service.findEventOccurrences(new ArrayList<Category>(), new Circle(1.0, 1.0, 1.0),
+                        new Interval(1L, 1L), new Integer(42), new ArrayList<Venue>(), new PaginationData(0, 5))).thenReturn(
                 sampleEventOccurrenceList);
-        List<EventOccurrence> result = resource.getEventOccurrences(new ArrayList<Category>(), "1.0,1.0", "1.0", "",
-                "", new Integer(42), new ArrayList<Venue>(), "0", "5");
+        List<EventOccurrence> result = resource.findEventOccurrences(new ArrayList<Category>(), "1.0,1.0", "1.0", "1",
+                "1", new Integer(42), new ArrayList<Venue>(), "0", "5");
+        assertThat(result, is(sampleEventOccurrenceList));
+    }
+
+    @Test
+    public void findingEventOccurrencesByTimeIntervalReturnsAsList() {
+        when(
+                service.findEventOccurrences(null, null, new Interval(1326196800L, 1328356800L), null, null,
+                        new PaginationData(0, 10))).thenReturn(sampleEventOccurrenceList);
+        List<EventOccurrence> result = resource.findEventOccurrences(null, null, null, "1326196800", "1328356800",
+                null, null, "0", "10");
+        assertThat(result, is(sampleEventOccurrenceList));
+    }
+
+    @Test
+    public void findingEventOccurrencesByCircleReturnsAsList() {
+        when(
+                service.findEventOccurrences(null, new Circle(20.0, 30.0, 100.0), null, null, null, new PaginationData(
+                        0, 10))).thenReturn(sampleEventOccurrenceList);
+        List<EventOccurrence> result = resource.findEventOccurrences(null, "20.0,30.0", "100.0", null, null, null,
+                null, "0", "10");
+        assertThat(result, is(sampleEventOccurrenceList));
+    }
+
+    @Test
+    public void findingEventOccurrencesByEventIdReturnsAsList() {
+        when(service.findEventOccurrences(null, null, null, 2, null, new PaginationData(0, 10))).thenReturn(
+                sampleEventOccurrenceList);
+        List<EventOccurrence> result = resource.findEventOccurrences(null, null, null, null, null, 2, null, "0", "10");
         assertThat(result, is(sampleEventOccurrenceList));
     }
 

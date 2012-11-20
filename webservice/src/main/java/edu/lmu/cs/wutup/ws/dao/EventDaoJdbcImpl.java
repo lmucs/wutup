@@ -121,6 +121,11 @@ public class EventDaoJdbcImpl implements EventDao {
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
                 pagination.pageNumber, pagination.pageSize);
     }
+    
+    @Override
+    public int findMaxKeyValueForComments() {
+        return CommentDaoUtils.findMaxKeyValueForComments(jdbcTemplate, "event");
+    }
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {

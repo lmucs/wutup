@@ -29,11 +29,11 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchResourceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Category;
@@ -53,11 +53,11 @@ import edu.lmu.cs.wutup.ws.service.EventOccurrenceService;
 public class EventOccurrenceResource extends AbstractWutupResource {
 
     private static final String EVENT_OCCURRENCE_NOT_FOUND = "Event occurrence %d does not exist";
+    private static final String OCCURRENCE_AUTHOR_NOT_FOUND = "Event occurrence or User author does not exist";
     private static final String EVENT_OCCURRENCE_ALREADY_EXISTS = "Event occurrence %d already exists";
     private static final String EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD = "Event occurrence query parameters improperly formed";
     private static final String CONDITIONAL_PARAMETER_MISSING = "The %s parameter must be present if the %s parameter is supplied";
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for event %d";
-    private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists for event %d";
     private static final String USER_NOT_FOUND = "User %d does not exist";
 
     @Autowired
@@ -65,7 +65,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<EventOccurrence> getEventOccurrences(@QueryParam("category") List<Category> categories,
+    public List<EventOccurrence> findEventOccurrences(@QueryParam("category") List<Category> categories,
             @QueryParam("center") String center, @QueryParam("radius") String radiusString,
             @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") Integer eventId,
             @QueryParam("venue") List<Venue> venues,
@@ -78,8 +78,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
         validateQuery(categories, circle, interval, eventId, venues);
 
-        return eventOccurrenceService.findEventOccurrencesByQuery(categories, circle, interval, eventId, venues,
-                pagination);
+        return eventOccurrenceService.findEventOccurrences(categories, circle, interval, eventId, venues, pagination);
     }
 
     @POST
@@ -185,13 +184,13 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     @GET
     @Path("/{id}/comments")
     public List<Comment> findEventOccurrenceComments(@PathParam("id") String idString,
-            @QueryParam("page") @DefaultValue(DEFAULT_PAGE_SIZE) String pageString,
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
         checkRequiredParameter("id", idString);
-        int eventOccurrenceId = toInteger("id", idString);
+        int id = toInteger("id", idString);
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
 
-        return eventOccurrenceService.findComments(eventOccurrenceId, pagination);
+        return eventOccurrenceService.findComments(id, pagination);
     }
 
     @POST
@@ -201,8 +200,9 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
         try {
             eventOccurrenceService.addComment(eventOccurrenceId, eventOccurrenceComment);
-        } catch (CommentExistsException e) {
-            throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, eventOccurrenceComment.getId());
+        } catch (NoSuchResourceException e) {
+            throw new ServiceException(NOT_FOUND, OCCURRENCE_AUTHOR_NOT_FOUND, eventOccurrenceId,
+                    eventOccurrenceComment.getAuthor().getId());
         }
     }
 
@@ -231,7 +231,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         try {
             eventOccurrenceService.deleteComment(eventOccurrenceId, commentId);
             return Response.noContent().build();
-        } catch (NoSuchEventOccurrenceException ex) {
+        } catch (NoSuchCommentException ex) {
             throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventOccurrenceId);
         }
     }
@@ -248,8 +248,8 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         }
 
         try {
-            DateTime startTime = eventOccurrenceService.parseStringToDateTime(start);
-            DateTime endTime = eventOccurrenceService.parseStringToDateTime(end);
+            DateTime startTime = new DateTime(Long.parseLong(start));
+            DateTime endTime = new DateTime(Long.parseLong(end));
             return new Interval(startTime, endTime);
         } catch (MalformedDateTimeStringException e) {
             throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);

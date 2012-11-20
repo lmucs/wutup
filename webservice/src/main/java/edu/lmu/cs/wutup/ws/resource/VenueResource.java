@@ -21,14 +21,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import edu.lmu.cs.wutup.ws.exception.CommentExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchResourceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
@@ -50,8 +51,10 @@ public class VenueResource extends AbstractWutupResource {
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for venue %d";
     private static final String COMMENT_ALREADY_EXISTS = "Comment %d already exists for venue %d";
 
-    @Autowired 
+    @Autowired
     VenueService venueService;
+
+    Logger logger = Logger.getLogger(getClass());
 
     @GET
     @Path("/")
@@ -84,6 +87,7 @@ public class VenueResource extends AbstractWutupResource {
     @POST
     @Path("/")
     public Response createVenue(final Venue venue, @Context UriInfo uriInfo) {
+        logger.debug("Creating venue");
         venue.setId(null);
         try {
             venueService.createVenue(venue);
@@ -127,8 +131,8 @@ public class VenueResource extends AbstractWutupResource {
     @Path("/{id}/comments")
     public List<Comment> findVenueComments(
             @PathParam("id") String idString,
-            @QueryParam("page") String pageString,
-            @QueryParam("pageSize") String pageSizeString) {
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE)String pageString,
+            @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         int venueId = toIntegerRequired("id", idString);
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
@@ -143,8 +147,8 @@ public class VenueResource extends AbstractWutupResource {
         int venueId = toIntegerRequired("id", idString);
         try {
             venueService.addComment(venueId, venueComment);
-        } catch (CommentExistsException e) {
-            throw new ServiceException(CONFLICT, COMMENT_ALREADY_EXISTS, venueComment.getId());
+        } catch (NoSuchResourceException e) {
+            throw new ServiceException(NOT_FOUND, VENUE_NOT_FOUND, venueId);
         }
     }
 
@@ -173,12 +177,12 @@ public class VenueResource extends AbstractWutupResource {
             @PathParam("id") String venueIdString,
             @PathParam("commentid") String commentIdString) {
 
-        int venueId = toIntegerRequired("id", commentIdString);
+        int venueId = toIntegerRequired("id", venueIdString);
         int commentId = toIntegerRequired("commentid", commentIdString);
         try {
             venueService.deleteComment(venueId, commentId);
             return Response.noContent().build();
-        } catch (NoSuchVenueException ex) {
+        } catch (NoSuchCommentException ex) {
             throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, venueId);
         }
     }

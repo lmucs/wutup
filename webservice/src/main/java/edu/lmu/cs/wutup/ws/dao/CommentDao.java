@@ -14,4 +14,6 @@ public interface CommentDao {
     List<Comment> findComments(int commentableId, PaginationData pagination);
 
     void deleteComment(int commentableId, int commentId);
+
+    int findMaxKeyValueForComments();
 }

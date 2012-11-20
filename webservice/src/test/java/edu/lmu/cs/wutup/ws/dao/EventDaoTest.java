@@ -114,6 +114,12 @@ public class EventDaoTest {
         events = eventDao.findEvents(new PaginationData(2, 3));
         assertThat(events.size(), is(2));
     }
+    
+    @Test
+    public void testGetMaxKeyValueForEventComments() {
+        int maxValue = eventDao.findMaxKeyValueForComments();
+        assertThat(maxValue, is(1));
+    }
 
     @Test
     public void findingCommentsWorks() {
@@ -130,6 +136,14 @@ public class EventDaoTest {
         eventDao.addComment(1, new Comment(null, "Hello", new DateTime(), sam));
         int afterCount = eventDao.findComments(1, new PaginationData(0, 10)).size();
         assertThat(afterCount, is(initialCount + 1));
+    }
+    
+    @Test
+    public void createdEventCommentAutoGeneratesId() {
+        int maxKeyValue = eventDao.findMaxKeyValueForComments();
+        eventDao.addComment(5, new Comment(null, "Boo", new DateTime(2012, 11, 11, 12, 34), sam));
+        int nextKeyValue = eventDao.findMaxKeyValueForComments();
+        assertThat(nextKeyValue, is(maxKeyValue + 1));
     }
     
     @Test

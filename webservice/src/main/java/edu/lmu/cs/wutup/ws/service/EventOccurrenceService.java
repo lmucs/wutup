@@ -2,10 +2,8 @@ package edu.lmu.cs.wutup.ws.service;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
@@ -25,14 +23,10 @@ public interface EventOccurrenceService extends CommentService {
 
     EventOccurrence findEventOccurrenceById(int id);
 
-    List<EventOccurrence> findAllEventOccurrences(PaginationData pagination);
-
-    List<EventOccurrence> findEventOccurrencesByQuery(List<Category> categories, Circle circle, Interval interval,
+    List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
             Integer eventId, List<Venue> venues, PaginationData pagination);
 
     void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
 
     void unregisterAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
-
-    DateTime parseStringToDateTime(String time) throws MalformedDateTimeStringException;
 }

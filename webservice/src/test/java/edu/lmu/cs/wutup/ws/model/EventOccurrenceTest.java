@@ -16,7 +16,7 @@ public class EventOccurrenceTest {
     private Event eventTwo = new Event(2, "Party", "Another hoedown!", dondi);
 
     @Test
-    public void fieldsSetByConstructorCanBeRead() {
+    public void fieldsSetByFullConstructorCanBeRead() {
         DateTime start = new DateTime(2012, 9, 27, 10, 50, 0);
         DateTime end = new DateTime(2012, 9, 27, 12, 5, 0);
         EventOccurrence o = new EventOccurrence(3, eventOne, new Venue(3, "", "", 15.0, 15.0, null), start, end);
@@ -26,6 +26,28 @@ public class EventOccurrenceTest {
                 is("Venue{id=3, address=, latitude=15.0, longitude=15.0, propertyMap=null}"));
         assertThat(o.getStart(), is(start));
         assertThat(o.getEnd(), is(end));
+    }
+
+    @Test
+    public void fieldsSetByNoIdConstructorCanBeRead() {
+        DateTime start = new DateTime(2012, 9, 27, 10, 50, 0);
+        DateTime end = new DateTime(2012, 9, 27, 12, 5, 0);
+        EventOccurrence o = new EventOccurrence(eventOne, new Venue(3, "", "", 15.0, 15.0, null), start, end);
+        assert(o.getId() == null);
+        assertThat(o.getEvent(), is(eventOne));
+        assertThat(o.getVenue().toString(),
+                is("Venue{id=3, address=, latitude=15.0, longitude=15.0, propertyMap=null}"));
+        assertThat(o.getStart(), is(start));
+        assertThat(o.getEnd(), is(end));
+    }
+
+    @Test
+    public void fieldsSetByLimitedConstructorCanBeRead() {
+        EventOccurrence o = new EventOccurrence(3, eventOne, new Venue(3, "", "", 15.0, 15.0, null));
+        assertThat(o.getId(), is(3));
+        assertThat(o.getEvent(), is(eventOne));
+        assertThat(o.getVenue().toString(),
+                is("Venue{id=3, address=, latitude=15.0, longitude=15.0, propertyMap=null}"));
     }
 
     @Test
