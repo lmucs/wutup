@@ -30,13 +30,11 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 @Repository
 public class EventDaoJdbcImpl implements EventDao {
 
-    private static final String SELECT_EVENT = "select e.*, u.* from event e join user u on (e.ownerId = u.id)";
     private static final String SELECT_COMMENT = "select ec.*, u.* from event_comment ec join user u on (ec.authorId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
 
     private static final String CREATE_SQL = "insert into event (name, description, ownerId) values (?,?,?)";
     private static final String UPDATE_SQL = "update event set name=ifnull(?, name), description=ifnull(?, description) where id=?";
-    private static final String FIND_ALL_SQL = SELECT_EVENT + " " + PAGINATION;
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
 
@@ -74,12 +72,7 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public Event findEventById(int id) {
         try {
-            return jdbcTemplate.queryForObject(
-                    new QueryBuilder().select("e.*, u.*")
-                            .from("event e")
-                            .joinOn("user u", "e.ownerId = u.id")
-                            .where("e.id=:id", id)
-                            .build(), eventRowMapper);
+            return jdbcTemplate.queryForObject(getSelectQuery().where("e.id=:id", id).build(), eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();
         }
@@ -88,9 +81,24 @@ public class EventDaoJdbcImpl implements EventDao {
     @Override
     public List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
             PaginationData pagination) {
-        // TODO: Update SQL to query with all supplied parameters
-        return jdbcTemplate.query(FIND_ALL_SQL, new Object[]{pagination.pageSize,
-                pagination.pageNumber * pagination.pageSize}, eventRowMapper);
+        QueryBuilder query = getSelectQuery().whereCircle(circle);
+
+        if (owner != null) {
+            query.where("e.ownerId = :id", owner.getId());
+        }
+        if (categories != null) {
+            // TODO: Implement categories search
+            for (int i = 0; i < categories.size(); i++) {
+                query.where(null, categories.get(i));
+            }
+        }
+        if (venues != null) {
+            for (int i = 0; i < venues.size(); i++) {
+                query.where("v.id = :vId" + i, venues.get(i).getId());
+            }
+        }
+
+        return jdbcTemplate.query(query.addPagination(pagination).build(), eventRowMapper);
     }
 
     @Override
@@ -139,4 +147,8 @@ public class EventDaoJdbcImpl implements EventDao {
                     rs.getString("nickname")));
         }
     };
+
+    private QueryBuilder getSelectQuery() {
+        return new QueryBuilder().select("e.*", "u.*").from("event e").joinOn("user u", "e.ownerId = u.id");
+    }
 }
