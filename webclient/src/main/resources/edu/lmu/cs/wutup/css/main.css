@@ -1,15 +1,15 @@
 body {
+    padding-top: 70px;
 	background: url('../img/noisy_grid.png');
 }
 
 #container {
-	padding-top: 70px;
 	padding-bottom: 40px;
 }
 
 #map_canvas {
 	width: 100%;
-	height: 730px;
+	height: 350px;
 }
 
 #map_canvas img {
@@ -200,13 +200,20 @@ table, td, th {
     overflow-y: scroll;
 }
 
-#left-column-container {
+#eventDescription {  
+    height: 200px !important;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+
+#left-sidebar {
     background-color: #ffffff;
     padding: 20px 20px;
     border: 1;
 }
 
-.left-column-header {
+.header {
     background-color: #A50001;
     color: #ffffff;
 }
@@ -214,6 +221,28 @@ table, td, th {
 .btn-small {
     height:auto;
     width:40px;
+    text-align:center;
+    white-space:nowrap;
+}
+
+.section {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+#event-header table, #event-header td, #event-header th {
+    background-color: #A50001;
+    color: #ffffff;
+}
+
+#map_canvas.eventMap {
+	width: 100%;
+	height: 350px;
+}
+
+.event-button {
+    height:auto;
+    width:100px;
     text-align:center;
     white-space:nowrap;
 }
