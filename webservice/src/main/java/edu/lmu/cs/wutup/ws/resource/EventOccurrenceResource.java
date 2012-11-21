@@ -69,7 +69,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
             @QueryParam("center") String center, @QueryParam("radius") String radiusString,
             @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") Integer eventId,
             @QueryParam("venue") List<Venue> venues,
-            @QueryParam("pageNumber") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         PaginationData pagination = paginationDataFor(pageNumberString, pageSizeString);
@@ -124,7 +124,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     @GET
     @Path("/{id}/attendees")
     public List<User> findAttendeesById(@PathParam("id") String idString,
-            @QueryParam("pageNumber") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         PaginationData pagination = paginationDataFor(pageNumberString, pageSizeString);
