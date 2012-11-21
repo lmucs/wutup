@@ -4,26 +4,28 @@ $(document).ready(function() {
 		var initialLocation, siberia = new google.maps.LatLng(60, 105), newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687), browserSupportFlag = new Boolean(), calendarEvents = null, mapOptions = {
 			zoom : 10,
 			mapTypeId : google.maps.MapTypeId.ROADMAP
-		};
+		},
+		mapMarkers = [];
 		map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-		createCalendar(calendarEvents);
+
 		// Trying W3C Geolocation
 		if (navigator.geolocation) {
 			browserSupportFlag = true;
 			navigator.geolocation.getCurrentPosition(function(position) {
 				initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 				map.setCenter(initialLocation);
+				google.maps.event.addListenerOnce(map, 'idle', function() {
+				createCalendar(calendarEvents, map, mapMarkers);
+				});
 				var bounds, radius, center;
 				google.maps.event.addListener(map, 'tilesloaded', function() {
 					bounds = map.getBounds();
-					radius = bounds.toSpan().lng();
 					center = bounds.getCenter();
-					console.log(center.toString());
-					// Grab Event Occurrences. Needs to be refined to map area.
-					$.getJSON('http://localhost:8080/wutup/occurrences?page=0&pageSize=20', function(occurrences) {//&center=' + center.lat() + "," + center.lng() + '&radius=' + radius
+					radius = calculateRadius(bounds);
+					$.getJSON(generateOccurrenceURL(center,radius,getCalendarView().start,getCalendarView().end), function(occurrences) {
 						calendarEvents = parseOccurrencesForCalendar(occurrences);
 						populateCalendar(calendarEvents);
-						populateMap(map, calendarEvents);
+						populateMap(map, calendarEvents, mapMarkers);
 					});
 
 				});
@@ -55,12 +57,48 @@ $(document).ready(function() {
 		};
 	};
 
-	var populateMap = function(gMap, events) {
+	var calculateRadius = function(bounds) {
+		if (typeof(Number.prototype.toRad) === "undefined") {
+			  Number.prototype.toRad = function() {
+			    return this * Math.PI / 180;
+			  }
+			}
+		var R = 3959, // Statute Mile
+		    center = bounds.getCenter(),
+		    corner = bounds.getNorthEast(),
+		    lat1 = center.lat().toRad(),
+		    lat2 = corner.lat().toRad(),
+		    dLat = (lat2-lat1).toRad(),
+		    dLon = (corner.lng()-center.lng()).toRad();
+
+		var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+		        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		return R * c;
+	};
+
+	var generateOccurrenceURL = function(center,radius,start,end) {
+		return 'http://localhost:8080/wutup/occurrences?page=0&pageSize=20&center=' +
+				center.lat() + ','+ center.lng() + '&radius=' +
+				(radius <= 100 ? radius : 100) + '&start=' + start.getTime() +
+				'&end=' + end.getTime();
+	};
+
+	var populateMap = function(gMap, events, mapMarkers) {
+		var deleteOverlays = function () {
+			  if (mapMarkers) {
+			    for (i in mapMarkers) {
+			      mapMarkers[i].setMap(null);
+			    }
+			  }
+			  mapMarkers.length = 0;
+		};
 		map = gMap;
+		deleteOverlays();
 		for (var i = 0; i < events.length; i++) {
-			createMarker(events[i]);
+			mapMarkers.push(createMarker(events[i]));
 		}
-	}
+	};
 	var createMarker = function(occurrence) {
 		var marker = new google.maps.Marker({
 			map : map,
@@ -107,7 +145,7 @@ $(document).ready(function() {
 		return calendarEvents;
 	};
 
-	var createCalendar = function(calendarEvents) {
+	var createCalendar = function(calendarEvents, map, mapMarkers) {
 		var calendar = $('#calendar').fullCalendar({
 			header : {
 				left : 'prev,next today',
@@ -123,6 +161,15 @@ $(document).ready(function() {
 					calendar.fullCalendar('changeView', 'agendaDay');
 				}
 			},
+			viewDisplay: function(view) { // This function controls behavior when the calendar view is changed
+			        var bounds = map.getBounds();
+			        var	radius = calculateRadius(bounds);
+			        $.getJSON(generateOccurrenceURL(bounds.getCenter(),radius,view.start,view.end), function(occurrences) {
+						calendarEvents = parseOccurrencesForCalendar(occurrences);
+						populateCalendar(calendarEvents);
+						populateMap(map, calendarEvents, mapMarkers);
+					});
+		    },
 			eventClick : function(event, jsEvent, view) {//'event' is used here instead of 'occurrence' due to fullcalendar.js documentation
 				displayInfoWindow(event);
 				displayEventInfo(event);
@@ -135,6 +182,10 @@ $(document).ready(function() {
 		$('#calendar').fullCalendar('removeEventSource', calendarEvents);
 		$('#calendar').fullCalendar('removeEvents');
 		$('#calendar').fullCalendar('addEventSource', calendarEvents);
+	};
+
+	var getCalendarView = function() {
+		return	$('#calendar').fullCalendar('getView');
 	};
 	instantiateMapAndCalendar();
 	//Start your Engines!
