@@ -120,6 +120,14 @@ public class EventDaoTest {
     }
 
     @Test
+    public void findingEventsCannotSqlInject() {
+        eventDao.createEvent(new Event(20, "Robert'); DROP TABLE Students;--", "", katrina));
+        List<Event> events = eventDao.findEvents("Robert'); DROP TABLE Students;--", null, null, null, null, null);
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Robert'); DROP TABLE Students;--"));
+    }
+
+    @Test
     public void findingEventsViaNameCannotSqlInject() {
         List<Event> events = eventDao.findEvents("Poker Night", null, null, null, null, new PaginationData(0, 3));
         assertThat(events.size(), is(1));
