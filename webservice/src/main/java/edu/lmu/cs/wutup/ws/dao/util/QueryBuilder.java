@@ -65,7 +65,7 @@ public class QueryBuilder {
      */
     public QueryBuilder append(String text) {
         assertNotBuilt();
-        appendBuilder.append(text);
+        appendBuilder.append(escapeApostrophe(text));
         return this;
     }
 
@@ -75,21 +75,21 @@ public class QueryBuilder {
         for (String field : fields) {
             select += field + ", ";
         }
-        select = select.substring(0, select.length() - 2);
+        select = escapeApostrophe(select.substring(0, select.length() - 2));
         return this;
     }
 
     public QueryBuilder from(String tableName) {
         assertNotBuilt();
-        from = tableName;
+        from = escapeApostrophe(tableName);
         return this;
     }
 
     private void addJoin(String type, String tableName, String joinCondition) {
         assertNotBuilt();
         if (type != null && tableName != null && joinCondition != null) {
-            joinByTypes.put(type, tableName);
-            joinByTypes.put(type, joinCondition);
+            joinByTypes.put(type, escapeApostrophe(tableName));
+            joinByTypes.put(type, escapeApostrophe(joinCondition));
         }
     }
 
@@ -103,9 +103,9 @@ public class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder order(String newOrder) {
+    public QueryBuilder order(String order) {
         assertNotBuilt();
-        order = newOrder;
+        this.order = escapeApostrophe(order);
         return this;
     }
 
@@ -117,10 +117,15 @@ public class QueryBuilder {
     public QueryBuilder where(String condition, Object paramValue) {
         assertNotBuilt();
         if (paramValue != null) {
+            String paramValueString = escapeApostrophe(paramValue.toString());
+            condition = escapeApostrophe(condition);
+            if (paramValue instanceof String) {
+                paramValueString = "'" + paramValueString + "'";
+            }
             clauses.add(condition);
             Matcher matcher = PARAMETER_PATTERN.matcher(condition);
             if (matcher.find()) {
-                parameters.put(matcher.group(1), paramValue);
+                parameters.put(matcher.group(1), paramValueString);
             }
         }
         return this;
@@ -136,7 +141,7 @@ public class QueryBuilder {
     }
 
     public QueryBuilder whereInterval(Interval i) {
-        //WHERE StartDate Between getdate() and getdate()-3
+        // WHERE StartDate Between getdate() and getdate()-3
         assertNotBuilt();
         if (i != null) {
             clauses.add("start between ':start1' and ':end1'");
@@ -215,6 +220,10 @@ public class QueryBuilder {
     }
 
     public QueryBuilder like(String condition, Object paramValue) {
-        return this.where(condition, "\'" + paramValue + "%\'");
+        return this.where(condition, paramValue.toString() + "%");
+    }
+
+    private String escapeApostrophe(String s) {
+        return s.replace("'", "''");
     }
 }

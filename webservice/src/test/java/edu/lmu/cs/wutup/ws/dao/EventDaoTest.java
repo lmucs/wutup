@@ -101,11 +101,6 @@ public class EventDaoTest {
         assertThat(eventDao.findNumberOfEvents(), is(8));
     }
 
-    // TODO - when general finding is implemented, do tests that find events and events that return an empty
-    // list of events. Using:
-    // List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
-    // PaginationData pagination);
-
     @Test
     public void findingEventsViaPaginationWorks() {
         assertThat(eventDao.findNumberOfEvents(), is(8));
@@ -121,6 +116,14 @@ public class EventDaoTest {
     public void findingEventsViaNameWorks() {
         List<Event> events = eventDao.findEvents("Poker Night", null, null, null, null, new PaginationData(0, 3));
         assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Poker Night"));
+    }
+
+    @Test
+    public void findingEventsViaNameCannotSqlInject() {
+        List<Event> events = eventDao.findEvents("Poker Night", null, null, null, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Poker Night"));
     }
 
     @Test

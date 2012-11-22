@@ -84,7 +84,7 @@ public class EventDaoJdbcImpl implements EventDao {
         QueryBuilder query = getSelectQuery().whereCircle(circle);
 
         if (name != null) {
-            query.where("e.name = :name", "\'" + name + "\'");
+            query.where("e.name = :name", name);
         }
         if (owner != null) {
             query.where("e.ownerId = :id", owner.getId());
