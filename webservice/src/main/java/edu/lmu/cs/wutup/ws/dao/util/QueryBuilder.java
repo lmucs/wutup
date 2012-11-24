@@ -219,8 +219,9 @@ public class QueryBuilder {
         return parameters;
     }
 
-    public QueryBuilder like(String condition, Object paramValue) {
-        return this.where(condition, paramValue.toString() + "%");
+    public QueryBuilder like(String field, String paramName, Object paramValue) {
+        //builder.like("lower(v.name) like lower(:venueName)", name);
+        return this.where("lower(" + field + ") like lower(:" + paramName + ")", "%" + paramValue.toString() + "%");
     }
 
     private String escapeApostrophe(String s) {

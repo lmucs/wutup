@@ -120,6 +120,13 @@ public class EventDaoTest {
     }
 
     @Test
+    public void findingEventsViaPartialNameWorks() {
+        List<Event> events = eventDao.findEvents("Poker", null, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Poker Night"));
+    }
+
+    @Test
     public void findingEventsCannotSqlInject() {
         eventDao.createEvent(new Event(20, "Robert'); DROP TABLE Students;--", "", katrina));
         List<Event> events = eventDao.findEvents("Robert'); DROP TABLE Students;--", null, null, null);
@@ -179,6 +186,7 @@ public class EventDaoTest {
         List<Comment> comments = eventDao.findComments(1, new PaginationData(1, 1));
         assertThat(comments.get(0).getBody(), is("Hello"));
         assertThat(comments.get(0).getId(), is(2));
+        // TODO:
         // Need to check on this. When creating a new DateTime in Java, timezone is set to utc-8:00,
         // when entering something in h2 through pure sql, the timezone is adjsuted for DST to utc-7:00
         assertThat(comments.get(0).getPostDate().toString(), is("2012-11-11T12:34:00.000-08:00"));

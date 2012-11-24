@@ -19,7 +19,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
-import edu.lmu.cs.wutup.ws.exception.NoSuchPropertyException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Circle;
@@ -101,7 +100,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
         }
 
         if (name != null) {
-            builder.like("lower(v.name) like lower(:venueName)", name);
+            builder.like("v.name", "venueName", name);
         }
 
         if (eventId != null) {

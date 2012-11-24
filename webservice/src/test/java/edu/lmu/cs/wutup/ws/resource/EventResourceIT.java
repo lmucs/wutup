@@ -11,7 +11,7 @@ import org.junit.Test;
 public class EventResourceIT {
 
     @Test
-    public void endpointGetFindsExistingEvent() {
+    public void endpointGetByIdFindsExistingEvent() {
         given().
             header("Accept", "application/json").
         expect().
@@ -23,6 +23,21 @@ public class EventResourceIT {
             body(containsString("Katrina")).
         when().
             get("/wutup/events/1");
+    }
+
+    @Test
+    public void endpointGetByNameFindsExistingEvent() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":1")).
+            body(containsString("\"name\":\"Poker Night\"")).
+            body(containsString("\"description\":\"Cards with the guys\"")).
+            body(containsString("Katrina")).
+        when().
+            get("/wutup/events?name=Poker");
     }
 
     @Test
@@ -39,7 +54,7 @@ public class EventResourceIT {
     }
 
     @Test
-    public void endpointGetWithUnusedIdProduces404() {
+    public void endpointGetByIdWithUnusedIdProduces404() {
         expect().
             statusCode(404).
             body(containsString("Event 100")).
@@ -70,7 +85,7 @@ public class EventResourceIT {
     }
 
     @Test
-    public void getEventAfterUpdate() {
+    public void endpointGetAfterUpdateIsCorrect() {
         given().
             contentType("application/json").
             body("{\"name\":\"Texas Hold Em\"}").
