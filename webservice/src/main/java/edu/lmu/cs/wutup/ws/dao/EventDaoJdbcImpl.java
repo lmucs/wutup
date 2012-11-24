@@ -20,7 +20,6 @@ import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Category;
-import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -78,9 +77,8 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public List<Event> findEvents(String name, User owner, List<Category> categories,
-            Circle circle, PaginationData pagination) {
-        QueryBuilder query = getSelectQuery().whereCircle(circle);
+    public List<Event> findEvents(String name, User owner, List<Category> categories, PaginationData pagination) {
+        QueryBuilder query = getSelectQuery();
 
         if (name != null) {
             query.where("e.name = :name", name);

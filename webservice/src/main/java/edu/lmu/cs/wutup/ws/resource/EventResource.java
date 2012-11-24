@@ -32,7 +32,6 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Category;
-import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -57,14 +56,12 @@ public class EventResource extends AbstractWutupResource {
     @GET
     @Path("/")
     public List<Event> findEvents(@QueryParam("name") String name, @QueryParam("owner") User owner,
-            @QueryParam("category") List<Category> categories, @QueryParam("center") String center,
-            @QueryParam("radius") String radiusString,
+            @QueryParam("category") List<Category> categories,
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
-        Circle circle = fromCenterAndRadiusParameters(center, radiusString);
-        return eventService.findEvents(name, owner, categories, circle, pagination);
+        return eventService.findEvents(name, owner, categories, pagination);
     }
 
     @GET
