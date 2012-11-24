@@ -13,7 +13,6 @@ import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Service
 @Transactional
@@ -38,9 +37,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findEvents(String name, User owner, List<Category> categories, List<Venue> venues,
-            Circle circle, PaginationData pagination) {
-        return eventDao.findEvents(name, owner, categories, venues, circle, pagination);
+    public List<Event> findEvents(String name, User owner, List<Category> categories, Circle circle,
+            PaginationData pagination) {
+        return eventDao.findEvents(name, owner, categories, circle, pagination);
     }
 
     @Override

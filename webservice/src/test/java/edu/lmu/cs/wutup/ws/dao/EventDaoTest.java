@@ -104,17 +104,17 @@ public class EventDaoTest {
     @Test
     public void findingEventsViaPaginationWorks() {
         assertThat(eventDao.findNumberOfEvents(), is(8));
-        List<Event> events = eventDao.findEvents(null, null, null, null, null, new PaginationData(0, 3));
+        List<Event> events = eventDao.findEvents(null, null, null, null, new PaginationData(0, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findEvents(null, null, null, null, null, new PaginationData(1, 3));
+        events = eventDao.findEvents(null, null, null, null, new PaginationData(1, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findEvents(null, null, null, null, null, new PaginationData(2, 3));
+        events = eventDao.findEvents(null, null, null, null, new PaginationData(2, 3));
         assertThat(events.size(), is(2));
     }
 
     @Test
     public void findingEventsViaNameWorks() {
-        List<Event> events = eventDao.findEvents("Poker Night", null, null, null, null, new PaginationData(0, 3));
+        List<Event> events = eventDao.findEvents("Poker Night", null, null, null, new PaginationData(0, 3));
         assertThat(events.size(), is(1));
         assertThat(events.get(0).getName(), is("Poker Night"));
     }
@@ -122,14 +122,14 @@ public class EventDaoTest {
     @Test
     public void findingEventsCannotSqlInject() {
         eventDao.createEvent(new Event(20, "Robert'); DROP TABLE Students;--", "", katrina));
-        List<Event> events = eventDao.findEvents("Robert'); DROP TABLE Students;--", null, null, null, null, null);
+        List<Event> events = eventDao.findEvents("Robert'); DROP TABLE Students;--", null, null, null, null);
         assertThat(events.size(), is(1));
         assertThat(events.get(0).getName(), is("Robert'); DROP TABLE Students;--"));
     }
 
     @Test
     public void findingEventsViaNameCannotSqlInject() {
-        List<Event> events = eventDao.findEvents("Poker Night", null, null, null, null, new PaginationData(0, 3));
+        List<Event> events = eventDao.findEvents("Poker Night", null, null, null, new PaginationData(0, 3));
         assertThat(events.size(), is(1));
         assertThat(events.get(0).getName(), is("Poker Night"));
     }

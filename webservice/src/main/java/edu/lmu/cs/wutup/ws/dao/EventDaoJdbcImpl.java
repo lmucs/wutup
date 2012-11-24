@@ -25,7 +25,6 @@ import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Repository
 public class EventDaoJdbcImpl implements EventDao {
@@ -79,7 +78,7 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public List<Event> findEvents(String name, User owner, List<Category> categories, List<Venue> venues,
+    public List<Event> findEvents(String name, User owner, List<Category> categories,
             Circle circle, PaginationData pagination) {
         QueryBuilder query = getSelectQuery().whereCircle(circle);
 
@@ -93,11 +92,6 @@ public class EventDaoJdbcImpl implements EventDao {
             // TODO: Implement categories search
             for (int i = 0; i < categories.size(); i++) {
                 query.where(null, categories.get(i));
-            }
-        }
-        if (venues != null) {
-            for (int i = 0; i < venues.size(); i++) {
-                query.where("v.id = :vId" + i, venues.get(i).getId());
             }
         }
 
