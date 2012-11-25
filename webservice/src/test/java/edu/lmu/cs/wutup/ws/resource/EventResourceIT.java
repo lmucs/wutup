@@ -71,6 +71,22 @@ public class EventResourceIT {
     }
 
     @Test
+    public void endpointGetByMultipleOwnersFindsExistingEvents() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":1")).
+            body(containsString("\"name\":\"Poker Night\"")).
+            body(containsString("\"id\":2")).
+            body(containsString("\"name\":\"Billiards with Prince Harry\"")).
+            body(containsString("Katrina")).
+        when().
+            get("/wutup/events?owner=8,7");
+    }
+
+    @Test
     public void endpointGetHasJsonAsDefaultAcceptHeader() {
         expect().
             statusCode(200).

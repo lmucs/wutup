@@ -4,6 +4,7 @@ import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -54,11 +55,21 @@ public class EventResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<Event> findEvents(@QueryParam("name") String name, @QueryParam("owner") List<Integer> owners,
+    public List<Event> findEvents(@QueryParam("name") String name, @QueryParam("owner") String ownerString,
             @QueryParam("category") List<Category> categories,
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
-
+        ArrayList<Integer> owners = new ArrayList<Integer>();
+        if (ownerString != null) {
+            String[] ownerStringArray = ownerString.split(",");
+            for (String owner : ownerStringArray) {
+                try {
+                    owners.add(Integer.parseInt(owner));
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
         return eventService.findEvents(name, owners, categories, pagination);
     }

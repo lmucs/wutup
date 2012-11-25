@@ -128,12 +128,23 @@ public class EventDaoTest {
     }
 
     @Test
-    public void findingEventsViaOwnerWorks() {
+    public void findingEventsViaSingleOwnerWorks() {
         ArrayList<Integer> sampleOwners = new ArrayList<Integer>();
         sampleOwners.add(8);
         List<Event> events = eventDao.findEvents(null, sampleOwners, null, new PaginationData(0, 3));
         assertThat(events.size(), is(1));
         assertThat(events.get(0).getName(), is("Poker Night"));
+    }
+
+    @Test
+    public void findingEventsViaMultipleOwnersWorks() {
+        ArrayList<Integer> sampleOwners = new ArrayList<Integer>();
+        sampleOwners.add(7);
+        sampleOwners.add(8);
+        List<Event> events = eventDao.findEvents(null, sampleOwners, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(2));
+        assertThat(events.get(0).getName(), is("Poker Night"));
+        assertThat(events.get(1).getName(), is("Billiards with Prince Harry"));
     }
 
     @Test

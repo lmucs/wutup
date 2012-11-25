@@ -84,8 +84,8 @@ public class EventDaoJdbcImpl implements EventDao {
             query.like("e.name", "name", name);
         }
         if (owners != null) {
-            for (Integer owner : owners) {
-                query.where("e.ownerId = :id", owner);
+            for (int i = 0; i < owners.size(); i++) {
+                query.orWhere("e.ownerId = :id" + i, owners.get(i));
             }
         }
         if (categories != null) {
@@ -95,7 +95,7 @@ public class EventDaoJdbcImpl implements EventDao {
             }
         }
 
-        return jdbcTemplate.query(query.addPagination(pagination).build(), eventRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).order("e.id").build(), eventRowMapper);
     }
 
     @Override
