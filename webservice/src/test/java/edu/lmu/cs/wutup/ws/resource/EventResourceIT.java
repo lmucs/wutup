@@ -41,6 +41,36 @@ public class EventResourceIT {
     }
 
     @Test
+    public void endpointGetByPartialNameFindsExistingEvent() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":1")).
+            body(containsString("\"name\":\"Poker Night\"")).
+            body(containsString("\"description\":\"Cards with the guys\"")).
+            body(containsString("Katrina")).
+        when().
+            get("/wutup/events?name=Pok");
+    }
+
+    @Test
+    public void endpointGetByOwnerFindsExistingEvent() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":1")).
+            body(containsString("\"name\":\"Poker Night\"")).
+            body(containsString("\"description\":\"Cards with the guys\"")).
+            body(containsString("Katrina")).
+        when().
+            get("/wutup/events?owner=8");
+    }
+
+    @Test
     public void endpointGetHasJsonAsDefaultAcceptHeader() {
         expect().
             statusCode(200).

@@ -53,12 +53,12 @@ public class QueryBuilderTest {
                 .joinOn("event e", "o.eventId = e.id")
                 .joinOn("user u", "e.ownerId = u.id")
                 .build();
-        assertThat(query, equalTo("select o.id, o.start, o.end, o.venueId, v.name as venueName, v.address, " +
-                "v.latitude, v.longitude, o.eventId, e.name as eventName, e.description, address, u.id as " +
-                "userId, u.firstName, u.lastName, u.email, u.nickname from occurrence o join venue v on " +
-                "(o.venueId = v.id) join event e on (o.eventId = e.id) join user u on (e.ownerId = u.id) where " +
-                "start between '2012-01-15 08:30:00.0' and '2012-01-16 11:30:00.0' and end between " +
-                "'2012-01-15 08:30:00.0' and '2012-01-16 11:30:00.0'"));
+        assertThat(query, equalTo("select o.id, o.start, o.end, o.venueId, v.name as venueName, v.address, "
+                + "v.latitude, v.longitude, o.eventId, e.name as eventName, e.description, address, u.id as "
+                + "userId, u.firstName, u.lastName, u.email, u.nickname from occurrence o join venue v on "
+                + "(o.venueId = v.id) join event e on (o.eventId = e.id) join user u on (e.ownerId = u.id) where "
+                + "start between '2012-01-15 08:30:00.0' and '2012-01-16 11:30:00.0' and end between "
+                + "'2012-01-15 08:30:00.0' and '2012-01-16 11:30:00.0'"));
     }
 
     @Test
@@ -70,9 +70,22 @@ public class QueryBuilderTest {
                 .joinOn("event e", "o.eventId = e.id")
                 .joinOn("user u", "e.ownerId = u.id")
                 .build();
-        assertThat(query, equalTo("select * from occurrence o join venue v on (o.venueId = v.id) join " +
-                "event e on (o.eventId = e.id) join user u on (e.ownerId = u.id) where " +
-                "get_distance_miles(v.latitude, 65.0, v.longitude, 120.0) <= 80.0"));
+        assertThat(query, equalTo("select * from occurrence o join venue v on (o.venueId = v.id) join "
+                + "event e on (o.eventId = e.id) join user u on (e.ownerId = u.id) where "
+                + "get_distance_miles(v.latitude, 65.0, v.longitude, 120.0) <= 80.0"));
+    }
+
+    @Test
+    public void queryWithSingleLikeIsCorrect() {
+        String query = new QueryBuilder().from("event").like("name", "name", "RIC").build();
+        assertThat(query, equalTo("select * from event where lower(name) like lower('%RIC%')"));
+    }
+
+    @Test
+    public void queryWithMultipleLikeIsCorrect() {
+        String query = new QueryBuilder().from("event").like("name", "name", "RIC").like("name2", "name2", "h").build();
+        assertThat(query,
+                equalTo("select * from event where lower(name) like lower('%RIC%') and lower(name2) like lower('%h%')"));
     }
 
     @Test

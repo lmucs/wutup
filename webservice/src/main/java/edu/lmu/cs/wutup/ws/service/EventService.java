@@ -5,7 +5,6 @@ import java.util.List;
 import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
-import edu.lmu.cs.wutup.ws.model.User;
 
 public interface EventService extends CommentService {
 
@@ -15,7 +14,7 @@ public interface EventService extends CommentService {
 
     Event findEventById(int id);
 
-    List<Event> findEvents(String name, User owner, List<Category> categories, PaginationData pagination);
+    List<Event> findEvents(String name, List<Integer> owners, List<Category> categories, PaginationData pagination);
 
     void deleteEvent(int id);
 }

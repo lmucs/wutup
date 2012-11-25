@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.ws.dao;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -122,6 +123,15 @@ public class EventDaoTest {
     @Test
     public void findingEventsViaPartialNameWorks() {
         List<Event> events = eventDao.findEvents("Poker", null, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Poker Night"));
+    }
+
+    @Test
+    public void findingEventsViaOwnerWorks() {
+        ArrayList<Integer> sampleOwners = new ArrayList<Integer>();
+        sampleOwners.add(8);
+        List<Event> events = eventDao.findEvents(null, sampleOwners, null, new PaginationData(0, 3));
         assertThat(events.size(), is(1));
         assertThat(events.get(0).getName(), is("Poker Night"));
     }

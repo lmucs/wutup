@@ -220,7 +220,6 @@ public class QueryBuilder {
     }
 
     public QueryBuilder like(String field, String paramName, Object paramValue) {
-        //builder.like("lower(v.name) like lower(:venueName)", name);
         return this.where("lower(" + field + ") like lower(:" + paramName + ")", "%" + paramValue.toString() + "%");
     }
 

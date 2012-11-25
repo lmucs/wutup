@@ -77,14 +77,16 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public List<Event> findEvents(String name, User owner, List<Category> categories, PaginationData pagination) {
+    public List<Event> findEvents(String name, List<Integer> owners, List<Category> categories, PaginationData pagination) {
         QueryBuilder query = getSelectQuery();
 
         if (name != null) {
             query.like("e.name", "name", name);
         }
-        if (owner != null) {
-            query.where("e.ownerId = :id", owner.getId());
+        if (owners != null) {
+            for (Integer owner : owners) {
+                query.where("e.ownerId = :id", owner);
+            }
         }
         if (categories != null) {
             // TODO: Implement categories search
