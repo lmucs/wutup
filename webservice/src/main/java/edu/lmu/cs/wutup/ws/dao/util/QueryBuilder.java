@@ -30,9 +30,11 @@ public class QueryBuilder {
     private String from;
     private String order;
     private String pagination;
-    private Map<String, Object> parameters = new HashMap<String, Object>();
+    private Map<String, Object> andParameters = new HashMap<String, Object>();
+    private Map<String, Object> orParameters = new HashMap<String, Object>();
     private MultiValueMap joinByTypes = new MultiValueMap();
-    private List<String> clauses = new ArrayList<String>();
+    private List<String> andClauses = new ArrayList<String>();
+    private List<String> orClauses = new ArrayList<String>();
     private String queryString;
 
     /**
@@ -41,7 +43,6 @@ public class QueryBuilder {
     public QueryBuilder() {
         stringBuilder = new StringBuilder();
         appendBuilder = new StringBuilder();
-        // No-arg constructor
     }
 
     /**
@@ -108,6 +109,22 @@ public class QueryBuilder {
         this.order = escapeApostrophe(order);
         return this;
     }
+    public QueryBuilder orWhere(String condition, Object paramValue) {
+        assertNotBuilt();
+        if (paramValue != null) {
+            String paramValueString = escapeApostrophe(paramValue.toString());
+            condition = escapeApostrophe(condition);
+            if (paramValue instanceof String) {
+                paramValueString = "'" + paramValueString + "'";
+            }
+            orClauses.add(condition);
+            Matcher matcher = PARAMETER_PATTERN.matcher(condition);
+            if (matcher.find()) {
+                orParameters.put(matcher.group(1), paramValueString);
+            }
+        }
+        return this;
+    }
 
     /**
      * Adds a clause to the list of clauses, finding at most one named parameter within the clause, and adding it and
@@ -122,10 +139,10 @@ public class QueryBuilder {
             if (paramValue instanceof String) {
                 paramValueString = "'" + paramValueString + "'";
             }
-            clauses.add(condition);
+            andClauses.add(condition);
             Matcher matcher = PARAMETER_PATTERN.matcher(condition);
             if (matcher.find()) {
-                parameters.put(matcher.group(1), paramValueString);
+                andParameters.put(matcher.group(1), paramValueString);
             }
         }
         return this;
@@ -144,12 +161,12 @@ public class QueryBuilder {
         // WHERE StartDate Between getdate() and getdate()-3
         assertNotBuilt();
         if (i != null) {
-            clauses.add("start between ':start1' and ':end1'");
-            clauses.add("end between ':start2' and ':end2'");
-            parameters.put(":start1", new Timestamp(i.getStartMillis()));
-            parameters.put(":end1", new Timestamp(i.getEndMillis()));
-            parameters.put(":start2", new Timestamp(i.getStartMillis()));
-            parameters.put(":end2", new Timestamp(i.getEndMillis()));
+            andClauses.add("start between ':start1' and ':end1'");
+            andClauses.add("end between ':start2' and ':end2'");
+            andParameters.put(":start1", new Timestamp(i.getStartMillis()));
+            andParameters.put(":end1", new Timestamp(i.getEndMillis()));
+            andParameters.put(":start2", new Timestamp(i.getStartMillis()));
+            andParameters.put(":end2", new Timestamp(i.getEndMillis()));
         }
         return this;
     }
@@ -182,8 +199,12 @@ public class QueryBuilder {
         }
 
         boolean first = true;
-        for (String clause : clauses) {
+        for (String clause : andClauses) {
             stringBuilder.append(first ? " where " : " and ").append(clause);
+            first = false;
+        }
+        for (String clause : orClauses) {
+            stringBuilder.append(first ? " where " : " or ").append(clause);
             first = false;
         }
 
@@ -191,7 +212,14 @@ public class QueryBuilder {
             stringBuilder.append(" order by " + order);
         }
 
-        for (Map.Entry<String, Object> e : parameters.entrySet()) {
+        for (Map.Entry<String, Object> e : andParameters.entrySet()) {
+            String parameterKey = e.getKey();
+            int parameterLength = parameterKey.length();
+            int parameterStartIndex = stringBuilder.indexOf(parameterKey);
+            stringBuilder.replace(parameterStartIndex, parameterStartIndex + parameterLength, e.getValue().toString());
+        }
+
+        for (Map.Entry<String, Object> e : orParameters.entrySet()) {
             String parameterKey = e.getKey();
             int parameterLength = parameterKey.length();
             int parameterStartIndex = stringBuilder.indexOf(parameterKey);
@@ -216,7 +244,7 @@ public class QueryBuilder {
      * Retrieves the query parameters that have been added so far.
      */
     public Map<String, Object> getParameters() {
-        return parameters;
+        return andParameters;
     }
 
     public QueryBuilder like(String field, String paramName, Object paramValue) {

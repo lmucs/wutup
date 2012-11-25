@@ -76,6 +76,15 @@ public class QueryBuilderTest {
     }
 
     @Test
+    public void queryWithWhereAndOrWhereIsCorrect() {
+        String query = new QueryBuilder().from("event")
+                .where("name = :name1", "ric")
+                .orWhere("name = :name2", "part")
+                .build();
+        assertThat(query, equalTo("select * from event where name = 'ric' or name = 'part'"));
+    }
+
+    @Test
     public void queryWithSingleLikeIsCorrect() {
         String query = new QueryBuilder().from("event").like("name", "name", "RIC").build();
         assertThat(query, equalTo("select * from event where lower(name) like lower('%RIC%')"));

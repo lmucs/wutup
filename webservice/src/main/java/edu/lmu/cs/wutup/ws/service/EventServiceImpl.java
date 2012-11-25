@@ -11,7 +11,6 @@ import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
-import edu.lmu.cs.wutup.ws.model.User;
 
 @Service
 @Transactional
