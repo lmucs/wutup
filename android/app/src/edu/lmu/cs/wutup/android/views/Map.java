@@ -16,6 +16,7 @@ import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
 import edu.lmu.cs.wutup.android.communication.GetOccurrences;
+import edu.lmu.cs.wutup.android.communication.PostOccurrences;
 import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.manager.EventPlotter;
 import edu.lmu.cs.wutup.android.manager.R;
@@ -49,11 +50,16 @@ public class Map extends MapActivity {
 		mapOverlays.add(occurrenceOverlay);
 		
 		try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }       
-		plotOccurrences();		
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+		
+		plotOccurrences();
+		
+		new PostOccurrences().execute(Occurrences.get(9));
+		
+		plotOccurrences();
 		
 	}
 	
@@ -77,7 +83,7 @@ public class Map extends MapActivity {
 	    occurrenceOverlay.clearOverlay();
 	    Log.i("overlay", "Cleared occurrence overlay.");
 	    
-	    for (Occurrence occurrence : Occurrences.get()) {
+	    for (Occurrence occurrence : Occurrences.getAll()) {
 	        occurrenceOverlay.addOverlay(makeOverlayItem(occurrence));
 	        Log.i("overlay", "Plotted occurrence " + occurrence.getId() + ".");
 	    }

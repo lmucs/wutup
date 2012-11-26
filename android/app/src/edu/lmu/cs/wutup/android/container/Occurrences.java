@@ -8,7 +8,11 @@ public class Occurrences {
     
     private static ArrayList<Occurrence> occurrences= new ArrayList<Occurrence>();
     
-    public static ArrayList<Occurrence> get() {
+    public static Occurrence get(int index) {
+        return occurrences.get(index);
+    }
+    
+    public static ArrayList<Occurrence> getAll() {
         return occurrences;
     }
     
