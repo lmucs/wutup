@@ -1,7 +1,7 @@
 onload = function () {
-    initializeEventQueue("hostingEventStream", hostingEventNames.length, hostingEventNames);
-    initializeEventQueue("attendingEventStream", attendingEventNames.length, attendingEventNames);
-    initializeEventQueue("invitedToEventStream", invitedToEventNames.length, invitedToEventNames);
+    initializeEventQueue("hosting-event-stream", hostingEventNames.length, hostingEventNames);
+    initializeEventQueue("attending-event-stream", attendingEventNames.length, attendingEventNames);
+    initializeEventQueue("invited-to-event-stream", invitedToEventNames.length, invitedToEventNames);
     
    
     initializeGuestList("Attending", 7, attendingGuests);
