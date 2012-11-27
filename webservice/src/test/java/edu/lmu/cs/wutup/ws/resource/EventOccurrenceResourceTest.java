@@ -207,8 +207,6 @@ public class EventOccurrenceResourceTest {
         }
     }
 
-    // TODO: Need to test GET on occurrences... a little scared.
-
     /* Begin Event Comment Testing */
     @Test
     public void canAddCommentsToEventOccurrence() {

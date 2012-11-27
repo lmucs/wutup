@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.log4j.Logger;
 import org.joda.time.Interval;
 
 import edu.lmu.cs.wutup.ws.model.Circle;
@@ -22,6 +23,7 @@ import edu.lmu.cs.wutup.ws.model.PaginationData;
  */
 public class QueryBuilder {
 
+    private Logger logger = Logger.getLogger(getClass());
     // Parameters must start with a lowercase ASCII letter.
     private static final Pattern PARAMETER_PATTERN = Pattern.compile("(:[a-z]\\w*)");
     private StringBuilder stringBuilder;
@@ -230,7 +232,8 @@ public class QueryBuilder {
             stringBuilder.append(" " + pagination);
         }
         stringBuilder.append(appendBuilder.toString());
-        return stringBuilder.toString();
+        logger.info("QUERY: " + getQueryString() + " PARAMS: " + getParameters());
+        return getQueryString();
     }
 
     /**
