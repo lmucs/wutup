@@ -3,7 +3,7 @@
           android:versionCode="1"
           android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="8"
+    <uses-sdk android:minSdkVersion="14"
               android:targetSdkVersion="17" />
     
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -27,10 +27,12 @@
         
         <activity android:name ="edu.lmu.cs.wutup.android.views.Map"
                   android:label="@string/title_map"
-                  android:theme="@android:style/Theme.NoTitleBar">
-            
-        </activity>
-        
+                  android:theme="@android:style/Theme.NoTitleBar" />
+                    
+        <activity android:name ="edu.lmu.cs.wutup.android.views.OccurrenceCreationForm"
+                  android:label="@string/title_map"
+                  android:theme="@android:style/Theme.NoTitleBar" />
+                    
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package edu.lmu.cs.wutup.android.views;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -100,14 +101,19 @@ public class Map extends MapActivity {
 	    //respond to menu item selection
 	    
 	    switch (item.getItemId()) {
+	    
+	        case R.id.create_occurrence: startActivity(new Intent(this, OccurrenceCreationForm.class));  
+	        							 break;
         	                      
-        	case R.id.list:   return true;
+        	case R.id.list:              break;
         	                 
-        	case R.id.search: return true;                 
+        	case R.id.search:            break;                 
         	                     
-        	default:          return true;
+        	default:                     break;
 	    
 	    }
+	    
+	    return true;
 	}
 
 }
