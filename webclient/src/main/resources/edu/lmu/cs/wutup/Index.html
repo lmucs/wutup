@@ -3,7 +3,7 @@
     <div id="container" class="container-fluid">
 
         <div class="row-fluid" id="call-to-action">
-            <div class="span10">
+            <div class="span12">
                 <h2>Find Out What's Up On Wutup!</h2>
 
                 <div class="well well-large">
@@ -23,42 +23,42 @@
      </div>
      
     <div class ="row-fluid">
-            <div id="left-sidebar" class="container-fluid span4">
+        <div class="container-fluid span4">
 
-                <div class="section">
-                    <h3 id="nickname" class="header">Wutup Shelby</h3>
-                    <a href="#" class="thumbnail" id="profile-picture">
-                        <img src="http://placehold.it/125x150" alt="">
-                    </a>
-                </div>
-
-                <div id="calendar" class="section" style='font-size: 13px'></div>
-
-                <div id="myEvents" class="tabbable section">
-                    <ul class="nav nav-tabs">  
-                        <li class="active"><a href="#tabHosting" data-toggle="tab">Hosting (2)</a></li>
-                        <li><a href="#tabAttending" data-toggle="tab">Attending (7)</a></li>  
-                        <li><a href="#tabInvitedTo" data-toggle="tab">Invited To (5) </a></li> 
-                    </ul>
-
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tabHosting">
-                            <table class="table table-hover" id="hostingEventStream"></table>
-                        </div>
-
-                        <div class="tab-pane" id="tabAttending">
-                            <table class="table table-hover" id="attendingEventStream"></table>
-                        </div>
-
-                        <div class="tab-pane" id="tabInvitedTo">
-                            <table class="table table-hover" id="invitedToEventStream"></table>
-                        </div>
-                    </div>
-                </div>
- 
+        <div id="left-sidebar">
+            <div class="section">
+                <a href="#"id="profile-picture"><img src="http://placehold.it/125x150" alt=""></a>
+                    Wutup <div id="nickname">Shelby!</div>
+                <btn id="event-createButton" class="btn btn-large">Create Event</btn>
             </div>
 
-            <div id="main-content" class="container-fluid span6">
+            <div id="calendar" class="section" style='font-size: 13px'></div>
+
+            <div id="my-events" class="tabbable section">
+                <ul class="nav nav-tabs">  
+                    <li class="active"><a href="#tab-hosting" data-toggle="tab">Hosting (2)</a></li>
+                    <li><a href="#tab-attending" data-toggle="tab">Attending (7)</a></li>  
+                    <li><a href="#tab-invited-to" data-toggle="tab">Invited To (5) </a></li> 
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-hosting">
+                        <table class="table table-hover" id="hosting-event-stream"></table>
+                    </div>
+
+                    <div class="tab-pane" id="tab-attending">
+                        <table class="table table-hover" id="attending-event-stream"></table>
+                    </div>
+
+                    <div class="tab-pane" id="tab-invited-to">
+                        <table class="table table-hover" id="invited-to-event-stream"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+            <div id="main-content" class="container-fluid span8">
                 <div id="map_canvas" class="section"></div>
 
                 <div class="section">
@@ -76,7 +76,7 @@
                         <btn class="btn"><i class="icon-forward"></i></btn>
                     </div>
 
-                    <table class="table table-hover" id="currentEventStream"></table>
+                    <table class="table table-hover" id="current-event-stream"></table>
                 </div>
             </div>
     </div>

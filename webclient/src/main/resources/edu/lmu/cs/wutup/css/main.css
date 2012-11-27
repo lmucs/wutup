@@ -197,20 +197,32 @@ table, td, th {
 .tab-content {  
     height: 154px !important;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
-#eventDescription {  
+#event-description {  
     height: 200px !important;
+    width: 100%;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 
 #left-sidebar {
-    background-color: #ffffff;
-    padding: 20px 20px;
-    border: 1;
+    border-style: solid;
+    border-width: 5px;
+    border-color: #A50001;
+    border-radius: 25px;
+    background-color: white;
+    padding: 10px;
+}
+
+#guest-list {
+    border-style: solid;
+    border-width: 5px;
+    border-color: #A50001;
+    border-radius: 25px;
+    background-color: white;
 }
 
 .header {
@@ -228,7 +240,6 @@ table, td, th {
 .section {
     padding-top: 15px;
     padding-bottom: 15px;
-    background-color: white;
 }
 
 #event-header table, #event-header td, #event-header th {
@@ -242,8 +253,18 @@ table, td, th {
 }
 
 .event-button {
-    height:auto;
-    width:100px;
+    height:33%;
+    width:70%;
+    float: center;
     text-align:center;
     white-space:nowrap;
+}
+
+#nickname, #profile-picture, #event-createButton
+{
+    display:inline;
+}
+
+#post-comment, #event-createButton {
+    float: right;
 }

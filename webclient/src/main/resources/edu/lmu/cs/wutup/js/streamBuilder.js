@@ -1,6 +1,6 @@
 var initializeEventQueue = function (id, rows, names) {
 
-    var isMainEventStream = (id === "currentEventStream") ? true : false;
+    var isMainEventStream = (id === "current-event-stream") ? true : false;
     var totalEvents = rows;
 
     var table=document.getElementById(id);
