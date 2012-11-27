@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.ws.dao;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -101,20 +102,64 @@ public class EventDaoTest {
         assertThat(eventDao.findNumberOfEvents(), is(8));
     }
 
-    // TODO - when general finding is implemented, do tests that find events and events that return an empty
-    // list of events. Using:
-    // List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
-    // PaginationData pagination);
-
     @Test
     public void findingEventsViaPaginationWorks() {
         assertThat(eventDao.findNumberOfEvents(), is(8));
-        List<Event> events = eventDao.findEvents(null, null, null, null, new PaginationData(0, 3));
+        List<Event> events = eventDao.findEvents(null, null, null, new PaginationData(0, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findEvents(null, null, null, null, new PaginationData(1, 3));
+        events = eventDao.findEvents(null, null, null, new PaginationData(1, 3));
         assertThat(events.size(), is(3));
-        events = eventDao.findEvents(null, null, null, null, new PaginationData(2, 3));
+        events = eventDao.findEvents(null, null, null, new PaginationData(2, 3));
         assertThat(events.size(), is(2));
+    }
+
+    @Test
+    public void findingEventsViaNameWorks() {
+        List<Event> events = eventDao.findEvents("Poker Night", null, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Poker Night"));
+    }
+
+    @Test
+    public void findingEventsViaPartialNameWorks() {
+        List<Event> events = eventDao.findEvents("Poker", null, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Poker Night"));
+    }
+
+    @Test
+    public void findingEventsViaSingleOwnerWorks() {
+        ArrayList<Integer> sampleOwners = new ArrayList<Integer>();
+        sampleOwners.add(8);
+        List<Event> events = eventDao.findEvents(null, sampleOwners, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Poker Night"));
+    }
+
+    @Test
+    public void findingEventsViaMultipleOwnersWorks() {
+        ArrayList<Integer> sampleOwners = new ArrayList<Integer>();
+        sampleOwners.add(7);
+        sampleOwners.add(8);
+        List<Event> events = eventDao.findEvents(null, sampleOwners, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(2));
+        assertThat(events.get(0).getName(), is("Poker Night"));
+        assertThat(events.get(1).getName(), is("Billiards with Prince Harry"));
+    }
+
+    @Test
+    public void findingEventsCannotSqlInject() {
+        eventDao.createEvent(new Event(20, "Robert'); DROP TABLE Students;--", "", katrina));
+        List<Event> events = eventDao.findEvents("Robert'); DROP TABLE Students;--", null, null, null);
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Robert'); DROP TABLE Students;--"));
+    }
+
+    @Test
+    public void findingEventsViaNameCannotSqlInject() {
+        List<Event> events = eventDao.findEvents("Poker Night", null, null, new PaginationData(0, 3));
+        assertThat(events.size(), is(1));
+        assertThat(events.get(0).getName(), is("Poker Night"));
     }
 
     @Test
@@ -162,6 +207,7 @@ public class EventDaoTest {
         List<Comment> comments = eventDao.findComments(1, new PaginationData(1, 1));
         assertThat(comments.get(0).getBody(), is("Hello"));
         assertThat(comments.get(0).getId(), is(2));
+        // TODO:
         // Need to check on this. When creating a new DateTime in Java, timezone is set to utc-8:00,
         // when entering something in h2 through pure sql, the timezone is adjsuted for DST to utc-7:00
         assertThat(comments.get(0).getPostDate().toString(), is("2012-11-11T12:34:00.000-08:00"));

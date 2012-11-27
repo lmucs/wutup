@@ -121,9 +121,10 @@ public class VenueDaoTest {
         assertThat(venues.get(0).getId(), is(1));
 
         venues = venueDao.findVenues("thE", null, null, new PaginationData(0, 10));
-        assertThat(venues.size(), is(2));
-        assertThat(venues.get(0).getId(), is(5));
-        assertThat(venues.get(1).getId(), is(6));
+        assertThat(venues.size(), is(3));
+        assertThat(venues.get(0).getId(), is(1));
+        assertThat(venues.get(1).getId(), is(5));
+        assertThat(venues.get(2).getId(), is(6));
     }
 
     @Test

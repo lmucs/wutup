@@ -3,11 +3,8 @@ package edu.lmu.cs.wutup.ws.dao;
 import java.util.List;
 
 import edu.lmu.cs.wutup.ws.model.Category;
-import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
-import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 public interface EventDao extends CommentDao {
 
@@ -15,8 +12,7 @@ public interface EventDao extends CommentDao {
 
     Event findEventById(int id);
 
-    List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
-            PaginationData pagination);
+    List<Event> findEvents(String name, List<Integer> owners, List<Category> categories, PaginationData pagination);
 
     void updateEvent(Event e);
 

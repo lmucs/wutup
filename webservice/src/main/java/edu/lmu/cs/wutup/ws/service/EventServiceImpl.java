@@ -8,12 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.EventDao;
 import edu.lmu.cs.wutup.ws.model.Category;
-import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
-import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Service
 @Transactional
@@ -38,9 +35,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
+    public List<Event> findEvents(String name, List<Integer> owners, List<Category> categories,
             PaginationData pagination) {
-        return eventDao.findEvents(owner, categories, venues, circle, pagination);
+        return eventDao.findEvents(name, owners, categories, pagination);
     }
 
     @Override

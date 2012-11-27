@@ -32,14 +32,14 @@ public class QueryBuilderTest {
 
     @Test
     public void queryWithSingleWhereIsCorrect() {
-        String query = new QueryBuilder().from("event").where("name = :name", "'Rich'").build();
+        String query = new QueryBuilder().from("event").where("name = :name", "Rich").build();
         assertThat(query, equalTo("select * from event where name = 'Rich'"));
     }
 
     @Test
     public void queryWithTwoWheresIsCorrect() {
-        String query = new QueryBuilder().from("event").where("name = :x", "'Rich'").where("radius = :y", "2").build();
-        assertThat(query, equalTo("select * from event where name = 'Rich' and radius = 2"));
+        String query = new QueryBuilder().from("event").where("name = :x", "Rich").where("radius = :y", "2").build();
+        assertThat(query, equalTo("select * from event where name = 'Rich' and radius = '2'"));
     }
 
     @Test
@@ -53,12 +53,12 @@ public class QueryBuilderTest {
                 .joinOn("event e", "o.eventId = e.id")
                 .joinOn("user u", "e.ownerId = u.id")
                 .build();
-        assertThat(query, equalTo("select o.id, o.start, o.end, o.venueId, v.name as venueName, v.address, " +
-                "v.latitude, v.longitude, o.eventId, e.name as eventName, e.description, address, u.id as " +
-                "userId, u.firstName, u.lastName, u.email, u.nickname from occurrence o join venue v on " +
-                "(o.venueId = v.id) join event e on (o.eventId = e.id) join user u on (e.ownerId = u.id) where " +
-                "start between '2012-01-15 08:30:00.0' and '2012-01-16 11:30:00.0' and end between " +
-                "'2012-01-15 08:30:00.0' and '2012-01-16 11:30:00.0'"));
+        assertThat(query, equalTo("select o.id, o.start, o.end, o.venueId, v.name as venueName, v.address, "
+                + "v.latitude, v.longitude, o.eventId, e.name as eventName, e.description, address, u.id as "
+                + "userId, u.firstName, u.lastName, u.email, u.nickname from occurrence o join venue v on "
+                + "(o.venueId = v.id) join event e on (o.eventId = e.id) join user u on (e.ownerId = u.id) where "
+                + "start between '2012-01-15 08:30:00.0' and '2012-01-16 11:30:00.0' and end between "
+                + "'2012-01-15 08:30:00.0' and '2012-01-16 11:30:00.0'"));
     }
 
     @Test
@@ -70,9 +70,31 @@ public class QueryBuilderTest {
                 .joinOn("event e", "o.eventId = e.id")
                 .joinOn("user u", "e.ownerId = u.id")
                 .build();
-        assertThat(query, equalTo("select * from occurrence o join venue v on (o.venueId = v.id) join " +
-                "event e on (o.eventId = e.id) join user u on (e.ownerId = u.id) where " +
-                "get_distance_miles(v.latitude, 65.0, v.longitude, 120.0) <= 80.0"));
+        assertThat(query, equalTo("select * from occurrence o join venue v on (o.venueId = v.id) join "
+                + "event e on (o.eventId = e.id) join user u on (e.ownerId = u.id) where "
+                + "get_distance_miles(v.latitude, 65.0, v.longitude, 120.0) <= 80.0"));
+    }
+
+    @Test
+    public void queryWithWhereAndOrWhereIsCorrect() {
+        String query = new QueryBuilder().from("event")
+                .where("name = :name1", "ric")
+                .orWhere("name = :name2", "part")
+                .build();
+        assertThat(query, equalTo("select * from event where name = 'ric' or name = 'part'"));
+    }
+
+    @Test
+    public void queryWithSingleLikeIsCorrect() {
+        String query = new QueryBuilder().from("event").like("name", "name", "RIC").build();
+        assertThat(query, equalTo("select * from event where lower(name) like lower('%RIC%')"));
+    }
+
+    @Test
+    public void queryWithMultipleLikeIsCorrect() {
+        String query = new QueryBuilder().from("event").like("name", "name", "RIC").like("name2", "name2", "h").build();
+        assertThat(query,
+                equalTo("select * from event where lower(name) like lower('%RIC%') and lower(name2) like lower('%h%')"));
     }
 
     @Test
@@ -84,7 +106,7 @@ public class QueryBuilderTest {
     @Test
     public void testQueryBuilderAppend() {
         String query = new QueryBuilder().from("event")
-                .where("name = :userName", "'Rich'")
+                .where("name = :userName", "Rich")
                 .append(" some text to append")
                 .build();
         assertThat(query, equalTo("select * from event where name = 'Rich' some text to append"));
@@ -102,7 +124,7 @@ public class QueryBuilderTest {
     public void testQueryWithInnerJoinAndSingleWhere() {
         String query = new QueryBuilder().from("event")
                 .innerJoinOn("eventOccurrence", "event.id = eventOccurrence.id")
-                .where("name = :name", "'Rich'")
+                .where("name = :name", "Rich")
                 .build();
         assertThat(
                 query,

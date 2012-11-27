@@ -20,12 +20,10 @@ import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Category;
-import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Repository
 public class EventDaoJdbcImpl implements EventDao {
@@ -79,12 +77,16 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     @Override
-    public List<Event> findEvents(User owner, List<Category> categories, List<Venue> venues, Circle circle,
-            PaginationData pagination) {
-        QueryBuilder query = getSelectQuery().whereCircle(circle);
+    public List<Event> findEvents(String name, List<Integer> owners, List<Category> categories, PaginationData pagination) {
+        QueryBuilder query = getSelectQuery();
 
-        if (owner != null) {
-            query.where("e.ownerId = :id", owner.getId());
+        if (name != null) {
+            query.like("e.name", "name", name);
+        }
+        if (owners != null) {
+            for (int i = 0; i < owners.size(); i++) {
+                query.orWhere("e.ownerId = :id" + i, owners.get(i));
+            }
         }
         if (categories != null) {
             // TODO: Implement categories search
@@ -92,13 +94,8 @@ public class EventDaoJdbcImpl implements EventDao {
                 query.where(null, categories.get(i));
             }
         }
-        if (venues != null) {
-            for (int i = 0; i < venues.size(); i++) {
-                query.where("v.id = :vId" + i, venues.get(i).getId());
-            }
-        }
 
-        return jdbcTemplate.query(query.addPagination(pagination).build(), eventRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).order("e.id").build(), eventRowMapper);
     }
 
     @Override

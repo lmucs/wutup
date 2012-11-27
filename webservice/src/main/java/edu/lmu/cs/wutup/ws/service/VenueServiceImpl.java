@@ -82,8 +82,11 @@ public class VenueServiceImpl implements VenueService {
 
     @Override
     public void updatePropertyValue(int venueId, String propertyName, String value) {
-        venueDao.updatePropertyValue(venueId,  propertyName,  value);
-        
+        if (value == null) {
+            venueDao.deleteProperty(venueId, propertyName);
+        } else {
+            venueDao.updatePropertyValue(venueId,  propertyName,  value);
+        }
     }
 
     @Override

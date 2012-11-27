@@ -7,6 +7,7 @@ insert into user (id, firstName, lastName, email, nickname) values (6, 'Eva', 'S
 insert into user (id, firstName, lastName, email, nickname) values (7, 'Olga', 'Shoopa', 'olga@gmail.com', 'gaah');
 insert into user (id, firstName, lastName, email, nickname) values (8, 'Katrina', 'Sherbina', 'ksherbina@gmail.com', 'Kat');
 insert into user (id, firstName, lastName, email, nickname) values (3503, 'John', 'Lennon', 'jlennon@gmail.com', 'John');
+insert into user (id, firstName, lastname, email, nickname) values (155, 'Carlos', 'Agudo', 'cagudo@gmail.com', 'Carlito');
 
 insert into event (name, description, ownerId) values ('Poker Night', 'Cards with the guys', 8);
 insert into event (name, description, ownerId) values ('Billiards with Prince Harry', 'Pool and drinks', 7);
