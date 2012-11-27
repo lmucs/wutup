@@ -56,11 +56,11 @@ public class Map extends MapActivity {
             e.printStackTrace();
         }
 		
-		plotOccurrences();
-		
-		new PostOccurrences().execute(Occurrences.get(9));
-		
-		plotOccurrences();
+//		plotOccurrences();
+//		
+//		new PostOccurrences().execute(Occurrences.get(9));
+//		
+//		plotOccurrences();
 		
 	}
 	

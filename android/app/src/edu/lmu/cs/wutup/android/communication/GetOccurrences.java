@@ -71,7 +71,7 @@ public class GetOccurrences extends HttpWutup{
             Occurrence occurrence = (Occurrence) occurenceIterator.next();
             
             Occurrences.add(occurrence);
-            Log.i("occurence", "Added occurence " + occurrence.getId() + ".");
+            Log.i("GET", "Added occurence " + occurrence.getId() + ".");
             
         }
         

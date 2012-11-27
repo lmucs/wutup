@@ -57,4 +57,10 @@ public class Occurrence {
         this.comments = comments;
     }
     
+    @Override
+    public String toString() {
+		return "blarkar";
+    	
+    }
+    
 }
