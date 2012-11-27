@@ -55,5 +55,10 @@ public class Venue {
     public void setPropertyMap(HashMap<String, String> propertyMap) {
         this.propertyMap = propertyMap;
     }
+    
+    @Override
+    public String toString() {
+    	return name;
+    }
 
 }

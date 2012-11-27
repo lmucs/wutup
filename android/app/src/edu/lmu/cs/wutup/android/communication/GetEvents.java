@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
 import edu.lmu.cs.wutup.android.container.Events;
-import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.model.Event;
 
 public class GetEvents extends HttpWutup{
@@ -65,14 +64,13 @@ public class GetEvents extends HttpWutup{
     private void fillEvents(MappingIterator<Event> eventIterator) {
         
         Events.clear();
-        Log.i("GET", "Cleared events.");
         
         while (eventIterator.hasNext()) {
             
             Event event = (Event) eventIterator.next();
             
             Events.add(event);
-            Log.i("GET", "Added event " + event.getId() + ".");
+            Log.i("GET", "Retrieved event " + event.getId() + ".");
             
         }
         

@@ -28,7 +28,10 @@ public class Occurrences {
     }
     
     public static void clear() {
-        occurrences.clear();        
+        occurrences.clear();
+        Log.i("container", "Cleared occurrences.");
+
+        
     }
 
 }

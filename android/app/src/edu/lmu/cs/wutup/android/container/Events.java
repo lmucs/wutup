@@ -2,6 +2,8 @@ package edu.lmu.cs.wutup.android.container;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 import edu.lmu.cs.wutup.android.model.Event;
 
 public class Events {
@@ -18,6 +20,7 @@ public class Events {
     
     public static void add(Event event) {
         events.add(event);
+        Log.i("container", "Added event " + event.getId() + ".");
     }
     
     public static void addAll(ArrayList<Event> events) {
@@ -25,7 +28,8 @@ public class Events {
     }
     
     public static void clear() {
-        events.clear();        
+        events.clear();
+        Log.i("container", "Cleared events.");
     }
 
 }

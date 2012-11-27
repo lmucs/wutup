@@ -64,7 +64,6 @@ public class GetOccurrences extends HttpWutup{
     private void fillOccurrences(MappingIterator<Occurrence> occurenceIterator) {
         
         Occurrences.clear();
-        Log.i("GET", "Cleared occurences.");
         
         while (occurenceIterator.hasNext()) {
             

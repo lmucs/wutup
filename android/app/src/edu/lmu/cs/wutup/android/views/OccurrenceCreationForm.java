@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import edu.lmu.cs.wutup.android.container.Events;
-import edu.lmu.cs.wutup.android.container.Occurrences;
+import edu.lmu.cs.wutup.android.container.Venues;
 import edu.lmu.cs.wutup.android.manager.R;
 import edu.lmu.cs.wutup.android.model.Event;
-import edu.lmu.cs.wutup.android.model.Occurrence;
+import edu.lmu.cs.wutup.android.model.Venue;
 
 
 public class OccurrenceCreationForm extends Activity {
@@ -23,13 +23,13 @@ public class OccurrenceCreationForm extends Activity {
 		setContentView(R.layout.occurrence_creation_form_v2);
 		
 		populateEventSpinner();
+		populateVenueSpinner();
 	
 	}
 	
-	public void populateEventSpinner() {
+	private void populateEventSpinner() {
 	
-		eventSpinner = (Spinner) findViewById(R.id.spinner1);
-		venueSpinner = (Spinner) findViewById(R.id.spinner2);
+		eventSpinner = (Spinner) findViewById(R.id.event_spinner);
 			 
 		ArrayAdapter<Event> eventAdapter = new ArrayAdapter<Event>(this, 
 												 				   android.R.layout.simple_spinner_item, 
@@ -37,6 +37,19 @@ public class OccurrenceCreationForm extends Activity {
 		
 		eventAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		eventSpinner.setAdapter(eventAdapter);
+		
+	  }
+	
+	private void populateVenueSpinner() {
+		
+		venueSpinner = (Spinner) findViewById(R.id.venue_spinner);
+			 
+		ArrayAdapter<Venue> venueAdapter = new ArrayAdapter<Venue>(this, 
+												 				   android.R.layout.simple_spinner_item, 
+				                                                   Venues.getAll());
+		
+		venueAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		venueSpinner.setAdapter(venueAdapter);
 		
 	  }
 
