@@ -228,6 +228,7 @@ table, td, th {
 .section {
     padding-top: 15px;
     padding-bottom: 15px;
+    background-color: white;
 }
 
 #event-header table, #event-header td, #event-header th {
