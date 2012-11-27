@@ -41,6 +41,11 @@ public class Event {
     public void setComments(ArrayList<Comment> comments) {
         this.comments = comments;
     }
+    
+    @Override
+    public String toString() {
+    	return name;
+    }
 
 
     

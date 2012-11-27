@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import edu.lmu.cs.wutup.android.container.Events;
 import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.manager.R;
+import edu.lmu.cs.wutup.android.model.Event;
 import edu.lmu.cs.wutup.android.model.Occurrence;
 
 
@@ -29,12 +31,12 @@ public class OccurrenceCreationForm extends Activity {
 		eventSpinner = (Spinner) findViewById(R.id.spinner1);
 		venueSpinner = (Spinner) findViewById(R.id.spinner2);
 			 
-		ArrayAdapter<Occurrence> occurrenceAdapter = new ArrayAdapter<Occurrence>(this, 
-				                                                                  android.R.layout.simple_spinner_item, 
-				                                                                  Occurrences.getAll());
+		ArrayAdapter<Event> eventAdapter = new ArrayAdapter<Event>(this, 
+												 				   android.R.layout.simple_spinner_item, 
+				                                                   Events.getAll());
 		
-		occurrenceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		eventSpinner.setAdapter(occurrenceAdapter);
+		eventAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		eventSpinner.setAdapter(eventAdapter);
 		
 	  }
 

@@ -2,6 +2,8 @@ package edu.lmu.cs.wutup.android.container;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 import edu.lmu.cs.wutup.android.model.Occurrence;
 
 public class Occurrences {
@@ -18,6 +20,7 @@ public class Occurrences {
     
     public static void add(Occurrence occurrence) {
         occurrences.add(occurrence);
+        Log.i("container", "Added occurence " + occurrence.getId() + ".");
     }
     
     public static void addAll(ArrayList<Occurrence> occurrences) {

@@ -64,14 +64,14 @@ public class GetOccurrences extends HttpWutup{
     private void fillOccurrences(MappingIterator<Occurrence> occurenceIterator) {
         
         Occurrences.clear();
-        Log.i("occurence", "Cleared occurences.");
+        Log.i("GET", "Cleared occurences.");
         
         while (occurenceIterator.hasNext()) {
             
             Occurrence occurrence = (Occurrence) occurenceIterator.next();
+            Log.i("GET", "Retrieved occurence " + occurrence.getId() + ".");
             
             Occurrences.add(occurrence);
-            Log.i("GET", "Added occurence " + occurrence.getId() + ".");
             
         }
         
