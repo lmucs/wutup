@@ -30,8 +30,7 @@
                   android:theme="@android:style/Theme.NoTitleBar" />
                     
         <activity android:name ="edu.lmu.cs.wutup.android.views.OccurrenceCreationForm"
-                  android:label="@string/title_map"
-                  android:theme="@android:style/Theme.NoTitleBar" />
+                  android:label="@string/occurrence_creation_form_title" />
                     
     </application>
 

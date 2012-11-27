@@ -16,7 +16,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 
+import edu.lmu.cs.wutup.android.communication.GetEvents;
 import edu.lmu.cs.wutup.android.communication.GetOccurrences;
+import edu.lmu.cs.wutup.android.communication.GetVenues;
 import edu.lmu.cs.wutup.android.communication.PostOccurrences;
 import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.manager.EventPlotter;
@@ -40,6 +42,8 @@ public class Map extends MapActivity {
 		setContentView(R.layout.map_view);
 		
 		new GetOccurrences().execute();
+		new GetEvents().execute();
+		new GetVenues().execute();
 		
 		mapView = (MapView) findViewById(R.id.map);
 		mapView.setBuiltInZoomControls(true);
@@ -57,10 +61,10 @@ public class Map extends MapActivity {
         }
 		
 		plotOccurrences();
-		
-		new PostOccurrences().execute(Occurrences.get(9));
-		
-		plotOccurrences();
+//		
+//		new PostOccurrences().execute(Occurrences.get(9));
+//		
+//		plotOccurrences();
 		
 	}
 	
