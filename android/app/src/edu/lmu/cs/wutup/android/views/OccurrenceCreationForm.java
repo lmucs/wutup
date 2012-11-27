@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.android.views;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import edu.lmu.cs.wutup.android.container.Events;
 import edu.lmu.cs.wutup.android.container.Venues;
@@ -20,10 +21,19 @@ public class OccurrenceCreationForm extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 	    
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.occurrence_creation_form_v2);
+		setContentView(R.layout.occurrence_creation_form_v3);
 		
-		populateEventSpinner();
-		populateVenueSpinner();
+		String[] stuff = {"adfasdf", "adsfdf", "3fsdf", "dsf43"};
+		AutoCompleteTextView event = (AutoCompleteTextView) findViewById(R.id.occurrence_creation_form_event);
+		ArrayAdapter<String> adp=new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line,stuff);
+		event.setThreshold(1);
+		event.setAdapter(adp);
+		
+		
+		
+//		populateEventSpinner();
+//		populateVenueSpinner();
 	
 	}
 	
