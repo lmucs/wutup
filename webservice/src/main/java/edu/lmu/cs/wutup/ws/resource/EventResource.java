@@ -91,6 +91,8 @@ public class EventResource extends AbstractWutupResource {
     @Path("/")
     public Response createEvent(Event event, @Context UriInfo uriInfo) {
         try {
+            checkEventCanBeCreated(event);
+
             int newId = eventService.createEvent(event);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(newId + "").build();
             return Response.created(newLocation).build();

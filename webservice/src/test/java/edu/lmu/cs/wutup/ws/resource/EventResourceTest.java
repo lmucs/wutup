@@ -34,7 +34,8 @@ public class EventResourceTest {
     EventResource resource;
     EventService service;
 
-    Event sampleEvent = new Event(1, "Alice");
+    User user = new User(1, "alice@example.com");
+    Event sampleEvent = new Event(1, "Alice", "Party", user);
     Comment sampleEventComment = new Comment(1, "body", new DateTime(), new User());
     List<Event> sampleEventList = new ArrayList<Event>();
     List<Comment> sampleEventCommentList = new ArrayList<Comment>();
