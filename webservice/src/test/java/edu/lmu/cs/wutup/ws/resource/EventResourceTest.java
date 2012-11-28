@@ -34,6 +34,7 @@ public class EventResourceTest {
     EventResource resource;
     EventService service;
 
+    Event eventWithoutCreator = new Event(3, "Party");
     User user = new User(1, "alice@example.com");
     Event sampleEvent = new Event(1, "Alice", "Party", user);
     Comment sampleEventComment = new Comment(1, "body", new DateTime(), new User());
@@ -57,6 +58,16 @@ public class EventResourceTest {
         verify(service).createEvent(sampleEvent);
         assertThat(response.getMetadata().getFirst("Location").toString(), startsWith("http://example.com/"));
         assertThat(response.getStatus(), is(201));
+    }
+
+    @Test
+    public void creatingEventWithoutCreatorThrowsExceptionWith400() {
+        try {
+            resource.createEvent(eventWithoutCreator, sampleUriInfo);
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(400));
+        }
     }
 
     @Test
