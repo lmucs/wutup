@@ -1,5 +1,6 @@
 $(document).ready(function() {
-	var initialLocation,
+	var initialLocation,  
+	baseUrl = window.location.protocol + "//" + window.location.hostname,
 	siberia = new google.maps.LatLng(60, 105),
 	newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687),
 	browserSupportFlag = new Boolean(),
@@ -52,7 +53,7 @@ $(document).ready(function() {
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			map.setCenter(initialLocation);
 			// Grab Event Occurrences. Needs to be refined to map area.
-			$.get('http://localhost:8080/wutup/occurrences?page=0&pageSize=20', function(occurrences) {
+			$.getJSON( generateOccurrenceURL(), function(occurrences) {
 				console.log(occurrences);
 				var calendarEvents = parseOccurrencesForCalendar(occurrences);
 				createCalendar(calendarEvents);
@@ -83,13 +84,18 @@ $(document).ready(function() {
 			});
 		}
 		map.setCenter(initialLocation);
-	}
+	};
+	
+	var generateOccurrenceURL = function() {
+		return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20';
+	};
+	
 	var populateMap = function(gMap, events) {
 		map = gMap;
 		for (var i = 0; i < events.length; i++) {
 			createMarker(events[i]);
 		}
-	}
+	};
 	var createMarker = function(occurrence) {
 		var marker = new google.maps.Marker({
 			map : map,
@@ -107,7 +113,7 @@ $(document).ready(function() {
 			displayEventInfo(occurrence);
 		});
 		return marker;
-	}
+	};
 	var displayEventInfo = function(occurrence) {
 		$("#result").html(function() {
 			return "<h3>" + occurrence.event.name + "</h3>" + "<p>" + occurrence.event.description + "</p>" + "<h4>" + occurrence.venue.name + "</h4>" + "<p><b>Address:</b> " + occurrence.venue.address + "</p>" + "<p><b>Start:</b> " + occurrence.start + "</p>" + "<p><b>End:</b> " + occurrence.end + "</p>";
@@ -132,13 +138,13 @@ $(document).ready(function() {
 	};
 
 	var parsedForUrl = function(attribute) {
-		var result = attribute.replace(/'/g, "");
+		var result = attribute.replace(/'/g, "%60");
 		return result.replace(/ /g, "+");
 	};
 
 	var getEventByName = function(name) {
 		console.log(parsedForUrl(name));
-		var venueList = $.get('http://localhost:8080/wutup/event?name=' + parsedForUrl(name), function(data) {
+		var venueList = $.get(baseUrl + ':8080/wutup/event?name=' + parsedForUrl(name), function(data) {
 		});
 	};
 
@@ -153,7 +159,7 @@ $(document).ready(function() {
 				'Accept' : 'application/json',
 				'Content-Type' : 'application/json'
 			},
-			url : 'http://localhost:8080/wutup/events',
+			url : baseUrl + ':8080/wutup/events',
 			type : 'POST',
 			data : JSON.stringify(newEvent),
 			success : function(response, textStatus, jqXhr) {
@@ -171,7 +177,7 @@ $(document).ready(function() {
 
 	var findOrCreateEvent = function(eventName, eventDescription) {
 		console.log("Finding or Creating an Event");
-		$.get('http://localhost:8080/wutup/events?name=' + parsedForUrl(eventName), function(data) {
+		$.get(baseUrl + ':8080/wutup/events?name=' + parsedForUrl(eventName), function(data) {
 			if (data.length > 0) {
 				console.log("Event Found!");
 				event = data[0];
@@ -182,13 +188,13 @@ $(document).ready(function() {
 		});
 	}
 	var getVenueByName = function(name) {
-		$.get('http://localhost:8080/wutup/venues?name=' + parsedForUrl(name), function(data) {
+		$.get(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(name), function(data) {
 			venue = data[0];
 		});
 	};
 
 	var createNewVenue = function(name, address) {
-		$.get('http://localhost:8080/wutup/geocode?address=' + parsedForUrl(address), function(data) {
+		$.get(baseUrl + ':8080/wutup/geocode?address=' + parsedForUrl(address), function(data) {
 			newVenue = {
 				name : name,
 				address : address,
@@ -200,7 +206,7 @@ $(document).ready(function() {
 					'Accept' : 'application/json',
 					'Content-Type' : 'application/json'
 				},
-				url : 'http://localhost:8080/wutup/venues/',
+				url : baseUrl + ':8080/wutup/venues/',
 				type : 'POST',
 				dataType : 'json',
 				data : JSON.stringify(newVenue),
@@ -220,10 +226,10 @@ $(document).ready(function() {
 
 	var findOrCreateVenue = function(venueName, venueAddress) {
 		console.log("Finding or Creating Venue");
-		$.get('http://localhost:8080/wutup/venues?name=' + parsedForUrl(venueName), function(data) {
+		$.get(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(venueName), function(data) {
 			if (data.length > 0) {
 				console.log("Venue Found!");
-				venue = data[0];
+				patchVenue(venueName, venueAddress);
 			} else {
 				console.log("Creating a new Venue");
 				createNewVenue(venueName, venueAddress);
@@ -233,8 +239,8 @@ $(document).ready(function() {
 
 	var createEventOccurrence = function(eventName, venueName, start, end) {
 		console.log(eventName, venueName);
-		$.get('http://localhost:8080/wutup/events?name=' + parsedForUrl(eventName), function(events) {
-			$.get('http://localhost:8080/wutup/venues?name=' + parsedForUrl(venueName), function(venues) {
+		$.get(baseUrl + ':8080/wutup/events?name=' + parsedForUrl(eventName), function(events) {
+			$.get(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(venueName), function(venues) {
 				var newOccurrence = {
 					event : events[0],
 					venue : venues[0],
@@ -246,7 +252,7 @@ $(document).ready(function() {
 						'Accept' : 'application/json',
 						'Content-Type' : 'application/json'
 					},
-					url : 'http://localhost:8080/wutup/occurrences/',
+					url : baseUrl + ':8080/wutup/occurrences/',
 					type : 'POST',
 					dataType : 'json',
 					data : JSON.stringify(newOccurrence),
