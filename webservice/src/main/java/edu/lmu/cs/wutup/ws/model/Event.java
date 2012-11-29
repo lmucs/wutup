@@ -1,7 +1,6 @@
 package edu.lmu.cs.wutup.ws.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
