@@ -1,6 +1,7 @@
 package edu.lmu.cs.wutup.ws.model;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
+import java.util.List;
 
 public interface Commentable {
 
@@ -10,5 +11,5 @@ public interface Commentable {
 
     void updateComment(int commentNumber, Comment comment);
 
-    ArrayList<Comment> getComments();
+    List<Comment> getComments();
 }
