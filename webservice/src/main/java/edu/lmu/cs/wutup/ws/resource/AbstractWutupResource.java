@@ -12,6 +12,7 @@ import org.joda.time.Interval;
 
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Circle;
+import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 /**
@@ -27,6 +28,7 @@ public abstract class AbstractWutupResource {
     private static final String MISSING_CENTER = "The center parameter must be present if the radius is supplied";
     private static final String MISSING_RADIUS = "The radius parameter must be present if the center is supplied";
     private static final String MALFORMED_PARAMETER = "The parameter '%s' is malformed";
+    private static final String INSUFFICIENT_EVENT_DATA = "Not enough data to create event";
 
     private static final Pattern CENTER_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?");
     private static final Pattern RADIUS_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
@@ -91,6 +93,12 @@ public abstract class AbstractWutupResource {
     void checkIdAgreement(int idInPath, Integer idInBody) {
         if (idInBody != null && idInPath != idInBody) {
             throw new ServiceException(CONFLICT, PATH_BODY_CONFLICT, idInPath, idInBody);
+        }
+    }
+
+    void checkEventCanBeCreated(Event e) {
+        if (e.getCreator() == null || e.getName() == null) {
+            throw new ServiceException(BAD_REQUEST, INSUFFICIENT_EVENT_DATA);
         }
     }
 

@@ -180,7 +180,6 @@ $(document).ready(function() {
 		$.get(baseUrl + ':8080/wutup/events?name=' + parsedForUrl(eventName), function(data) {
 			if (data.length > 0) {
 				console.log("Event Found!");
-				event = data[0];
 			} else {
 				console.log("Creating an Event");
 				createNewEvent(eventName, eventDescription, null);
@@ -229,7 +228,7 @@ $(document).ready(function() {
 		$.get(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(venueName), function(data) {
 			if (data.length > 0) {
 				console.log("Venue Found!");
-				patchVenue(venueName, venueAddress);
+				// patchVenue(venueName, venueAddress);
 			} else {
 				console.log("Creating a new Venue");
 				createNewVenue(venueName, venueAddress);
