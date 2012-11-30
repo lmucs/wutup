@@ -1,13 +1,13 @@
-insert into user (id, firstName, lastName, email, nickname) values (1, 'Honda', 'Prius', '40mpg@gmail.com', 'hybrid');
-insert into user (id, firstName, lastName, email, nickname) values (2, 'Ned', 'Stark', 'naked@winterfell.com', 'headless');
-insert into user (id, firstName, lastName, email, nickname) values (3, 'Jack', 'Handy', 'jh1942@lion.lmu.edu', 'DeepThoughts');
-insert into user (id, firstName, lastName, email, nickname) values (4, 'Heather', 'Northington', 'h.north@lion.lmu.edu', 'hnorth');
-insert into user (id, firstName, lastName, email, nickname) values (5, 'Ignatius', 'Krumpkin', 'iggy@hotmail.com', 'IKOK');
-insert into user (id, firstName, lastName, email, nickname) values (6, 'Eva', 'Sandleborn', 'eva@htomail.com', 'sandy');
-insert into user (id, firstName, lastName, email, nickname) values (7, 'Olga', 'Shoopa', 'olga@gmail.com', 'gaah');
-insert into user (id, firstName, lastName, email, nickname) values (8, 'Katrina', 'Sherbina', 'ksherbina@gmail.com', 'Kat');
-insert into user (id, firstName, lastName, email, nickname) values (3503, 'John', 'Lennon', 'jlennon@gmail.com', 'John');
-insert into user (id, firstName, lastname, email, nickname) values (155, 'Carlos', 'Agudo', 'cagudo@gmail.com', 'Carlito');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (1, 'Honda', 'Prius', '40mpg@gmail.com', 'hybrid', 'hybrid');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (2, 'Ned', 'Stark', 'naked@winterfell.com', 'headless', 'nedstark');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (3, 'Jack', 'Handy', 'jh1942@lion.lmu.edu', 'DeepThoughts', 'jackhandy');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (4, 'Heather', 'Northington', 'h.north@lion.lmu.edu', 'hnorth', 'heathernorthington');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (5, 'Ignatius', 'Krumpkin', 'iggy@hotmail.com', 'IKOK', 'ignatius');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (6, 'Eva', 'Sandleborn', 'eva@htomail.com', 'sandy', 'eva');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (7, 'Olga', 'Shoopa', 'olga@gmail.com', 'gaah', 'olga');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (8, 'Katrina', 'Sherbina', 'ksherbina@gmail.com', 'Kat', 'katrina');
+insert into user (id, firstName, lastName, email, nickname, sessionId) values (3503, 'John', 'Lennon', 'jlennon@gmail.com', 'John', 'john');
+insert into user (id, firstName, lastname, email, nickname, sessionId) values (155, 'Carlos', 'Agudo', 'cagudo@gmail.com', 'Carlito', 'carlos');
 
 insert into event (name, description, ownerId) values ('Poker Night', 'Cards with the guys', 8);
 insert into event (name, description, ownerId) values ('Billiards with Prince Harry', 'Pool and drinks', 7);

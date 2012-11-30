@@ -40,7 +40,8 @@ public class UserServiceImpl implements UserService {
                 updater.getFirstName() == null ? userToUpdate.getFirstName() : updater.getFirstName(),
                 updater.getLastName() == null ? userToUpdate.getLastName() : updater.getLastName(),
                 updater.getEmail() == null ? userToUpdate.getEmail() : updater.getEmail(),
-                updater.getNickname() == null ? userToUpdate.getNickname() : updater.getNickname());
+                updater.getNickname() == null ? userToUpdate.getNickname() : updater.getNickname(),
+                updater.getSessionId() == null ? userToUpdate.getSessionId() : updater.getSessionId());
         return template;
     }
 }
