@@ -1,7 +1,7 @@
 package edu.lmu.cs.wutup.ws.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,7 +15,7 @@ public class Event implements Commentable, Serializable {
     private String name;
     private String description;
     private User creator;
-    private ArrayList<Comment> comments;
+    private List<Comment> comments;
 
     public Event() {
         // No-arg constructor required for annotations
@@ -84,7 +84,7 @@ public class Event implements Commentable, Serializable {
     }
 
     @Override
-    public ArrayList<Comment> getComments() {
+    public List<Comment> getComments() {
         return this.comments;
     }
 

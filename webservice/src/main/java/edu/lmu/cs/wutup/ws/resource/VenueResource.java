@@ -1,8 +1,8 @@
 package edu.lmu.cs.wutup.ws.resource;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 
 import java.net.URI;
 import java.util.List;
@@ -52,7 +52,7 @@ public class VenueResource extends AbstractWutupResource {
     private static final String VENUE_NOT_FOUND = "Venue %d does not exist";
     private static final String VENUE_ALREADY_EXISTS = "Vensue %d already exists";
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for venue %d";
-    private static final String PROPERTY_VENUE_ID_CONFLICT = "Property %s does not exist for Venue %d";
+    private static final String PROPERTY_VENUE_ID_CONFLICT = "Property does not exist for Venue %d, cannot be deleted";
     private static final String INVALID_NUM_OF_PROPERTIES = "Only one property key and value pair must be specified";
 
     @Autowired
@@ -195,20 +195,22 @@ public class VenueResource extends AbstractWutupResource {
     @POST
     @Path("/{id}/properties")
     public Response updateProperty(@PathParam("id") String venueIdString, Map<String, String> keyValuePair) {
-        if (keyValuePair.size() == 0 || keyValuePair.size() > 1) {
-            throw new ServiceException(BAD_REQUEST, INVALID_NUM_OF_PROPERTIES);
-        }
+        validateMapSize(keyValuePair, 1);
         int venueId = toIntegerRequired("id", venueIdString);
-        String key = (String) keyValuePair.keySet().toArray()[0];
-        String value = (String) keyValuePair.values().toArray()[0];
         try {
             Venue v = venueService.findVenueById(venueId);
-            venueService.updatePropertyValue(v.getId(), key, value);
+            venueService.updateOrAddProperty(v.getId(), keyValuePair);
             return Response.noContent().build();
         } catch (NoSuchPropertyException e) {
-            throw new ServiceException(CONFLICT, PROPERTY_VENUE_ID_CONFLICT, key, venueId);
+            throw new ServiceException(CONFLICT, PROPERTY_VENUE_ID_CONFLICT, venueId);
         } catch (NoSuchVenueException e) {
             throw new ServiceException(NOT_FOUND, VENUE_NOT_FOUND, venueId);
+        }
+    }
+    
+    public void validateMapSize(Map<String, String> map, int requiredSize) {
+        if (map.isEmpty() || map.size() > 1) {
+            throw new ServiceException(BAD_REQUEST, INVALID_NUM_OF_PROPERTIES);
         }
     }
 }

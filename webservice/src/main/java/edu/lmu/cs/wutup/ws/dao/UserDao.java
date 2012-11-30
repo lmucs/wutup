@@ -6,6 +6,7 @@ public interface UserDao {
 
     void createUser(User u);
     User findUserById(int id);
+    User findUserBySessionId(String sessionId);
     void updateUser(User u);
     int findNumberOfUsers();
     void deleteUser(int i);

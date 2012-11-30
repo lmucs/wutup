@@ -15,6 +15,7 @@ public class User implements Serializable {
     private String lastName;
     private String email;
     private String nickname;
+    private String sessionId;
 
     public User() {
         // No-arg constructor required for annotations
@@ -23,17 +24,30 @@ public class User implements Serializable {
     public User(Integer id, String email) {
         this(id, null, null, email, null);
     }
+    
+    public User(Integer id, String email, String sessionId) {
+        this(id, null, null, email, null);
+    }
 
     public User(String first, String last, String email, String nick) {
-        this(null, first, last, email, nick);
+        this(null, first, last, email, nick, null);
+    }
+    
+    public User(String first, String last, String email, String nick, String sessionId) {
+        this(null, first, last, email, nick, sessionId);
     }
 
     public User(Integer id, String first, String last, String email, String nick) {
+        this(id, first, last, email, nick, null);
+    }
+    
+    public User(Integer id, String first, String last, String email, String nick, String sessionId) {
         this.id = id;
         this.firstName = first;
         this.lastName = last;
         this.email = email;
         this.nickname = nick;
+        this.sessionId = sessionId;
     }
 
     @XmlElement(name = "id")
@@ -79,6 +93,15 @@ public class User implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+    
+    @XmlElement(name = "sessionId")
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     @Override

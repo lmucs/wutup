@@ -182,7 +182,7 @@ public class VenueDaoTest {
         Map<String, String> properties = venueDao.findProperties(2);
         assertThat(properties.size(), is(2));
         assertThat(properties.get("Parking"), is("Valet only"));
-        venueDao.updatePropertyValue(2, "Parking", "Free parking for all!");
+        venueDao.updateOrAddProperty(2, "Parking", "Free parking for all!");
         properties = venueDao.findProperties(2);
         assertThat(properties.size(), is(2));
         assertThat(properties.get("Parking"), is("Free parking for all!"));

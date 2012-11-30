@@ -81,17 +81,27 @@ public class VenueServiceImpl implements VenueService {
     }
 
     @Override
-    public void updatePropertyValue(int venueId, String propertyName, String value) {
+    public void updateOrAddProperty(int venueId, Map<String, String> keyValuePair) {
+        String key = extractPropertyKey(keyValuePair, 0);
+        String value = extractPropertyValue(keyValuePair, 0);
         if (value == null) {
-            venueDao.deleteProperty(venueId, propertyName);
+            venueDao.deleteProperty(venueId, key);
         } else {
-            venueDao.updatePropertyValue(venueId,  propertyName,  value);
+            venueDao.updateOrAddProperty(venueId, key, value);
         }
     }
 
     @Override
     public void deleteProperty(int venueId, String propertyName) {
         venueDao.deleteProperty(venueId, propertyName);
-        
+
+    }
+
+    private String extractPropertyKey(Map<String, String> map, Integer keyIndex) {
+        return (String) map.keySet().toArray()[keyIndex];
+    }
+
+    private String extractPropertyValue(Map<String, String> map, Integer valueIndex) {
+        return (String) map.values().toArray()[valueIndex];
     }
 }
