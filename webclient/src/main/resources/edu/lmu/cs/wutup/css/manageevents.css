@@ -6,3 +6,8 @@
 .pac-container {
     z-index: 1200 !important;
 }
+
+
+#event-description {  
+    height: 200px;
+}

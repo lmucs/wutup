@@ -200,14 +200,6 @@ table, td, th {
     overflow-y: auto;
 }
 
-#event-description {  
-    height: 200px !important;
-    width: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
-
-
 #left-sidebar {
     border-style: solid;
     border-width: 5px;
