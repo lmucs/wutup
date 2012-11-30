@@ -180,7 +180,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     @Override
-    public void updatePropertyValue(int venueId, String propertyName, String value) {
+    public void updateOrAddProperty(int venueId, String propertyName, String value) {
         int rowsUpdated = jdbcTemplate.update(UPDATE_PROPERTY_VALUE, value, venueId, propertyName);
         if (rowsUpdated == 0) {
             addProperty(venueId, propertyName, value);

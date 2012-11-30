@@ -25,7 +25,7 @@ public interface VenueService extends CommentService {
 
     void addProperty(int venueId, String propertyName, String value);
 
-    void updatePropertyValue(int venueId, String propertyName, String value);
+    void updateOrAddProperty(int venueId, Map<String, String> keyValuePair);
 
     void deleteProperty(int venueId, String propertyName);
 

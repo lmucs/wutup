@@ -81,8 +81,8 @@ public class VenueServiceTest {
 
     @Test
     public void updatePropertyValueDelegatesToDao() {
-        service.updatePropertyValue(sampleVenue.getId(), samplePropertyKey, samplePropertyValue);
-        verify(dao).updatePropertyValue(sampleVenue.getId(), samplePropertyKey, samplePropertyValue);
+        service.updateOrAddProperty(sampleVenue.getId(), samplePropertyMap);
+        verify(dao).updateOrAddProperty(sampleVenue.getId(), samplePropertyKey, samplePropertyValue);
     }
 
     @Test
