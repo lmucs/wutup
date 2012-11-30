@@ -12,7 +12,7 @@ public class FBAuthIT {
         expect().
             statusCode(200).
         when().
-            get("/wutup/auth/facebook");
+            get("/wutup/auth/facebook?sessionId=hello");
     }
     
     @Ignore
@@ -21,7 +21,7 @@ public class FBAuthIT {
         expect().
             statusCode(200).
         when().
-            get("/wutup/auth/landing?state=637730135&code=AQA_5m_sNTv-g7HaAev6TYeNPb7naOU#_=_");
+            get("/wutup/auth/stuff/landing?state=637730135&code=AQA_5m_sNTv-g7HaAev6TYeNPb7naOU#_=_");
     }
     
     @Test
@@ -29,7 +29,7 @@ public class FBAuthIT {
         expect().
             statusCode(401).
         when().
-            get("/wutup/auth/landing?error=someshitwentwrong#_=_");
+            get("/wutup/auth/stuff/landing?error=someshitwentwrong#_=_");
     }
     
     @Ignore
@@ -38,6 +38,6 @@ public class FBAuthIT {
         expect().
             statusCode(200).
         when().
-            get("/wutup/auth/landing?access_token=SomeSuper-Long_key&expires=346517");
+            get("/wutup/auth/stuff/landing?access_token=SomeSuper-Long_key&expires=346517");
     }
 }

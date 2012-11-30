@@ -22,8 +22,8 @@ import edu.lmu.cs.wutup.ws.model.FacebookGateway;
 public class FBAuthServiceImpl {
     private static final Pattern accessTokenPattern = Pattern.compile("(?<=access_token=)[A-z0-9_-]+(?=&)");
     
-    public static String getAccessToken(String code) throws IOException {
-        return extractAccessToken(FacebookGateway.acquireAccessToken(code));
+    public static String getAccessToken(String code, String sessionId) throws IOException {
+        return extractAccessToken(FacebookGateway.acquireAccessToken(code, sessionId));
     }
     
     private static String extractAccessToken(String tokenContainer) {
