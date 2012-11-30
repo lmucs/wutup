@@ -25,7 +25,7 @@ public interface VenueDao extends CommentDao {
 
     void addProperty(int venueId, String propertyName, String value);
 
-    void updatePropertyValue(int venueId, String propertyName, String value);
+    void updateOrAddProperty(int venueId, String propertyName, String value);
 
     void deleteProperty(int venueId, String propertyName);
 }
