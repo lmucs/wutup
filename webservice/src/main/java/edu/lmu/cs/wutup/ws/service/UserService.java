@@ -7,5 +7,6 @@ public interface UserService {
     void updateUser(User u);
     void createUser(User u);
     User findUserById(int id);
+    User findUserBySessionId(String id);
     void deleteUser(int id);
 }
