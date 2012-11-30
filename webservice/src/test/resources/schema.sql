@@ -21,6 +21,7 @@ create table user (
   lastName varchar(512),
   email varchar(512),
   nickname varchar(512),
+  sessionId varchar(512),
   primary key(id)
 );
 

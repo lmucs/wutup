@@ -120,6 +120,14 @@ public class UserDaoTest {
         int nextGeneratedUserId = userDao.getNextUsableUserId();
         assertEquals(nextGeneratedUserId, currentMaxIdValue + 1);
     }
+    
+    @Test
+    public void checkRetrievalBySessionId() {
+        User u = new User(15, "stuff", "verhasselt", "hah@poof.com", "gratz", "someSessionId12");
+        userDao.createUser(u);
+        User retrieve = userDao.findUserBySessionId("someSessionId12");
+        assertEquals(retrieve.getId(), u.getId());
+    }
 
     @After
     public void tearDownDatabase() {
