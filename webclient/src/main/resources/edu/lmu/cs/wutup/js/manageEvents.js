@@ -264,9 +264,9 @@ $(document).ready(function () {
             });
         },
 
-        patchVenue = function (venue, description) {
+        patchVenue = function (venue, address) {
             var venuePatch = {
-                description: description
+                address: address
             };
             $.ajax({
                 headers: {
@@ -322,7 +322,7 @@ $(document).ready(function () {
             });
         },
 
-        findOrPatchEvent = function (name, description, creator) {
+        createOrPatchEvent = function (name, description, creator) {
             console.log("Finding or Creating an Event");
             $.get(baseUrl + ':8080/wutup/events?name=' + parsedForUrl(name), function (data) {
                 if (data.length > 0) {
@@ -335,7 +335,7 @@ $(document).ready(function () {
             });
         },
 
-        findOrPatchVenue = function (venueName, venueAddress) {
+        createOrPatchVenue = function (venueName, venueAddress) {
             console.log("Finding or Creating Venue");
             $.get(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(venueName), function (data) {
                 if (data.length > 0) {
@@ -359,6 +359,10 @@ $(document).ready(function () {
                 event: occurrence.event
             }, true // make the event "stick"
             );
+        },
+        
+        removeEventOnCalendar = function (occurrence) {
+        	$('#calendar').fullCalendar('removeEvents', occurrence.id);
         },
 
         createCalendar = function (calendarEvents) {
@@ -403,10 +407,18 @@ $(document).ready(function () {
                                         nickname: "Big Sexy",
                                         email: "cagudo@gmail.com"
                                     };
-                                findOrPatchEvent(eventName, $('#event-description').val(), creator);
-                                findOrPatchVenue(venueName, $('#venue-address').val());
+                                createOrPatchEvent(eventName, $('#event-description').val(), creator);
+                                createOrPatchVenue(venueName, $('#venue-address').val());
                                 setTimeout(function () {
-                                    createOccurrence(eventName, venueName, start, end);
+                                	if(calEvent === null) {
+                                		createEventOccurrence(eventName, venueName, start, end);
+                                	}
+                                	else {
+                                		calEvent.event.description = $('#event-description').val();
+                                		calEvent.venue.address = $('#venue-address').val();
+                                		removeEventOnCalendar(calEvent);
+                                		renderEventOnCalendar(calEvent);
+                                	}
                                 }, 2000);
                                 calendar.fullCalendar('unselect');
                             },
