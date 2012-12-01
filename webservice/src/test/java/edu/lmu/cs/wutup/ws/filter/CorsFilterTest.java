@@ -32,7 +32,7 @@ public class CorsFilterTest {
         request.addHeader("Access-Control-Request-Method", "PUT");
         filter.doFilterInternal(request, response, chain);
         assertThat(response.getHeader("Access-Control-Allow-Origin"), is("*"));
-        assertThat(response.getHeader("Access-Control-Allow-Methods"), is("GET, POST, PUT, DELETE"));
+        assertThat(response.getHeader("Access-Control-Allow-Methods"), is("GET, POST, PATCH, PUT, DELETE"));
         assertThat(response.getHeader("Access-Control-Allow-Headers"), is("Content-Type"));
         assertThat(response.getHeader("Access-Control-Max-Age"), is("1800"));
     }
