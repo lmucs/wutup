@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.EventOccurrenceDao;
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
@@ -48,9 +47,9 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     }
 
     @Override
-    public List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
+    public List<EventOccurrence> findEventOccurrences(Integer attendee, Circle circle, Interval interval,
             Integer eventId, Integer venueId, PaginationData pagination) {
-        return eventOccurrenceDao.findEventOccurrences(categories, circle, interval, eventId, venueId, pagination);
+        return eventOccurrenceDao.findEventOccurrences(attendee, circle, interval, eventId, venueId, pagination);
     }
 
     @Override
