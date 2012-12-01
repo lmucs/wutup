@@ -23,7 +23,6 @@ import org.junit.Test;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
@@ -144,10 +143,10 @@ public class EventOccurrenceResourceTest {
     @Test
     public void findingEventOccurrencesReturnsAllOccurrencesAsList() {
         when(
-                service.findEventOccurrences(new ArrayList<Category>(), new Circle(1.0, 1.0, 1.0),
+                service.findEventOccurrences(null, new Circle(1.0, 1.0, 1.0),
                         new Interval(1L, 1L), new Integer(42), null, new PaginationData(0, 5))).thenReturn(
                 sampleEventOccurrenceList);
-        List<EventOccurrence> result = resource.findEventOccurrences(new ArrayList<Category>(), "1.0,1.0", "1.0", "1",
+        List<EventOccurrence> result = resource.findEventOccurrences(null, "1.0,1.0", "1.0", "1",
                 "1", new Integer(42), null, "0", "5");
         assertThat(result, is(sampleEventOccurrenceList));
     }

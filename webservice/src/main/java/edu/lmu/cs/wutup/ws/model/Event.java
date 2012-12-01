@@ -11,6 +11,8 @@ import com.google.common.base.Objects;
 @XmlRootElement
 public class Event implements Commentable, Serializable {
 
+    private static final long serialVersionUID = 4439892580209653370L;
+
     private Integer id;
     private String name;
     private String description;

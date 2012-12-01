@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.joda.time.Interval;
 
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -22,7 +21,7 @@ public interface EventOccurrenceDao extends CommentDao {
 
     EventOccurrence findEventOccurrenceById(int id);
 
-    List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle,
+    List<EventOccurrence> findEventOccurrences(Integer attendee, Circle circle,
             Interval interval, Integer eventId, Integer venueId, PaginationData pagination);
 
     int findNumberOfEventOccurrences();

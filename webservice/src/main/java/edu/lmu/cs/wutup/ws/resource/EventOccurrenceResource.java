@@ -36,7 +36,6 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchResourceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
@@ -64,7 +63,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @GET
     @Path("/")
-    public List<EventOccurrence> findEventOccurrences(@QueryParam("category") List<Category> categories,
+    public List<EventOccurrence> findEventOccurrences(@QueryParam("attendee") Integer attendee,
             @QueryParam("center") String center, @QueryParam("radius") String radiusString,
             @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") Integer eventId,
             @QueryParam("venueId") Integer venueId,
@@ -75,9 +74,9 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
         Interval interval = makeIntervalFromStartAndEndTime(start, end);
 
-        validateQuery(categories, circle, interval, eventId, venueId);
+        validateQuery(attendee, circle, interval, eventId, venueId);
 
-        return eventOccurrenceService.findEventOccurrences(categories, circle, interval, eventId, venueId, pagination);
+        return eventOccurrenceService.findEventOccurrences(attendee, circle, interval, eventId, venueId, pagination);
     }
 
     @POST
@@ -255,9 +254,9 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         }
     }
 
-    private void validateQuery(List<Category> categories, Circle circle, Interval interval, Integer eventId,
+    private void validateQuery(Integer attendee, Circle circle, Interval interval, Integer eventId,
             Integer venueId) {
-        if (categories == null && circle == null && interval == null && eventId == null && venueId == null) {
+        if (attendee == null && circle == null && interval == null && eventId == null && venueId == null) {
             throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
         }
     }

@@ -11,16 +11,11 @@ import org.junit.Test;
 public class EventOccurrenceResourceIT {
 
     @Test
-    public void getOccurrencesReturnsAllEventOccurrences() {
+    public void getOccurrencesWithoutQueryReturns400() {
         given().
             header("Accept", "application/json").
         expect().
-            statusCode(200).
-            contentType("application/json").
-            body(containsString("\"id\":1")).
-            body(containsString("\"event\":{\"id\":8")).
-            body(containsString("\"venue\":{\"id\":4")).
-            body(containsString("\"comments\":null")).
+            statusCode(400).
         when().
             get("/wutup/occurrences/");
     }

@@ -10,6 +10,8 @@ import com.google.common.base.Objects;
 @XmlRootElement(name = "user")
 public class User implements Serializable {
 
+    private static final long serialVersionUID = 4537099912543978942L;
+
     private Integer id;
     private String firstName;
     private String lastName;
@@ -24,7 +26,7 @@ public class User implements Serializable {
     public User(Integer id, String email) {
         this(id, null, null, email, null);
     }
-    
+
     public User(Integer id, String email, String sessionId) {
         this(id, null, null, email, null);
     }
@@ -32,7 +34,7 @@ public class User implements Serializable {
     public User(String first, String last, String email, String nick) {
         this(null, first, last, email, nick, null);
     }
-    
+
     public User(String first, String last, String email, String nick, String sessionId) {
         this(null, first, last, email, nick, sessionId);
     }
@@ -40,7 +42,7 @@ public class User implements Serializable {
     public User(Integer id, String first, String last, String email, String nick) {
         this(id, first, last, email, nick, null);
     }
-    
+
     public User(Integer id, String first, String last, String email, String nick, String sessionId) {
         this.id = id;
         this.firstName = first;
@@ -94,7 +96,7 @@ public class User implements Serializable {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-    
+
     @XmlElement(name = "sessionId")
     public String getSessionId() {
         return sessionId;
