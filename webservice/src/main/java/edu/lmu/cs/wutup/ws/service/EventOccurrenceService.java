@@ -9,7 +9,6 @@ import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 public interface EventOccurrenceService extends CommentService {
 
@@ -24,7 +23,7 @@ public interface EventOccurrenceService extends CommentService {
     EventOccurrence findEventOccurrenceById(int id);
 
     List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
-            Integer eventId, List<Venue> venues, PaginationData pagination);
+            Integer eventId, Integer venueId, PaginationData pagination);
 
     void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
 

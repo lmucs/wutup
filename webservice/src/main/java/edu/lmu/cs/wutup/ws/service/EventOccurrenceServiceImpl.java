@@ -14,7 +14,6 @@ import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Service
 @Transactional
@@ -50,8 +49,8 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
 
     @Override
     public List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
-            Integer eventId, List<Venue> venues, PaginationData pagination) {
-        return eventOccurrenceDao.findEventOccurrences(categories, circle, interval, eventId, venues, pagination);
+            Integer eventId, Integer venueId, PaginationData pagination) {
+        return eventOccurrenceDao.findEventOccurrences(categories, circle, interval, eventId, venueId, pagination);
     }
 
     @Override

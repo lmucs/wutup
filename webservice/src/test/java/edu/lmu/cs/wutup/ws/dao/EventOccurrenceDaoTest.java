@@ -4,14 +4,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -103,28 +101,13 @@ public class EventOccurrenceDaoTest {
 
     @Test
     public void findEventOccurencesViaOneVenue() {
-        ArrayList<Venue> venues = new ArrayList<Venue>();
-        venues.add(new Venue(2, null, null));
         List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null,
-                venues, new PaginationData(0, 5));
+                2, new PaginationData(0, 5));
         assertThat(occurrences.size(), is(2));
         EventOccurrence e1 = occurrences.get(0);
         EventOccurrence e2 = occurrences.get(1);
         assertThat(e1.getId(), is(2));
         assertThat(e2.getId(), is(7));
-    }
-
-    @Ignore
-    @Test
-    public void findEventOccurencesViaMultipleVenues() {
-        // TODO: Make multiple venues query work
-        ArrayList<Venue> venues = new ArrayList<Venue>();
-        venues.add(new Venue(1, null, null));
-        venues.add(new Venue(2, null, null));
-        venues.add(new Venue(3, null, null));
-        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null,
-                venues, new PaginationData(0, 5));
-        assertThat(occurrences.size(), is(6));
     }
 
     @Test

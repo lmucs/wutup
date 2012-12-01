@@ -160,7 +160,6 @@ public class QueryBuilder {
     }
 
     public QueryBuilder whereInterval(Interval i) {
-        // WHERE StartDate Between getdate() and getdate()-3
         assertNotBuilt();
         if (i != null) {
             andClauses.add("start between ':start1' and ':end1'");

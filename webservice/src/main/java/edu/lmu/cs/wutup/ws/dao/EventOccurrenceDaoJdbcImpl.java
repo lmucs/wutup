@@ -96,20 +96,16 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle, Interval interval,
-            Integer eventId, List<Venue> venues, PaginationData pagination) {
+            Integer eventId, Integer venueId, PaginationData pagination) {
         QueryBuilder query = getSelectQuery().whereCircle(circle)
                 .where("o.eventid = :eventid", eventId)
+                .where("o.venueid = :venueid", venueId)
                 .whereInterval(interval);
 
         if (categories != null) {
             for (int i = 0; i < categories.size(); i++) {
                 // TODO
                 query.where(null, categories.get(i));
-            }
-        }
-        if (venues != null) {
-            for (int i = 0; i < venues.size(); i++) {
-                query.where("v.id = :vId" + i, venues.get(i).getId());
             }
         }
 

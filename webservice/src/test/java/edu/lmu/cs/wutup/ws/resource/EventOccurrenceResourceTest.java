@@ -145,10 +145,10 @@ public class EventOccurrenceResourceTest {
     public void findingEventOccurrencesReturnsAllOccurrencesAsList() {
         when(
                 service.findEventOccurrences(new ArrayList<Category>(), new Circle(1.0, 1.0, 1.0),
-                        new Interval(1L, 1L), new Integer(42), new ArrayList<Venue>(), new PaginationData(0, 5))).thenReturn(
+                        new Interval(1L, 1L), new Integer(42), null, new PaginationData(0, 5))).thenReturn(
                 sampleEventOccurrenceList);
         List<EventOccurrence> result = resource.findEventOccurrences(new ArrayList<Category>(), "1.0,1.0", "1.0", "1",
-                "1", new Integer(42), new ArrayList<Venue>(), "0", "5");
+                "1", new Integer(42), null, "0", "5");
         assertThat(result, is(sampleEventOccurrenceList));
     }
 

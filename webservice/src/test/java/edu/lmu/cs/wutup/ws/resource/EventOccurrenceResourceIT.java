@@ -162,7 +162,7 @@ public class EventOccurrenceResourceIT {
             body(equalTo("[]")).
         when().
             get("/wutup/occurrences/3/comments");
-        
+
         given().
             contentType("application/json").
             body("{\"author\":{\"id\":3},\"body\":\"aww hell nah\",\"postdate\":" + publishDate.getMillis() + "}").
@@ -247,7 +247,7 @@ public class EventOccurrenceResourceIT {
         when().
             post("/wutup/occurrences/26/comments");
     }
-    
+
     @Test
     public void addCommentWithNonExistantAuthorResponds404() {
         DateTime publishDate = new DateTime(2012, 11, 15, 12, 34, 56);

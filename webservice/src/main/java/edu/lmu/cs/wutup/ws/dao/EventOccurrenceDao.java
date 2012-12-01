@@ -9,7 +9,6 @@ import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.model.Venue;
 
 public interface EventOccurrenceDao extends CommentDao {
 
@@ -24,7 +23,7 @@ public interface EventOccurrenceDao extends CommentDao {
     EventOccurrence findEventOccurrenceById(int id);
 
     List<EventOccurrence> findEventOccurrences(List<Category> categories, Circle circle,
-            Interval interval, Integer eventId, List<Venue> venues, PaginationData pagination);
+            Interval interval, Integer eventId, Integer venueId, PaginationData pagination);
 
     int findNumberOfEventOccurrences();
 
