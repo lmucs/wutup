@@ -2,7 +2,12 @@ package edu.lmu.cs.wutup.ws.model;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.Random;
+
+import javax.ws.rs.core.Response;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
@@ -13,8 +18,8 @@ import edu.lmu.cs.wutup.ws.exception.MissingUserFBIdException;
 import edu.lmu.cs.wutup.ws.exception.RequiredFBNameOrStartTimeMissingException;
 
 public class FacebookGateway extends AbstractGateway {
-    public static String acquireAccessToken(String code, String sessionId) throws ClientProtocolException, IOException {
-        return stringifyEntity(executeGetRequest(constructLandingUrl(code, sessionId)));
+    public static String acquireAccessToken(String code, String redirectUri) throws ClientProtocolException, IOException {
+        return stringifyEntity(executeGetRequest(constructAccessTokenLandingUrl(code, redirectUri)));
     }
 
     public static String acquireUserEvents(String accessToken) throws ParseException, ClientProtocolException,
@@ -43,10 +48,21 @@ public class FacebookGateway extends AbstractGateway {
                 location, FBLocationId, privacyType)));
     }
 
-    private static String constructLandingUrl(String code, String sessionId) throws UnsupportedEncodingException {
+    private static String constructAccessTokenLandingUrl(String code, String redirectUri) throws UnsupportedEncodingException {
         return "https://graph.facebook.com/oauth/access_token?" + "client_id=" + System.getenv("WUTUP_FB_APP_ID")
-                + "&redirect_uri=" + URLEncoder.encode("http://localhost:8080/wutup/auth/" + sessionId + "/landing", "ISO-8859-1")
+                + "&redirect_uri=" + URLEncoder.encode(redirectUri, "ISO-8859-1")
                 + "&client_secret=" + System.getenv("WUTUP_FB_APP_SECRET") + "&code=" + code;
+    }
+    
+    public static Response acquireFBCode(String redirectUri) throws ParseException, ClientProtocolException, UnsupportedEncodingException, IOException, URISyntaxException {
+        return Response.seeOther(new URI(constructAuthDialogUrl(redirectUri))).build();
+    }
+    
+    private static String constructAuthDialogUrl(String redirectUri) throws UnsupportedEncodingException {
+        return "https://www.facebook.com/dialog/oauth?"
+                + "client_id=" + System.getenv("WUTUP_FB_APP_ID")
+                + "&redirect_uri=" + URLEncoder.encode(redirectUri, "ISO-8859-1")
+                + "&scope=user_events,create_event" + "&state=" + Math.abs(new Random().nextInt());
     }
 
     private static String constructGetEventsUrl(String accessToken) {
