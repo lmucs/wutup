@@ -19,6 +19,11 @@ public class ManualListAdapter<T> extends ArrayAdapter<T> implements Filterable 
 	}
 	
 	@Override
+	public void clear() {
+		items.clear();
+	}
+	
+	@Override
 	public void addAll(Collection<? extends T> collection) {
 		items.addAll(collection);		
 	}

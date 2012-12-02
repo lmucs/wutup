@@ -12,11 +12,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+
+import edu.lmu.cs.wutup.android.manager.LogTags;
 
 public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 	
@@ -100,9 +103,13 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 	}
 	
 	private void populateAutoCompleteSuggestions(List<T> autoCompleteSuggestions) {
+		
 		adapter.clear();		
 		adapter.addAll(autoCompleteSuggestions);		
 		adapter.notifyDataSetChanged();		
+		
+		Log.i(LogTags.EVENT_CREATION, "Cleared auto complete suggestions. Repopulated list with " + autoCompleteSuggestions.size() +" new suggestions.");
+		
 	}
 
 /**********************************************************************************************************************

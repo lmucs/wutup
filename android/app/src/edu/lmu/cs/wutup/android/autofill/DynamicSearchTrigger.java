@@ -49,8 +49,8 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 				Log.i(LogTags.EVENT_CREATION, "Canceled previous dynamic search for " + c.toString() + ".");
 			}
 			
-//			String queryParameters = "?name=" + newText;
-			dynamicSearch = new DynamicSearch<T>().execute(c, adpater, address);
+			String queryParameters = "?name=" + newText;
+			dynamicSearch = new DynamicSearch<T>().execute(c, adpater, address + queryParameters);
 			Log.i(LogTags.EVENT_CREATION, "Executed new dynamic search for " + c.toString() + ", with text \"" + newText + "\".");
 			
 			textChanged = false;
