@@ -34,13 +34,13 @@ public class ManualListAdapter<T> extends ArrayAdapter<T> implements Filterable 
 	@Override
 	public void clear() {
 		items.clear();
-		Log.i(LogTags.ADAPTER, "Manual list adapter cleared.");
+		Log.i(LogTags.AUTO_COMPLETE, "Manual list adapter cleared.");
 	}
 	
 	@Override
 	public void addAll(Collection<? extends T> collection) {
 		items.addAll(collection);
-		Log.i(LogTags.ADAPTER, "List of " + collection.size() + " items added to manual list adapter.");
+		Log.i(LogTags.AUTO_COMPLETE, "List of " + collection.size() + " items added to manual list adapter.");
 	}
 	
     @Override

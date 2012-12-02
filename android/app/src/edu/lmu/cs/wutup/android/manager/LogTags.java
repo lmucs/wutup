@@ -4,5 +4,6 @@ public class LogTags {
 
 	public static final String EVENT_CREATION = "Event Creation";
 	public static final String ADAPTER = "Adapter";
+	public static final String AUTO_COMPLETE = "Auto Complete";
 	
 }

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+
 import edu.lmu.cs.wutup.android.manager.LogTags;
 
 public class DynamicSearchTrigger<T> implements TextWatcher {
@@ -32,7 +33,7 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 	}
 	
 /**********************************************************************************************************************
- * Method Overriding BEGIN
+ * Constructors END & Public Methods BEGIN
  **********************************************************************************************************************/
 	
 	@Override
@@ -64,6 +65,11 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		textChanged = true;		
+		Log.i(LogTags.AUTO_COMPLETE, "Auto complete text feild text changed.");
 	}
+	
+/**********************************************************************************************************************
+ * Public Methods END
+ **********************************************************************************************************************/	
 
 }
