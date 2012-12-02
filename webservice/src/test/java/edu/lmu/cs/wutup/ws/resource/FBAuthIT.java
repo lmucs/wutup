@@ -1,43 +1,46 @@
 package edu.lmu.cs.wutup.ws.resource;
 
 import static com.jayway.restassured.RestAssured.expect;
+import static org.hamcrest.Matchers.containsString;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class FBAuthIT {
     
     @Test
-    public void redirectToFacebookForAuthentication() {
+    public void getFacebookEvents() {
         expect().
             statusCode(200).
         when().
-            get("/wutup/auth/facebook?sessionId=hello");
-    }
-    
-    @Ignore
-    @Test
-    public void testSuccessfulAuthenticationLanding() {
-        expect().
-            statusCode(200).
-        when().
-            get("/wutup/auth/stuff/landing?state=637730135&code=AQA_5m_sNTv-g7HaAev6TYeNPb7naOU#_=_");
+            get("/wutup/auth/facebook/events");
     }
     
     @Test
-    public void testAuthenticationLandingWithErrorFromFacebook() {
+    public void getFacebookEventsWithErrorFails() {
         expect().
             statusCode(401).
         when().
-            get("/wutup/auth/stuff/landing?error=someshitwentwrong#_=_");
+            get("/wutup/auth/facebook/events?error=someErrorThatFacebookSent");
     }
     
-    @Ignore
     @Test
-    public void testAuthenticationLandingWithAccessTokenFromFacebook() {
+    public void retrieveNonexistentUserBySessionId() {
         expect().
             statusCode(200).
+            body(containsString("{}")).
         when().
-            get("/wutup/auth/stuff/landing?access_token=SomeSuper-Long_key&expires=346517");
+            get("/wutup/auth/someSessionId12");
+    }
+    
+    @Test
+    public void retrieveExistingUserBySessionId() {
+        expect().
+            statusCode(200).
+            body(containsString("40mpg@gmail.com")).
+            body(containsString("hybrid")).
+            body(containsString("Honda")).
+            body(containsString("Prius")).
+        when().
+            get("/wutup/auth/hybrid");
     }
 }
