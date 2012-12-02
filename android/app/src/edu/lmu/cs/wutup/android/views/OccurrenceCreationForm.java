@@ -2,11 +2,10 @@ package edu.lmu.cs.wutup.android.views;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Spinner;
-import edu.lmu.cs.wutup.android.container.Events;
-import edu.lmu.cs.wutup.android.container.Venues;
+import edu.lmu.cs.wutup.android.autofill.DynamicSearchTrigger;
+import edu.lmu.cs.wutup.android.autofill.ManualListAdapter;
+import edu.lmu.cs.wutup.android.communication.HttpWutup;
 import edu.lmu.cs.wutup.android.manager.R;
 import edu.lmu.cs.wutup.android.model.Event;
 import edu.lmu.cs.wutup.android.model.Venue;
@@ -14,8 +13,21 @@ import edu.lmu.cs.wutup.android.model.Venue;
 
 public class OccurrenceCreationForm extends Activity {
 	
-	Spinner eventSpinner;
-	Spinner venueSpinner;
+/**********************************************************************************************************************
+ * Member Variables BEGIN
+ **********************************************************************************************************************/
+
+	private static final int NUMBER_OF_PREVIOUS_CHARACTERS_REQUIRED_BEFORE_OFFERING_SUGGESTIONS = 0;
+	
+	AutoCompleteTextView eventTextField;
+	ManualListAdapter<Event> eventAdapter;
+	
+	AutoCompleteTextView venueTextField;
+	ManualListAdapter<Venue> venueAdapter;
+
+/**********************************************************************************************************************
+ * Member Variables END & Method Overriding BEGIN
+ **********************************************************************************************************************/
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -23,44 +35,33 @@ public class OccurrenceCreationForm extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.occurrence_creation_form_v3);
 		
-		String[] stuff = {"adfasdf", "adsfdf", "3fsdf", "dsf43"};
-		AutoCompleteTextView event = (AutoCompleteTextView) findViewById(R.id.occurrence_creation_form_event);
-		ArrayAdapter<String> adp=new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line,stuff);
-		event.setThreshold(1);
-		event.setAdapter(adp);
+		eventTextField = (AutoCompleteTextView) findViewById(R.id.occurrence_creation_form_event_text_field);
+		eventAdapter = new ManualListAdapter<Event>(this, android.R.layout.simple_dropdown_item_1line);
+		eventTextField.setAdapter(eventAdapter);
+		eventTextField.setThreshold(NUMBER_OF_PREVIOUS_CHARACTERS_REQUIRED_BEFORE_OFFERING_SUGGESTIONS);
+		eventTextField.addTextChangedListener(new DynamicSearchTrigger<Event>(Event.class, eventAdapter, HttpWutup.ADDRESS_OF_EVENTS));
 		
-		
-		
-//		populateEventSpinner();
-//		populateVenueSpinner();
-	
+//		venueTextField = (AutoCompleteTextView) findViewById(R.id.occurrence_creation_form_venue_text_field);
+//		venueAdapter = new AdapterAutoComplete<Venue>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<Venue>());
+//		venueTextField.setAdapter(venueAdapter);
+//		venueTextField.addTextChangedListener(new DynamicSearchTrigger<Venue>(venueAdapter, Venue.class, HttpWutup.ADDRESS_OF_VENUES));
+
 	}
 	
-	private void populateEventSpinner() {
+/**********************************************************************************************************************
+ * Method Overriding END & Public Methods BEGIN
+ **********************************************************************************************************************/
 	
-		eventSpinner = (Spinner) findViewById(R.id.event_spinner);
-			 
-		ArrayAdapter<Event> eventAdapter = new ArrayAdapter<Event>(this, 
-												 				   android.R.layout.simple_spinner_item, 
-				                                                   Events.getAll());
-		
-		eventAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		eventSpinner.setAdapter(eventAdapter);
-		
-	  }
 	
-	private void populateVenueSpinner() {
-		
-		venueSpinner = (Spinner) findViewById(R.id.venue_spinner);
-			 
-		ArrayAdapter<Venue> venueAdapter = new ArrayAdapter<Venue>(this, 
-												 				   android.R.layout.simple_spinner_item, 
-				                                                   Venues.getAll());
-		
-		venueAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		venueSpinner.setAdapter(venueAdapter);
-		
-	  }
+	
+/**********************************************************************************************************************
+ * Public Methods END & Private Methods BEGIN
+ **********************************************************************************************************************/
 
+	
+	
+/**********************************************************************************************************************
+ * Private Methods END
+ **********************************************************************************************************************/	
+	
 }
