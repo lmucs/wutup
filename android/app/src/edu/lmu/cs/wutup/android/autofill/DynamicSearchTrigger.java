@@ -43,7 +43,7 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 		
 		Log.i(LogTags.EVENT_CREATION, "Event text view changed. New text reads \"" + newText + "\".");
 		
-		if (textChanged) {
+		if (textChanged & !newText.matches("")) {
 			
 			if (dynamicSearch != null) {
 				dynamicSearch.cancel(MAY_INTERRUPT_SEARCH);
