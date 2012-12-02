@@ -45,6 +45,12 @@ public class Map extends MapActivity {
 		new GetEvents().execute();
 		new GetVenues().execute();
 		
+		try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+		
 		mapView = (MapView) findViewById(R.id.map);
 		mapView.setBuiltInZoomControls(true);
 		
@@ -54,11 +60,7 @@ public class Map extends MapActivity {
 		occurrenceOverlay = new EventPlotter(dropPin, this);	
 		mapOverlays.add(occurrenceOverlay);
 		
-		try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 		
 		plotOccurrences();
 //		

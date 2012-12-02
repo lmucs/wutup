@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 
 public abstract class HttpWutup extends AsyncTask<Object, Integer, Object> {
 	
-	public static final String ADDRESS_OF_SERVER = "http://192.168.1.107:8080/";
+	public static final String ADDRESS_OF_SERVER = "http://192.168.1.104:8080/";
 	
 	public static final String ADDRESS_OF_EVENTS = ADDRESS_OF_SERVER + "wutup/events/";
 	public static final String ADDRESS_OF_OCCURRENCES = ADDRESS_OF_SERVER + "wutup/occurrences/";

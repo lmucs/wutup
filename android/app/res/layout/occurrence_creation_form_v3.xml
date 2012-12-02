@@ -9,7 +9,7 @@
         android:layout_height="wrap_content" >
         
         <AutoCompleteTextView 
-            android:id="@+id/occurrence_creation_form_event" 
+            android:id="@+id/occurrence_creation_form_event_text_field" 
             android:layout_width="fill_parent" 
             android:layout_height="wrap_content">
             
