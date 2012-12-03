@@ -3,10 +3,12 @@ package edu.lmu.cs.wutup.ws.resource;
 import static com.jayway.restassured.RestAssured.expect;
 import static org.hamcrest.Matchers.containsString;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class FBAuthIT {
     
+    @Ignore
     @Test
     public void getFacebookEvents() {
         expect().
@@ -15,6 +17,7 @@ public class FBAuthIT {
             get("/wutup/auth/facebook/events");
     }
     
+    @Ignore
     @Test
     public void getFacebookEventsWithErrorFails() {
         expect().

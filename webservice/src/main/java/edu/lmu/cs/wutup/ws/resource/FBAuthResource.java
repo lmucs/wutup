@@ -1,8 +1,8 @@
 package edu.lmu.cs.wutup.ws.resource;
 
-import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getAccessToken;
 import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.fetchFBCode;
-import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getUserEvents;
+import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getAccessToken;
+import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.syncUser;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
+import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.service.UserService;
 
 @Component
@@ -28,38 +29,6 @@ public class FBAuthResource {
 
     @Autowired
     UserService userService;
-
-    @GET
-    @Path("/facebook/events")
-    public Response getFBEvents(
-            @DefaultValue("") @QueryParam("state") String state,
-            @DefaultValue("") @QueryParam("code") String code,
-            @DefaultValue("") @QueryParam("error_reason") String errorReason,
-            @DefaultValue("") @QueryParam("error") String error,
-            @DefaultValue("") @QueryParam("error_description") String errorDescription) {
-
-        if (!error.equals("")) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-
-        } else if (code.equals("")) {
-            try {
-                return fetchFBCode("http://localhost:8080/wutup/auth/facebook/events");
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return Response.serverError().build();
-            }
-        }
-
-        try {
-            return Response
-                    .ok(getUserEvents(getAccessToken(code, "http://localhost:8080/wutup/auth/facebook/events")))
-                    .build();
-
-        } catch (Exception e) {
-            return Response.serverError().build();
-        }
-    }
 
     @GET
     @Path("/{sessionId}")
@@ -75,6 +44,40 @@ public class FBAuthResource {
             return Response
                     .ok("{}")
                     .build();
+        }
+    }
+    
+    @GET
+    @Path("/facebook/sync")
+    public Response syncEventsWithFB(
+            @DefaultValue("") @QueryParam("state") String state,
+            @DefaultValue("") @QueryParam("code") String code,
+            @DefaultValue("") @QueryParam("error_reason") String errorReason,
+            @DefaultValue("") @QueryParam("error") String error,
+            @DefaultValue("") @QueryParam("error_description") String errorDescription) {
+
+        final String redirectUri = "http://localhost:8080/wutup/auth/facebook/sync";
+        
+        if (!error.equals("")) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
+        } else if (code.equals("")) {
+            try {
+                return fetchFBCode(redirectUri);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Response.serverError().build();
+            }
+        }
+
+        try {
+            return Response
+                    .ok(syncUser(getAccessToken(code, redirectUri), new User()))
+                    .build();
+
+        } catch (Exception e) {
+            return Response.serverError().build();
         }
     }
 }
