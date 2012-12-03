@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.resource;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
@@ -7,11 +8,13 @@ import java.net.URI;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,6 +38,7 @@ import edu.lmu.cs.wutup.ws.service.UserService;
 @Path("/users")
 public class UserResource extends AbstractWutupResource {
 
+    private static final String MISSING_QUERY_PARAM = "Must provide query parameter %s.";
     private static final String USER_NOT_FOUND = "User %d does not exist.";
     private static final String USER_ALREADY_EXISTS = "User %d already exists";
 
@@ -52,6 +56,21 @@ public class UserResource extends AbstractWutupResource {
             return Response.created(newLocation).build();
         } catch (UserExistsException e) {
             throw new ServiceException(CONFLICT, USER_ALREADY_EXISTS, u.getId());
+        }
+    }
+    
+    @GET
+    @Path("/")
+    public User findUserByFacebookId(@DefaultValue("") @QueryParam("fbId") String idString) {
+        if (idString.equals("")) {
+            throw new ServiceException(BAD_REQUEST, MISSING_QUERY_PARAM, "fbId");
+        }
+        
+        try {
+            return userService.findUserByFacebookId(idString);
+        } catch (NoSuchUserException e) {
+            int id = toInteger("fbId", idString);
+            throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, id);
         }
     }
 

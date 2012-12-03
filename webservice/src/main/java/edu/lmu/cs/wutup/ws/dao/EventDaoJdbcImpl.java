@@ -76,6 +76,16 @@ public class EventDaoJdbcImpl implements EventDao {
             throw new NoSuchEventException();
         }
     }
+    
+    @Override
+    public Event findEventByName(String name) {
+        QueryBuilder query = getSelectQuery().where("e.name=:name", name);
+        try {
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), eventRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchEventException();
+        }
+    }
 
     @Override
     public List<Event> findEvents(String name, List<Integer> owners, List<Category> categories, PaginationData pagination) {
@@ -142,7 +152,7 @@ public class EventDaoJdbcImpl implements EventDao {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"), new User(
                     rs.getInt("ownerid"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("email"),
-                    rs.getString("nickname")));
+                    rs.getString("nickname"), rs.getString("facebookId")));
         }
     };
 

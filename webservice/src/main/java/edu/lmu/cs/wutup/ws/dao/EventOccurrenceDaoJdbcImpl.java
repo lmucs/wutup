@@ -188,8 +188,9 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             String lastName = rs.getString("lastName");
             String nickname = rs.getString("nickname");
             String email = rs.getString("email");
+            String facebookId = rs.getString("facebookId");
 
-            User user = new User(userId, firstName, lastName, nickname, email);
+            User user = new User(userId, firstName, lastName, nickname, email, facebookId);
             Event event = new Event(eventId, eventName, description, user);
             Venue venue = new Venue(venueId, venueName, address, latitude, longitude, null);
             return new EventOccurrence(occurrenceId, event, venue, start, end);
@@ -200,14 +201,14 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static RowMapper<User> userRowMapper = new RowMapper<User>() {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"),
-                    rs.getString("email"), rs.getString("nickname"));
+                    rs.getString("email"), rs.getString("nickname"), rs.getString("facebookId"));
         }
     };
 
     private QueryBuilder getSelectQuery() {
         return new QueryBuilder().select("o.id", "o.start", "o.end", "o.venueId", "v.name as venueName", "v.address",
                 "v.latitude", "v.longitude", "o.eventId", "e.name as eventName", "e.description", "address",
-                "u.id as userId", "u.firstName", "u.lastName", "u.email", "u.nickname")
+                "u.id as userId", "u.firstName", "u.lastName", "u.email", "u.nickname", "u.sessionId", "u.facebookId")
                 .from("occurrence o")
                 .joinOn("venue v", "o.venueId = v.id")
                 .joinOn("event e", "o.eventId = e.id")

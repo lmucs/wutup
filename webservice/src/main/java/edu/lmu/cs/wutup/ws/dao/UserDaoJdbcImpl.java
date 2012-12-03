@@ -30,6 +30,7 @@ public class UserDaoJdbcImpl implements UserDao {
     private static final String DELETE_SQL = "delete from user where id=?;";
     private static final String FIND_BY_ID_SQL = "select * from user where id=?;";
     private static final String FIND_BY_SESSION_ID_SQL = "select * from user where sessionId=?;";
+    private static final String FIND_BY_FACEBOOK_ID_SQL = "select * from user where facebookId=?;";
     private static final String COUNT_SQL = "select count(*) from user;";
     
     @Autowired
@@ -64,6 +65,15 @@ public class UserDaoJdbcImpl implements UserDao {
     public User findUserBySessionId(String sessionId) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_SESSION_ID_SQL, new Object[]{sessionId}, userRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchUserException();
+        }
+    }
+
+    @Override
+    public User findUserByFacebookId(String id) {
+        try {
+            return jdbcTemplate.queryForObject(FIND_BY_FACEBOOK_ID_SQL, new Object[]{id}, userRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchUserException();
         }
