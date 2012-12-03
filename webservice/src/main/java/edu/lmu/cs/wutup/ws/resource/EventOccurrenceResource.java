@@ -1,6 +1,5 @@
 package edu.lmu.cs.wutup.ws.resource;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
@@ -22,7 +21,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -30,7 +28,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
-import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchResourceException;
@@ -53,8 +50,6 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     private static final String EVENT_OCCURRENCE_NOT_FOUND = "Event occurrence %d does not exist";
     private static final String OCCURRENCE_AUTHOR_NOT_FOUND = "Event occurrence or User author does not exist";
     private static final String EVENT_OCCURRENCE_ALREADY_EXISTS = "Event occurrence %d already exists";
-    private static final String EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD = "Event occurrence query parameters improperly formed";
-    private static final String CONDITIONAL_PARAMETER_MISSING = "The %s parameter must be present if the %s parameter is supplied";
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for event %d";
     private static final String USER_NOT_FOUND = "User %d does not exist";
 
@@ -74,7 +69,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
         Interval interval = makeIntervalFromStartAndEndTime(start, end);
 
-        validateQuery(attendee, circle, interval, eventId, venueId);
+        checkOccurrenceCanBeQueried(attendee, circle, interval, eventId, venueId);
 
         return eventOccurrenceService.findEventOccurrences(attendee, circle, interval, eventId, venueId, pagination);
     }
@@ -82,6 +77,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     @POST
     @Path("/")
     public Response createEventOccurrence(EventOccurrence eventOccurrence, @Context UriInfo uriInfo) {
+        checkOccurrenceCanBeCreated(eventOccurrence);
         try {
             int newId = eventOccurrenceService.createEventOccurrence(eventOccurrence);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(newId + "").build();
@@ -231,33 +227,6 @@ public class EventOccurrenceResource extends AbstractWutupResource {
             return Response.noContent().build();
         } catch (NoSuchCommentException ex) {
             throw new ServiceException(NOT_FOUND, COMMENT_NOT_FOUND, commentId, eventOccurrenceId);
-        }
-    }
-
-    private Interval makeIntervalFromStartAndEndTime(String start, String end) {
-        if (start == null && end == null) {
-            return null;
-        }
-        if (end == null) {
-            throw new ServiceException(BAD_REQUEST, CONDITIONAL_PARAMETER_MISSING, "end time", "start time");
-        }
-        if (start == null) {
-            throw new ServiceException(BAD_REQUEST, CONDITIONAL_PARAMETER_MISSING, "start time", "end time");
-        }
-
-        try {
-            DateTime startTime = new DateTime(Long.parseLong(start));
-            DateTime endTime = new DateTime(Long.parseLong(end));
-            return new Interval(startTime, endTime);
-        } catch (MalformedDateTimeStringException e) {
-            throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
-        }
-    }
-
-    private void validateQuery(Integer attendee, Circle circle, Interval interval, Integer eventId,
-            Integer venueId) {
-        if (attendee == null && circle == null && interval == null && eventId == null && venueId == null) {
-            throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);
         }
     }
 }

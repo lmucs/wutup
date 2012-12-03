@@ -47,13 +47,20 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public int createEventOccurrence(EventOccurrence e) {
+    public int createEventOccurrence(EventOccurrence o) {
+        Event e = o.getEvent();
+        Venue v = o.getVenue();
+        DateTime start = o.getStart();
+        DateTime end = o.getEnd();
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_OCCURRENCE_SQL, new int[]{
                 Types.INTEGER, Types.INTEGER, Types.TIMESTAMP, Types.TIMESTAMP});
         factory.setReturnGeneratedKeys(true);
         factory.setGeneratedKeysColumnNames(new String[]{"id"});
-        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{e.getEvent().getId(),
-                e.getVenue().getId(), new Timestamp(e.getStart().getMillis()), new Timestamp(e.getEnd().getMillis())});
+        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{
+                e != null ? e.getId() : null,
+                v != null ? v.getId() : null,
+                start != null ? new Timestamp(start.getMillis()) : null,
+                end != null ? new Timestamp(end.getMillis()) : null});
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(creator, keyHolder);
@@ -87,8 +94,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     public EventOccurrence findEventOccurrenceById(int id) {
         QueryBuilder query = getSelectQuery();
         try {
-            return jdbcTemplate.queryForObject(query.where("o.id = :id", id).build(),
-                    query.getParametersArray(), eventOccurrenceRowMapper);
+            return jdbcTemplate.queryForObject(query.where("o.id = :id", id).build(), query.getParametersArray(),
+                    eventOccurrenceRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventOccurrenceException();
         }
@@ -106,7 +113,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             query.joinOn("attendee a", "o.id = a.occurrenceId").where("a.userId = :attendeeId", attendee);
         }
 
-        return jdbcTemplate.query(query.addPagination(pagination).build(), query.getParametersArray(), eventOccurrenceRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).build(), query.getParametersArray(),
+                eventOccurrenceRowMapper);
     }
 
     public int findNumberOfEventOccurrences() {

@@ -25,6 +25,7 @@ import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
@@ -36,7 +37,7 @@ public class EventOccurrenceResourceTest {
     EventOccurrenceResource resource;
     EventOccurrenceService service;
 
-    EventOccurrence sampleEventOccurrence = new EventOccurrence(1, new Venue());
+    EventOccurrence sampleEventOccurrence = new EventOccurrence(1, new Event(), new Venue());
     Comment sampleEventOccurrenceComment = new Comment(1, "body", new DateTime(), new User());
     List<EventOccurrence> sampleEventOccurrenceList = new ArrayList<EventOccurrence>();
     List<Comment> sampleEventOccurrenceCommentList = new ArrayList<Comment>();
