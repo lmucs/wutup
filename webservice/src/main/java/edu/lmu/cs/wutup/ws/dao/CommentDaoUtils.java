@@ -57,14 +57,18 @@ public class CommentDaoUtils {
     }
 
     public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING) {
-        return jdbcTemplate.query(SQL_STRING, commentRowMapper);
+            return jdbcTemplate.query(SQL_STRING, commentRowMapper);
+    }
+
+    public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING, Object[] args) {
+            return jdbcTemplate.query(SQL_STRING, args, commentRowMapper);
     }
 
     public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING,
             int objectId, int pageNumber, int pageSize) {
         return jdbcTemplate.query(SQL_STRING, new Object[]{objectId, pageSize, pageNumber * pageSize}, commentRowMapper);
     }
-    
+
     public static int findMaxKeyValueForComments(JdbcTemplate jdbcTemplate, String objectName) {
         return jdbcTemplate.queryForInt("select max(id) from " + objectName + "_comment");
     }
@@ -76,7 +80,7 @@ public class CommentDaoUtils {
             Timestamp persistedTimestamp = rs.getTimestamp("timestamp");
             DateTime timestamp = persistedTimestamp == null ? null : new DateTime(persistedTimestamp);
             return new Comment(commentId, text, timestamp, new User(rs.getInt("authorid"), rs.getString("firstName"),
-                    rs.getString("lastName"), rs.getString("email"), rs.getString("nickname")));
+                    rs.getString("lastName"), rs.getString("email"), rs.getString("nickname"), rs.getString("facebookId")));
         }
     };
 }

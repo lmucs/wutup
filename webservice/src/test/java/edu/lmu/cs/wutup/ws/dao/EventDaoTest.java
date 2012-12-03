@@ -9,6 +9,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -33,7 +34,7 @@ public class EventDaoTest {
     User sam = new User(1, "sam@example.org");
     User marc = new User(2, "marc@example.org");
     User allyson = new User(3, "allyson@example.org");
-    User katrina = new User(8, "Katrina", "Sherbina", "ksherbina@gmail.com", "Kat");
+    User katrina = new User(8, "Katrina", "Sherbina", "ksherbina@gmail.com", "Kat", null);
 
     @Before
     public void setUp() {
@@ -51,6 +52,16 @@ public class EventDaoTest {
         int initialCount = eventDao.findNumberOfEvents();
         eventDao.createEvent(e);
         assertThat(eventDao.findNumberOfEvents(), is(initialCount + 1));
+    }
+
+    @Ignore
+    @Test
+    public void retrieveEventByName() {
+        Event e = new Event(5024, "Stuff and Things", "love", sam);
+
+        int eventCount = eventDao.findNumberOfEvents();
+        eventDao.createEvent(e);
+        assertThat(eventDao.findEventByName("Stuff and Things").getId(), is(eventCount + 1));
     }
 
     @Test

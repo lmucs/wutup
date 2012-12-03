@@ -69,8 +69,18 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public Event findEventById(int id) {
+        QueryBuilder query = getSelectQuery().where("e.id=:id", id);
         try {
-            return jdbcTemplate.queryForObject(getSelectQuery().where("e.id=:id", id).build(), eventRowMapper);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), eventRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchEventException();
+        }
+    }
+    
+    @Override
+    public Event findEventByName(String name) {
+        try {
+            return jdbcTemplate.queryForObject(getSelectQuery().where("e.name = :name", name).build(), eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();
         }
@@ -95,7 +105,7 @@ public class EventDaoJdbcImpl implements EventDao {
             }
         }
 
-        return jdbcTemplate.query(query.addPagination(pagination).order("e.id").build(), eventRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).order("e.id").build(), query.getParametersArray(), eventRowMapper);
     }
 
     @Override
@@ -141,7 +151,7 @@ public class EventDaoJdbcImpl implements EventDao {
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"), new User(
                     rs.getInt("ownerid"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("email"),
-                    rs.getString("nickname")));
+                    rs.getString("nickname"), rs.getString("facebookId")));
         }
     };
 

@@ -24,7 +24,6 @@ import edu.lmu.cs.wutup.ws.exception.AttendeeExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchAttendeeException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
@@ -86,9 +85,10 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public EventOccurrence findEventOccurrenceById(int id) {
+        QueryBuilder query = getSelectQuery();
         try {
-            return jdbcTemplate.queryForObject(getSelectQuery().where("o.id = :id", id).build(),
-                    eventOccurrenceRowMapper);
+            return jdbcTemplate.queryForObject(query.where("o.id = :id", id).build(),
+                    query.getParametersArray(), eventOccurrenceRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventOccurrenceException();
         }
@@ -106,7 +106,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             query.joinOn("attendee a", "o.id = a.occurrenceId").where("a.userId = :attendeeId", attendee);
         }
 
-        return jdbcTemplate.query(query.addPagination(pagination).build(), eventOccurrenceRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).build(), query.getParametersArray(), eventOccurrenceRowMapper);
     }
 
     public int findNumberOfEventOccurrences() {
@@ -118,7 +118,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         QueryBuilder query = new QueryBuilder().from("attendee a")
                 .joinOn("user u", "a.userId = u.id")
                 .where("a.occurrenceId = :oId", id);
-        return jdbcTemplate.query(query.addPagination(pagination).build(), userRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).build(), query.getParametersArray(), userRowMapper);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 .where("oc.subjectId = :subjectId", eventId)
                 .order("oc.timestamp")
                 .addPagination(pagination);
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build());
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build(), query.getParametersArray());
     }
 
     @Override
@@ -188,8 +188,9 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             String lastName = rs.getString("lastName");
             String nickname = rs.getString("nickname");
             String email = rs.getString("email");
+            String facebookId = rs.getString("facebookId");
 
-            User user = new User(userId, firstName, lastName, nickname, email);
+            User user = new User(userId, firstName, lastName, nickname, email, facebookId);
             Event event = new Event(eventId, eventName, description, user);
             Venue venue = new Venue(venueId, venueName, address, latitude, longitude, null);
             return new EventOccurrence(occurrenceId, event, venue, start, end);
@@ -200,14 +201,14 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     private static RowMapper<User> userRowMapper = new RowMapper<User>() {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"),
-                    rs.getString("email"), rs.getString("nickname"));
+                    rs.getString("email"), rs.getString("nickname"), rs.getString("facebookId"));
         }
     };
 
     private QueryBuilder getSelectQuery() {
         return new QueryBuilder().select("o.id", "o.start", "o.end", "o.venueId", "v.name as venueName", "v.address",
                 "v.latitude", "v.longitude", "o.eventId", "e.name as eventName", "e.description", "address",
-                "u.id as userId", "u.firstName", "u.lastName", "u.email", "u.nickname")
+                "u.id as userId", "u.firstName", "u.lastName", "u.email", "u.nickname", "u.sessionId", "u.facebookId")
                 .from("occurrence o")
                 .joinOn("venue v", "o.venueId = v.id")
                 .joinOn("event e", "o.eventId = e.id")

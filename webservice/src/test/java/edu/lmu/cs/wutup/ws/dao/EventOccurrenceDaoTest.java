@@ -34,8 +34,8 @@ public class EventOccurrenceDaoTest {
     private EmbeddedDatabase database;
     private EventOccurrenceDaoJdbcImpl eventOccurrenceDao = new EventOccurrenceDaoJdbcImpl();
 
-    private User dondi = new User(1, "dondi@example.com");
-    private User sampleUser = new User(3503, "John", "Lennon", "jlennon@gmail.com", "John");
+    private User dondi = new User(1, "john", "dionisio", "dondi@example.com", "dondi", null, "dondifacebookid");
+    private User sampleUser = new User(3503, "John", "Lennon", "jlennon@gmail.com", "John", null, null);
     private DateTime sampleDateTime = new DateTime(2012, 10, 31, 23, 56, 0);
     private Event eventOne = new Event(1, "Party", "A hoedown!", dondi);
     private Event eventTwo = new Event(2, "Party", "Another hoedown!", dondi);

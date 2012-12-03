@@ -112,7 +112,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
             builder.where(createCircleSearchClause(circle), circle.radius);
         }
 
-        return jdbcTemplate.query(builder.build(), venueRowMapper);
+        return jdbcTemplate.query(builder.build(), builder.getParametersArray(), venueRowMapper);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     @Override
     public Map<String, String> findProperties(int venueId) {
         QueryBuilder builder = new QueryBuilder().select("*").from("venue_property").where("venueId = :id", venueId);
-        List<String[]> keyValuePairs = jdbcTemplate.query(builder.build(), propertyRowMapper);
+        List<String[]> keyValuePairs = jdbcTemplate.query(builder.build(), builder.getParametersArray(), propertyRowMapper);
         Map<String, String> properties = new HashMap<String, String>();
         for (int i = 0; i < keyValuePairs.size(); i++) {
             properties.put(keyValuePairs.get(i)[0], keyValuePairs.get(i)[1]);
