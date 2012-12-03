@@ -1,6 +1,6 @@
 package edu.lmu.cs.wutup.ws.service;
 
-import static edu.lmu.cs.wutup.ws.model.GoogleGateway.parseJSONResponseToLocation;
+import static edu.lmu.cs.wutup.ws.model.GoogleGateway.extractLocationFromJSON;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -26,7 +26,7 @@ public class GeocodeServiceTest {
 
     @Test
     public void googleGatewayProperlyParsesGoogleJSONResponse() throws JSONException {
-        JSONObject j = parseJSONResponseToLocation(new JSONObject("{\"results\" : [{\"geometry\" :" +
+        JSONObject j = extractLocationFromJSON(new JSONObject("{\"results\" : [{\"geometry\" :" +
                 "{\"location\" : {\"lat\" : 33.9682680,\"lng\" : -118.4219410}}" + 
                 "}],\"status\" : \"OK\"}"));
         

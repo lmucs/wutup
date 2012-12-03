@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -18,7 +19,7 @@ public class GoogleGateway extends AbstractGateway {
     }
     
     //TODO: Revise method to account for the response Google hands back for reverse geocoding
-    public static JSONObject parseJSONResponseToLocation(JSONObject j) throws JSONException {
+    public static JSONObject extractLocationFromJSON(JSONObject j) throws JSONException {
         return ((JSONObject) j
                 .getJSONArray("results")
                 .get(0))
@@ -31,6 +32,30 @@ public class GoogleGateway extends AbstractGateway {
                 .getJSONArray("results")
                 .get(0))
                 .get("formatted_address");
+    }
+    
+    public static String extractNameFromJSON(JSONObject j) throws JSONException {
+        return filterNameByTypes(j, "point_of_interest", "establishment");
+    }
+    
+    private static String filterNameByTypes(JSONObject j, String ... type) throws JSONException {
+        JSONArray addressComponents = ((JSONObject) j
+                .getJSONArray("results")
+                .get(0))
+                .getJSONArray("address_components");
+        
+        for (int w = 0; w < type.length; w++) {
+            for (int x = 0; x < addressComponents.length(); x++) {
+                JSONArray types = ((JSONObject) addressComponents.get(x)).getJSONArray("types");
+                for (int y = 0; y < types.length(); y++) {
+                    if(((String) types.get(y)).equals(type[w])) {
+                        return (String) ((JSONObject) addressComponents.get(x)).get("long_name");
+                    }
+                }
+            }
+        }
+        
+        return extractAddressFromJSON(j);
     }
     
     //TODO: Spaces will need to be replaced with + characters client-side

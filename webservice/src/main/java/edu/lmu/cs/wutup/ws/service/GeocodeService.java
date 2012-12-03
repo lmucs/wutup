@@ -5,6 +5,6 @@ import edu.lmu.cs.wutup.ws.model.LatLong;
 
 public interface GeocodeService {
 
-    public LatLong resolveAddressToLatLong(String address) throws NoAddressProvidedException;
+    //public LatLong resolveAddressToLatLong(String address) throws NoAddressProvidedException;
 
 }
