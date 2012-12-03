@@ -24,7 +24,6 @@ import edu.lmu.cs.wutup.ws.exception.AttendeeExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchAttendeeException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
@@ -86,9 +85,10 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     @Override
     public EventOccurrence findEventOccurrenceById(int id) {
+        QueryBuilder query = getSelectQuery();
         try {
-            return jdbcTemplate.queryForObject(getSelectQuery().where("o.id = :id", id).build(),
-                    eventOccurrenceRowMapper);
+            return jdbcTemplate.queryForObject(query.where("o.id = :id", id).build(),
+                    query.getParametersArray(), eventOccurrenceRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventOccurrenceException();
         }
@@ -106,7 +106,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             query.joinOn("attendee a", "o.id = a.occurrenceId").where("a.userId = :attendeeId", attendee);
         }
 
-        return jdbcTemplate.query(query.addPagination(pagination).build(), eventOccurrenceRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).build(), query.getParametersArray(), eventOccurrenceRowMapper);
     }
 
     public int findNumberOfEventOccurrences() {
@@ -118,7 +118,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         QueryBuilder query = new QueryBuilder().from("attendee a")
                 .joinOn("user u", "a.userId = u.id")
                 .where("a.occurrenceId = :oId", id);
-        return jdbcTemplate.query(query.addPagination(pagination).build(), userRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).build(), query.getParametersArray(), userRowMapper);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 .where("oc.subjectId = :subjectId", eventId)
                 .order("oc.timestamp")
                 .addPagination(pagination);
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build());
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build(), query.getParametersArray());
     }
 
     @Override
