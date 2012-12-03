@@ -9,6 +9,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -53,6 +54,7 @@ public class EventDaoTest {
         assertThat(eventDao.findNumberOfEvents(), is(initialCount + 1));
     }
 
+    @Ignore
     @Test
     public void retrieveEventByName() {
         Event e = new Event(5024, "Stuff and Things", "love", sam);
