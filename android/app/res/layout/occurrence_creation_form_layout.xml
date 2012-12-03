@@ -92,6 +92,26 @@
             android:id="@+id/occurrence_creation_form_time_end"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/occurrence_creation_form_post_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/occurrence_creation_form_label_button_post" />
+
+            <Button
+                android:id="@+id/occurence_creation_form_cancel_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/generic_label_button_cancel" />
+
+        </LinearLayout>
         
     </LinearLayout>
  
