@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import android.os.AsyncTask;
+import android.util.Log;
+
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.os.AsyncTask;
+import edu.lmu.cs.wutup.android.manager.LogTags;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
@@ -33,7 +36,7 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 	private String address;
 	
 /**********************************************************************************************************************
- * Member Variables END & Method Overriding BEGIN
+ * Member Variables END & Public Methods BEGIN
  **********************************************************************************************************************/
 	
 	@Override
@@ -63,7 +66,12 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 			}
 			
 		} else {
-			throw new IllegalArgumentException();
+			
+			IllegalArgumentException illegalArgumentException = new IllegalArgumentException();
+			
+			Log.e(LogTags.AUTO_COMPLETE, "Invalid dynamic search parameters!", illegalArgumentException);
+			throw illegalArgumentException;
+			
 		}
 		
 		return null;
@@ -71,7 +79,7 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 	}
 	
 /**********************************************************************************************************************
- * Method Overriding END & Private Methods BEGIN
+ * Public Methods END & Private Methods BEGIN
  **********************************************************************************************************************/
 
 	private BufferedInputStream retrieveSerializedObjects(String address) throws IllegalStateException, IOException {
@@ -82,19 +90,22 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 	    
 	    InputStream inputStream = httpResponse.getEntity().getContent();;
 	    BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);       
-                        
+                    
+	    Log.i(LogTags.AUTO_COMPLETE, "Retrieve auto complete serialized suggestions from web service.");
 	    return bufferedInputStream;
 	    
 	}
 	
-	private MappingIterator<T> deserializeObjects(BufferedInputStream serializedObjects) throws JsonProcessingException, IOException {
-     
+	private MappingIterator<T> deserializeObjects(BufferedInputStream serializedObjects) throws JsonProcessingException, 
+	                                                                                            IOException 
+    { 
         ObjectMapper eventObjectMapper = new ObjectMapper();
         ObjectReader eventObjectReader = eventObjectMapper.reader(c); 
         
         MappingIterator<T> deserializeObjects = eventObjectReader.readValues(serializedObjects);
         serializedObjects.close();
               
+        Log.i(LogTags.AUTO_COMPLETE, "Deserialized auto complete suggestions from web service.");
         return deserializeObjects;
 	
 	}
@@ -102,7 +113,7 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 	private void populateAutoCompleteSuggestions(List<T> autoCompleteSuggestions) {
 		adapter.clear();		
 		adapter.addAll(autoCompleteSuggestions);		
-		adapter.notifyDataSetChanged();		
+		adapter.notifyDataSetChanged();			
 	}
 
 /**********************************************************************************************************************

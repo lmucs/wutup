@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+
 import edu.lmu.cs.wutup.android.manager.LogTags;
 
 public class DynamicSearchTrigger<T> implements TextWatcher {
@@ -32,7 +33,7 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 	}
 	
 /**********************************************************************************************************************
- * Method Overriding BEGIN
+ * Constructors END & Public Methods BEGIN
  **********************************************************************************************************************/
 	
 	@Override
@@ -42,15 +43,15 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 		
 		Log.i(LogTags.EVENT_CREATION, "Event text view changed. New text reads \"" + newText + "\".");
 		
-		if (textChanged) {
+		if (textChanged & !newText.matches("")) {
 			
 			if (dynamicSearch != null) {
 				dynamicSearch.cancel(MAY_INTERRUPT_SEARCH);
 				Log.i(LogTags.EVENT_CREATION, "Canceled previous dynamic search for " + c.toString() + ".");
 			}
 			
-//			String queryParameters = "?name=" + newText;
-			dynamicSearch = new DynamicSearch<T>().execute(c, adpater, address);
+			String queryParameters = "?name=" + newText;
+			dynamicSearch = new DynamicSearch<T>().execute(c, adpater, address + queryParameters);
 			Log.i(LogTags.EVENT_CREATION, "Executed new dynamic search for " + c.toString() + ", with text \"" + newText + "\".");
 			
 			textChanged = false;
@@ -64,6 +65,11 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		textChanged = true;		
+		Log.i(LogTags.AUTO_COMPLETE, "Auto complete text feild text changed.");
 	}
+	
+/**********************************************************************************************************************
+ * Public Methods END
+ **********************************************************************************************************************/	
 
 }
