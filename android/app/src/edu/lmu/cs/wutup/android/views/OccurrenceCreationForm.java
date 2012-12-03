@@ -27,30 +27,22 @@ public class OccurrenceCreationForm extends Activity {
 	ManualListAdapter<Venue> venueAdapter;
 
 /**********************************************************************************************************************
- * Member Variables END & Method Overriding BEGIN
+ * Member Variables END & Android Life Cycle Methods BEGIN
  **********************************************************************************************************************/
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.occurrence_creation_form_v3);
+		setContentView(R.layout.occurrence_creation_form_layout);
 		
-		eventTextField = (AutoCompleteTextView) findViewById(R.id.occurrence_creation_form_event_text_field);
-		eventAdapter = new ManualListAdapter<Event>(this, android.R.layout.simple_dropdown_item_1line);
-		eventTextField.setAdapter(eventAdapter);
-		eventTextField.setThreshold(NUMBER_OF_CHARACTERS_REQUIRED_BEFORE_OFFERING_SUGGESTIONS);
-		eventTextField.addTextChangedListener(new DynamicSearchTrigger<Event>(Event.class, eventAdapter, HttpWutup.ADDRESS_OF_EVENTS));
+		initiateEventDynamicSearch();
+		initiateVenueDynamicSearch();
 		
-//		venueTextField = (AutoCompleteTextView) findViewById(R.id.occurrence_creation_form_venue_text_field);
-//		venueAdapter = new AdapterAutoComplete<Venue>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<Venue>());
-//		venueTextField.setAdapter(venueAdapter);
-//		venueTextField.addTextChangedListener(new DynamicSearchTrigger<Venue>(venueAdapter, Venue.class, HttpWutup.ADDRESS_OF_VENUES));
-
 	}
 	
 /**********************************************************************************************************************
- * Method Overriding END & Public Methods BEGIN
+ * Android Life Cycle Methods END & Other Public Methods BEGIN
  **********************************************************************************************************************/
 	
 	
@@ -59,7 +51,31 @@ public class OccurrenceCreationForm extends Activity {
  * Public Methods END & Private Methods BEGIN
  **********************************************************************************************************************/
 
+	private void initiateEventDynamicSearch() {
+		
+		eventTextField = (AutoCompleteTextView) findViewById(R.id.occurrence_creation_form_event_text_field);
+		eventAdapter = new ManualListAdapter<Event>(this, android.R.layout.simple_dropdown_item_1line);
+		
+		eventTextField.setAdapter(eventAdapter);
+		eventTextField.setThreshold(NUMBER_OF_CHARACTERS_REQUIRED_BEFORE_OFFERING_SUGGESTIONS);
+		eventTextField.addTextChangedListener(new DynamicSearchTrigger<Event>(Event.class, 
+																		      eventAdapter, 
+																		      HttpWutup.ADDRESS_OF_EVENTS));
+		
+	}
 	
+	private void initiateVenueDynamicSearch() {
+		
+		venueTextField = (AutoCompleteTextView) findViewById(R.id.occurrence_creation_form_venue_text_field);
+		venueAdapter = new ManualListAdapter<Venue>(this, android.R.layout.simple_dropdown_item_1line);
+		
+		venueTextField.setAdapter(venueAdapter);
+		venueTextField.setThreshold(NUMBER_OF_CHARACTERS_REQUIRED_BEFORE_OFFERING_SUGGESTIONS);
+		venueTextField.addTextChangedListener(new DynamicSearchTrigger<Venue>(Venue.class, 
+				                                                              venueAdapter, 
+				                                                              HttpWutup.ADDRESS_OF_VENUES));
+		
+	}
 	
 /**********************************************************************************************************************
  * Private Methods END

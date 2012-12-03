@@ -69,8 +69,9 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public Event findEventById(int id) {
+        QueryBuilder query = getSelectQuery().where("e.id=:id", id);
         try {
-            return jdbcTemplate.queryForObject(getSelectQuery().where("e.id=:id", id).build(), eventRowMapper);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();
         }
@@ -104,7 +105,7 @@ public class EventDaoJdbcImpl implements EventDao {
             }
         }
 
-        return jdbcTemplate.query(query.addPagination(pagination).order("e.id").build(), eventRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).order("e.id").build(), query.getParametersArray(), eventRowMapper);
     }
 
     @Override

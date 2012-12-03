@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.ws.dao.util;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -10,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.map.MultiValueMap;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.Interval;
 
@@ -32,8 +34,8 @@ public class QueryBuilder {
     private String from;
     private String order;
     private String pagination;
-    private Map<String, Object> andParameters = new HashMap<String, Object>();
-    private Map<String, Object> orParameters = new HashMap<String, Object>();
+    private Map<String, Object> andParameters = new LinkedHashMap<String, Object>();
+    private Map<String, Object> orParameters = new LinkedHashMap<String, Object>();
     private MultiValueMap joinByTypes = new MultiValueMap();
     private List<String> andClauses = new ArrayList<String>();
     private List<String> orClauses = new ArrayList<String>();
@@ -68,7 +70,7 @@ public class QueryBuilder {
      */
     public QueryBuilder append(String text) {
         assertNotBuilt();
-        appendBuilder.append(escapeApostrophe(text));
+        appendBuilder.append(text);
         return this;
     }
 
@@ -78,21 +80,21 @@ public class QueryBuilder {
         for (String field : fields) {
             select += field + ", ";
         }
-        select = escapeApostrophe(select.substring(0, select.length() - 2));
+        select = select.substring(0, select.length() - 2);
         return this;
     }
 
     public QueryBuilder from(String tableName) {
         assertNotBuilt();
-        from = escapeApostrophe(tableName);
+        from = tableName;
         return this;
     }
 
     private void addJoin(String type, String tableName, String joinCondition) {
         assertNotBuilt();
         if (type != null && tableName != null && joinCondition != null) {
-            joinByTypes.put(type, escapeApostrophe(tableName));
-            joinByTypes.put(type, escapeApostrophe(joinCondition));
+            joinByTypes.put(type, tableName);
+            joinByTypes.put(type, joinCondition);
         }
     }
 
@@ -108,22 +110,20 @@ public class QueryBuilder {
 
     public QueryBuilder order(String order) {
         assertNotBuilt();
-        this.order = escapeApostrophe(order);
+        this.order = order;
         return this;
     }
+
     public QueryBuilder orWhere(String condition, Object paramValue) {
         assertNotBuilt();
         if (paramValue != null) {
-            String paramValueString = escapeApostrophe(paramValue.toString());
-            condition = escapeApostrophe(condition);
-            if (paramValue instanceof String) {
-                paramValueString = "'" + paramValueString + "'";
-            }
-            orClauses.add(condition);
+            String paramValueString = paramValue.toString();
             Matcher matcher = PARAMETER_PATTERN.matcher(condition);
             if (matcher.find()) {
                 orParameters.put(matcher.group(1), paramValueString);
             }
+            condition = condition.replace(matcher.group(1), "?");
+            orClauses.add(condition);
         }
         return this;
     }
@@ -136,16 +136,13 @@ public class QueryBuilder {
     public QueryBuilder where(String condition, Object paramValue) {
         assertNotBuilt();
         if (paramValue != null) {
-            String paramValueString = escapeApostrophe(paramValue.toString());
-            condition = escapeApostrophe(condition);
-            if (paramValue instanceof String) {
-                paramValueString = "'" + paramValueString + "'";
-            }
-            andClauses.add(condition);
+            String paramValueString = paramValue.toString();
             Matcher matcher = PARAMETER_PATTERN.matcher(condition);
             if (matcher.find()) {
                 andParameters.put(matcher.group(1), paramValueString);
             }
+            condition = condition.replace(matcher.group(1), "?");
+            andClauses.add(condition);
         }
         return this;
     }
@@ -162,14 +159,18 @@ public class QueryBuilder {
     public QueryBuilder whereInterval(Interval i) {
         assertNotBuilt();
         if (i != null) {
-            andClauses.add("start between ':start1' and ':end1'");
-            andClauses.add("end between ':start2' and ':end2'");
+            andClauses.add("start between ? and ?");
+            andClauses.add("end between ? and ?");
             andParameters.put(":start1", new Timestamp(i.getStartMillis()));
             andParameters.put(":end1", new Timestamp(i.getEndMillis()));
             andParameters.put(":start2", new Timestamp(i.getStartMillis()));
             andParameters.put(":end2", new Timestamp(i.getEndMillis()));
         }
         return this;
+    }
+
+    public QueryBuilder like(String field, String paramName, Object paramValue) {
+        return this.where("lower(" + field + ") like lower(:" + paramName + ")", "%" + paramValue.toString() + "%");
     }
 
     public QueryBuilder addPagination(PaginationData p) {
@@ -213,20 +214,6 @@ public class QueryBuilder {
             stringBuilder.append(" order by " + order);
         }
 
-        for (Map.Entry<String, Object> e : andParameters.entrySet()) {
-            String parameterKey = e.getKey();
-            int parameterLength = parameterKey.length();
-            int parameterStartIndex = stringBuilder.indexOf(parameterKey);
-            stringBuilder.replace(parameterStartIndex, parameterStartIndex + parameterLength, e.getValue().toString());
-        }
-
-        for (Map.Entry<String, Object> e : orParameters.entrySet()) {
-            String parameterKey = e.getKey();
-            int parameterLength = parameterKey.length();
-            int parameterStartIndex = stringBuilder.indexOf(parameterKey);
-            stringBuilder.replace(parameterStartIndex, parameterStartIndex + parameterLength, e.getValue().toString());
-        }
-
         if (pagination != null) {
             stringBuilder.append(" " + pagination);
         }
@@ -246,14 +233,13 @@ public class QueryBuilder {
      * Retrieves the query parameters that have been added so far.
      */
     public Map<String, Object> getParameters() {
-        return andParameters;
+        Map<String, Object> parameters = new LinkedHashMap<String, Object>();
+        parameters.putAll(andParameters);
+        parameters.putAll(orParameters);
+        return parameters;
     }
 
-    public QueryBuilder like(String field, String paramName, Object paramValue) {
-        return this.where("lower(" + field + ") like lower(:" + paramName + ")", "%" + paramValue.toString() + "%");
-    }
-
-    private String escapeApostrophe(String s) {
-        return s.replace("'", "''");
+    public Object[] getParametersArray() {
+        return ArrayUtils.addAll(andParameters.values().toArray(), orParameters.values().toArray());
     }
 }

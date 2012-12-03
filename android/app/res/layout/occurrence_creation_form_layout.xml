@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        
+	    <GridLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content" >
+	
+	        <TextView
+	            android:layout_column="0"
+	            android:layout_columnSpan="1"
+	            android:layout_gravity="left"
+	            android:layout_row="0"
+	            android:layout_rowSpan="1"
+	            android:text="@string/occurrence_creation_form_label_event"
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	        <AutoCompleteTextView
+	            android:id="@+id/occurrence_creation_form_event_text_field"
+	            android:layout_column="1"
+	            android:layout_gravity="fill_horizontal"
+	            android:layout_row="0"
+	            android:layout_rowSpan="1"
+	            android:ems="10" />
+	
+	        <TextView
+	            android:layout_column="0"
+	            android:layout_columnSpan="1"
+	            android:layout_gravity="left"
+	            android:layout_row="1"
+	            android:layout_rowSpan="1"
+	            android:text="@string/occurrence_creation_form_label_venue"
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	        <AutoCompleteTextView
+	            android:id="@+id/occurrence_creation_form_venue_text_field"
+	            android:layout_column="1"
+	            android:layout_gravity="fill_horizontal"
+	            android:layout_row="1"
+	            android:layout_rowSpan="1"
+	            android:ems="10" />
+	
+	    </GridLayout>
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/occurrence_creation_form_label_date_start"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <CalendarView
+	        android:id="@+id/occurrence_creation_form_date_start"
+	        android:layout_width="match_parent"
+	        android:layout_height="300dp" />
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/occurrence_creation_form_label_time_start"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+	    <TimePicker
+	        android:id="@+id/occurrence_creation_form_time_start"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" />
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/occurrence_creation_form_label_date_end"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <CalendarView
+            android:id="@+id/occurrence_creation_form_date_end"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/occurrence_creation_form_label_time_end"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TimePicker
+            android:id="@+id/occurrence_creation_form_time_end"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        
+    </LinearLayout>
+ 
+</ScrollView>
