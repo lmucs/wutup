@@ -1,10 +1,10 @@
 package edu.lmu.cs.wutup.ws.service;
 
-import static edu.lmu.cs.wutup.ws.model.GoogleGateway.extractNameFromJSON;
 import static edu.lmu.cs.wutup.ws.model.GoogleGateway.extractAddressFromJSON;
+import static edu.lmu.cs.wutup.ws.model.GoogleGateway.extractLocationFromJSON;
+import static edu.lmu.cs.wutup.ws.model.GoogleGateway.extractNameFromJSON;
 import static edu.lmu.cs.wutup.ws.model.GoogleGateway.geocodeAddressToLatLong;
 import static edu.lmu.cs.wutup.ws.model.GoogleGateway.geocodeCoordinatesToAddress;
-import static edu.lmu.cs.wutup.ws.model.GoogleGateway.extractLocationFromJSON;
 
 import java.io.IOException;
 
@@ -12,6 +12,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.exception.MalformedCoordinatesException;
 import edu.lmu.cs.wutup.ws.exception.NoAddressProvidedException;
@@ -19,8 +20,9 @@ import edu.lmu.cs.wutup.ws.model.LatLong;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Service
+@Transactional
 public class GeocodeServiceImpl implements GeocodeService {
-    public static LatLong resolveAddressToLatLong(String address) throws NoAddressProvidedException {
+    public LatLong resolveAddressToLatLong(String address) throws NoAddressProvidedException {
 
         if (address == null || address == "") {
             throw new NoAddressProvidedException();
@@ -38,7 +40,7 @@ public class GeocodeServiceImpl implements GeocodeService {
         }
     }
 
-    public static String resolveLatLongToAddress(Double lat, Double lng) throws MalformedCoordinatesException {
+    public String resolveLatLongToAddress(Double lat, Double lng) throws MalformedCoordinatesException {
 
         if (lat == null || lng == null || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
             throw new MalformedCoordinatesException();
@@ -54,7 +56,7 @@ public class GeocodeServiceImpl implements GeocodeService {
 
     }
     
-    public static Venue resolveVenue(String address, Double lat, Double lng) throws ClientProtocolException, JSONException, IOException {
+    public Venue resolveVenue(String address, Double lat, Double lng) throws ClientProtocolException, JSONException, IOException {
         Venue v = new Venue();
         String resolvedName, resolvedAddress;
         Double resolvedLat, resolvedLng;

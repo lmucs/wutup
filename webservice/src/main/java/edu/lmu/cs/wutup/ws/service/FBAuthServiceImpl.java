@@ -3,7 +3,6 @@ package edu.lmu.cs.wutup.ws.service;
 import static edu.lmu.cs.wutup.ws.model.FacebookGateway.acquireFBCode;
 import static edu.lmu.cs.wutup.ws.model.FacebookGateway.acquireUserEvents;
 import static edu.lmu.cs.wutup.ws.model.FacebookGateway.createUserEvent;
-import static edu.lmu.cs.wutup.ws.service.GeocodeServiceImpl.resolveVenue;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -18,6 +17,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +32,9 @@ import edu.lmu.cs.wutup.ws.model.FacebookGateway;
 @Transactional
 public class FBAuthServiceImpl implements FBAuthService {
     private static final Pattern accessTokenPattern = Pattern.compile("(?<=access_token=)[A-z0-9_-]+(?=&)");
+
+    @Autowired
+    GeocodeService geocodeService;
 
     @Override
     public String getAccessToken(String code, String redirectUri) throws IOException {
@@ -85,7 +88,7 @@ public class FBAuthServiceImpl implements FBAuthService {
                 // If not, construct a new one and put all this stuff into the database.
                 JSONObject current = events.getJSONObject(x);
                 e = new EventOccurrence(new Event(null, current.getString("name"), current.getString("name"), u),
-                        resolveVenue(current.getString("location"), null, null), new DateTime(
+                        geocodeService.resolveVenue(current.getString("location"), null, null), new DateTime(
                                 current.getString("start_time")));
                 System.out.println(e);
             }
