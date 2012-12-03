@@ -2,8 +2,11 @@ package edu.lmu.cs.wutup.android.views;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -14,6 +17,7 @@ import org.joda.time.DateTimeConstants;
 import edu.lmu.cs.wutup.android.autofill.DynamicSearchTrigger;
 import edu.lmu.cs.wutup.android.autofill.ManualListAdapter;
 import edu.lmu.cs.wutup.android.communication.HttpWutup;
+import edu.lmu.cs.wutup.android.manager.LogTags;
 import edu.lmu.cs.wutup.android.manager.R;
 import edu.lmu.cs.wutup.android.model.Event;
 import edu.lmu.cs.wutup.android.model.Venue;
@@ -43,6 +47,9 @@ public class OccurrenceCreationForm extends Activity {
 	
 	Button cancelButton;
 	Button postOccurrenceButton;
+	
+	Event selectedEvent;
+	Venue selectedVenue;
 
 /**********************************************************************************************************************
  * Member Variables END & Android Life Cycle Methods BEGIN
@@ -91,7 +98,27 @@ public class OccurrenceCreationForm extends Activity {
 																		      eventAdapter, 
 																		      HttpWutup.ADDRESS_OF_EVENTS));
 		
+		initiateEventSelectionListener();
+		
 	}
+	
+	private void initiateEventSelectionListener() {
+		
+		eventTextField.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				
+				selectedEvent = eventAdapter.getItem(position);
+				
+				Log.i(LogTags.OCCURRENCE_CREATION, 
+				      "Selected event " + selectedEvent.getId() + ". Event named \"" + selectedEvent.getName() + "\".");
+				
+			}
+			
+		});
+		
+	}	
 	
 	private void initiateVenueDynamicSearch() {
 		
@@ -104,8 +131,28 @@ public class OccurrenceCreationForm extends Activity {
 				                                                              venueAdapter, 
 				                                                              HttpWutup.ADDRESS_OF_VENUES));
 		
+		initiateVenueSelectionListener();
+		
 	}
 	
+	private void initiateVenueSelectionListener() {
+		
+		venueTextField.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				
+				selectedVenue = venueAdapter.getItem(position);
+				
+				Log.i(LogTags.OCCURRENCE_CREATION, 
+					  "Selected venue " + selectedVenue.getId() + ". Venue named \"" + selectedVenue.getName() + "\".");
+				
+			}
+			
+		});
+		
+	}
+
 	private void initiateDateAndTimeWidgets() {
 		startDate = (CalendarView) findViewById(R.id.occurrence_creation_form_date_start);
 		startTime = (TimePicker) findViewById(R.id.occurrence_creation_form_time_start);
@@ -140,7 +187,12 @@ public class OccurrenceCreationForm extends Activity {
 			
 		    @Override
 		    public void onClick(View v) {
+		    	
+		      Log.i(LogTags.OCCURRENCE_CREATION, 
+		    		"User opted out of occurence creation. Occurrence creation activity scheduled to close.");	
+		      
 		      finish();
+		      
 		    }
 		    
 		  });
