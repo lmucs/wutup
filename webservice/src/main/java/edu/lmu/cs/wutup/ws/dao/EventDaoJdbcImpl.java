@@ -79,8 +79,9 @@ public class EventDaoJdbcImpl implements EventDao {
     
     @Override
     public Event findEventByName(String name) {
+        QueryBuilder query = getSelectQuery().where("e.name=:name", name);
         try {
-            return jdbcTemplate.queryForObject(getSelectQuery().where("e.name = :name", name).build(), eventRowMapper);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), eventRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventException();
         }
