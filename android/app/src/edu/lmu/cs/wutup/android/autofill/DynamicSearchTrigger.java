@@ -15,6 +15,8 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 	
 	public static final boolean MAY_INTERRUPT_SEARCH = false;
 	
+	private static final String SPACE_CHARACTER_FOR_URLS = "%20";
+	
 	private boolean textChanged = false;
 	private AsyncTask<Object, Integer, Void> dynamicSearch = null;
 	
@@ -51,8 +53,11 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 			}
 			
 			String queryParameters = "?name=" + newText;
-			dynamicSearch = new DynamicSearch<T>().execute(c, adpater, address + queryParameters);
-			Log.i(LogTags.AUTO_COMPLETE, "Executed new dynamic search for " + c.toString() + ", with text \"" + newText + "\".");
+			String addressWithParameters = address + queryParameters;
+			addressWithParameters = addressWithParameters.replaceAll(" ", SPACE_CHARACTER_FOR_URLS);
+			
+			dynamicSearch = new DynamicSearch<T>().execute(c, adpater, addressWithParameters);
+			Log.i(LogTags.AUTO_COMPLETE, "Executed new dynamic search for " + c.toString() + ", with HTTP call \"" + addressWithParameters + "\".");
 			
 			textChanged = false;
 		}
