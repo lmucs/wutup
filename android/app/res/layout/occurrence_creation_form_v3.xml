@@ -3,19 +3,37 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-        
-        <AutoCompleteTextView 
-            android:id="@+id/occurrence_creation_form_event_text_field" 
-            android:layout_width="fill_parent" 
-            android:layout_height="wrap_content">
+    
+	<GridLayout android:layout_width="match_parent"
+	            android:layout_height="wrap_content" >
             
-        </AutoCompleteTextView>
+	    <TextView android:layout_width="wrap_content"
+	              android:layout_height="wrap_content"
+	              android:text="@string/occurrence_creation_form_event_label"
+	              android:textAppearance="?android:attr/textAppearanceLarge" />
         
-    </LinearLayout>
+        <AutoCompleteTextView android:id="@+id/occurrence_creation_form_event_text_field" 
+                              android:layout_width="fill_parent" 
+                              android:layout_height="wrap_content" />
+   
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/occurrence_creation_form_venue_label"
+                  android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <AutoCompleteTextView android:id="@+id/occurrence_creation_form_venue_text_field" 
+                              android:layout_width="fill_parent" 
+                              android:layout_height="wrap_content" />
+                
+
+        
+
+        
+        
+	              
+    </GridLayout>
+
+
     
 
 </ScrollView>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:layout_gravity="left"
+            android:layout_row="0"
+            android:layout_rowSpan="1"
+            android:text="@string/occurrence_creation_form_event_label"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <AutoCompleteTextView
+            android:id="@+id/occurrence_creation_form_event_text_field"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            android:layout_gravity="fill_horizontal"
+            android:layout_row="0"
+            android:layout_rowSpan="1"
+            android:ems="10" />
+
+        <TextView
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:layout_gravity="left"
+            android:layout_row="1"
+            android:layout_rowSpan="1"
+            android:text="@string/occurrence_creation_form_venue_label"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <AutoCompleteTextView
+            android:id="@+id/occurrence_creation_form_venue_text_field"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            android:layout_gravity="fill_horizontal"
+            android:layout_row="1"
+            android:layout_rowSpan="1"
+            android:ems="10" />        
+        
+    </GridLayout>
+ 
+</ScrollView>

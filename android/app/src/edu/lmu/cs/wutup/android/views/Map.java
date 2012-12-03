@@ -10,22 +10,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
-import com.google.android.maps.Overlay;
-import com.google.android.maps.OverlayItem;
-
-import edu.lmu.cs.wutup.android.communication.GetEvents;
-import edu.lmu.cs.wutup.android.communication.GetOccurrences;
-import edu.lmu.cs.wutup.android.communication.GetVenues;
-import edu.lmu.cs.wutup.android.communication.PostOccurrences;
 import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.manager.EventPlotter;
 import edu.lmu.cs.wutup.android.manager.R;
 import edu.lmu.cs.wutup.android.model.Event;
 import edu.lmu.cs.wutup.android.model.Occurrence;
 import edu.lmu.cs.wutup.android.model.Venue;
+
+import com.google.android.maps.GeoPoint;
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 
 public class Map extends MapActivity {
     
@@ -41,9 +37,9 @@ public class Map extends MapActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
 		
-		new GetOccurrences().execute();
-		new GetEvents().execute();
-		new GetVenues().execute();
+//		new GetOccurrences().execute();
+//		new GetEvents().execute();
+//		new GetVenues().execute();
 		
 		try {
             Thread.sleep(15000);
@@ -54,15 +50,15 @@ public class Map extends MapActivity {
 		mapView = (MapView) findViewById(R.id.map);
 		mapView.setBuiltInZoomControls(true);
 		
-		dropPin = this.getResources().getDrawable(R.drawable.androidmarker);
-		
-		mapOverlays = mapView.getOverlays();
-		occurrenceOverlay = new EventPlotter(dropPin, this);	
-		mapOverlays.add(occurrenceOverlay);
+//		dropPin = this.getResources().getDrawable(R.drawable.androidmarker);
+//		
+//		mapOverlays = mapView.getOverlays();
+//		occurrenceOverlay = new EventPlotter(dropPin, this);	
+//		mapOverlays.add(occurrenceOverlay);
 		
 
 		
-		plotOccurrences();
+//		plotOccurrences();
 //		
 //		new PostOccurrences().execute(Occurrences.get(9));
 //		
