@@ -2,7 +2,10 @@ package edu.lmu.cs.wutup.android.views;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.TimePicker;
 
@@ -37,6 +40,9 @@ public class OccurrenceCreationForm extends Activity {
 	
 	long startInUnixTime;
 	long endInUnixTime;
+	
+	Button cancelButton;
+	Button postOccurrenceButton;
 
 /**********************************************************************************************************************
  * Member Variables END & Android Life Cycle Methods BEGIN
@@ -51,19 +57,25 @@ public class OccurrenceCreationForm extends Activity {
 		initiateEventDynamicSearch();
 		initiateVenueDynamicSearch();
 		
-		startDate = (CalendarView) findViewById(R.id.occurrence_creation_form_date_start);
-		startTime = (TimePicker) findViewById(R.id.occurrence_creation_form_time_start);
-		endDate = (CalendarView) findViewById(R.id.occurrence_creation_form_date_end);
-		endTime = (TimePicker) findViewById(R.id.occurrence_creation_form_time_end);
+		initiateDateAndTimeWidgets();
+		
+		initiatePostOccurrenceButton();
+		initiateCancelButtton();
 		
 	}
 	
+
+
 /**********************************************************************************************************************
  * Android Life Cycle Methods END & Other Public Methods BEGIN
  **********************************************************************************************************************/
 	
 	
 	
+
+
+
+
 /**********************************************************************************************************************
  * Public Methods END & Private Methods BEGIN
  **********************************************************************************************************************/
@@ -91,6 +103,47 @@ public class OccurrenceCreationForm extends Activity {
 		venueTextField.addTextChangedListener(new DynamicSearchTrigger<Venue>(Venue.class, 
 				                                                              venueAdapter, 
 				                                                              HttpWutup.ADDRESS_OF_VENUES));
+		
+	}
+	
+	private void initiateDateAndTimeWidgets() {
+		startDate = (CalendarView) findViewById(R.id.occurrence_creation_form_date_start);
+		startTime = (TimePicker) findViewById(R.id.occurrence_creation_form_time_start);
+		endDate = (CalendarView) findViewById(R.id.occurrence_creation_form_date_end);
+		endTime = (TimePicker) findViewById(R.id.occurrence_creation_form_time_end);
+	}
+	
+	
+	private void initiatePostOccurrenceButton() {
+		
+		postOccurrenceButton = (Button) findViewById(R.id.occurrence_creation_form_button_post);
+		
+		postOccurrenceButton.setOnClickListener(new OnClickListener() {
+			
+		    @Override
+		    public void onClick(View v) {
+		      
+		    	calculateAndSetStartInUnixTime();
+		    	calculateAndSetEndInUnixTime();
+		    	
+		    }
+		    
+		  });
+		
+	}
+	
+	private void initiateCancelButtton() {
+		
+		cancelButton = (Button) findViewById(R.id.occurence_creation_form_button_cancel);
+		
+		cancelButton.setOnClickListener(new OnClickListener() {
+			
+		    @Override
+		    public void onClick(View v) {
+		      finish();
+		    }
+		    
+		  });
 		
 	}
 	

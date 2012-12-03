@@ -98,14 +98,14 @@
             android:layout_height="wrap_content" >
 
             <Button
-                android:id="@+id/occurrence_creation_form_post_button"
+                android:id="@+id/occurrence_creation_form_button_post"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/occurrence_creation_form_label_button_post" />
 
             <Button
-                android:id="@+id/occurence_creation_form_cancel_button"
+                android:id="@+id/occurence_creation_form_button_cancel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
