@@ -27,7 +27,7 @@ public class OccurrenceCreationForm extends Activity {
 	ManualListAdapter<Venue> venueAdapter;
 
 /**********************************************************************************************************************
- * Member Variables END & Method Overriding BEGIN
+ * Member Variables END & Android Life Cycle Methods BEGIN
  **********************************************************************************************************************/
 	
 	@Override
@@ -42,7 +42,7 @@ public class OccurrenceCreationForm extends Activity {
 	}
 	
 /**********************************************************************************************************************
- * Method Overriding END & Public Methods BEGIN
+ * Android Life Cycle Methods END & Other Public Methods BEGIN
  **********************************************************************************************************************/
 	
 	
