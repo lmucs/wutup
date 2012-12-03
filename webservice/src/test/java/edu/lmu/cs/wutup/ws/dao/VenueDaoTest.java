@@ -32,7 +32,7 @@ public class VenueDaoTest {
 
     private EmbeddedDatabase database;
     private VenueDaoJdbcImpl venueDao = new VenueDaoJdbcImpl();
-    private User sampleUser = new User(3503, "John", "Lennon", "jlennon@gmail.com", "John");
+    private User sampleUser = new User(3503, "John", "Lennon", "jlennon@gmail.com", "John", null);
     private DateTime sampleDateTime = new DateTime(2012, 10, 31, 23, 56, 0);
 
     @Before

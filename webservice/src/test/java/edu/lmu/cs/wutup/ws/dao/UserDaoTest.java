@@ -39,7 +39,7 @@ public class UserDaoTest {
 
     @Test
     public void creatingIncrementsSize() {
-        User u = new User(9, "Dodger", "Duck", "dd@gmail.com", null);
+        User u = new User(9, "Dodger", "Duck", "dd@gmail.com", null, null);
         int beforeSize = userDao.findNumberOfUsers();
         userDao.createUser(u);
         assertThat(userDao.findNumberOfUsers(), is(beforeSize + 1));
@@ -96,7 +96,7 @@ public class UserDaoTest {
 
     @Test //TODO need to automate user ids
     public void updatedUserColumnsCanBeRead() {
-        userDao.createUser(new User(9, "Busby", "Fernjoy", "bf@lol.com", "bferny"));
+        userDao.createUser(new User(9, "Busby", "Fernjoy", "bf@lol.com", "bferny", null));
         User u = userDao.findUserById(9);
         u.setEmail("fernjoy@aol.com");
         u.setNickname("greenhouser");
@@ -123,7 +123,7 @@ public class UserDaoTest {
     
     @Test
     public void checkRetrievalBySessionId() {
-        User u = new User(15, "stuff", "verhasselt", "hah@poof.com", "gratz", "someSessionId12");
+        User u = new User(15, "stuff", "verhasselt", "hah@poof.com", "gratz", "someSessionId12", "somefbid");
         userDao.createUser(u);
         User retrieve = userDao.findUserBySessionId("someSessionId12");
         assertEquals(retrieve.getId(), u.getId());

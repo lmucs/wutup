@@ -13,7 +13,7 @@ public class UserTest {
 
     @Test
     public void fieldsSetByConstructorCanBeRead() {
-        User u = new User(1492, "Joe", "Coffee", "jcoffee@gmail.com","jc1989");
+        User u = new User(1492, "Joe", "Coffee", "jcoffee@gmail.com","jc1989", null);
         assertThat(u.getId(), is(1492));
         assertThat(u.getFirstName(), is("Joe"));
         assertThat(u.getLastName(), is("Coffee"));

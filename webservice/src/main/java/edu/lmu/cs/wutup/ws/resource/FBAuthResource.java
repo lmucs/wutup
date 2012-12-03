@@ -1,9 +1,5 @@
 package edu.lmu.cs.wutup.ws.resource;
 
-import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.fetchFBCode;
-import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.getAccessToken;
-import static edu.lmu.cs.wutup.ws.service.FBAuthServiceImpl.syncUser;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -19,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.service.FBAuthService;
 import edu.lmu.cs.wutup.ws.service.UserService;
 
 @Component
@@ -29,6 +26,9 @@ public class FBAuthResource {
 
     @Autowired
     UserService userService;
+    
+    @Autowired
+    FBAuthService fbService;
 
     @GET
     @Path("/{sessionId}")
@@ -63,7 +63,7 @@ public class FBAuthResource {
 
         } else if (code.equals("")) {
             try {
-                return fetchFBCode(redirectUri);
+                return fbService.fetchFBCode(redirectUri);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -73,7 +73,7 @@ public class FBAuthResource {
 
         try {
             return Response
-                    .ok(syncUser(getAccessToken(code, redirectUri), new User()))
+                    .ok(fbService.syncUser(fbService.getAccessToken(code, redirectUri), new User()))
                     .build();
 
         } catch (Exception e) {

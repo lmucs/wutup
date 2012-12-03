@@ -76,7 +76,7 @@ public class CommentDaoUtils {
             Timestamp persistedTimestamp = rs.getTimestamp("timestamp");
             DateTime timestamp = persistedTimestamp == null ? null : new DateTime(persistedTimestamp);
             return new Comment(commentId, text, timestamp, new User(rs.getInt("authorid"), rs.getString("firstName"),
-                    rs.getString("lastName"), rs.getString("email"), rs.getString("nickname")));
+                    rs.getString("lastName"), rs.getString("email"), rs.getString("nickname"), rs.getString("facebookId")));
         }
     };
 }
