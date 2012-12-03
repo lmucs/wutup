@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
 import edu.lmu.cs.wutup.ws.exception.MalformedCoordinatesException;
 import edu.lmu.cs.wutup.ws.exception.NoAddressProvidedException;
 import edu.lmu.cs.wutup.ws.model.LatLong;
-import edu.lmu.cs.wutup.ws.service.GeocodeServiceImpl;
+import edu.lmu.cs.wutup.ws.service.GeocodeService;
 
 @Component
 @Path("/geocode")
 public class GeocodeResource {
 
     @Autowired
-    GeocodeServiceImpl geocodeService;
+    GeocodeService geocodeService;
     
     @GET
     @Produces({"application/json"})

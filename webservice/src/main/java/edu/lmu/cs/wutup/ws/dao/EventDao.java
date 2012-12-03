@@ -11,6 +11,8 @@ public interface EventDao extends CommentDao {
     int createEvent(Event e);
 
     Event findEventById(int id);
+    
+    Event findEventByName(String name);
 
     List<Event> findEvents(String name, List<Integer> owners, List<Category> categories, PaginationData pagination);
 

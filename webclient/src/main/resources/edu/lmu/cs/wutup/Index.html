@@ -1,3 +1,8 @@
+<wicket:head>
+	<wicket:link>
+	    <link href="css/index.css" rel="stylesheet" />
+	</wicket:link>
+</wicket:head>
 <wicket:extend>
 
     <div id="container" class="container-fluid">
@@ -31,14 +36,16 @@
                     Wutup <div id="nickname">Shelby!</div>
                 <btn id="event-createButton" class="btn btn-large">Create Event</btn>
             </div>
-
-            <div id="calendar" class="section" style='font-size: 13px'></div>
+			<div class="section">
+				<div id="calendar" style='font-size: 13px'></div>
+			</div>
+            
 
             <div id="my-events" class="tabbable section">
                 <ul class="nav nav-tabs">  
                     <li class="active"><a href="#tab-hosting" data-toggle="tab">Hosting (2)</a></li>
                     <li><a href="#tab-attending" data-toggle="tab">Attending (7)</a></li>  
-                    <li><a href="#tab-invited-to" data-toggle="tab">Invited To (5) </a></li> 
+                    <li><a href="#tab-invited-to" data-toggle="tab">Around Me </a></li> 
                 </ul>
 
                 <div class="tab-content">
@@ -68,7 +75,7 @@
                             <script language = "Javascript">
                                 var date = new Date();
                                 var day = date.getDate();
-                                var month = date.getMonth();
+                                var month = date.getMonth(); 
                                 var year = date.getFullYear();
                                 document.write(month + " " + day + " " + year);
                             </script>
@@ -96,8 +103,8 @@
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqOg2q0dqSGTw1OkyqWTWsVSOLCsHjXpM&sensor=false&libraries=places"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script src="lib/fullcalendar/fullcalendar.min.js"></script>
-    <script src="js/manageEventsMap.js"></script>
-    <script src="js/indexCalendar.js"></script>
+    <script src="js/dashboard.js"></script>
+<!--     <script src="js/indexCalendar.js"></script> -->
     <script src="js/streamBuilder.js"></script>
     <script src="js/mainStreams.js"></script>
     </wicket:link>

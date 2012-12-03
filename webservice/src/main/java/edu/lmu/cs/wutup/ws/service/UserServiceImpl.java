@@ -35,6 +35,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findUserByFacebookId(String id) {
+        return userDao.findUserBySessionId(id);
+    }
+
+    @Override
     public void deleteUser(int id) {
         userDao.deleteUser(id);
     }

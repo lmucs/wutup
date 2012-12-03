@@ -32,11 +32,12 @@ public class UserDaoJdbcImpl implements UserDao {
     private static final String DELETE_SQL = "delete from user where id=?;";
     private static final String FIND_BY_ID_SQL = "select * from user where id=?;";
     private static final String FIND_BY_SESSION_ID_SQL = "select * from user where sessionId=?;";
+    private static final String FIND_BY_FACEBOOK_ID_SQL = "select * from user where facebookId=?;";
     private static final String COUNT_SQL = "select count(*) from user;";
-    private static final String FIND_ALL_USER_COMMENTS = "select * from (select v.*, u.firstname, u.lastname, u.email, u.nickname "
+    private static final String FIND_ALL_USER_COMMENTS = "select * from (select v.*, u.firstname, u.lastname, u.email, u.nickname, u.facebookid "
             + "from venue_comment v join user u on (authorId = u.id) union select o.*, u.firstname, u.lastname, u.email, "
-            + "u.nickname from occurrence_comment o join user u on (authorId = u.id) union select e.*, u.firstname, u.lastname, "
-            + "u.email, u.nickname from event_comment e join user u on (authorId = u.id)) where authorId = ? order by timestamp desc limit ? offset ?";
+            + "u.nickname, u.facebookid from occurrence_comment o join user u on (authorId = u.id) union select e.*, u.firstname, u.lastname, "
+            + "u.email, u.nickname, u.facebookid from event_comment e join user u on (authorId = u.id)) where authorId = ? order by timestamp desc limit ? offset ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -70,6 +71,15 @@ public class UserDaoJdbcImpl implements UserDao {
     public User findUserBySessionId(String sessionId) {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_SESSION_ID_SQL, new Object[]{sessionId}, userRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchUserException();
+        }
+    }
+
+    @Override
+    public User findUserByFacebookId(String id) {
+        try {
+            return jdbcTemplate.queryForObject(FIND_BY_FACEBOOK_ID_SQL, new Object[]{id}, userRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchUserException();
         }

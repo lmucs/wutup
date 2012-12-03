@@ -41,18 +41,18 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 		
 		String newText = s.toString();
 		
-		Log.i(LogTags.EVENT_CREATION, "Event text view changed. New text reads \"" + newText + "\".");
+		Log.i(LogTags.AUTO_COMPLETE, "Event text view changed. New text reads \"" + newText + "\".");
 		
 		if (textChanged & !newText.matches("")) {
 			
 			if (dynamicSearch != null) {
 				dynamicSearch.cancel(MAY_INTERRUPT_SEARCH);
-				Log.i(LogTags.EVENT_CREATION, "Canceled previous dynamic search for " + c.toString() + ".");
+				Log.i(LogTags.AUTO_COMPLETE, "Canceled previous dynamic search for " + c.toString() + ".");
 			}
 			
 			String queryParameters = "?name=" + newText;
 			dynamicSearch = new DynamicSearch<T>().execute(c, adpater, address + queryParameters);
-			Log.i(LogTags.EVENT_CREATION, "Executed new dynamic search for " + c.toString() + ", with text \"" + newText + "\".");
+			Log.i(LogTags.AUTO_COMPLETE, "Executed new dynamic search for " + c.toString() + ", with text \"" + newText + "\".");
 			
 			textChanged = false;
 		}

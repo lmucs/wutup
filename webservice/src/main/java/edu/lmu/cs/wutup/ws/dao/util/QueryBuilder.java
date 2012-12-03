@@ -2,7 +2,6 @@ package edu.lmu.cs.wutup.ws.dao.util;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

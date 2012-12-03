@@ -17,6 +17,7 @@ create alias get_distance_km for "edu.lmu.cs.wutup.ws.dao.util.Haversine.getDist
 
 create table user (
   id integer auto_increment not null,
+  facebookId varchar(512),
   firstName varchar(512),
   lastName varchar(512),
   email varchar(512),

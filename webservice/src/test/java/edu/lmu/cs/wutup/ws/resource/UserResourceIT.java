@@ -33,6 +33,26 @@ public class UserResourceIT {
     }
 
     @Test
+    public void retrieveUserByFbId() {
+        given()
+            .contentType("application/json")
+        .expect()
+            .statusCode(404)
+        .when()
+            .get("wutup/users?fbId=1");
+    }
+
+    @Test
+    public void malformedGetByFbIdReturns400() {
+        given()
+            .contentType("application/json")
+        .expect()
+            .statusCode(400)
+        .when()
+            .get("wutup/users");
+    }
+
+    @Test
     public void updateUserWithoutIdInBodyResponds204OnSuccess() {
         given()
             .contentType("application/json")

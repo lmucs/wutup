@@ -1,19 +1,19 @@
-$(document).ready(function () {
-	"use strict";
+var loadPageFunctionality = function () {
+    "use strict";
     var baseUrl = window.location.protocol + "//" + window.location.hostname,
+        mapOptions = {
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        },
+        map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions),
+        infowindow = new google.maps.InfoWindow(),
         initializeManageEventsPage = function () {
             var initialLocation,
-            	siberia = new google.maps.LatLng(60, 105),
+            siberia = new google.maps.LatLng(60, 105),
                 newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687),
                 browserSupportFlag,
-                mapOptions = {
-                    zoom: 10,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                },
-                map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions),
                 input = document.getElementById('venue-address'),
                 autocomplete = new google.maps.places.Autocomplete(input),
-                infowindow = new google.maps.InfoWindow(),
                 marker = new google.maps.Marker({
                     map: map
                 });
@@ -22,7 +22,8 @@ $(document).ready(function () {
                 infowindow.close();
                 marker.setVisible(false);
                 input.className = '';
-                var place = autocomplete.getPlace(), address = '';
+                var place = autocomplete.getPlace(),
+                    address = '';
                 if (!place.geometry) {
                     // Inform the user that the place was not found and return.
                     input.className = 'notfound';
@@ -86,11 +87,12 @@ $(document).ready(function () {
         },
 
         generateOccurrenceURL = function () {
-            return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=50';
+            return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=50&start=1054014101447&end=1954514188253';
         },
 
         populateMap = function (gMap, events) {
-            var map = gMap, i;
+            var map = gMap,
+                i;
             for (i = 0; i < events.length; i += 1) {
                 createMarker(map, events[i]);
             }
@@ -120,10 +122,11 @@ $(document).ready(function () {
         },
 
         parseOccurrencesForCalendar = function (occurrences) {
-            var calendarEvents = [], i;
+            var calendarEvents = [],
+                i;
             for (i = 0; i < occurrences.length; i += 1) {
                 calendarEvents.push({
-                	id: occurrences[i].id,
+                    id: occurrences[i].id,
                     title: occurrences[i].event.name,
                     start: new Date(occurrences[i].start),
                     end: new Date(occurrences[i].end),
@@ -149,7 +152,7 @@ $(document).ready(function () {
             $.ajax({
                 headers: {
                     'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                    'Content-Type': 'application/json'
                 },
                 url: baseUrl + ':8080/wutup/events',
                 type: 'POST',
@@ -178,7 +181,7 @@ $(document).ready(function () {
                 $.ajax({
                     headers: {
                         'Accept': 'application/json',
-                            'Content-Type': 'application/json'
+                        'Content-Type': 'application/json'
                     },
                     url: baseUrl + ':8080/wutup/venues/',
                     type: 'POST',
@@ -198,7 +201,7 @@ $(document).ready(function () {
             });
         },
 
-        createEventOccurrence = function (eventName, venueName, start, end) {
+        createOccurrence = function (eventName, venueName, start, end) {
             console.log(eventName, venueName);
             $.get(baseUrl + ':8080/wutup/events?name=' + parsedForUrl(eventName), function (events) {
                 $.get(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(venueName), function (venues) {
@@ -211,7 +214,7 @@ $(document).ready(function () {
                     $.ajax({
                         headers: {
                             'Accept': 'application/json',
-                                'Content-Type': 'application/json'
+                            'Content-Type': 'application/json'
                         },
                         url: baseUrl + ':8080/wutup/occurrences/',
                         type: 'POST',
@@ -219,6 +222,8 @@ $(document).ready(function () {
                         data: JSON.stringify(newOccurrence),
                         success: function (response, textStatus, jqXhr) {
                             console.log("Hooray We Added A New Occurrence!!");
+                            createMarker(map, newOccurrence);
+                            renderEventOnCalendar(newOccurrence);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             console.log("The following error occured: " + textStatus, errorThrown);
@@ -226,7 +231,6 @@ $(document).ready(function () {
                         },
                         complete: function () {
                             console.log("occurrence ajax completed");
-                            renderEventOnCalendar(newOccurrence);
                         }
                     });
                 });
@@ -241,16 +245,14 @@ $(document).ready(function () {
             $.ajax({
                 headers: {
                     'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                    'Content-Type': 'application/json'
                 },
                 url: baseUrl + ':8080/wutup/events/' + event.id,
                 type: 'PATCH',
                 data: JSON.stringify(eventPatch),
-                xhr: function() {
-			        return window.XMLHttpRequest == null || new window.XMLHttpRequest().addEventListener == null 
-			            ? new window.ActiveXObject("Microsoft.XMLHTTP")
-			            : $.ajaxSettings.xhr();
-			    },
+                xhr: function () {
+                    return window.XMLHttpRequest == null || new window.XMLHttpRequest().addEventListener == null ? new window.ActiveXObject("Microsoft.XMLHTTP") : $.ajaxSettings.xhr();
+                },
                 success: function (response, textStatus, jqXhr) {
                     console.log("Event Successfully Patched!");
                 },
@@ -265,52 +267,57 @@ $(document).ready(function () {
         },
 
         patchVenue = function (venue, address) {
-            var venuePatch = {
-                address: address
-            };
-            $.ajax({
-                headers: {
-                    'Accept': 'application/json',
+            $.get(baseUrl + ':8080/wutup/geocode?address=' + parsedForUrl(address), function (data) {
+                var venuePatch = {
+                    address: address,
+                    latitude: data.latitude,
+                    longitude: data.longitude
+                };
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
                         'Content-Type': 'application/json'
-                },
-                url: baseUrl + ':8080/wutup/venues/' + venue.id,
-                type: 'PATCH',
-                data: JSON.stringify(venuePatch),
-                xhr: function() {
-			        return window.XMLHttpRequest == null || new window.XMLHttpRequest().addEventListener == null 
-			            ? new window.ActiveXObject("Microsoft.XMLHTTP")
-			            : $.ajaxSettings.xhr();
-			    },
-                success: function (response, textStatus, jqXhr) {
-                    console.log("Venue Successfully Patched!");
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    // log the error to the console
-                    console.log("The following error occured: " + textStatus, errorThrown);
-                },
-                complete: function () {
-                    console.log("Venue Patch Ran");
-                }
+                    },
+                    url: baseUrl + ':8080/wutup/venues/' + venue.id,
+                    type: 'PATCH',
+                    data: JSON.stringify(venuePatch),
+                    xhr: function () {
+                        return window.XMLHttpRequest == null || new window.XMLHttpRequest().addEventListener == null ? new window.ActiveXObject("Microsoft.XMLHTTP") : $.ajaxSettings.xhr();
+                    },
+                    success: function (response, textStatus, jqXhr) {
+                        console.log("Venue Successfully Patched!");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // log the error to the console
+                        console.log("The following error occured: " + textStatus, errorThrown);
+                    },
+                    complete: function () {
+                        console.log("Venue Patch Ran");
+                    }
+                });
             });
         },
 
         patchOccurrence = function (occurrence) {
-        	var newOccurrence = { start: occurrence.start, end: occurrence.end};
+            var newOccurrence = {
+                start: occurrence.start,
+                end: occurrence.end
+            };
             $.ajax({
                 headers: {
-                    'Accept': 'application/json',	
-                        'Content-Type': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 url: baseUrl + ':8080/wutup/occurrences/' + occurrence.id,
                 type: 'PATCH',
                 data: JSON.stringify(newOccurrence),
-                xhr: function() {
-			        return window.XMLHttpRequest == null || new window.XMLHttpRequest().addEventListener == null 
-			            ? new window.ActiveXObject("Microsoft.XMLHTTP")
-			            : $.ajaxSettings.xhr();
-			    },
+                xhr: function () {
+                    return window.XMLHttpRequest == null || new window.XMLHttpRequest().addEventListener == null ? new window.ActiveXObject("Microsoft.XMLHTTP") : $.ajaxSettings.xhr();
+                },
                 success: function (response, textStatus, jqXhr) {
                     console.log("Occurrence Successfully Patched!");
+                    removeEventOnCalendar(occurrence);
+                    renderEventOnCalendar(occurrence);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     // log the error to the console
@@ -318,6 +325,31 @@ $(document).ready(function () {
                 },
                 complete: function () {
                     console.log("Occurrence Patch Ran");
+                }
+            });
+        },
+
+
+        deleteOccurrence = function (occurrence) {
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: baseUrl + ':8080/wutup/occurrences/' + occurrence.id,
+                type: 'DELETE',
+                xhr: function () {
+                    return window.XMLHttpRequest == null || new window.XMLHttpRequest().addEventListener == null ? new window.ActiveXObject("Microsoft.XMLHTTP") : $.ajaxSettings.xhr();
+                },
+                success: function (response, textStatus, jqXhr) {
+                    console.log("Occurrence Successfully Deleted!");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    // log the error to the console
+                    console.log("The following error occured: " + textStatus, errorThrown);
+                },
+                complete: function () {
+                    console.log("Occurrence Deletion Ran");
                 }
             });
         },
@@ -350,6 +382,7 @@ $(document).ready(function () {
 
         renderEventOnCalendar = function (occurrence) {
             $('#calendar').fullCalendar('renderEvent', {
+                id: occurrence.id,
                 title: occurrence.event.name,
                 description: occurrence.event.description,
                 start: occurrence.start,
@@ -360,114 +393,124 @@ $(document).ready(function () {
             }, true // make the event "stick"
             );
         },
-        
+
         removeEventOnCalendar = function (occurrence) {
-        	$('#calendar').fullCalendar('removeEvents', occurrence.id);
+            $('#calendar').fullCalendar('removeEvents', occurrence.id);
         },
 
         createCalendar = function (calendarEvents) {
 
             var clearOrPopulateDialogFields = function (calEvent) {
-                    $('#event-dialog').removeClass('hidden');
-                    $('#event-dialog').removeAttr("title");
-                    if (calEvent === null) {
-                        $('#event-name').val("");
-                        $('#event-description').val("");
-                        $('#venue-name').val("");
-                        $('#venue-address').val("");
-                    } else {
-                        $("#event-name").val(calEvent.title);
-                        $("#event-description").val(calEvent.event.description);
-                        $('#venue-name').val(calEvent.venue.name);
-                        $("#venue-address").val(calEvent.venue.address);
+                $('#event-dialog').removeClass('hidden');
+                $('#event-dialog').removeAttr("title");
+                if (calEvent === null) {
+                    $('#event-name').val("");
+                    $('#event-description').val("");
+                    $('#venue-name').val("");
+                    $('#venue-address').val("");
+                } else {
+                    $("#event-name").val(calEvent.title);
+                    $("#event-description").val(calEvent.event.description);
+                    $('#venue-name').val(calEvent.venue.name);
+                    $("#venue-address").val(calEvent.venue.address);
+                }
+            },
+
+            addDeleteButtonToDialog = function (occurrence) {
+                var buttons = $('#event-dialog').dialog('option', 'buttons')
+                $.extend(buttons, {
+                    "Delete Event": function () {
+                        $(this).dialog("close");
+                        deleteOccurrence(occurrence);
+                        removeEventOnCalendar(occurrence);
+                    }
+                });
+                $('#event-dialog').dialog('option', 'buttons', buttons);
+            },
+
+            showEventDialog = function (calEvent, start, end) {
+                clearOrPopulateDialogFields(calEvent);
+                $('#event-dialog').dialog({
+                    show: "fade",
+                    hide: "explode",
+                    modal: true,
+                    title: calEvent === null ? "Create Event" : "Edit Event",
+                    position: {
+                        my: 'top',
+                        at: 'top',
+                        of: $("#calendar")
+                    },
+                    buttons: {
+                        "Save Event!": function () {
+                            $(this).dialog("close");
+                            var eventName = $('#event-name').val(),
+                                venueName = $('#venue-name').val(),
+                                creator = {
+                                    id: 155,
+                                    firstname: "Carlos",
+                                    lastname: "Agudo",
+                                    nickname: "Big Sexy",
+                                    email: "cagudo@gmail.com"
+                                };
+                            createOrPatchEvent(eventName, $('#event-description').val(), creator);
+                            createOrPatchVenue(venueName, $('#venue-address').val());
+                            setTimeout(function () {
+                                if (calEvent === null) {
+                                    createOccurrence(eventName, venueName, start, end);
+                                } else {
+                                    calEvent.event.description = $('#event-description').val();
+                                    calEvent.venue.address = $('#venue-address').val();
+                                    patchOccurrence(calEvent);
+                                }
+                            }, 2000);
+                            calendar.fullCalendar('unselect');
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+                if (calEvent != null) {
+                    addDeleteButtonToDialog(calEvent);
+
+                }
+            },
+
+            calendar = $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                theme: true,
+                selectable: true,
+                selectHelper: true,
+                select: function (start, end, allDay) {
+                    if (!allDay) {
+                        showEventDialog(null, start, end);
                     }
                 },
-                
-                showEventDialog = function (calEvent, start, end) {
-                    clearOrPopulateDialogFields(calEvent);
-                    $('#event-dialog').dialog({
-                        show: "fade",
-                        hide: "explode",
-                        modal: true,
-                        title: calEvent === null ? "Create Event" : "Edit Event",
-                        position: {
-                            my: 'top',
-                            at: 'top',
-                            of: $("#calendar")
-                        },
-                        buttons: {
-                            "Save Event!": function () {
-                                $(this).dialog("close");
-                                var eventName = $('#event-name').val(),
-                                    venueName = $('#venue-name').val(),
-                                    creator = {
-                                        id: 155,
-                                        firstname: "Carlos",
-                                        lastname: "Agudo",
-                                        nickname: "Big Sexy",
-                                        email: "cagudo@gmail.com"
-                                    };
-                                createOrPatchEvent(eventName, $('#event-description').val(), creator);
-                                createOrPatchVenue(venueName, $('#venue-address').val());
-                                setTimeout(function () {
-                                	if(calEvent === null) {
-                                		createEventOccurrence(eventName, venueName, start, end);
-                                	}
-                                	else {
-                                		calEvent.event.description = $('#event-description').val();
-                                		calEvent.venue.address = $('#venue-address').val();
-                                		removeEventOnCalendar(calEvent);
-                                		renderEventOnCalendar(calEvent);
-                                	}
-                                }, 2000);
-                                calendar.fullCalendar('unselect');
-                            },
-                            Cancel: function () {
-                                $(this).dialog("close");
-                            }
-                        }
-                    });
+                dayClick: function (date, allDay, jsEvent, view) {
+                    if (allDay) {
+                        calendar.fullCalendar('gotoDate', date.getFullYear(), date.getMonth(), date.getDate());
+                        calendar.fullCalendar('changeView', 'agendaDay');
+                    }
                 },
-                
-	            calendar = $('#calendar').fullCalendar({
-	                header: {
-	                    left: 'prev,next today',
-	                    center: 'title',
-	                    right: 'month,agendaWeek,agendaDay'
-	                },
-	                theme: true,
-	                selectable: true,
-	                selectHelper: true,
-	                select: function (start, end, allDay) {
-	                    if (!allDay) {
-	                        showEventDialog(null, start, end);
-	                    }
-	                },
-	                dayClick: function (date, allDay, jsEvent, view) {
-	                    if (allDay) {
-	                        calendar.fullCalendar('gotoDate', date.getFullYear(), date.getMonth(), date.getDate());
-	                        calendar.fullCalendar('changeView', 'agendaDay');
-	                    }
-	                },
-	                eventClick: function (calEvent, jsEvent, view) {
-	                    showEventDialog(calEvent, calEvent.start, calEvent.end);
-	                },
-	                eventRender: function (event, element) {
-	                    //                createMarker(event);
-	                },
-	                editable: true,
-	                eventDrop: function( occurrence, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view ) { 
-	                	console.log(occurrence);
-	                	patchOccurrence(occurrence);	
-	                },
-	                eventResize: function( occurrence, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ) {
-	                    console.log(occurrence);
-	                	patchOccurrence(occurrence);	
-	                },
-	                events: calendarEvents
-	            });
+                eventClick: function (calEvent, jsEvent, view) {
+                    showEventDialog(calEvent, calEvent.start, calEvent.end);
+                },
+                eventRender: function (event, element) {},
+                editable: true,
+                eventDrop: function (occurrence, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
+                    patchOccurrence(occurrence);
+                },
+                eventResize: function (occurrence, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view) {
+                    patchOccurrence(occurrence);
+                },
+                events: calendarEvents
+            });
         };
 
     initializeManageEventsPage();
 
-});
+};
