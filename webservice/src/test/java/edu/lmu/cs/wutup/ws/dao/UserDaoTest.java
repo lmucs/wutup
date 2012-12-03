@@ -1,20 +1,23 @@
 package edu.lmu.cs.wutup.ws.dao;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
-import edu.lmu.cs.wutup.ws.exception.UserExistsException;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
+import edu.lmu.cs.wutup.ws.exception.UserExistsException;
+import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 
 public class UserDaoTest {
@@ -129,6 +132,21 @@ public class UserDaoTest {
         assertEquals(retrieve.getId(), u.getId());
     }
 
+    @Test
+    public void testFindCommentsByUserId() {
+        List<Comment> comments = userDao.findCommentsByUserId(1, new PaginationData(0, 10));
+        System.out.println(comments);
+        assertThat(comments.size(), is(3));
+        assertThat(comments.get(0).getBody(), is("pizza pizza"));
+        assertThat(comments.get(0).getAuthor().getNickname(), is("hybrid"));
+        assertThat(comments.get(0).getAuthor().getId(), is(1));
+        assertThat(comments.get(1).getBody(), is("This venue sux."));
+        assertThat(comments.get(1).getAuthor().getNickname(), is("hybrid"));
+        assertThat(comments.get(1).getAuthor().getId(), is(1));
+        assertThat(comments.get(2).getBody(), is("Boo, sux"));
+        assertThat(comments.get(2).getAuthor().getNickname(), is("hybrid"));
+        assertThat(comments.get(2).getAuthor().getId(), is(1));
+    }
     @After
     public void tearDownDatabase() {
         database.shutdown();

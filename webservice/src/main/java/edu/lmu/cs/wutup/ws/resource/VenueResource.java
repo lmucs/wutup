@@ -207,7 +207,7 @@ public class VenueResource extends AbstractWutupResource {
             throw new ServiceException(NOT_FOUND, VENUE_NOT_FOUND, venueId);
         }
     }
-    
+
     public void validateMapSize(Map<String, String> map, int requiredSize) {
         if (map.isEmpty() || map.size() > 1) {
             throw new ServiceException(BAD_REQUEST, INVALID_NUM_OF_PROPERTIES);

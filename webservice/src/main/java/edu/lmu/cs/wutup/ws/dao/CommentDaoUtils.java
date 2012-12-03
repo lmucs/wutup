@@ -23,7 +23,8 @@ import edu.lmu.cs.wutup.ws.model.User;
 public class CommentDaoUtils {
 
     public static Integer addComment(JdbcTemplate jdbcTemplate, String objectName, Integer objectId, Comment comment) {
-        String create_sql = "insert into " + objectName + "_comment(subjectId, authorId, text, timestamp) values(?,?,?,?)";
+        String create_sql = "insert into " + objectName
+                + "_comment(subjectId, authorId, text, timestamp) values(?,?,?,?)";
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(create_sql, new int[]{
                 Types.INTEGER, Types.INTEGER, Types.VARCHAR, Types.TIMESTAMP});
         factory.setReturnGeneratedKeys(true);
@@ -57,11 +58,12 @@ public class CommentDaoUtils {
     }
 
     public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING) {
-            return jdbcTemplate.query(SQL_STRING, commentRowMapper);
+        return jdbcTemplate.query(SQL_STRING, commentRowMapper);
     }
 
-    public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING, Object[] args) {
-            return jdbcTemplate.query(SQL_STRING, args, commentRowMapper);
+    public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING,
+            Object[] args) {
+        return jdbcTemplate.query(SQL_STRING, args, commentRowMapper);
     }
 
     public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING,
