@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.dao.EventDao;
@@ -42,6 +43,13 @@ public class EventServiceTest {
     public void creationDelegatesToDao() {
         service.createEvent(sampleEvent);
         verify(dao).createEvent(sampleEvent);
+    }
+
+    @Ignore
+    @Test
+    public void retrieveEventByName() {
+        dao.createEvent(new Event(null, "Party Hardy", "fat party!", new User()));
+        assertThat(dao.findEventByName("Party Hardy").getDescription(), equalTo("fat party!"));
     }
 
     @Test(expected=EventExistsException.class)
