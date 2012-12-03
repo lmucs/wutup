@@ -3,6 +3,7 @@ package edu.lmu.cs.wutup.android.autofill;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.os.AsyncTask;
@@ -21,7 +22,7 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
-public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
+public class DynamicSearch<T> extends AsyncTask<Object, Integer, List<T>> {
 	
 /**********************************************************************************************************************
  * Member Variables BEGIN
@@ -41,7 +42,9 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	protected Void doInBackground(Object... parameters) {
+	protected List<T> doInBackground(Object... parameters) {
+		
+		List<T> autoCompleteSuggestions = new ArrayList<T>();
 		
 		if (parameters[INDEX_OF_CLASS_IN_PARAMETERS] instanceof Class &&
 			parameters[INDEX_OF_ADAPTER_IN_PARAMETERS] instanceof ManualListAdapter &&	
@@ -55,8 +58,7 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 				
 				BufferedInputStream serializedObjects = retrieveSerializedObjects(address);				
 				MappingIterator<T> deserializedObjects = deserializeObjects(serializedObjects);
-				List<T> autoCompleteSuggestions = IteratorUtils.toList(deserializedObjects);
-				populateAutoCompleteSuggestions(autoCompleteSuggestions);
+				autoCompleteSuggestions = IteratorUtils.toList(deserializedObjects);
 				
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
@@ -74,8 +76,13 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, Void> {
 			
 		}
 		
-		return null;
+		return autoCompleteSuggestions;
 		
+	}
+	
+	@Override
+	protected void onPostExecute (List<T> autoCompleteSuggestions) {
+		populateAutoCompleteSuggestions(autoCompleteSuggestions);	
 	}
 	
 /**********************************************************************************************************************

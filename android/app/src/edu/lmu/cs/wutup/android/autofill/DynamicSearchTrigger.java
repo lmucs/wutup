@@ -1,5 +1,7 @@
 package edu.lmu.cs.wutup.android.autofill;
 
+import java.util.List;
+
 import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,7 +20,7 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 	private static final String SPACE_CHARACTER_FOR_URLS = "%20";
 	
 	private boolean textChanged = false;
-	private AsyncTask<Object, Integer, Void> dynamicSearch = null;
+	private AsyncTask<Object, Integer, List<T>> dynamicSearch = null;
 	
 	private Class<T> c;
 	private ManualListAdapter<T> adpater;
