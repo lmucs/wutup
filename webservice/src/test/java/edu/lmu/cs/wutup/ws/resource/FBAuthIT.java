@@ -60,6 +60,6 @@ public class FBAuthIT {
             body(containsString("Honda")).
             body(containsString("Prius")).
         when().
-            get("/wutup/auth/hybrid");
+            get("/wutup/auth/hybridfbid");
     }
 }

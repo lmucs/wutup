@@ -1,4 +1,4 @@
-insert into user (id, firstName, lastName, email, nickname, sessionId) values (1, 'Honda', 'Prius', '40mpg@gmail.com', 'hybrid', 'hybrid');
+insert into user (id, firstName, lastName, email, nickname, sessionId, facebookId) values (1, 'Honda', 'Prius', '40mpg@gmail.com', 'hybrid', 'hybrid', 'hybridfbid');
 insert into user (id, firstName, lastName, email, nickname, sessionId) values (2, 'Ned', 'Stark', 'naked@winterfell.com', 'headless', 'nedstark');
 insert into user (id, firstName, lastName, email, nickname, sessionId) values (3, 'Jack', 'Handy', 'jh1942@lion.lmu.edu', 'DeepThoughts', 'jackhandy');
 insert into user (id, firstName, lastName, email, nickname, sessionId) values (4, 'Heather', 'Northington', 'h.north@lion.lmu.edu', 'hnorth', 'heathernorthington');

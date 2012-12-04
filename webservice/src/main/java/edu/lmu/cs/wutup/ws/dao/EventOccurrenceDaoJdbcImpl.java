@@ -64,7 +64,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(creator, keyHolder);
-            return (Integer) keyHolder.getKey();
+            o.setId((Integer) keyHolder.getKey());
+            return o.getId();
         } catch (DuplicateKeyException ex) {
             throw new EventOccurrenceExistsException();
         }

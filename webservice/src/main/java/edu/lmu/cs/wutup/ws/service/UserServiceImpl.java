@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByFacebookId(String id) {
-        return userDao.findUserBySessionId(id);
+        return userDao.findUserByFacebookId(id);
     }
 
     @Override

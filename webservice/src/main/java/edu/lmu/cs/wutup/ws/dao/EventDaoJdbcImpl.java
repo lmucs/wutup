@@ -53,7 +53,8 @@ public class EventDaoJdbcImpl implements EventDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(creator, keyHolder);
-            return (Integer) keyHolder.getKey();
+            e.setId((Integer) keyHolder.getKey());
+            return e.getId();
         } catch (DuplicateKeyException ex) {
             throw new EventExistsException();
         }

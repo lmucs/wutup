@@ -11,6 +11,7 @@ import java.io.IOException;
 import org.apache.http.client.ClientProtocolException;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,9 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 @Service
 @Transactional
 public class GeocodeServiceImpl implements GeocodeService {
+    @Autowired
+    VenueService venueService;
+    
     public LatLong resolveAddressToLatLong(String address) throws NoAddressProvidedException {
 
         if (address == null || address == "") {
@@ -79,7 +83,9 @@ public class GeocodeServiceImpl implements GeocodeService {
         v.setLatitude(resolvedLat);
         v.setLongitude(resolvedLng);
         v.setName(resolvedName);
-        
+
+        venueService.createVenue(v);
+
         return v;
     }
 }

@@ -171,8 +171,7 @@ public class EventOccurrenceResourceIT {
         expect().
             statusCode(200).
             contentType("application/json").
-            body(containsString("\"id\":4")).
-            body(containsString("\"author\":{\"id\":3,\"email\":\"jh1942@lion.lmu.edu\",\"nickname\":\"DeepThoughts\",\"firstname\":\"Jack\",\"lastname\":\"Handy\"}")).
+            body(containsString("\"email\":\"jh1942@lion.lmu.edu\"")).
             body(containsString("\"body\":\"aww hell nah\"")).
             body(containsString("\"postdate\":" + publishDate.getMillis())).
         when().

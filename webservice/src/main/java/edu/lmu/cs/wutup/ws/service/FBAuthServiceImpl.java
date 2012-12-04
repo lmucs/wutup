@@ -104,6 +104,8 @@ public class FBAuthServiceImpl implements FBAuthService {
                     null,
                     fbUser.getId()
                 );
+            userService.createUser(u);
+            u = userService.findUserByFacebookId(fbUser.getId());
         }
 
         return u;
@@ -125,6 +127,7 @@ public class FBAuthServiceImpl implements FBAuthService {
                     event = eventService.findEventByName(current.getString("name"));
                 } catch (NoSuchEventException exception) {
                     event = new Event(null, current.getString("name"), current.getString("name"), u);
+                    eventService.createEvent(event);
                 }
 
                 // TODO: Check for this in the database first.
@@ -139,6 +142,7 @@ public class FBAuthServiceImpl implements FBAuthService {
 
             return u;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new FBUserSynchronizationException();
         }
     }
