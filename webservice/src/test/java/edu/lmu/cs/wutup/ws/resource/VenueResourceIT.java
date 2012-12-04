@@ -216,7 +216,7 @@ public class VenueResourceIT {
     }
 
     @Test
-    public void testGetemptyVenuePropertiesResponds200WithEmptyBody() {
+    public void testGetEmptyVenuePropertiesResponds200WithEmptyBody() {
         given().
             header("Accept", "application/json").
         expect().
@@ -227,12 +227,11 @@ public class VenueResourceIT {
     }
 
     @Test
-    public void testGetVenuePropertiesWithNonExistantVenueIdResponds200WithEmptyBody() {
+    public void testGetVenuePropertiesWithNonExistantVenueIdResponds404() {
         given().
             header("Accept", "application/json").
         expect().
-            statusCode(200).
-            body(equalTo("{}")).
+            statusCode(404).
         when().
             get("/wutup/venues/8008135/properties");
     }

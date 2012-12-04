@@ -26,5 +26,5 @@ public interface UserDao {
 
     int getNextUsableUserId();
 
-    List<Comment> findCommentsByUserId(int id, PaginationData pagination);
+    List<Comment> findCommentsByUser(User author, PaginationData pagination);
 }

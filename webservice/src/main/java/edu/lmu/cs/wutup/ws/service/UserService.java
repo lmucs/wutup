@@ -20,5 +20,5 @@ public interface UserService {
 
     void deleteUser(int id);
 
-    List<Comment> findCommentsByUserId(int id, PaginationData pagination);
+    List<Comment> findCommentsByUser(User author, PaginationData pagination);
 }

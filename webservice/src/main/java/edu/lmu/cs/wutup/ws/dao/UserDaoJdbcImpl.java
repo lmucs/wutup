@@ -16,6 +16,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.UserExistsException;
 import edu.lmu.cs.wutup.ws.model.Comment;
@@ -34,10 +35,6 @@ public class UserDaoJdbcImpl implements UserDao {
     private static final String FIND_BY_SESSION_ID_SQL = "select * from user where sessionId=?;";
     private static final String FIND_BY_FACEBOOK_ID_SQL = "select * from user where facebookId=?;";
     private static final String COUNT_SQL = "select count(*) from user;";
-    private static final String FIND_ALL_USER_COMMENTS = "select * from (select v.*, u.firstname, u.lastname, u.email, u.nickname, u.facebookid "
-            + "from venue_comment v join user u on (authorId = u.id) union select o.*, u.firstname, u.lastname, u.email, "
-            + "u.nickname, u.facebookid from occurrence_comment o join user u on (authorId = u.id) union select e.*, u.firstname, u.lastname, "
-            + "u.email, u.nickname, u.facebookid from event_comment e join user u on (authorId = u.id)) where authorId = ? order by timestamp desc limit ? offset ?";
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -121,9 +118,14 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     @Override
-    public List<Comment> findCommentsByUserId(int id, PaginationData pagination) {
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_ALL_USER_COMMENTS, new Object[]{id,
-                pagination.pageSize, pagination.pageNumber});
+    public List<Comment> findCommentsByUser(User author, PaginationData pagination) {
+        QueryBuilder builder = new QueryBuilder().select("*")
+                .from("(select v.* from venue_comment v union select o.* from occurrence_comment o union select e.* from event_comment e)")
+                .where("authorId = :userId", author.getId())
+                .order("timestamp desc")
+                .addPagination(pagination);
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, builder.build(),
+                builder.getParametersArray(), author);
     }
 
     private void createUserWithGeneratedId(User u, KeyHolder keyHolder) {
@@ -150,7 +152,8 @@ public class UserDaoJdbcImpl implements UserDao {
     private static RowMapper<User> userRowMapper = new RowMapper<User>() {
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"),
-                    rs.getString("email"), rs.getString("nickname"), rs.getString("sessionId"), rs.getString("facebookId"));
+                    rs.getString("email"), rs.getString("nickname"), rs.getString("sessionId"),
+                    rs.getString("facebookId"));
         }
     };
 }

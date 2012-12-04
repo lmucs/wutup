@@ -231,7 +231,8 @@ public class VenueDaoTest {
     @Test
     public void testGetVenueComments() {
         List<Comment> comments = venueDao.findComments(10, new PaginationData(0, 10));
-        DateTime knownCommentTime = new DateTime(2012, 3, 30, 12, 34, 56);
+        DateTime knownCommentTime1 = new DateTime(2012, 3, 30, 12, 34, 56);
+        DateTime knownCommentTime2 = new DateTime(2012, 12, 25, 7, 0, 0);
         assertThat(comments.size(), is(2));
         assertThat(comments.get(0).getId(), is(1));
         assertThat(comments.get(0).getBody(), is("This venue sux."));
@@ -240,8 +241,14 @@ public class VenueDaoTest {
         assertThat(comments.get(0).getAuthor().getFirstName(), is("Honda"));
         assertThat(comments.get(0).getAuthor().getLastName(), is("Prius"));
         assertThat(comments.get(0).getAuthor().getNickname(), is("hybrid"));
-        assertThat(comments.get(0).getPostDate().getMillis(), is(knownCommentTime.getMillis()));
+        assertThat(comments.get(0).getPostDate().getMillis(), is(knownCommentTime1.getMillis()));
         assertThat(comments.get(1).getId(), is(2));
+        assertThat(comments.get(1).getBody(), is("My life is a sham"));
+        assertThat(comments.get(1).getAuthor().getEmail(), is("naked@winterfell.com"));
+        assertThat(comments.get(1).getAuthor().getFirstName(), is("Ned"));
+        assertThat(comments.get(1).getAuthor().getLastName(), is("Stark"));
+        assertThat(comments.get(1).getAuthor().getNickname(), is("headless"));
+        assertThat(comments.get(1).getPostDate().getMillis(), is(knownCommentTime2.getMillis()));
     }
 
     @Test

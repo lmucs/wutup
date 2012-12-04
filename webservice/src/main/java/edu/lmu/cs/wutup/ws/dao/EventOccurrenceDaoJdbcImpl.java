@@ -171,7 +171,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 .where("oc.subjectId = :subjectId", eventId)
                 .order("oc.timestamp")
                 .addPagination(pagination);
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build(), query.getParametersArray());
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build(), query.getParametersArray(), null);
     }
 
     @Override

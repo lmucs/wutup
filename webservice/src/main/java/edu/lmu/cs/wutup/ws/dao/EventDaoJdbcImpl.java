@@ -140,8 +140,8 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public List<Comment> findComments(int eventId, PaginationData pagination) {
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, eventId,
-                pagination.pageNumber, pagination.pageSize);
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, new Object[]{eventId,
+                pagination.pageSize, pagination.pageSize * pagination.pageNumber}, null);
     }
 
     @Override
