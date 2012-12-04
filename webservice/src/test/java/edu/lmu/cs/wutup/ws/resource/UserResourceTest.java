@@ -1,12 +1,12 @@
 package edu.lmu.cs.wutup.ws.resource;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -15,12 +15,12 @@ import javax.ws.rs.core.UriInfo;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.lmu.cs.wutup.ws.resource.UserResource;
-import edu.lmu.cs.wutup.ws.service.UserService;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.exception.UserExistsException;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
+import edu.lmu.cs.wutup.ws.service.UserService;
 
 public class UserResourceTest {
 
@@ -28,6 +28,7 @@ public class UserResourceTest {
     UserService service;
     UriInfo sampleUriInfo;
     User sampleUser = new User(1, "heyheyhey@gmail.com");
+    PaginationData samplePagination = new PaginationData(0, 10);
 
     @Before
     public void setUp() {
@@ -137,5 +138,4 @@ public class UserResourceTest {
             assertThat(e.getResponse().getStatus(), is(400));
         }
     }
-
 }

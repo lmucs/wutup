@@ -5,6 +5,7 @@ import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -28,6 +29,8 @@ import org.springframework.stereotype.Component;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.exception.UserExistsException;
+import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.service.UserService;
 
@@ -58,14 +61,14 @@ public class UserResource extends AbstractWutupResource {
             throw new ServiceException(CONFLICT, USER_ALREADY_EXISTS, u.getId());
         }
     }
-    
+
     @GET
     @Path("/")
     public User findUserByFacebookId(@DefaultValue("") @QueryParam("fbId") String idString) {
         if (idString.equals("")) {
             throw new ServiceException(BAD_REQUEST, MISSING_QUERY_PARAM, "fbId");
         }
-        
+
         try {
             return userService.findUserByFacebookId(idString);
         } catch (NoSuchUserException e) {
@@ -111,5 +114,20 @@ public class UserResource extends AbstractWutupResource {
             throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, id);
         }
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("/{id}/comments")
+    public List<Comment> findCommentsByUserId(@PathParam("id") String idString,
+            @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
+            @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
+        int id = toIntegerRequired("id", idString);
+        PaginationData pagination = paginationDataFor(pageString, pageSizeString);
+        try {
+            User existingUser = userService.findUserById(id);
+            return userService.findCommentsByUserId(existingUser.getId(), pagination);
+        } catch (NoSuchUserException e) {
+            throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, id);
+        }
     }
 }
