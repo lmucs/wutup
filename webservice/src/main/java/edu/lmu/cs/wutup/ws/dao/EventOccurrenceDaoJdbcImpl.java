@@ -47,25 +47,21 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public int createEventOccurrence(EventOccurrence o) {
-        Event e = o.getEvent();
-        Venue v = o.getVenue();
-        DateTime start = o.getStart();
-        DateTime end = o.getEnd();
+    public int createEventOccurrence(EventOccurrence e) {
+        Integer venueId = e.getVenue() != null ? e.getVenue().getId() : null;
+        Integer eventId = e.getEvent() != null ? e.getEvent().getId() : null;
+        Timestamp start = e.getStart() != null ? new Timestamp(e.getStart().getMillis()) : null;
+        Timestamp end = e.getEnd() != null ? new Timestamp(e.getEnd().getMillis()) : null;
         PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(CREATE_OCCURRENCE_SQL, new int[]{
                 Types.INTEGER, Types.INTEGER, Types.TIMESTAMP, Types.TIMESTAMP});
         factory.setReturnGeneratedKeys(true);
         factory.setGeneratedKeysColumnNames(new String[]{"id"});
-        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{
-                e != null ? e.getId() : null,
-                v != null ? v.getId() : null,
-                start != null ? new Timestamp(start.getMillis()) : null,
-                end != null ? new Timestamp(end.getMillis()) : null});
+        PreparedStatementCreator creator = factory.newPreparedStatementCreator(new Object[]{eventId, venueId, start, end});
         KeyHolder keyHolder = new GeneratedKeyHolder();
         try {
             jdbcTemplate.update(creator, keyHolder);
-            o.setId((Integer) keyHolder.getKey());
-            return o.getId();
+            e.setId((Integer) keyHolder.getKey());
+            return e.getId();
         } catch (DuplicateKeyException ex) {
             throw new EventOccurrenceExistsException();
         }

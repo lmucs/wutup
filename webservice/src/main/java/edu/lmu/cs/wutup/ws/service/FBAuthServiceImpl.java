@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,24 +121,28 @@ public class FBAuthServiceImpl implements FBAuthService {
             edu.lmu.cs.wutup.ws.model.User u = findOrCreateFBUser(accessToken, getUserIdFromFB(getFBUser(accessToken)));;
 
             for (int x = 0; x < events.length(); x++) {
-                JSONObject current = events.getJSONObject(x);
-
-                Event event;
                 try {
-                    event = eventService.findEventByName(current.getString("name"));
-                } catch (NoSuchEventException exception) {
-                    event = new Event(null, current.getString("name"), current.getString("name"), u);
-                    eventService.createEvent(event);
+                    JSONObject current = events.getJSONObject(x);
+                    
+                    Event event;
+                    try {
+                        event = eventService.findEventByName(current.getString("name"));
+                    } catch (NoSuchEventException exception) {
+                        event = new Event(null, current.getString("name"), current.getString("name"), u);
+                        eventService.createEvent(event);
+                    }
+
+                    // TODO: Check for this in the database first.
+                    e = new EventOccurrence(
+                            event,
+                            geocodeService.resolveVenue(current.getString("location"), null, null),
+                            new DateTime(current.getString("start_time"))
+                        );
+
+                    occurrenceService.createEventOccurrence(e);
+                } catch (JSONException exception) {
+                    break;
                 }
-
-                // TODO: Check for this in the database first.
-                e = new EventOccurrence(
-                        event,
-                        geocodeService.resolveVenue(current.getString("location"), null, null),
-                        new DateTime(current.getString("start_time"))
-                    );
-
-                occurrenceService.createEventOccurrence(e);
             }
 
             return u;
