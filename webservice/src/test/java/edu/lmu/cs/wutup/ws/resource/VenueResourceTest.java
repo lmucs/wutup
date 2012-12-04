@@ -1,6 +1,5 @@
 package edu.lmu.cs.wutup.ws.resource;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -53,12 +52,6 @@ public class VenueResourceTest {
         sampleProperties = new HashMap<String, String>();
         updateProperties = new HashMap<String, String>();
         sampleProperties.put(samplePropertyKey, samplePropertyValue);
-    }
-
-    @Test
-    public void getVenuePropertiesResponds200() {
-        when(service.findProperties(2)).thenReturn(sampleProperties);
-        assertThat(resource.getProperties("2"), equalTo(sampleProperties));
     }
 
     @Test

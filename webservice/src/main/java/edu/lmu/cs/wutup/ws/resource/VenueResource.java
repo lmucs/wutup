@@ -183,13 +183,16 @@ public class VenueResource extends AbstractWutupResource {
         }
     }
 
-    // Need to go over functionality with class / Dr. Toal
-    // GETting at a non existant venue id and a venue with no properties both respond 200.
     @GET
     @Path("/{id}/properties")
     public Map<String, String> getProperties(@PathParam("id") String venueIdString) {
         int venueId = toIntegerRequired("id", venueIdString);
-        return venueService.findProperties(venueId);
+        try {
+            Venue existingVenue = venueService.findVenueById(venueId);
+            return venueService.findProperties(existingVenue.getId());
+        } catch (NoSuchVenueException e) {
+            throw new ServiceException(NOT_FOUND, VENUE_NOT_FOUND, venueId);
+        }
     }
 
     @POST
