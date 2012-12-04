@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -135,16 +136,21 @@ public class UserDaoTest {
 
     @Test
     public void testFindCommentsByUserId() {
+        DateTime postDate1 = new DateTime(2012, 3, 17, 0, 0, 0);
+        DateTime postDate2 = new DateTime(2012, 3, 30, 12, 34, 56);
+        DateTime postDate3 = new DateTime(2012, 12, 25, 7, 0, 0);
         List<Comment> comments = userDao.findCommentsByUser(sampleUser, new PaginationData(0, 10));
-        System.out.println(comments);
         assertThat(comments.size(), is(3));
         assertThat(comments.get(0).getBody(), is("pizza pizza"));
         assertThat(comments.get(0).getAuthor().getNickname(), is("hybrid"));
         assertThat(comments.get(0).getAuthor().getId(), is(1));
+        assertThat(comments.get(0).getPostDate().getMillis(), is(postDate3.getMillis()));
         assertThat(comments.get(1).getBody(), is("This venue sux."));
         assertThat(comments.get(1).getAuthor().getNickname(), is("hybrid"));
         assertThat(comments.get(1).getAuthor().getId(), is(1));
+        assertThat(comments.get(1).getPostDate().getMillis(), is(postDate2.getMillis()));
         assertThat(comments.get(2).getBody(), is("Boo, sux"));
+        assertThat(comments.get(2).getPostDate().getMillis(), is(postDate1.getMillis()));
         assertThat(comments.get(2).getAuthor().getNickname(), is("hybrid"));
         assertThat(comments.get(2).getAuthor().getId(), is(1));
     }

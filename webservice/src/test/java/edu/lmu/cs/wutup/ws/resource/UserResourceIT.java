@@ -130,7 +130,7 @@ public class UserResourceIT {
             .statusCode(200)
             .body(containsString("\"email\":\"40mpg@gmail.com\""))
             .body(containsString("\"postdate\":" + publishDateFirst.getMillis() + "}"))
-		    .body(containsString(publishDateSecond.getMillis() + "}"))
+            .body(containsString(publishDateSecond.getMillis() + "}"))
             .body(containsString(publishDateThird.getMillis() + "}"))
         .when()
             .get("wutup/users/1/comments");
