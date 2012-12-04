@@ -3,7 +3,9 @@ package edu.lmu.cs.wutup.ws.resource;
 import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 public class UserResourceIT {
@@ -96,4 +98,57 @@ public class UserResourceIT {
             .patch("/wutup/users/2");
     }
 
+    @Test
+    public void findCommentsByNonExistantUserIdResponds404() {
+        given()
+            .header("Accept", "application/json")
+        .expect()
+            .statusCode(404)
+        .when()
+            .get("wutup/users/9999/comments");
+            
+    }
+
+    @Test
+    public void findCommentsByExistingUserIdResponds200OnSuccess() {
+        given()
+            .header("Accept", "application/json")
+        .expect()
+            .statusCode(200)
+        .when()
+            .get("wutup/users/1/comments");
+    }
+
+    @Test
+    public void commentsFoundByUserIdCanBeRead() {
+        DateTime publishDateFirst = new DateTime(2012, 3, 17, 0, 0, 0);
+        DateTime publishDateSecond = new DateTime(2012, 3, 30, 12, 34, 56);
+        DateTime publishDateThird = new DateTime(2012, 12, 25, 7, 0, 0);
+        given()
+            .header("Accept", "application/json")
+        .expect()
+            .statusCode(200)
+            .body(containsString("{\"id\":1,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
+            		"\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"Boo, sux\"," +
+            		"\"postdate\":" + publishDateFirst.getMillis() + "}"))
+		    .body(containsString("{\"id\":1,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
+                    "\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"This venue sux.\"," +
+                    "\"postdate\":" + publishDateSecond.getMillis() + "}"))
+            .body(containsString("{\"id\":3,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
+                    "\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"pizza pizza\"," +
+                    "\"postdate\":" + publishDateThird.getMillis() + "}"))
+        .when()
+            .get("wutup/users/1/comments");
+    }
+
+    @Test
+    public void findCommentsByUserWithNoCommentsRespondsEmptyArray() {
+        given()
+            .header("Accept", "application/json")
+        .expect()
+            .statusCode(200)
+            .body(equalTo("[]"))
+        .when()
+            .get("wutup/users/7/comments");
+    }
 }

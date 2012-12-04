@@ -1,10 +1,14 @@
 package edu.lmu.cs.wutup.ws.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.lmu.cs.wutup.ws.dao.UserDao;
+import edu.lmu.cs.wutup.ws.model.Comment;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 
 @Service
@@ -43,7 +47,12 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(int id) {
         userDao.deleteUser(id);
     }
-    
+
+    @Override
+    public List<Comment> findCommentsByUserId(int id, PaginationData pagination) {
+        return userDao.findCommentsByUserId(id, pagination);
+    }
+
     public User createUserAsUpdateTemplate(User userToUpdate, User updater) {
         User template = new User(
                 userToUpdate.getId(),

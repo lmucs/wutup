@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.dao.UserDao;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.User;
 
 public class UserServiceTest {
@@ -15,6 +16,7 @@ public class UserServiceTest {
     UserDao dao;
 
     User sampleUser = new User(1, "Alice");
+    PaginationData samplePagination = new PaginationData(0, 10);
 
     @Before
     public void setUp() {
@@ -28,13 +30,13 @@ public class UserServiceTest {
         service.createUser(sampleUser);
         verify(dao).createUser(sampleUser);
     }
-    
-    @Test 
+
+    @Test
     public void updateDelegatesToDao() {
         service.updateUser(sampleUser);
         verify(dao).updateUser(sampleUser);
     }
-    
+
     @Test
     public void deleteDelegatesToDao() {
         service.deleteUser(sampleUser.getId());
@@ -45,6 +47,12 @@ public class UserServiceTest {
     public void findByIdDelegatesToDao() {
         service.findUserById(sampleUser.getId());
         verify(dao).findUserById(sampleUser.getId());
+    }
+
+    @Test
+    public void findCommentsByUserIdDelegatsToDao() {
+        service.findCommentsByUserId(sampleUser.getId(), samplePagination);
+        verify(dao).findCommentsByUserId(sampleUser.getId(), samplePagination);
     }
 
 }
