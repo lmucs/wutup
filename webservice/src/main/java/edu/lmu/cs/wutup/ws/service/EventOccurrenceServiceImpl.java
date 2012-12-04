@@ -48,7 +48,7 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
 
     @Override
     public List<EventOccurrence> findEventOccurrences(Integer attendee, Circle circle, Interval interval,
-            Integer eventId, Integer venueId, PaginationData pagination) {
+            List<Integer> eventId, Integer venueId, PaginationData pagination) {
         return eventOccurrenceDao.findEventOccurrences(attendee, circle, interval, eventId, venueId, pagination);
     }
 

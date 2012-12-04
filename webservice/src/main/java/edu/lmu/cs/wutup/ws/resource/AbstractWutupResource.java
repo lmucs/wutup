@@ -4,6 +4,7 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -121,7 +122,7 @@ public abstract class AbstractWutupResource {
         }
     }
 
-    void checkOccurrenceCanBeQueried(Integer attendee, Circle circle, Interval interval, Integer eventId,
+    void checkOccurrenceCanBeQueried(Integer attendee, Circle circle, Interval interval, List<Integer> eventId,
             Integer venueId) {
         if (attendee == null && circle == null && interval == null && eventId == null && venueId == null) {
             throw new ServiceException(BAD_REQUEST, EVENT_OCCURRENCE_QUERY_PARAMETERS_BAD);

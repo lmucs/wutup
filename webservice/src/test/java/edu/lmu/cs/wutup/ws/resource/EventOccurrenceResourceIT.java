@@ -21,7 +21,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void getWithEventIdQueryFindsEventOccurrences() {
+    public void getWithOneEventIdQueryFindsEventOccurrences() {
         given().
             header("Accept", "application/json").
         expect().
@@ -31,6 +31,21 @@ public class EventOccurrenceResourceIT {
             body(containsString("{\"id\":6,\"event\":{\"id\":2")).
         when().
             get("/wutup/occurrences?eventId=2");
+    }
+
+    @Test
+    public void getWithMultipleEventIdQueryFindsEventOccurrences() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("{\"id\":1,\"event\":{\"id\":2")).
+            body(containsString("{\"id\":6,\"event\":{\"id\":2")).
+            body(containsString("{\"id\":5,\"event\":{\"id\":3")).
+            body(containsString("{\"id\":10,\"event\":{\"id\":3")).
+        when().
+            get("/wutup/occurrences?eventId=2,3,4");
     }
 
     @Test

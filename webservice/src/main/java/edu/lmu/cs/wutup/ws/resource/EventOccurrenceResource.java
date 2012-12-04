@@ -1,9 +1,12 @@
 package edu.lmu.cs.wutup.ws.resource;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -52,6 +55,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     private static final String EVENT_OCCURRENCE_ALREADY_EXISTS = "Event occurrence %d already exists";
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for event %d";
     private static final String USER_NOT_FOUND = "User %d does not exist";
+    private static final String PARAMETER_NON_INTEGER_LIST = "The parameter %s should be a list of integers";
 
     @Autowired
     EventOccurrenceService eventOccurrenceService;
@@ -60,18 +64,31 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     @Path("/")
     public List<EventOccurrence> findEventOccurrences(@QueryParam("attendee") Integer attendee,
             @QueryParam("center") String center, @QueryParam("radius") String radiusString,
-            @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") Integer eventId,
+            @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") String eventIdString,
             @QueryParam("venueId") Integer venueId,
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
+        ArrayList<Integer> eventIds = null;
+
+        if (eventIdString != null) {
+            eventIds = new ArrayList<Integer>();
+            try {
+                String[] eventIdStrings = eventIdString.split(",");
+                for (String s : Arrays.asList(eventIdStrings)) {
+                    eventIds.add(new Integer(s));
+                }
+            } catch (NumberFormatException e) {
+                throw new ServiceException(BAD_REQUEST, PARAMETER_NON_INTEGER_LIST, eventIdString);
+            }
+        }
         PaginationData pagination = paginationDataFor(pageNumberString, pageSizeString);
         Circle circle = fromCenterAndRadiusParameters(center, radiusString);
         Interval interval = makeIntervalFromStartAndEndTime(start, end);
 
-        checkOccurrenceCanBeQueried(attendee, circle, interval, eventId, venueId);
+        checkOccurrenceCanBeQueried(attendee, circle, interval, eventIds, venueId);
 
-        return eventOccurrenceService.findEventOccurrences(attendee, circle, interval, eventId, venueId, pagination);
+        return eventOccurrenceService.findEventOccurrences(attendee, circle, interval, eventIds, venueId, pagination);
     }
 
     @POST

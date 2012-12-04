@@ -22,7 +22,7 @@ public interface EventOccurrenceService extends CommentService {
     EventOccurrence findEventOccurrenceById(int id);
 
     List<EventOccurrence> findEventOccurrences(Integer attendee, Circle circle, Interval interval,
-            Integer eventId, Integer venueId, PaginationData pagination);
+            List<Integer> eventId, Integer venueId, PaginationData pagination);
 
     void registerAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId);
 

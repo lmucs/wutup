@@ -22,7 +22,7 @@ public interface EventOccurrenceDao extends CommentDao {
     EventOccurrence findEventOccurrenceById(int id);
 
     List<EventOccurrence> findEventOccurrences(Integer attendee, Circle circle,
-            Interval interval, Integer eventId, Integer venueId, PaginationData pagination);
+            Interval interval, List<Integer> eventId, Integer venueId, PaginationData pagination);
 
     int findNumberOfEventOccurrences();
 

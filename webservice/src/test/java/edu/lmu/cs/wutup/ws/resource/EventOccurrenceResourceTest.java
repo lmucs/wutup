@@ -143,12 +143,14 @@ public class EventOccurrenceResourceTest {
 
     @Test
     public void findingEventOccurrencesReturnsAllOccurrencesAsList() {
+        ArrayList<Integer> a = new ArrayList<Integer>();
+        a.add(new Integer(1));
         when(
                 service.findEventOccurrences(null, new Circle(1.0, 1.0, 1.0),
-                        new Interval(1L, 1L), new Integer(42), null, new PaginationData(0, 5))).thenReturn(
+                        new Interval(1L, 1L), a, null, new PaginationData(0, 5))).thenReturn(
                 sampleEventOccurrenceList);
         List<EventOccurrence> result = resource.findEventOccurrences(null, "1.0,1.0", "1.0", "1",
-                "1", new Integer(42), null, "0", "5");
+                "1", "1", null, "0", "5");
         assertThat(result, is(sampleEventOccurrenceList));
     }
 
@@ -174,9 +176,11 @@ public class EventOccurrenceResourceTest {
 
     @Test
     public void findingEventOccurrencesByEventIdReturnsAsList() {
-        when(service.findEventOccurrences(null, null, null, 2, null, new PaginationData(0, 10))).thenReturn(
+        ArrayList<Integer> a = new ArrayList<Integer>();
+        a.add(new Integer(2));
+        when(service.findEventOccurrences(null, null, null, a, null, new PaginationData(0, 10))).thenReturn(
                 sampleEventOccurrenceList);
-        List<EventOccurrence> result = resource.findEventOccurrences(null, null, null, null, null, 2, null, "0", "10");
+        List<EventOccurrence> result = resource.findEventOccurrences(null, null, null, null, null, "2", null, "0", "10");
         assertThat(result, is(sampleEventOccurrenceList));
     }
 
