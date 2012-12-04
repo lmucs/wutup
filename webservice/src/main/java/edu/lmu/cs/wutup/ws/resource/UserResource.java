@@ -125,7 +125,7 @@ public class UserResource extends AbstractWutupResource {
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
         try {
             User existingUser = userService.findUserById(id);
-            return userService.findCommentsByUserId(existingUser.getId(), pagination);
+            return userService.findCommentsByUser(existingUser, pagination);
         } catch (NoSuchUserException e) {
             throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, id);
         }

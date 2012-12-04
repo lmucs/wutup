@@ -137,8 +137,8 @@ public class VenueDaoJdbcImpl implements VenueDao {
 
     @Override
     public List<Comment> findComments(int venueId, PaginationData pagination) {
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, venueId,
-                pagination.pageNumber, pagination.pageSize);
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, new Object[] {venueId,
+                pagination.pageSize, pagination.pageSize * pagination.pageNumber}, null);
     }
 
     @Override

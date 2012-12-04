@@ -22,6 +22,8 @@ import edu.lmu.cs.wutup.ws.model.User;
 
 public class CommentDaoUtils {
 
+    private static User knownAuthor = null;
+
     public static Integer addComment(JdbcTemplate jdbcTemplate, String objectName, Integer objectId, Comment comment) {
         String create_sql = "insert into " + objectName
                 + "_comment(subjectId, authorId, text, timestamp) values(?,?,?,?)";
@@ -57,18 +59,15 @@ public class CommentDaoUtils {
         }
     }
 
-    public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING) {
+    public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING, User author) {
+        knownAuthor = author;
         return jdbcTemplate.query(SQL_STRING, commentRowMapper);
     }
 
     public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING,
-            Object[] args) {
+            Object[] args, User author) {
+        knownAuthor = author;
         return jdbcTemplate.query(SQL_STRING, args, commentRowMapper);
-    }
-
-    public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING,
-            int objectId, int pageNumber, int pageSize) {
-        return jdbcTemplate.query(SQL_STRING, new Object[]{objectId, pageSize, pageNumber * pageSize}, commentRowMapper);
     }
 
     public static int findMaxKeyValueForComments(JdbcTemplate jdbcTemplate, String objectName) {
@@ -81,8 +80,10 @@ public class CommentDaoUtils {
             String text = rs.getString("text");
             Timestamp persistedTimestamp = rs.getTimestamp("timestamp");
             DateTime timestamp = persistedTimestamp == null ? null : new DateTime(persistedTimestamp);
-            return new Comment(commentId, text, timestamp, new User(rs.getInt("authorid"), rs.getString("firstName"),
-                    rs.getString("lastName"), rs.getString("email"), rs.getString("nickname"), rs.getString("facebookId")));
+            User author = knownAuthor == null ? new User(rs.getInt("authorid"), rs.getString("firstName"),
+                    rs.getString("lastName"), rs.getString("email"), rs.getString("nickname"),
+                    rs.getString("facebookId")) : knownAuthor;
+            return new Comment(commentId, text, timestamp, author);
         }
     };
 }

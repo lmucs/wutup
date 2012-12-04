@@ -51,8 +51,8 @@ public class UserServiceTest {
 
     @Test
     public void findCommentsByUserIdDelegatsToDao() {
-        service.findCommentsByUserId(sampleUser.getId(), samplePagination);
-        verify(dao).findCommentsByUserId(sampleUser.getId(), samplePagination);
+        service.findCommentsByUser(sampleUser, samplePagination);
+        verify(dao).findCommentsByUser(sampleUser, samplePagination);
     }
 
 }

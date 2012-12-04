@@ -129,13 +129,13 @@ public class UserResourceIT {
         .expect()
             .statusCode(200)
             .body(containsString("{\"id\":1,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
-            		"\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"Boo, sux\"," +
+            		"\"sessionId\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"Boo, sux\"," +
             		"\"postdate\":" + publishDateFirst.getMillis() + "}"))
 		    .body(containsString("{\"id\":1,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
-                    "\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"This venue sux.\"," +
+                    "\"sessionId\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"This venue sux.\"," +
                     "\"postdate\":" + publishDateSecond.getMillis() + "}"))
             .body(containsString("{\"id\":3,\"author\":{\"id\":1,\"email\":\"40mpg@gmail.com\",\"nickname\":\"hybrid\"," +
-                    "\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"pizza pizza\"," +
+                    "\"sessionId\":\"hybrid\",\"firstname\":\"Honda\",\"lastname\":\"Prius\"},\"body\":\"pizza pizza\"," +
                     "\"postdate\":" + publishDateThird.getMillis() + "}"))
         .when()
             .get("wutup/users/1/comments");

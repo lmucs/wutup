@@ -24,6 +24,7 @@ public class UserDaoTest {
 
     private EmbeddedDatabase database;
     private UserDaoJdbcImpl userDao = new UserDaoJdbcImpl();
+    User sampleUser = new User(1, "Honda", "Prius", "40mpg@gmail", "hybrid", "");
 
     @Before
     public void setUp() {
@@ -134,7 +135,7 @@ public class UserDaoTest {
 
     @Test
     public void testFindCommentsByUserId() {
-        List<Comment> comments = userDao.findCommentsByUserId(1, new PaginationData(0, 10));
+        List<Comment> comments = userDao.findCommentsByUser(sampleUser, new PaginationData(0, 10));
         System.out.println(comments);
         assertThat(comments.size(), is(3));
         assertThat(comments.get(0).getBody(), is("pizza pizza"));

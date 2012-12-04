@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Comment> findCommentsByUserId(int id, PaginationData pagination) {
-        return userDao.findCommentsByUserId(id, pagination);
+    public List<Comment> findCommentsByUser(User author, PaginationData pagination) {
+        return userDao.findCommentsByUser(author, pagination);
     }
 
     public User createUserAsUpdateTemplate(User userToUpdate, User updater) {
