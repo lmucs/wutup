@@ -195,7 +195,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             String email = rs.getString("email");
             String facebookId = rs.getString("facebookId");
 
-            User user = new User(userId, firstName, lastName, nickname, email, facebookId);
+            User user = new User(userId, firstName, lastName, email, nickname, facebookId);
             Event event = new Event(eventId, eventName, description, user);
             Venue venue = new Venue(venueId, venueName, address, latitude, longitude, null);
             return new EventOccurrence(occurrenceId, event, venue, start, end);
