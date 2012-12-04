@@ -62,7 +62,7 @@ public class FacebookGateway extends AbstractGateway {
         return "https://www.facebook.com/dialog/oauth?"
                 + "client_id=" + System.getenv("WUTUP_FB_APP_ID")
                 + "&redirect_uri=" + URLEncoder.encode(redirectUri, "ISO-8859-1")
-                + "&scope=user_events,create_event" + "&state=" + Math.abs(new Random().nextInt());
+                + "&scope=user_events,create_event,email" + "&state=" + Math.abs(new Random().nextInt());
     }
 
     private static String constructGetEventsUrl(String accessToken) {
