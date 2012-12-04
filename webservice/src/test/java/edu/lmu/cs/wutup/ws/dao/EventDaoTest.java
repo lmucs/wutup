@@ -174,7 +174,7 @@ public class EventDaoTest {
     @Test
     public void testGetMaxKeyValueForEventComments() {
         int maxValue = eventDao.findMaxKeyValueForComments();
-        assertThat(maxValue, is(1));
+        assertThat(maxValue, is(2));
     }
 
     @Test
@@ -215,7 +215,7 @@ public class EventDaoTest {
         eventDao.addComment(1, new Comment(null, "Hello", new DateTime(2012, 11, 11, 12, 34), sam));
         List<Comment> comments = eventDao.findComments(1, new PaginationData(1, 1));
         assertThat(comments.get(0).getBody(), is("Hello"));
-        assertThat(comments.get(0).getId(), is(2));
+        assertThat(comments.get(0).getId(), is(3));
         // TODO:
         // Need to check on this. When creating a new DateTime in Java, timezone is set to utc-8:00,
         // when entering something in h2 through pure sql, the timezone is adjsuted for DST to utc-7:00

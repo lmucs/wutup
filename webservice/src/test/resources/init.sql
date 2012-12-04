@@ -62,6 +62,7 @@ insert into attendee (occurrenceId, userId) values (1, 2);
 insert into attendee (occurrenceId, userId) values (2, 1);
 
 insert into event_comment (id, subjectId, authorId, text, timestamp) values (1, 1, 1, 'Boo, sux', '2012-03-17T00:00:00');
+insert into event_comment (id, subjectId, authorId, text, timestamp) values (2, 2, 2, 'Boo, sux', '2012-03-17T00:00:00');
 
 insert into occurrence_comment(id, subjectId, authorId, text, timestamp) values (1, 1, 3503, 'Aww yeah.', '2012-04-18T00:00:00');
 insert into occurrence_comment(id, subjectId, authorId, text, timestamp) values (2, 1, 3503, 'Aww no.', '2012-04-18T00:00:00');

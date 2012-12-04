@@ -188,7 +188,7 @@ public class EventResourceIT {
             body(containsString("\"author\":{\"id\":3,\"email\":\"jh1942@lion.lmu.edu\",\"nickname\":\"DeepThoughts\"," +
                     "\"firstname\":\"Jack\",\"lastname\":\"Handy\"}")).
             body(containsString("\"postdate\":" + publishDate.getMillis())).
-            body(containsString("\"id\":2")).
+            body(containsString("\"id\":3")).
         when().
             get("/wutup/events/4/comments");
 
@@ -202,18 +202,18 @@ public class EventResourceIT {
         expect().
             statusCode(200).
             contentType("application/json").
-            body(containsString("\"id\":1")).
+            body(containsString("\"id\":2")).
             body(containsString("\"body\":\"Boo, sux\"")).
             body(containsString("\"postdate\":" + knownTimestamp)).
         when().
-            get("/wutup/events/1/comments");
+            get("/wutup/events/2/comments");
 
         given().
             header("Accept", "application/json").
         expect().
             statusCode(204).
         when().
-            delete("/wutup/events/1/comments/1");
+            delete("/wutup/events/2/comments/2");
 
         given().
             header("Accept", "application/json").
@@ -221,7 +221,7 @@ public class EventResourceIT {
             statusCode(200).
             body(equalTo("[]")).
         when().
-            get("/wutup/events/1/comments");
+            get("/wutup/events/2/comments");
     }
 
     @Test
