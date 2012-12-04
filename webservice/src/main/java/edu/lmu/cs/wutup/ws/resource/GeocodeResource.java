@@ -1,5 +1,7 @@
 package edu.lmu.cs.wutup.ws.resource;
 
+import java.io.IOException;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -45,6 +47,10 @@ public class GeocodeResource {
         } catch (NoAddressProvidedException e) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
+                    .build();
+        } catch (IOException e) {
+            return Response
+                    .serverError()
                     .build();
         }
         
