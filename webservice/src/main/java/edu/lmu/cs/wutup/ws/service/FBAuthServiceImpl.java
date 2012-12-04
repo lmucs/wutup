@@ -110,7 +110,7 @@ public class FBAuthServiceImpl implements FBAuthService {
     }
 
     @Override
-    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken/*, edu.lmu.cs.wutup.ws.model.User u*/) {
+    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken) {
         try {
             JSONArray events = new JSONObject(getUserEvents(accessToken)).getJSONArray("data");
 
@@ -127,6 +127,7 @@ public class FBAuthServiceImpl implements FBAuthService {
                     event = new Event(null, current.getString("name"), current.getString("name"), u);
                 }
 
+                // TODO: Check for this in the database first.
                 e = new EventOccurrence(
                         event,
                         geocodeService.resolveVenue(current.getString("location"), null, null),

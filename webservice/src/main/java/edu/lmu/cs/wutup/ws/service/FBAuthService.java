@@ -28,7 +28,7 @@ public interface FBAuthService {
 
     public edu.lmu.cs.wutup.ws.model.User findOrCreateFBUser(String accessToken, String fbId);
 
-    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken/*, edu.lmu.cs.wutup.ws.model.User u*/);
+    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken);
 
     public String postUserEvent(String accessToken, String name, DateTime start, DateTime end,
             String description, String location, String FBLocationId, String privacyType);
