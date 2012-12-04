@@ -8,26 +8,42 @@ import org.junit.Test;
 
 public class FBAuthIT {
     
-    @Ignore
     @Test
-    public void getFacebookEvents() {
-        expect().
-            statusCode(200).
-        when().
-            get("/wutup/auth/facebook/events");
-    }
-    
-    @Ignore
-    @Test
-    public void getFacebookEventsWithErrorFails() {
+    public void fbAuthFailsWhenErrorIsPresent() {
         expect().
             statusCode(401).
         when().
-            get("/wutup/auth/facebook/events?error=someErrorThatFacebookSent");
+            get("/wutup/auth/facebook?error=someerrorstring");
     }
     
+    @Ignore
     @Test
-    public void retrieveNonexistentUserBySessionId() {
+    public void syncFacebookEventsWithFBCodeSucceeds() {
+        expect().
+            statusCode(200).
+        when().
+            get("/wutup/auth/facebook/sync?code=somecodestring12");
+    }
+
+    @Test
+    public void fbSyncFailsWhenErrorIsPresent() {
+        expect().
+            statusCode(401).
+        when().
+            get("/wutup/auth/facebook/sync?error=someerrorstring");
+    }
+
+    @Ignore
+    @Test
+    public void getFacebookEventsWithFBCodeSucceeds() {
+        expect().
+            statusCode(200).
+        when().
+            get("/wutup/auth/facebook?code=somecodestring12");
+    }
+
+    @Test
+    public void retrieveNonexistentUserByFacebookId() {
         expect().
             statusCode(200).
             body(containsString("{}")).
@@ -36,7 +52,7 @@ public class FBAuthIT {
     }
     
     @Test
-    public void retrieveExistingUserBySessionId() {
+    public void retrieveExistingUserByFacebookId() {
         expect().
             statusCode(200).
             body(containsString("40mpg@gmail.com")).

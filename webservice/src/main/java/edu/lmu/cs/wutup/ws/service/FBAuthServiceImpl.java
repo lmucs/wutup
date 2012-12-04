@@ -23,7 +23,10 @@ import org.springframework.stereotype.Service;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.types.User;
 
+import edu.lmu.cs.wutup.ws.exception.FBUserSynchronizationException;
+import edu.lmu.cs.wutup.ws.exception.InvalidFBAccessTokenException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.FacebookGateway;
@@ -41,8 +44,11 @@ public class FBAuthServiceImpl implements FBAuthService {
     @Autowired
     EventOccurrenceService occurrenceService;
 
+    @Autowired
+    UserService userService;
+
     @Override
-    public String getAccessToken(String code, String redirectUri) throws IOException {
+    public String getAccessToken(String code, String redirectUri) throws IOException, InvalidFBAccessTokenException {
         return extractAccessToken(FacebookGateway.acquireAccessToken(code, redirectUri));
     }
 
@@ -52,26 +58,29 @@ public class FBAuthServiceImpl implements FBAuthService {
         return acquireFBCode(redirectUri);
     }
 
-    private String extractAccessToken(String tokenContainer) {
+    private String extractAccessToken(String tokenContainer) throws InvalidFBAccessTokenException {
         Matcher m = accessTokenPattern.matcher(tokenContainer);
 
         if (m.find()) {
             return m.group(0);
+        } else {
+            throw new InvalidFBAccessTokenException();
         }
-
-        // TODO: We need to protect against this by returning the proper HTTP
-        // response code
-        return null;
     }
 
     @Override
-    public String getUserNameFromFB(String accessToken) {
-        return new DefaultFacebookClient(accessToken).fetchObject("me", User.class).getName();
+    public String getUserNameFromFB(User u) {
+        return u.getName();
     }
 
     @Override
-    public String getUserIdFromFB(String accessToken) {
-        return new DefaultFacebookClient(accessToken).fetchObject("me", User.class).getId();
+    public String getUserIdFromFB(User u) {
+        return u.getId();
+    }
+
+    @Override
+    public User getFBUser(String accessToken) {
+        return new DefaultFacebookClient(accessToken).fetchObject("me", User.class);
     }
 
     @Override
@@ -80,12 +89,34 @@ public class FBAuthServiceImpl implements FBAuthService {
     }
 
     @Override
-    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken, edu.lmu.cs.wutup.ws.model.User u) {
+    public edu.lmu.cs.wutup.ws.model.User findOrCreateFBUser(String accessToken, String fbId) {
+        edu.lmu.cs.wutup.ws.model.User u;
+        try {
+            u = userService.findUserByFacebookId(fbId);
+        } catch (NoSuchUserException e) {
+            User fbUser = getFBUser(accessToken);
+            u = new edu.lmu.cs.wutup.ws.model.User(
+                    null,
+                    fbUser.getFirstName(),
+                    fbUser.getLastName(),
+                    fbUser.getEmail(),
+                    fbUser.getName(),
+                    null,
+                    fbUser.getId()
+                );
+        }
 
+        return u;
+    }
+
+    @Override
+    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken/*, edu.lmu.cs.wutup.ws.model.User u*/) {
         try {
             JSONArray events = new JSONObject(getUserEvents(accessToken)).getJSONArray("data");
 
             EventOccurrence e;
+            edu.lmu.cs.wutup.ws.model.User u = findOrCreateFBUser(accessToken, getUserIdFromFB(getFBUser(accessToken)));;
+
             for (int x = 0; x < events.length(); x++) {
                 JSONObject current = events.getJSONObject(x);
 
@@ -104,11 +135,11 @@ public class FBAuthServiceImpl implements FBAuthService {
 
                 occurrenceService.createEventOccurrence(e);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        return u;
+            return u;
+        } catch (Exception e) {
+            throw new FBUserSynchronizationException();
+        }
     }
 
     @Override
@@ -116,7 +147,7 @@ public class FBAuthServiceImpl implements FBAuthService {
             String description, String location, String FBLocationId, String privacyType) {
 
         try {
-            return createUserEvent(accessToken, getUserIdFromFB(accessToken), name, start, end, description, location,
+            return createUserEvent(accessToken, getUserIdFromFB(getFBUser(accessToken)), name, start, end, description, location,
                     FBLocationId, privacyType);
         } catch (Exception e) {
             e.printStackTrace();

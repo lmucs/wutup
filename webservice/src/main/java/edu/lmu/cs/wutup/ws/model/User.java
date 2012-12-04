@@ -46,7 +46,7 @@ public class User implements Serializable {
 
     public User(Integer id, String first, String last, String email, String nick, String sessionId, String facebookId) {
         this.id = id;
-        this.setFacebookId(facebookId);
+        this.facebookId = facebookId;
         this.firstName = first;
         this.lastName = last;
         this.email = email;

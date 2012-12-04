@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.model.User;
-import edu.lmu.cs.wutup.ws.service.EventService;
 import edu.lmu.cs.wutup.ws.service.FBAuthService;
 import edu.lmu.cs.wutup.ws.service.UserService;
 
@@ -30,9 +29,6 @@ public class FBAuthResource {
     
     @Autowired
     FBAuthService fbService;
-    
-    @Autowired
-    EventService eventService;
 
     @GET
     @Path("/{facebookId}")
@@ -75,8 +71,13 @@ public class FBAuthResource {
         }
 
         try {
+            /*
+             * Return existing user or create their account.
+             */
+            final String accessToken = fbService.getAccessToken(code, redirectUri);
+            User u = fbService.findOrCreateFBUser(accessToken, fbService.getUserIdFromFB(fbService.getFBUser(accessToken)));
             return Response
-                    .ok(fbService.getAccessToken(code, redirectUri))
+                    .ok(u)
                     .build();
 
         } catch (Exception e) {
@@ -110,12 +111,11 @@ public class FBAuthResource {
 
         try {
             return Response
-                    .ok(fbService.syncUser(fbService.getAccessToken(code, redirectUri), new User(null, "happy@golucky.net")))
+                    .ok(fbService.syncUser(fbService.getAccessToken(code, redirectUri)/*, new User(null, "happy@golucky.net")*/))
                     .build();
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return Response.ok().build();
+            return Response.serverError().build();
         }
     }
 }
