@@ -71,9 +71,6 @@ public class FBAuthResource {
         }
 
         try {
-            /*
-             * Return existing user or create their account.
-             */
             final String accessToken = fbService.getAccessToken(code, redirectUri);
             User u = fbService.findOrCreateFBUser(accessToken, fbService.getUserIdFromFB(fbService.getFBUser(accessToken)));
             return Response
@@ -111,7 +108,7 @@ public class FBAuthResource {
 
         try {
             return Response
-                    .ok(fbService.syncUser(fbService.getAccessToken(code, redirectUri)/*, new User(null, "happy@golucky.net")*/))
+                    .ok(fbService.syncUser(fbService.getAccessToken(code, redirectUri)))
                     .build();
 
         } catch (Exception e) {
