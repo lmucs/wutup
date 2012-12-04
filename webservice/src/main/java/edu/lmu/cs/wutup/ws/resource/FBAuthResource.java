@@ -94,7 +94,7 @@ public class FBAuthResource {
             @DefaultValue("") @QueryParam("error") String error,
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
-        final String redirectUri = "http://localhost:8080/wutup/auth/facebook/sync";
+        final String redirectUri = "http://wutup.cs.lmu.edu:8080/wutup/auth/facebook/sync";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
