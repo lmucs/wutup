@@ -128,7 +128,6 @@ public class FBAuthServiceImpl implements FBAuthService {
                     try {
                         event = eventService.findEventByName(current.getString("name"));
                     } catch (NoSuchEventException exception) {
-                        System.out.println("\n\n" + u + "\n\n");
                         event = new Event(null, current.getString("name"), current.getString("name"), u);
                         eventService.createEvent(event);
                     }
