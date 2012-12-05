@@ -5,28 +5,6 @@
 </wicket:head>
 <wicket:extend>
 
-    <div id="container" class="container-fluid">
-
-        <div class="row-fluid" id="call-to-action">
-            <div class="span12">
-                <h2>Find Out What's Up On Wutup!</h2>
-
-                <div class="well well-large">
-                    <p>Yo! Wutup is a social event management service that allows
-                        users to create and promote events, invite friends to events, and
-                        register for events. Events can be searched by category,
-                        geography, sponsor, or date range. The service connects to social
-                        networking sites like facebook and twitter for promotion and
-                        registration, and exposes a RESTful API so developers can generate
-                        any number of clients (web, mobile web, iOS, Android, an so on).
-                        The project was developed by the LMU CMSI 401 Software Engineering
-                        Laboratory class during the 2012 fall semester.</p>
-                </div>
-                
-            </div>
-        </div>
-     </div>
-     
     <div class ="row-fluid">
         <div class="container-fluid span4">
 
@@ -39,26 +17,20 @@
 			<div class="section">
 				<div id="calendar" style='font-size: 13px'></div>
 			</div>
-            
 
             <div id="my-events" class="tabbable section">
                 <ul class="nav nav-tabs">  
-                    <li class="active"><a href="#tab-hosting" data-toggle="tab">Hosting (2)</a></li>
-                    <li><a href="#tab-attending" data-toggle="tab">Attending (7)</a></li>  
-                    <li><a href="#tab-invited-to" data-toggle="tab">Around Me </a></li> 
+                    <li class="active"><a href="#tab-hosting" data-toggle="tab">Hosting</a></li>
+                    <li><a href="#tab-attending" data-toggle="tab">Attending</a></li>  
                 </ul>
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab-hosting">
-                        <table class="table table-hover" id="hosting-event-stream"></table>
+                        <table class="table table-hover" id="hosting-event-stream"><tbody></tbody></table>
                     </div>
 
                     <div class="tab-pane" id="tab-attending">
-                        <table class="table table-hover" id="attending-event-stream"></table>
-                    </div>
-
-                    <div class="tab-pane" id="tab-invited-to">
-                        <table class="table table-hover" id="invited-to-event-stream"></table>
+                        <table class="table table-hover" id="attending-event-stream"><tbody></tbody></table>
                     </div>
                 </div>
             </div>
@@ -103,10 +75,8 @@
     <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqOg2q0dqSGTw1OkyqWTWsVSOLCsHjXpM&sensor=false&libraries=places"></script>
     <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
     <script src="lib/fullcalendar/fullcalendar.min.js"></script>
-    <script src="js/dashboard.js"></script>
-<!--     <script src="js/indexCalendar.js"></script> -->
-    <script src="js/streamBuilder.js"></script>
-    <script src="js/mainStreams.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/fbPermissionCheck.js"></script>
     </wicket:link>
 
 </wicket:extend>
