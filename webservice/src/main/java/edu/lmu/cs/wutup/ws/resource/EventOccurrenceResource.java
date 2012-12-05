@@ -143,21 +143,25 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
         return eventOccurrenceService.findAttendeesByEventOccurrenceId(id, pagination);
     }
-
+/*
+ * sponse createEventOccurrence(EventOccurrence eventOccurrence, ) {
+        checkOccurrenceCanBeCreated(eventOccurrence);
+        try {
+            int newId = eventOccurrenceService.createEventOccurrence(eventOccurrence);
+ */
     @POST
     @Path("/{id}/attendees")
     public Response registerAttendeeForEventOccurrence(@PathParam("id") String idString,
-            @QueryParam("userId") String userIdString) {
+            Integer userId) {
         int eventOccurrenceId = toInteger("id", idString);
-        int attendeeId = toInteger("userId", userIdString);
 
         try {
-            eventOccurrenceService.registerAttendeeForEventOccurrence(eventOccurrenceId, attendeeId);
+            eventOccurrenceService.registerAttendeeForEventOccurrence(eventOccurrenceId, userId);
             return Response.noContent().build();
         } catch (NoSuchEventOccurrenceException ex) {
             throw new ServiceException(NOT_FOUND, EVENT_OCCURRENCE_NOT_FOUND, eventOccurrenceId);
         } catch (NoSuchUserException ex) {
-            throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, attendeeId);
+            throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, userId);
         }
     }
 
