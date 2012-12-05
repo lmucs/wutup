@@ -9,6 +9,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -136,6 +137,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             jdbcTemplate.update(CREATE_ATTENDEE_SQL, eventOccurrenceId, attendeeId);
         } catch (DuplicateKeyException ex) {
             throw new AttendeeExistsException();
+        } catch (DataAccessException e) {
+            throw new NoSuchAttendeeException();
         }
     }
 
