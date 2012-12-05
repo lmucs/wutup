@@ -7,19 +7,20 @@ window.fbAsyncInit = function() {
       xfbml      : true  // parse XFBML
     });
 
+    var baseUrl = window.location.protocol + "//" + window.location.hostname;
     function redirectForAuthentication() {
-       
+    	window.location.replace(baseUrl + ':8080/wutup/auth/facebook');
     }
     
     // Additional init code here
     FB.getLoginStatus(function(response) {
     	  if (response.status === 'connected') {
-    		  console.log(response);
     	    // connected
     		  FB.api('/me', function(response) {
-    			  console.log(response);
+    			  $.getJSON(baseUrl + ':8080/wutup/users?fbId=' + response.id, function (user) {
+    				  loadPageFunctionality(baseUrl, user);
+    			  });
     			});
-    		  loadPageFunctionality();
     	  } else if (response.status === 'not_authorized') {
     		  // hasn't given the app permission
     		  redirectForAuthentication();
