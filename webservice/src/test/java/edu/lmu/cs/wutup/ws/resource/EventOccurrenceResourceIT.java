@@ -136,6 +136,7 @@ public class EventOccurrenceResourceIT {
         .expect()
             .statusCode(201)
             .header("Location", "http://localhost:8080/wutup/occurrences/11")
+            .body(containsString("11"))
             .contentType("application/json")
         .when()
             .post("/wutup/occurrences");

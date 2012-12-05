@@ -64,8 +64,8 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     @Path("/")
     public List<EventOccurrence> findEventOccurrences(@QueryParam("attendee") Integer attendee,
             @QueryParam("center") String center, @QueryParam("radius") String radiusString,
-            @QueryParam("start") String start, @QueryParam("end") String end, @QueryParam("eventId") String eventIdString,
-            @QueryParam("venueId") Integer venueId,
+            @QueryParam("start") String start, @QueryParam("end") String end,
+            @QueryParam("eventId") String eventIdString, @QueryParam("venueId") Integer venueId,
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageNumberString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
 
@@ -98,7 +98,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
         try {
             int newId = eventOccurrenceService.createEventOccurrence(eventOccurrence);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(newId + "").build();
-            return Response.created(newLocation).build();
+            return Response.created(newLocation).type(MediaType.APPLICATION_JSON).entity(newId).build();
         } catch (EventOccurrenceExistsException e) {
             throw new ServiceException(CONFLICT, EVENT_OCCURRENCE_ALREADY_EXISTS, eventOccurrence.getId());
         }
