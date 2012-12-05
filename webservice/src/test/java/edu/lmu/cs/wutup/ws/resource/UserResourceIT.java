@@ -18,7 +18,7 @@ public class UserResourceIT {
                     + ",\"nickname\":\"Big Sexy\",\"email\":\"cagudo@gmail.com\"}")
         .expect()
             .statusCode(201)
-            .header("Location", "http://localhost:8080/wutup/users/3504")
+            .header("Location", "http://localhost:8080/wutup/users/3505")
         .when()
             .post("/wutup/users");
     }
@@ -63,7 +63,7 @@ public class UserResourceIT {
             .statusCode(204)
         .when()
             .patch("wutup/users/7");
-        
+
         expect()
             .statusCode(200)
             .contentType("application/json")
@@ -106,7 +106,7 @@ public class UserResourceIT {
             .statusCode(404)
         .when()
             .get("wutup/users/9999/comments");
-            
+
     }
 
     @Test

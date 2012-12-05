@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -16,6 +17,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import edu.lmu.cs.wutup.ws.exception.NoSuchAttendeeOrOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
@@ -54,6 +56,95 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test
+    public void countOfInitialDataSetIsAsExpected() {
+        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
+    }
+
+    @Test
+    public void findEventOccurrencesByIdWorks() {
+        int id = 2;
+        EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(id);
+        assertThat(e.getId(), is(id));
+    }
+
+    @Test(expected = NoSuchEventOccurrenceException.class)
+    public void findNonExistentEventThrowsException() {
+        eventOccurrenceDao.findEventOccurrenceById(1000);
+    }
+
+    @Test
+    public void findEventOccurrencesByPaginationWorks() {
+        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
+        List<EventOccurrence> eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null,
+                new PaginationData(0, 3));
+        assertThat(eventOccurrences.size(), is(3));
+        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(1,
+                3));
+        assertThat(eventOccurrences.size(), is(3));
+        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(3,
+                3));
+        assertThat(eventOccurrences.size(), is(1));
+    }
+
+    @Test
+    public void findEventOccurrencesByCircleWorks() {
+        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, new Circle(34.1127863,
+                -118.3392439, 0.01), null, null, null, new PaginationData(0, 5));
+        assertThat(occurrences.size(), is(2));
+        EventOccurrence e1 = occurrences.get(0);
+        EventOccurrence e2 = occurrences.get(1);
+        assertThat(e1.getId(), is(2));
+        assertThat(e2.getId(), is(7));
+    }
+
+    @Test
+    public void findEventOccurrencesByDateTimeIntervalWorks() {
+        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, new Interval(
+                new DateTime("2012-01-15T08:30:00"), new DateTime("2012-01-16T11:30:00")), null, null,
+                new PaginationData(0, 5));
+        assertThat(occurrences.size(), is(1));
+        EventOccurrence e = occurrences.get(0);
+        assertThat(e.getId(), is(1));
+    }
+
+    @Test
+    public void findEventOccurencesByVenueIdWorks() {
+        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, 2,
+                new PaginationData(0, 5));
+        assertThat(occurrences.size(), is(2));
+        EventOccurrence e1 = occurrences.get(0);
+        EventOccurrence e2 = occurrences.get(1);
+        assertThat(e1.getId(), is(2));
+        assertThat(e2.getId(), is(7));
+    }
+
+    @Test
+    public void findEventOccurencesByOneEventIdWorks() {
+        ArrayList<Integer> a = new ArrayList<Integer>();
+        a.add(2);
+        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, a, null,
+                new PaginationData(0, 5));
+        assertThat(occurrences.size(), is(2));
+        assertThat(occurrences.get(0).getId(), is(1));
+        assertThat(occurrences.get(1).getId(), is(6));
+    }
+
+    @Test
+    public void findEventOccurencesByMultipleEventIdsWorks() {
+        ArrayList<Integer> a = new ArrayList<Integer>();
+        a.add(1);
+        a.add(2);
+        a.add(3);
+        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, a, null,
+                new PaginationData(0, 5));
+        assertThat(occurrences.size(), is(4));
+        assertThat(occurrences.get(0).getId(), is(1));
+        assertThat(occurrences.get(1).getId(), is(5));
+        assertThat(occurrences.get(2).getId(), is(6));
+        assertThat(occurrences.get(3).getId(), is(10));
+    }
+
+    @Test
     public void creatingIncrementsSize() {
         EventOccurrence e = new EventOccurrence(2000, eventOne, keck, new DateTime("2012-11-13T08:30:00Z"),
                 new DateTime("2012-11-13T09:40:50Z"));
@@ -72,42 +163,13 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test
-    public void deletingDecrementsSize() {
-        int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
-        eventOccurrenceDao.deleteEventOccurrence(initialCount - 1);
-        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(initialCount - 1));
-    }
-
-    @Test
-    public void findEventOccurrencesViaCircle() {
-        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, new Circle(34.1127863, -118.3392439, 0.01), null, null,
-                null, new PaginationData(0, 5));
-        assertThat(occurrences.size(), is(2));
-        EventOccurrence e1 = occurrences.get(0);
-        EventOccurrence e2 = occurrences.get(1);
-        assertThat(e1.getId(), is(2));
-        assertThat(e2.getId(), is(7));
-    }
-
-    @Test
-    public void findEventOccurrencesViaDateTimeInterval() {
-        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, new Interval(
-                new DateTime("2012-01-15T08:30:00"), new DateTime("2012-01-16T11:30:00")), null, null,
-                new PaginationData(0, 5));
-        assertThat(occurrences.size(), is(1));
-        EventOccurrence e = occurrences.get(0);
-        assertThat(e.getId(), is(1));
-    }
-
-    @Test
-    public void findEventOccurencesViaOneVenue() {
-        List<EventOccurrence> occurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null,
-                2, new PaginationData(0, 5));
-        assertThat(occurrences.size(), is(2));
-        EventOccurrence e1 = occurrences.get(0);
-        EventOccurrence e2 = occurrences.get(1);
-        assertThat(e1.getId(), is(2));
-        assertThat(e2.getId(), is(7));
+    public void createEventOccurrenceWithIdIgnoresId() {
+        EventOccurrence e = new EventOccurrence(2, eventOne, keck, new DateTime("2012-11-13T08:30:00Z"), new DateTime(
+                "2012-11-13T11:30:00Z"));
+        int newId = eventOccurrenceDao.createEventOccurrence(e);
+        EventOccurrence eByReturnedId = eventOccurrenceDao.findEventOccurrenceById(newId);
+        assertThat(eByReturnedId.getId(), is(newId));
+        assertTrue(e.getId().intValue() != 2);
     }
 
     @Test
@@ -127,40 +189,49 @@ public class EventOccurrenceDaoTest {
         eventOccurrenceDao.updateEventOccurrence(new EventOccurrence(1000, eventTwo, keck));
     }
 
+    @Test
+    public void deletingOccurrenceDecrementsSize() {
+        int initialCount = eventOccurrenceDao.findNumberOfEventOccurrences();
+        eventOccurrenceDao.deleteEventOccurrence(initialCount - 1);
+        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(initialCount - 1));
+    }
+
     @Test(expected = NoSuchEventOccurrenceException.class)
-    public void deleteNonExistentEventThrowsException() {
-        eventOccurrenceDao.deleteEventOccurrence(1000);
-    }
-
-    @Test(expected = NoSuchEventOccurrenceException.class)
-    public void findNonExistentEventThrowsException() {
-        eventOccurrenceDao.findEventOccurrenceById(1000);
+    public void deletingNonExistentOccurrenceThrowsException() {
+        eventOccurrenceDao.deleteEventOccurrence(200000);
     }
 
     @Test
-    public void countOfInitialDataSetIsAsExpected() {
-        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
+    public void findAttendeesByEventOccurrenceIdWorks() {
+        List<User> attendees = eventOccurrenceDao.findAttendeesByEventOccurrenceId(1, new PaginationData(0, 5));
+        assertThat(attendees.size(), is(2));
+        assertThat(attendees.get(0).getId(), is(1));
+        assertThat(attendees.get(1).getId(), is(2));
     }
 
     @Test
-    public void findEventOccurrencesViaPaginationWorks() {
-        assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
-        List<EventOccurrence> eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null,
-                new PaginationData(0, 3));
-        assertThat(eventOccurrences.size(), is(3));
-        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(1,
-                3));
-        assertThat(eventOccurrences.size(), is(3));
-        eventOccurrences = eventOccurrenceDao.findEventOccurrences(null, null, null, null, null, new PaginationData(3,
-                3));
-        assertThat(eventOccurrences.size(), is(1));
-    }
-
-    @Test
-    public void findAttendeesViaPaginationWorks() {
+    public void findAttendeesByPaginationWorks() {
         List<User> attendees = eventOccurrenceDao.findAttendeesByEventOccurrenceId(1, new PaginationData(0, 2));
         assertThat(attendees.size(), is(2));
         assertThat(attendees.get(1).getId(), is(2));
+    }
+
+    @Test
+    public void registerExistingUserAsAttendeeCanBeFound() {
+        eventOccurrenceDao.registerAttendeeForEventOccurrence(2, 2);
+        List<User> attendees = eventOccurrenceDao.findAttendeesByEventOccurrenceId(1, new PaginationData(0, 2));
+        assertThat(attendees.size(), is(2));
+        assertThat(attendees.get(1).getId(), is(2));
+    }
+
+    @Test(expected = NoSuchAttendeeOrOccurrenceException.class)
+    public void registerNonExistentUserAsAttendeeThrowsException() {
+        eventOccurrenceDao.registerAttendeeForEventOccurrence(2, 8675309);
+    }
+
+    @Test(expected = NoSuchAttendeeOrOccurrenceException.class)
+    public void registerUserAsAttendeeToNonExistentOccurrenceThrowsException() {
+        eventOccurrenceDao.registerAttendeeForEventOccurrence(8675309, 2);
     }
 
     @Test
@@ -170,12 +241,19 @@ public class EventOccurrenceDaoTest {
         assertThat(attendees.size(), is(1));
     }
 
-    @Test
-    public void registerAttendeeCanBeFound() {
-        eventOccurrenceDao.registerAttendeeForEventOccurrence(2, 2);
-        List<User> attendees = eventOccurrenceDao.findAttendeesByEventOccurrenceId(1, new PaginationData(0, 2));
-        assertThat(attendees.size(), is(2));
-        assertThat(attendees.get(1).getId(), is(2));
+    @Test(expected = NoSuchAttendeeOrOccurrenceException.class)
+    public void unregisterNonRegisteredUserFromAttendeesThrowsException() {
+        eventOccurrenceDao.unregisterAttendeeForEventOccurrence(1, 3);
+    }
+
+    @Test(expected = NoSuchAttendeeOrOccurrenceException.class)
+    public void unregisterNonExistentAttendeeThrowsException() {
+        eventOccurrenceDao.unregisterAttendeeForEventOccurrence(1, 8675309);
+    }
+
+    @Test(expected = NoSuchAttendeeOrOccurrenceException.class)
+    public void unregisterAttendeeFromNonExistentOccurrenceThrowsException() {
+        eventOccurrenceDao.unregisterAttendeeForEventOccurrence(8675309, 1);
     }
 
     @Test

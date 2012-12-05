@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.AttendeeExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
-import edu.lmu.cs.wutup.ws.exception.NoSuchAttendeeException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchAttendeeOrOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
@@ -115,7 +115,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
             query.joinOn("attendee a", "o.id = a.occurrenceId").where("a.userId = :attendeeId", attendee);
         }
 
-        return jdbcTemplate.query(query.addPagination(pagination).build(), query.getParametersArray(),
+        return jdbcTemplate.query(query.addPagination(pagination).order("o.id").build(), query.getParametersArray(),
                 eventOccurrenceRowMapper);
     }
 
@@ -128,7 +128,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         QueryBuilder query = new QueryBuilder().from("attendee a")
                 .joinOn("user u", "a.userId = u.id")
                 .where("a.occurrenceId = :oId", id);
-        return jdbcTemplate.query(query.addPagination(pagination).build(), query.getParametersArray(), userRowMapper);
+        return jdbcTemplate.query(query.addPagination(pagination).order("u.id").build(), query.getParametersArray(), userRowMapper);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         } catch (DuplicateKeyException ex) {
             throw new AttendeeExistsException();
         } catch (DataAccessException e) {
-            throw new NoSuchAttendeeException();
+            throw new NoSuchAttendeeOrOccurrenceException();
         }
     }
 
@@ -146,7 +146,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     public void unregisterAttendeeForEventOccurrence(int eventOccurrenceId, int attendeeId) {
         int rowsUpdated = jdbcTemplate.update(DELETE_ATTENDEE_SQL, eventOccurrenceId, attendeeId);
         if (rowsUpdated == 0) {
-            throw new NoSuchAttendeeException();
+            throw new NoSuchAttendeeOrOccurrenceException();
         }
     }
 

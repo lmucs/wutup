@@ -39,7 +39,7 @@ public class UserDaoTest {
 
     @Test
     public void tableHasCorrectSizeFromSetup() {
-        assertThat(userDao.findNumberOfUsers(), is(10));
+        assertThat(userDao.findNumberOfUsers(), is(11));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class UserDaoTest {
     public void createUserWithNullIdGeneratesId() {
         User u = new User(null, "Fabio");
         userDao.createUser(u);
-        assertThat(u.getId(), is(3504));
+        assertThat(u.getId(), is(3505));
     }
 
     @Test(expected=NoSuchUserException.class)
@@ -125,7 +125,7 @@ public class UserDaoTest {
         int nextGeneratedUserId = userDao.getNextUsableUserId();
         assertEquals(nextGeneratedUserId, currentMaxIdValue + 1);
     }
-    
+
     @Test
     public void checkRetrievalBySessionId() {
         User u = new User(15, "stuff", "verhasselt", "hah@poof.com", "gratz", "someSessionId12", "somefbid");
