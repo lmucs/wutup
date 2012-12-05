@@ -20,7 +20,6 @@ import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Circle;
