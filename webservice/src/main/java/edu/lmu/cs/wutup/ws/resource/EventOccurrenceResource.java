@@ -32,10 +32,10 @@ import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.AttendeeExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchAttendeeOrOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchResourceException;
-import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
@@ -52,10 +52,10 @@ import edu.lmu.cs.wutup.ws.service.EventOccurrenceService;
 public class EventOccurrenceResource extends AbstractWutupResource {
 
     private static final String EVENT_OCCURRENCE_NOT_FOUND = "Event occurrence %d does not exist";
+    private static final String EVENT_OCCURRENCE_OR_USER_NOT_FOUND = "Event occurrence %d or user %d does not exist";
     private static final String OCCURRENCE_AUTHOR_NOT_FOUND = "Event occurrence or User author does not exist";
     private static final String EVENT_OCCURRENCE_ALREADY_EXISTS = "Event occurrence %d already exists";
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for event %d";
-    private static final String USER_NOT_FOUND = "User %d does not exist";
     private static final String PARAMETER_NON_INTEGER_LIST = "The parameter %s should be a list of integers";
     private static final String ATTENDEE_ALREADY_EXISTS = "Attendee %d is already registered for event occurrence %d";
 
@@ -148,17 +148,14 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
     @POST
     @Path("/{id}/attendees")
-    public Response registerAttendeeForEventOccurrence(@PathParam("id") String idString,
-            Integer userId) {
+    public Response registerAttendeeForEventOccurrence(@PathParam("id") String idString, Integer userId) {
         int eventOccurrenceId = toInteger("id", idString);
 
         try {
             eventOccurrenceService.registerAttendeeForEventOccurrence(eventOccurrenceId, userId);
             return Response.noContent().build();
-        } catch (NoSuchEventOccurrenceException ex) {
-            throw new ServiceException(NOT_FOUND, EVENT_OCCURRENCE_NOT_FOUND, eventOccurrenceId);
-        } catch (NoSuchUserException ex) {
-            throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, userId);
+        } catch (NoSuchAttendeeOrOccurrenceException ex) {
+            throw new ServiceException(NOT_FOUND, EVENT_OCCURRENCE_OR_USER_NOT_FOUND, eventOccurrenceId, userId);
         } catch (AttendeeExistsException e) {
             throw new ServiceException(CONFLICT, ATTENDEE_ALREADY_EXISTS, userId, eventOccurrenceId);
         }
@@ -167,17 +164,14 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     @DELETE
     @Path("/{id}/attendees/{userId}")
     public Response unregisterAttendeeForEventOccurrence(@PathParam("id") String idString,
-            @PathParam("userId") String userIdString) {
+            @PathParam("userId") Integer userId) {
         int eventOccurrenceId = toInteger("id", idString);
-        int attendeeId = toInteger("userId", userIdString);
 
         try {
-            eventOccurrenceService.unregisterAttendeeForEventOccurrence(eventOccurrenceId, attendeeId);
+            eventOccurrenceService.unregisterAttendeeForEventOccurrence(eventOccurrenceId, userId);
             return Response.noContent().build();
-        } catch (NoSuchEventOccurrenceException ex) {
-            throw new ServiceException(NOT_FOUND, EVENT_OCCURRENCE_NOT_FOUND, eventOccurrenceId);
-        } catch (NoSuchUserException ex) {
-            throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, attendeeId);
+        } catch (NoSuchAttendeeOrOccurrenceException ex) {
+            throw new ServiceException(NOT_FOUND, EVENT_OCCURRENCE_OR_USER_NOT_FOUND, eventOccurrenceId, userId);
         }
     }
 

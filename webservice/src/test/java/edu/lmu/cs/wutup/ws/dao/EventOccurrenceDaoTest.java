@@ -61,14 +61,14 @@ public class EventOccurrenceDaoTest {
     }
 
     @Test
-    public void findEventOccurrencesByIdWorks() {
+    public void findEventOccurrenceByIdWorks() {
         int id = 2;
         EventOccurrence e = eventOccurrenceDao.findEventOccurrenceById(id);
         assertThat(e.getId(), is(id));
     }
 
     @Test(expected = NoSuchEventOccurrenceException.class)
-    public void findNonExistentEventThrowsException() {
+    public void findNonExistentEventOccurrenceIdThrowsException() {
         eventOccurrenceDao.findEventOccurrenceById(1000);
     }
 
