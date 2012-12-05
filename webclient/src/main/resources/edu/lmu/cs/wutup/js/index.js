@@ -28,7 +28,7 @@ var loadPageFunctionality = function (baseUrl, user) {
 	    },
 	    
 	    generateOccurrencesByUserEventIdsUrl = function (eventIds) {
-	    	return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&eventId=' + (eventIds === null ? 0 : eventIds);
+	    	return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&eventId=' + (eventIds.length === 0 ? 0 : eventIds);
 	    },
 	    
 	    generateOccurrencesByAttendeeUrl = function (attendee) {
@@ -159,7 +159,7 @@ var loadPageFunctionality = function (baseUrl, user) {
                 browserSupportFlag = false,
                 calendarEvents = null,
                 mapOptions = {
-                    zoom: 10,
+                    zoom: 17,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 },
                 mapMarkers = [],
@@ -198,6 +198,8 @@ var loadPageFunctionality = function (baseUrl, user) {
 	                        }
 	                    	$.getJSON(generateOccurrencesByUserEventIdsUrl(eventIds), function (ownedOccurrences) {
 	                    		$.getJSON(generateOccurrencesByAttendeeUrl(user), function (attendingOccurrences) {
+	                    			var both = $.extend(ownedOccurrences, attendingOccurrences)
+	                    			console.log(both);
 	                    			calendarEvents = parseOccurrencesForCalendar($.extend(ownedOccurrences, attendingOccurrences));
 			                        populateCalendar(calendarEvents);
 			                        populateMap(map, calendarEvents, mapMarkers);

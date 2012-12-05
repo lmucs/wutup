@@ -139,7 +139,7 @@ $(document).ready(function () {
                 browserSupportFlag = false,
                 calendarEvents = null,
                 mapOptions = {
-                    zoom: 10,
+                    zoom: 17,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 },
                 mapMarkers = [],
