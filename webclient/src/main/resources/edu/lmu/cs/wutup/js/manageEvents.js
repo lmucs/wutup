@@ -1,14 +1,15 @@
 var loadPageFunctionality = function (baseUrl, user) {
     "use strict";
      var mapOptions = {
-            zoom: 10,
+            zoom: 17,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         },
         map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions),
+        mapMarkers = [],
         infowindow = new google.maps.InfoWindow(),
         initializeManageEventsPage = function () {
-            var initialLocation,
-            siberia = new google.maps.LatLng(60, 105),
+            var initialLocation, i,
+            	eventIds = [],
                 newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687),
                 browserSupportFlag,
                 input = document.getElementById('venue-address'),
@@ -50,12 +51,16 @@ var loadPageFunctionality = function (baseUrl, user) {
                 navigator.geolocation.getCurrentPosition(function (position) {
                     initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                     map.setCenter(initialLocation);
-                    // Grab Event Occurrences. Needs to be refined to map area.
-                    $.getJSON(generateOccurrenceURL(), function (occurrences) {
-                        console.log(occurrences);
-                        var calendarEvents = parseOccurrencesForCalendar(occurrences);
-                        createCalendar(calendarEvents);
-                        populateMap(map, occurrences);
+					$.getJSON(generateUserBoundUrl(user), function (events) {
+						for (i = 0; i < events.length; i += 1) {
+	                        	eventIds.push(events[i].id);
+	                        }
+	                    $.getJSON(generateOccurrencesByUserEventIdsUrl(eventIds), function (occurrences) {
+	                        console.log(occurrences);
+	                        var calendarEvents = parseOccurrencesForCalendar(occurrences);
+	                        createCalendar(calendarEvents);
+	                        populateMap(map, occurrences, mapMarkers);
+	                    });
                     });
 
                 }, function () {
@@ -65,14 +70,19 @@ var loadPageFunctionality = function (baseUrl, user) {
                 // Browser doesn't support Geolocation
             } else {
                 browserSupportFlag = false;
-                handleNoGeolocation(browserSupportFlag);
+                handleNoGeolocation(browserSupportFlag, newyork);
             }
+            $('#facebook-sync').click(function(){
+			   document.location.href=baseUrl + ':8080/wutup/auth/facebook/sync';
+			});
         },
 
-        handleNoGeolocation = function (errorFlag) {
+        handleNoGeolocation = function (errorFlag, fakeLocation) {
+        	var initialLocation, siberia = new google.maps.LatLng(60, 105);
             if (errorFlag === true) {
                 alert("Geolocation service failed.");
-                initialLocation = newyork;
+                console.log(map);
+                initialLocation = fakeLocation;
             } else {
                 alert("Your browser doesn't support geolocation. We've placed you in Siberia.");
                 initialLocation = siberia;
@@ -84,19 +94,41 @@ var loadPageFunctionality = function (baseUrl, user) {
             }
             map.setCenter(initialLocation);
         },
-
-        generateOccurrenceURL = function () {
-            return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=50&start=1054014101447&end=1954514188253';
+        
+        showError = function(errorText) {
+        	 $('#facebook-sync').before("<div class=\"alert alert-error\"><a class=\"close\" data-dismiss=\"alert\">×</a><strong>Error: </strong>" + errorText + "</div>")
         },
+	    generateUserBoundUrl = function (owner) {
+	        return baseUrl + ':8080/wutup/events?page=0&pageSize=20&owner=' + owner.id	;
+	    },
 
-        populateMap = function (gMap, events) {
-            var map = gMap,
-                i;
-            for (i = 0; i < events.length; i += 1) {
-                createMarker(map, events[i]);
+	    generateOccurrencesByUserEventIdsUrl = function (eventIds) {
+	    	console.log(eventIds)
+	    	return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&eventId=' + (eventIds.length === 0 ? 0 : eventIds);
+	    },
+	    
+	    removeMarker = function (markerTitle, mapMarkers) {
+	    	var i;
+	    	for (i = 0; i < mapMarkers.length; i += 1) {
+	    		if (mapMarkers[i].title === markerTitle) {
+	    			mapMarkers[i].setMap(null);
+	    			return;
+	    		}
+	    	}
+	    },
+	    
+	    displayInfoWindow = function (occurrence) {
+            if (infowindow) {
+                infowindow.close();
             }
+            infowindow = new google.maps.InfoWindow({
+                content: occurrence.event.name + '</br>',
+                position: new google.maps.LatLng(occurrence.venue.latitude, occurrence.venue.longitude)
+            });
+            infowindow.open(map);
         },
-        createMarker = function (map, occurrence) {
+
+        createMarker = function (occurrence) {
             var marker = new google.maps.Marker({
                 map: map,
                 position: new google.maps.LatLng(occurrence.venue.latitude, occurrence.venue.longitude),
@@ -104,14 +136,27 @@ var loadPageFunctionality = function (baseUrl, user) {
                 animation: google.maps.Animation.DROP
             });
             google.maps.event.addListener(marker, 'click', function () {
-                if (infowindow) infowindow.close();
-                infowindow = new google.maps.InfoWindow({
-                    content: occurrence.event.name + '</br>'
-                });
-                infowindow.open(map, marker);
+                displayInfoWindow(occurrence);
                 displayEventInfo(occurrence);
             });
             return marker;
+        },
+
+        populateMap = function (gMap, events, mapMarkers) {
+            var i,
+                deleteOverlays = function () {
+                    if (mapMarkers) {
+                        for (i = 0; i < mapMarkers.length; i += 1) {
+                            mapMarkers[i].setMap(null);
+                        }
+                    }
+                    mapMarkers.length = 0;
+                };
+            map = gMap;
+            deleteOverlays();
+            for (i = 0; i < events.length; i += 1) {
+                mapMarkers.push(createMarker(events[i]));
+            }
         },
         displayEventInfo = function (occurrence) {
             $("#result").html(function () {
@@ -222,11 +267,12 @@ var loadPageFunctionality = function (baseUrl, user) {
                         success: function (response, textStatus, jqXHR) {
                             console.log("Hooray We Added A New Occurrence!!");
                             $.extend(newOccurrence, {id: response});
-                            createMarker(map, newOccurrence);
+                            mapMarkers.push(createMarker(occurrence))
                             renderEventOnCalendar(newOccurrence);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             console.log("The following error occured: " + textStatus, errorThrown);
+                            showError("Occurrence not created.");
 
                         },
                         complete: function (jqXHR, textStatus) {
@@ -299,10 +345,12 @@ var loadPageFunctionality = function (baseUrl, user) {
         },
 
         patchOccurrence = function (occurrence) {
-            var newOccurrence = {
-                start: occurrence.start,
-                end: occurrence.end
-            };
+        	var newOccurrence = {
+        		event: occurrence.event,
+        		venue: occurrence.venue,
+        		start: occurrence.start,
+        		end: occurrence.end
+        	}
             $.ajax({
                 headers: {
                     'Accept': 'application/json',
@@ -318,6 +366,8 @@ var loadPageFunctionality = function (baseUrl, user) {
                     console.log("Occurrence Successfully Patched!");
                     removeEventOnCalendar(occurrence);
                     renderEventOnCalendar(occurrence);
+                    removeMarker(occurrence.event.name, mapMarkers);
+                    createMarker(occurrence);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     // log the error to the console
@@ -452,9 +502,13 @@ var loadPageFunctionality = function (baseUrl, user) {
                                 if (calEvent === null) {
                                     createOccurrence(eventName, venueName, start, end);
                                 } else {
-                                    calEvent.event.description = $('#event-description').val();
-                                    calEvent.venue.address = $('#venue-address').val();
-                                    patchOccurrence(calEvent);
+                                    $.getJSON(baseUrl + ':8080/wutup/events?name=' + parsedForUrl(eventName), function (events) {
+                                    	$.getJSON(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(venueName), function (venues) {
+                                    		calEvent.event = events[0];
+                                    		calEvent.venue = venues[0];
+                                    		patchOccurrence(calEvent);
+                                    	});
+                                	});
                                 }
                             }, 3000);
                             calendar.fullCalendar('unselect');
