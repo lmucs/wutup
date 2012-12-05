@@ -8,6 +8,7 @@ insert into user (id, firstName, lastName, email, nickname, sessionId) values (7
 insert into user (id, firstName, lastName, email, nickname, sessionId) values (8, 'Katrina', 'Sherbina', 'ksherbina@gmail.com', 'Kat', 'katrina');
 insert into user (id, firstName, lastName, email, nickname, sessionId) values (3503, 'John', 'Lennon', 'jlennon@gmail.com', 'John', 'john');
 insert into user (id, firstName, lastname, email, nickname, sessionId) values (155, 'Carlos', 'Agudo', 'cagudo@gmail.com', 'Carlito', 'carlos');
+insert into user (id, firstName, lastname, email, nickname, facebookId) values (3504, 'Sam', 'Verhasselt', 'azureus42@yahoo.com', 'Sam Verhasselt','777892175');
 
 insert into event (name, description, ownerId) values ('Poker Night', 'Cards with the guys', 8);
 insert into event (name, description, ownerId) values ('Billiards with Prince Harry', 'Pool and drinks', 7);
