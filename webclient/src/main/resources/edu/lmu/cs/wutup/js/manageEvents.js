@@ -1,7 +1,6 @@
-var loadPageFunctionality = function () {
+var loadPageFunctionality = function (baseUrl, user) {
     "use strict";
-    var baseUrl = window.location.protocol + "//" + window.location.hostname,
-        mapOptions = {
+     var mapOptions = {
             zoom: 10,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         },
@@ -220,8 +219,9 @@ var loadPageFunctionality = function () {
                         type: 'POST',
                         dataType: 'json',
                         data: JSON.stringify(newOccurrence),
-                        success: function (response, textStatus, jqXhr) {
+                        success: function (response, textStatus, jqXHR) {
                             console.log("Hooray We Added A New Occurrence!!");
+                            $.extend(newOccurrence, {id: response});
                             createMarker(map, newOccurrence);
                             renderEventOnCalendar(newOccurrence);
                         },
@@ -229,8 +229,8 @@ var loadPageFunctionality = function () {
                             console.log("The following error occured: " + textStatus, errorThrown);
 
                         },
-                        complete: function () {
-                            console.log("occurrence ajax completed");
+                        complete: function (jqXHR, textStatus) {
+                            console.log(jqXHR.getAllResponseHeaders());
                         }
                     });
                 });
@@ -445,13 +445,7 @@ var loadPageFunctionality = function () {
                             $(this).dialog("close");
                             var eventName = $('#event-name').val(),
                                 venueName = $('#venue-name').val(),
-                                creator = {
-                                    id: 155,
-                                    firstname: "Carlos",
-                                    lastname: "Agudo",
-                                    nickname: "Big Sexy",
-                                    email: "cagudo@gmail.com"
-                                };
+                                creator = user;
                             createOrPatchEvent(eventName, $('#event-description').val(), creator);
                             createOrPatchVenue(venueName, $('#venue-address').val());
                             setTimeout(function () {
@@ -462,7 +456,7 @@ var loadPageFunctionality = function () {
                                     calEvent.venue.address = $('#venue-address').val();
                                     patchOccurrence(calEvent);
                                 }
-                            }, 2000);
+                            }, 3000);
                             calendar.fullCalendar('unselect');
                         },
                         Cancel: function () {
