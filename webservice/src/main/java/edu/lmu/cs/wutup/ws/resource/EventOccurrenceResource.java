@@ -30,6 +30,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import edu.lmu.cs.wutup.ws.exception.AttendeeExistsException;
 import edu.lmu.cs.wutup.ws.exception.EventOccurrenceExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
@@ -56,6 +57,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
     private static final String COMMENT_NOT_FOUND = "Comment %d does not exist for event %d";
     private static final String USER_NOT_FOUND = "User %d does not exist";
     private static final String PARAMETER_NON_INTEGER_LIST = "The parameter %s should be a list of integers";
+    private static final String ATTENDEE_ALREADY_EXISTS = "Attendee %d is already registered for event occurrence %d";
 
     @Autowired
     EventOccurrenceService eventOccurrenceService;
@@ -143,12 +145,7 @@ public class EventOccurrenceResource extends AbstractWutupResource {
 
         return eventOccurrenceService.findAttendeesByEventOccurrenceId(id, pagination);
     }
-/*
- * sponse createEventOccurrence(EventOccurrence eventOccurrence, ) {
-        checkOccurrenceCanBeCreated(eventOccurrence);
-        try {
-            int newId = eventOccurrenceService.createEventOccurrence(eventOccurrence);
- */
+
     @POST
     @Path("/{id}/attendees")
     public Response registerAttendeeForEventOccurrence(@PathParam("id") String idString,
@@ -162,6 +159,8 @@ public class EventOccurrenceResource extends AbstractWutupResource {
             throw new ServiceException(NOT_FOUND, EVENT_OCCURRENCE_NOT_FOUND, eventOccurrenceId);
         } catch (NoSuchUserException ex) {
             throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, userId);
+        } catch (AttendeeExistsException e) {
+            throw new ServiceException(CONFLICT, ATTENDEE_ALREADY_EXISTS, userId, eventOccurrenceId);
         }
     }
 
