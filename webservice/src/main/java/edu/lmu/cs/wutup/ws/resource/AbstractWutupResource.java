@@ -192,8 +192,8 @@ public abstract class AbstractWutupResource {
     }
 
     /**
-     * Creates a pagination data object out of string parameters. Throws a serice exception with BAD_REQUEST if either
-     * parmeter is missing or malformed; throws a service exception with FORBIDDEN if values are out of range.
+     * Creates a pagination data object out of string parameters. Throws a service exception with BAD_REQUEST if either
+     * parameter is missing or malformed; throws a service exception with FORBIDDEN if values are out of range.
      */
     PaginationData paginationDataFor(String pageString, String pageSizeString) {
 
