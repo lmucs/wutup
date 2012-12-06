@@ -59,6 +59,10 @@ public class CommentDaoUtils {
         }
     }
 
+    public static void deleteCommentsRelatedToSubject(JdbcTemplate jdbcTemplate, String objectName, int subjectId) {
+        jdbcTemplate.update("delete from " + objectName + "_comment where subjectId=?", subjectId);
+    }
+
     public static List<Comment> findCommentableObjectComments(JdbcTemplate jdbcTemplate, String SQL_STRING, User author) {
         knownAuthor = author;
         return jdbcTemplate.query(SQL_STRING, commentRowMapper);
