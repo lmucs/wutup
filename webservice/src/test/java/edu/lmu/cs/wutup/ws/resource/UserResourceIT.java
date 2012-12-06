@@ -11,6 +11,72 @@ import org.junit.Test;
 public class UserResourceIT {
 
     @Test
+    public void testGetUserById() {
+        given()
+            .contentType("application/json")
+        .expect()
+            .statusCode(200)
+            .contentType("application/json")
+            .body(containsString("\"id\":5"))
+            .body(containsString("\"nickname\":\"IKOK\""))
+            .body(containsString("\"email\":\"iggy@hotmail.com\""))
+            .body(containsString("\"firstname\":\"Ignatius\""))
+            .body(containsString("\"lastname\":\"Krumpkin\""))
+        .when()
+            .get("wutup/users/5");
+    }
+
+    @Test
+    public void testGetNonExistantUserByIdResponds404() {
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(404).
+        when().
+            get("/wutup/users/12344");
+    }
+
+    @Test
+    public void testGetUserWithMalformedIdResponds400() {
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(400).
+        when().
+            get("/wutup/users/hellonurse");
+    }
+
+    @Test
+    public void testCreateUserRequiresAtleastNameAndEmail() {
+        given()
+            .contentType("application/json")
+            .body("{\"id\":155,\"firstname\":\"Carlos\",\"lastname\":\"Agudo\""
+                    + ",\"nickname\":\"Big Sexy\"}")
+        .expect()
+            .statusCode(400)
+        .when()
+            .post("/wutup/users");
+
+        given()
+            .contentType("application/json")
+            .body("{\"id\":155,\"lastname\":\"Agudo\""
+                    + ",\"nickname\":\"Big Sexy\",\"email\":\"cagudo@gmail.com\"}")
+        .expect()
+            .statusCode(400)
+        .when()
+            .post("/wutup/users");
+
+        given()
+            .contentType("application/json")
+            .body("{\"id\":155,\"firstname\":\"Carlos\","
+                    + ",\"nickname\":\"Big Sexy\",\"email\":\"cagudo@gmail.com\"}")
+        .expect()
+            .statusCode(400)
+        .when()
+            .post("/wutup/users");
+    }
+
+    @Test
     public void createUserOnPostToUsersResourceResponds201WithLocation() {
         given()
             .contentType("application/json")
@@ -21,6 +87,32 @@ public class UserResourceIT {
             .header("Location", "http://localhost:8080/wutup/users/3505")
         .when()
             .post("/wutup/users");
+    }
+
+    @Test
+    public void postedUserCanBeRead() {
+        given()
+            .contentType("application/json")
+            .body("{\"firstname\":\"Cake\",\"lastname\":\"Man\""
+                    + ",\"nickname\":\"Funfetti\",\"email\":\"party@party.com\"}")
+        .expect()
+            .statusCode(201)
+            .header("Location", "http://localhost:8080/wutup/users/3506")
+        .when()
+            .post("/wutup/users");
+
+        given()
+            .contentType("application/json")
+        .expect()
+            .statusCode(200)
+            .contentType("application/json")
+            .body(containsString("\"id\":3506"))
+            .body(containsString("\"nickname\":\"Funfetti\""))
+            .body(containsString("\"email\":\"party@party.com\""))
+            .body(containsString("\"firstname\":\"Cake\""))
+            .body(containsString("\"lastname\":\"Man\""))
+        .when()
+            .get("wutup/users/3506");
     }
 
     @Test
@@ -96,6 +188,47 @@ public class UserResourceIT {
             .statusCode(204)
         .when()
             .patch("/wutup/users/2");
+    }
+
+    @Test
+    public void deleteNonExistantUserResponds404() {
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(404).
+        when().
+            delete("/wutup/users/88434");
+    }
+
+    @Test
+    public void deletedUserCanNoLongerBeFound() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":3504")).
+            body(containsString("\"firstname\":\"Sam\"")).
+            body(containsString("\"lastname\":\"Verhasselt\"")).
+            body(containsString("\"email\":\"azureus42@yahoo.com\"")).
+            body(containsString("\"nickname\":\"Sam Verhasselt\"")).
+            body(containsString("\"facebookId\":\"777892175\"")).
+        when().
+            get("/wutup/users/3504");
+
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(204).
+        when().
+            delete("/wutup/users/3504");
+
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(404).
+        when().
+            get("/wutup/users/3504");
     }
 
     @Test

@@ -45,6 +45,7 @@ public class UserResource extends AbstractWutupResource {
     private static final String USER_NOT_FOUND = "User %d does not exist.";
     private static final String USER_NOT_FOUND_BY_QUERY = "No User found by specified query parameters";
     private static final String USER_ALREADY_EXISTS = "User %d already exists";
+    private static final String USER_UNDER_SPECIFIED = "User is not sufficiently specified for creation.";
 
     @Autowired
     UserService userService;
@@ -55,6 +56,7 @@ public class UserResource extends AbstractWutupResource {
         // User id will be automatically generated
         u.setId(null);
         try {
+            checkUserHasRequiredFields(u);
             userService.createUser(u);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(u.getId() + "").build();
             return Response.created(newLocation).build();
@@ -128,6 +130,12 @@ public class UserResource extends AbstractWutupResource {
             return userService.findCommentsByUser(existingUser, pagination);
         } catch (NoSuchUserException e) {
             throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, id);
+        }
+    }
+
+    public void checkUserHasRequiredFields(User u) {
+        if (u.getEmail() == null || u.getFirstName() == null || u.getLastName() == null) {
+            throw new ServiceException(BAD_REQUEST, USER_UNDER_SPECIFIED);
         }
     }
 }

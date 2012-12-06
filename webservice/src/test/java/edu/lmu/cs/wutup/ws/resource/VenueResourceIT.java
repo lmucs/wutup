@@ -221,7 +221,7 @@ public class VenueResourceIT {
             body(containsString("\"longitude\":0")).
         when().
             get("/wutup/venues/11");
-        
+
         given().
             contentType("application/json").
             header("Accept", "application/json").
@@ -237,7 +237,7 @@ public class VenueResourceIT {
         when().
             get("/wutup/venues/11");
     }
-    
+
     @Test
     public void testDeleteNonExistantVenueResponds404() {
         given().

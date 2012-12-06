@@ -27,7 +27,7 @@ public class UserResourceTest {
     UserResource resource;
     UserService service;
     UriInfo sampleUriInfo;
-    User sampleUser = new User(1, "heyheyhey@gmail.com");
+    User sampleUser = new User(1, "john", "crown",  "heyheyhey@gmail.com", "lolol", "haha");
     PaginationData samplePagination = new PaginationData(0, 10);
 
     @Before
