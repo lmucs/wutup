@@ -43,6 +43,7 @@ public class UserResource extends AbstractWutupResource {
 
     private static final String MISSING_QUERY_PARAM = "Must provide query parameter %s.";
     private static final String USER_NOT_FOUND = "User %d does not exist.";
+    private static final String USER_NOT_FOUND_BY_QUERY = "No User found by specified query parameters";
     private static final String USER_ALREADY_EXISTS = "User %d already exists";
 
     @Autowired
@@ -72,8 +73,7 @@ public class UserResource extends AbstractWutupResource {
         try {
             return userService.findUserByFacebookId(idString);
         } catch (NoSuchUserException e) {
-            int id = toInteger("fbId", idString);
-            throw new ServiceException(NOT_FOUND, USER_NOT_FOUND, id);
+            throw new ServiceException(NOT_FOUND, USER_NOT_FOUND_BY_QUERY);
         }
     }
 

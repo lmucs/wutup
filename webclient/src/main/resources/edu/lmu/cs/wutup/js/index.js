@@ -1,5 +1,4 @@
 var loadPageFunctionality = function (baseUrl, user) {
-	console.log(user);
 	"use strict";
     var map, infowindow,
 	    calculateRadius = function (bounds) {
@@ -153,20 +152,24 @@ var loadPageFunctionality = function (baseUrl, user) {
         getCalendarView = function () {
             return $('#calendar').fullCalendar('getView');
         },
-        
+
         setUserInfo = function () {
         	setProfilePicture();
         	setUserNameForGreeting();
         },
 
         setProfilePicture = function () {
-            var picture = document.getElementById("profile-picture-img"),
-                facebookPictureSrc = "https://graph.facebook.com/" + user.facebookId + "/picture?type=normal";
-            picture.src = facebookPictureSrc;
+            if (user.facebookId !== undefined) {
+                var picture = document.getElementById("profile-picture-img"),
+                    facebookPictureSrc = "https://graph.facebook.com/" + user.facebookId + "/picture?type=normal";
+                picture.src = facebookPictureSrc;
+            }
         },
 
         setUserNameForGreeting = function () {
-            document.getElementById("nickname").innerHTML = user.firstname;
+            if (user.firstname != undefined) {
+                document.getElementById("nickname").innerHTML = user.firstname;
+            }
         },
 
         instantiateMapAndCalendar = function () {
