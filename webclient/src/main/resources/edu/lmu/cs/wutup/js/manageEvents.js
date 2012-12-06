@@ -246,7 +246,6 @@ var loadPageFunctionality = function (baseUrl, user) {
         },
 
         createOccurrence = function (eventName, venueName, start, end) {
-            console.log(eventName, venueName);
             $.get(baseUrl + ':8080/wutup/events?name=' + parsedForUrl(eventName), function (events) {
                 $.get(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(venueName), function (venues) {
                     var newOccurrence = {
