@@ -89,7 +89,7 @@ public class FBAuthResource {
             final String accessToken = fbService.getAccessToken(code, redirectUri);
             fbService.findOrCreateFBUser(accessToken, fbService.getUserIdFromFB(fbService.getFBUser(accessToken)));
             return Response
-                    .seeOther(new URI(landing))
+                    .seeOther(new URI(/*landing*/"http://wutup.cs.lmu.edu:9090/wutup"))
                     .build();
 
         } catch (Exception e) {
@@ -122,6 +122,7 @@ public class FBAuthResource {
         }
 
         try {
+            
             return Response
                     .ok(fbService.syncUser(fbService.getAccessToken(code, redirectUri)))
                     .build();
