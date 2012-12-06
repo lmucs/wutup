@@ -162,7 +162,7 @@ var loadPageFunctionality = function (baseUrl, user) {
             if (user.facebookId !== undefined) {
                 var picture = $("#profile-picture-img"),
                     facebookPictureSrc = "https://graph.facebook.com/" + user.facebookId + "/picture?type=normal";
-                picture.attr("src","second.jpg");
+                picture.attr("src",facebookPictureSrc);
             }
         },
 
