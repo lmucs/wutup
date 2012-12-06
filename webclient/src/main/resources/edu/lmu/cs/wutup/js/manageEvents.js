@@ -246,7 +246,6 @@ var loadPageFunctionality = function (baseUrl, user) {
         },
 
         createOccurrence = function (eventName, venueName, start, end) {
-            console.log(eventName, venueName);
             $.get(baseUrl + ':8080/wutup/events?name=' + parsedForUrl(eventName), function (events) {
                 $.get(baseUrl + ':8080/wutup/venues?name=' + parsedForUrl(venueName), function (venues) {
                     var newOccurrence = {
@@ -267,7 +266,7 @@ var loadPageFunctionality = function (baseUrl, user) {
                         success: function (response, textStatus, jqXHR) {
                             console.log("Hooray We Added A New Occurrence!!");
                             $.extend(newOccurrence, {id: response});
-                            mapMarkers.push(createMarker(occurrence))
+                            mapMarkers.push(createMarker(newOccurrence))
                             renderEventOnCalendar(newOccurrence);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
