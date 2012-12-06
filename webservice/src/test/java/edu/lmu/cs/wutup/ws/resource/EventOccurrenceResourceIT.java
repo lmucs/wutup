@@ -138,6 +138,26 @@ public class EventOccurrenceResourceIT {
             get("/wutup/occurrences?eventId=abba&start=1325764800000&end=1338465600000");
     }
 
+    @Test
+    public void getWithNonExistentEventIdReturns200() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+        when().
+            get("/wutup/occurrences?eventId=30");
+    }
+
+    @Test
+    public void getWithNonExistentTimeIntervalReturns200() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+        when().
+            get("/wutup/occurrences?start=1025764100000&end=1025764800000");
+    }
+
     @Ignore
     @Test
     public void getWithInvalidTimeIntervalReturns400() {
@@ -146,7 +166,7 @@ public class EventOccurrenceResourceIT {
         expect().
             statusCode(400).
         when().
-            get("/wutup/occurrences?eventId=2&start=1325764800000&end=aroundmidnight");
+            get("/wutup/occurrences?eventId=2&start=1325764800000&end=reallate");
     }
 
     @Test
