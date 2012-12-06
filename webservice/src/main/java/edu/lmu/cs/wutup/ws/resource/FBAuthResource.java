@@ -59,7 +59,7 @@ public class FBAuthResource {
             @DefaultValue("") @QueryParam("error") String error,
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
-        String redirectUri = "http://wutup.cs.lmu.edu:9090/wutup/";
+        String redirectUri = "http://wutup.cs.lmu.edu:8080/wutup/auth/facebook";
         
         if (!landing.equals("")) {
             try {
@@ -106,7 +106,7 @@ public class FBAuthResource {
             @DefaultValue("") @QueryParam("error") String error,
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
-        final String redirectUri = "http://wutup.cs.lmu.edu:9090/wutup/";
+        final String redirectUri = "http://wutup.cs.lmu.edu:8080/wutup/auth/facebook/sync";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
