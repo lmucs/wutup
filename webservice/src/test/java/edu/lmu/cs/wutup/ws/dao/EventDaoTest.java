@@ -233,6 +233,17 @@ public class EventDaoTest {
         assertThat(updatedComment.getAuthor(), is(initialComment.getAuthor()));
     }
 
+    @Test
+    public void deletingEventAlsoDeletesRelatedComments() {
+        List<Comment> comments = eventDao.findComments(1, new PaginationData(0, 10));
+        assertThat(comments.size(), is(1));
+        assertThat(comments.get(0).getId(), is(1));
+        assertThat(comments.get(0).getBody(), is("Boo, sux"));
+        assertThat(comments.get(0).getPostDate().toString(), is("2012-03-17T00:00:00.000-07:00"));
+        eventDao.deleteEvent(1);
+        comments = eventDao.findComments(1, new PaginationData(0, 10));       
+    }
+
     @After
     public void tearDownDatabase() {
         database.shutdown();

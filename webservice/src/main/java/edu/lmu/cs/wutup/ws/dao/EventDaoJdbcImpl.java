@@ -95,6 +95,7 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public void deleteEvent(int id) {
+        deleteRelatedEventComments(id);
         int rowsUpdated = jdbcTemplate.update(DELETE_SQL, id);
         if (rowsUpdated == 0) {
             throw new NoSuchEventException();
@@ -139,6 +140,10 @@ public class EventDaoJdbcImpl implements EventDao {
                     rs.getString("nickname"), rs.getString("facebookId")));
         }
     };
+    
+    public void deleteRelatedEventComments(int subjectId) {
+        CommentDaoUtils.deleteCommentsRelatedToSubject(jdbcTemplate, "event", subjectId);
+    }
 
     private QueryBuilder getSelectQuery() {
         return new QueryBuilder().select("e.*", "u.*").from("event e").joinOn("user u", "e.ownerId = u.id");
