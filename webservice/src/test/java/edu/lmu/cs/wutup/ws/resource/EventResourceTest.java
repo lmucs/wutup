@@ -179,7 +179,7 @@ public class EventResourceTest {
     @Test
     public void findingAllEventsWithPageSizeTooHighProducesHttp403() {
         try {
-            resource.findEvents(null, null, null, "1", "51");
+            resource.findEvents(null, null, "1", "51");
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(403));
@@ -189,7 +189,7 @@ public class EventResourceTest {
     @Test
     public void findingAllEventsWithPageSizeTooLowProducesHttp403() {
         try {
-            resource.findEvents(null, null, null, "0", "0");
+            resource.findEvents(null, null, "0", "0");
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(403));

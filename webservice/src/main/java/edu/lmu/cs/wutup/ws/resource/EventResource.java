@@ -32,7 +32,6 @@ import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -56,7 +55,6 @@ public class EventResource extends AbstractWutupResource {
     @GET
     @Path("/")
     public List<Event> findEvents(@QueryParam("name") String name, @QueryParam("owner") String ownerString,
-            @QueryParam("category") List<Category> categories,
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
             @QueryParam("pageSize") @DefaultValue(DEFAULT_PAGE_SIZE) String pageSizeString) {
         ArrayList<Integer> owners = new ArrayList<Integer>();
@@ -71,7 +69,7 @@ public class EventResource extends AbstractWutupResource {
             }
         }
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
-        return eventService.findEvents(name, owners, categories, pagination);
+        return eventService.findEvents(name, owners, pagination);
     }
 
     @GET

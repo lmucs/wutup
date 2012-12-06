@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.dao.EventDao;
@@ -25,7 +24,7 @@ public class EventServiceTest {
 
     EventServiceImpl service;
     EventDao dao;
-    
+
     User sampleUser = new User(4, "hello@gmail.com");
     Event sampleEvent = new Event(1, "Alice");
     Comment sampleComment = new Comment(56, "Mic check 1 2", null, sampleUser);
@@ -43,13 +42,6 @@ public class EventServiceTest {
     public void creationDelegatesToDao() {
         service.createEvent(sampleEvent);
         verify(dao).createEvent(sampleEvent);
-    }
-
-    @Ignore
-    @Test
-    public void retrieveEventByName() {
-        dao.createEvent(new Event(null, "Party Hardy", "fat party!", new User()));
-        assertThat(dao.findEventByName("Party Hardy").getDescription(), equalTo("fat party!"));
     }
 
     @Test(expected=EventExistsException.class)
@@ -75,25 +67,25 @@ public class EventServiceTest {
         // TODO service.findEventsByName(null, 10, 50);
         // TODO verify(dao).findAllEvents(10, 50);
     }
-    
+
     @Test
     public void findingEventCommentsDelegatesToDao() {
         when(dao.findComments(1, samplePagination)).thenReturn(sampleComments);
         assertThat(service.findComments(1, samplePagination), equalTo(sampleComments));
     }
-    
+
     @Test
     public void addingCommentDelegatesToDao() {
         service.addComment(2, sampleComment);
         verify(dao).addComment(2, sampleComment);
     }
-    
+
     @Test
     public void updatingCommentDelegatestoDao() {
         service.updateComment(2, sampleComment);
         verify(dao).updateComment(2, sampleComment);
     }
-    
+
     @Test
     public void deletingCommentDelegatesToDao() {
         service.deleteComment(1, 2);

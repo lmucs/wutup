@@ -7,6 +7,7 @@ import static edu.lmu.cs.wutup.ws.model.FacebookGateway.createUserEvent;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,11 +27,11 @@ import com.restfb.types.User;
 
 import edu.lmu.cs.wutup.ws.exception.FBUserSynchronizationException;
 import edu.lmu.cs.wutup.ws.exception.InvalidFBAccessTokenException;
-import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.FacebookGateway;
+import edu.lmu.cs.wutup.ws.model.PaginationData;
 
 @Service
 public class FBAuthServiceImpl implements FBAuthService {
@@ -96,15 +97,8 @@ public class FBAuthServiceImpl implements FBAuthService {
             u = userService.findUserByFacebookId(fbId);
         } catch (NoSuchUserException e) {
             User fbUser = getFBUser(accessToken);
-            u = new edu.lmu.cs.wutup.ws.model.User(
-                    null,
-                    fbUser.getFirstName(),
-                    fbUser.getLastName(),
-                    fbUser.getEmail(),
-                    fbUser.getName(),
-                    null,
-                    fbUser.getId()
-                );
+            u = new edu.lmu.cs.wutup.ws.model.User(null, fbUser.getFirstName(), fbUser.getLastName(),
+                    fbUser.getEmail(), fbUser.getName(), null, fbUser.getId());
             userService.createUser(u);
             u = userService.findUserByFacebookId(fbUser.getId());
         }
@@ -118,26 +112,26 @@ public class FBAuthServiceImpl implements FBAuthService {
             JSONArray events = new JSONObject(getUserEvents(accessToken)).getJSONArray("data");
 
             EventOccurrence e;
-            edu.lmu.cs.wutup.ws.model.User u = findOrCreateFBUser(accessToken, getUserIdFromFB(getFBUser(accessToken)));;
+            edu.lmu.cs.wutup.ws.model.User u = findOrCreateFBUser(accessToken, getUserIdFromFB(getFBUser(accessToken)));
 
             for (int x = 0; x < events.length(); x++) {
                 try {
                     JSONObject current = events.getJSONObject(x);
-                    
+
                     Event event;
-                    try {
-                        event = eventService.findEventByName(current.getString("name"));
-                    } catch (NoSuchEventException exception) {
+                    ArrayList<Event> existingEvents = new ArrayList<Event>(eventService.findEvents(
+                            current.getString("name"), null, new PaginationData(0, 1)));
+
+                    if (existingEvents.size() > 0) {
+                        event = existingEvents.get(0);
+                    } else {
                         event = new Event(null, current.getString("name"), current.getString("name"), u);
                         eventService.createEvent(event);
                     }
 
                     // TODO: Check for this in the database first.
-                    e = new EventOccurrence(
-                            event,
-                            geocodeService.resolveVenue(current.getString("location"), null, null),
-                            new DateTime(current.getString("start_time"))
-                        );
+                    e = new EventOccurrence(event, geocodeService.resolveVenue(current.getString("location"), null,
+                            null), new DateTime(current.getString("start_time")));
 
                     System.out.println("EventOccurrence ID: " + occurrenceService.createEventOccurrence(e));
                 } catch (JSONException exception) {
@@ -153,12 +147,12 @@ public class FBAuthServiceImpl implements FBAuthService {
     }
 
     @Override
-    public String postUserEvent(String accessToken, String name, DateTime start, DateTime end,
-            String description, String location, String FBLocationId, String privacyType) {
+    public String postUserEvent(String accessToken, String name, DateTime start, DateTime end, String description,
+            String location, String FBLocationId, String privacyType) {
 
         try {
-            return createUserEvent(accessToken, getUserIdFromFB(getFBUser(accessToken)), name, start, end, description, location,
-                    FBLocationId, privacyType);
+            return createUserEvent(accessToken, getUserIdFromFB(getFBUser(accessToken)), name, start, end, description,
+                    location, FBLocationId, privacyType);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

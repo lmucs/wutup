@@ -19,7 +19,6 @@ import org.springframework.stereotype.Repository;
 import edu.lmu.cs.wutup.ws.dao.util.QueryBuilder;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
-import edu.lmu.cs.wutup.ws.model.Category;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -77,19 +76,9 @@ public class EventDaoJdbcImpl implements EventDao {
             throw new NoSuchEventException();
         }
     }
-    
-    @Override
-    public Event findEventByName(String name) {
-        QueryBuilder query = getSelectQuery().where("e.name=:name", name);
-        try {
-            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), eventRowMapper);
-        } catch (IncorrectResultSizeDataAccessException e) {
-            throw new NoSuchEventException();
-        }
-    }
 
     @Override
-    public List<Event> findEvents(String name, List<Integer> owners, List<Category> categories, PaginationData pagination) {
+    public List<Event> findEvents(String name, List<Integer> owners, PaginationData pagination) {
         QueryBuilder query = getSelectQuery();
 
         if (name != null) {
@@ -98,12 +87,6 @@ public class EventDaoJdbcImpl implements EventDao {
         if (owners != null) {
             for (int i = 0; i < owners.size(); i++) {
                 query.orWhere("e.ownerId = :id" + i, owners.get(i));
-            }
-        }
-        if (categories != null) {
-            // TODO: Implement categories search
-            for (int i = 0; i < categories.size(); i++) {
-                query.where(null, categories.get(i));
             }
         }
 
