@@ -72,7 +72,7 @@ public class VenueDaoTest {
     public void createdVenueWithoutIdHasCorrectIdGenerated() {
         Venue v = new Venue(null, "I'm a venue!", "Nowhere, CA, 94041", 26.0000, -118.3432, null);
         venueDao.createVenue(v);
-        assertThat(v.getId(), is(11));
+        assertThat(v.getId(), is(12));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class VenueDaoTest {
 
     @Test
     public void countOfInitialDataSetIsAsExpected() {
-        assertThat(venueDao.findNumberOfVenues(), is(9));
+        assertThat(venueDao.findNumberOfVenues(), is(10));
     }
 
     // TODO LOTS MORE TESTS ON THE VARIOUS FORMS OF GETTERS
@@ -129,7 +129,7 @@ public class VenueDaoTest {
 
     @Test
     public void findingVenuesViaPaginationWorks() {
-        assertThat(venueDao.findNumberOfVenues(), is(9));
+        assertThat(venueDao.findNumberOfVenues(), is(10));
         List<Venue> venues = venueDao.findVenues(null, null, null, new PaginationData(0, 3));
         assertThat(venues.size(), is(3));
         venues = venueDao.findVenues(null, null, null, new PaginationData(1, 3));

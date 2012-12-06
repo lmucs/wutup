@@ -165,7 +165,7 @@ public class VenueResourceIT {
             body("{\"id\":26,\"name\":\"Test Venue\",\"address\":\"6555 Test St, Los Angeles, CA\",\"latitude\":34.1019444,\"longitude\":-188.3261111}").
         expect().
             statusCode(201).
-            header("Location", "http://localhost:8080/wutup/venues/11").
+            header("Location", "http://localhost:8080/wutup/venues/12").
         when().
             post("/wutup/venues");
     }
@@ -177,11 +177,76 @@ public class VenueResourceIT {
             body("{\"name\":\"Test Venue\",\"address\":\"6555 Test St, Los Angeles, CA\",\"latitude\":34.1019444,\"longitude\":-188.3261111}").
         expect().
             statusCode(201).
-            header("Location", "http://localhost:8080/wutup/venues/12").
+            header("Location", "http://localhost:8080/wutup/venues/13").
         when().
             post("/wutup/venues");
     }
 
+    @Test
+    public void testPostedVenueCanBeRead() {
+        given().
+            contentType("application/json").
+            body("{\"name\":\"Test Venue\",\"address\":\"6555 Test St, Los Angeles, CA\",\"latitude\":34.1019444,\"longitude\":-188.3261111}").
+        expect().
+            statusCode(201).
+            header("Location", "http://localhost:8080/wutup/venues/14").
+        when().
+            post("/wutup/venues");
+
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":14")).
+            body(containsString("\"name\":\"Test Venue\"")).
+            body(containsString("\"address\":\"6555 Test St, Los Angeles, CA\"")).
+            body(containsString("\"latitude\":34.1019444")).
+            body(containsString("\"longitude\":-188.3261111")).
+        when().
+            get("/wutup/venues/14");
+    }
+
+    @Test
+    public void testDeletedVenueCanNoLongerBeFound() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            contentType("application/json").
+            body(containsString("\"id\":11")).
+            body(containsString("\"name\":\"Some trailer park\"")).
+            body(containsString("\"address\":\"2800 East Observatory Rd, Los Angeles, CA 90027\"")).
+            body(containsString("\"latitude\":0")).
+            body(containsString("\"longitude\":0")).
+        when().
+            get("/wutup/venues/11");
+        
+        given().
+            contentType("application/json").
+            header("Accept", "application/json").
+        expect().
+            statusCode(204).
+        when().
+            delete("/wutup/venues/11");
+
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(404).
+        when().
+            get("/wutup/venues/11");
+    }
+    
+    @Test
+    public void testDeleteNonExistantVenueResponds404() {
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(404).
+        when().
+            get("/wutup/venues/8008135");
+    }
     // **************************** PROPERTY TESTING ****************************
     @Test
     public void testGetVenuePropertiesById() {
