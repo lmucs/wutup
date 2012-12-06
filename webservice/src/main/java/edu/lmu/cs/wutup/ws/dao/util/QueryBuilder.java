@@ -158,12 +158,15 @@ public class QueryBuilder {
     public QueryBuilder whereInterval(Interval i) {
         assertNotBuilt();
         if (i != null) {
+            Timestamp startStamp = new Timestamp(i.getStartMillis());
+            Timestamp endStamp = new Timestamp(i.getEndMillis());
+
             andClauses.add("start between ? and ?");
             andClauses.add("end between ? and ?");
-            andParameters.put(":start1", new Timestamp(i.getStartMillis()));
-            andParameters.put(":end1", new Timestamp(i.getEndMillis()));
-            andParameters.put(":start2", new Timestamp(i.getStartMillis()));
-            andParameters.put(":end2", new Timestamp(i.getEndMillis()));
+            andParameters.put(":start1", startStamp);
+            andParameters.put(":end1", endStamp);
+            andParameters.put(":start2", startStamp);
+            andParameters.put(":end2", endStamp);
         }
         return this;
     }
