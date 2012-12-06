@@ -205,6 +205,7 @@ table, td, th {
     border-width: 5px;
     border-color: #A50001;
     border-radius: 25px;
+    min-width: 320px;
     background-color: white;
     padding: 10px;
 }
