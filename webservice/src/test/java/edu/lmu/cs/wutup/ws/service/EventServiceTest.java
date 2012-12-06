@@ -61,11 +61,11 @@ public class EventServiceTest {
         when(dao.findEventById(7)).thenReturn(sampleEvent);
         assertThat(service.findEventById(7), equalTo(sampleEvent));
 
-        // TODO service.findEventsByName("Alice", 1, 5);
-        // TODO verify(dao).findEventsByName("Alice", 1, 5);
+        service.findEvents(sampleEvent.getName(), null, samplePagination);
+        verify(dao).findEvents(sampleEvent.getName(), null, samplePagination);
 
-        // TODO service.findEventsByName(null, 10, 50);
-        // TODO verify(dao).findAllEvents(10, 50);
+        service.findEvents(null, null, samplePagination);
+        verify(dao).findEvents(null, null, samplePagination);
     }
 
     @Test
