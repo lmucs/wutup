@@ -267,7 +267,7 @@ var loadPageFunctionality = function (baseUrl, user) {
                         success: function (response, textStatus, jqXHR) {
                             console.log("Hooray We Added A New Occurrence!!");
                             $.extend(newOccurrence, {id: response});
-                            mapMarkers.push(createMarker(occurrence))
+                            mapMarkers.push(createMarker(newOccurrence))
                             renderEventOnCalendar(newOccurrence);
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
