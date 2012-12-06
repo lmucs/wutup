@@ -59,7 +59,7 @@ create table occurrence (
   start datetime,
   end datetime,
   primary key(id),
-  foreign key(eventId) references event(id),
+  foreign key(eventId) references event(id) on delete cascade,
   foreign key(venueId) references venue(id)
 );
 
@@ -75,15 +75,14 @@ create table event_category (
   eventId integer not null,
   categoryId integer not null,
   primary key(eventId, categoryId),
-  foreign key(eventId) references occurrence(id),
-  foreign key(categoryId) references user(id)
+  foreign key(eventId) references occurrence(id) on delete cascade
 );
 
 create table attendee (
   occurrenceId integer not null,
   userId integer not null,
   primary key(occurrenceId, userId),
-  foreign key(occurrenceId) references occurrence(id),
+  foreign key(occurrenceId) references occurrence(id) on delete cascade,
   foreign key(userId) references user(id)
 );
 
@@ -94,7 +93,7 @@ create table event_comment (
   text varchar(2048),
   timestamp datetime,
   primary key(id),
-  foreign key(subjectId) references event(id),
+  foreign key(subjectId) references event(id) on delete cascade,
   foreign key(authorId) references user(id)
 );
 
@@ -105,7 +104,7 @@ create table occurrence_comment (
   text varchar(2048),
   timestamp datetime,
   primary key(id),
-  foreign key(subjectId) references occurrence(id),
+  foreign key(subjectId) references occurrence(id) on delete cascade,
   foreign key(authorId) references user(id)
 );
 

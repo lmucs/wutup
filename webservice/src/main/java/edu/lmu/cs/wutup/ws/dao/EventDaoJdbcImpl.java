@@ -29,12 +29,10 @@ public class EventDaoJdbcImpl implements EventDao {
 
     private static final String SELECT_COMMENT = "select ec.*, u.* from event_comment ec join user u on (ec.authorId = u.id)";
     private static final String PAGINATION = "limit ? offset ?";
-
     private static final String CREATE_SQL = "insert into event (name, description, ownerId) values (?,?,?)";
     private static final String UPDATE_SQL = "update event set name=ifnull(?, name), description=ifnull(?, description) where id=?";
     private static final String DELETE_SQL = "delete from event where id=?";
     private static final String COUNT_SQL = "select count(*) from event";
-
     private static final String FIND_COMMENTS_SQL = SELECT_COMMENT
             + " where ec.subjectId = ? order by ec.timestamp asc " + PAGINATION;
 
@@ -95,7 +93,6 @@ public class EventDaoJdbcImpl implements EventDao {
 
     @Override
     public void deleteEvent(int id) {
-        deleteRelatedEventComments(id);
         int rowsUpdated = jdbcTemplate.update(DELETE_SQL, id);
         if (rowsUpdated == 0) {
             throw new NoSuchEventException();
@@ -140,10 +137,6 @@ public class EventDaoJdbcImpl implements EventDao {
                     rs.getString("nickname"), rs.getString("facebookId")));
         }
     };
-    
-    public void deleteRelatedEventComments(int subjectId) {
-        CommentDaoUtils.deleteCommentsRelatedToSubject(jdbcTemplate, "event", subjectId);
-    }
 
     private QueryBuilder getSelectQuery() {
         return new QueryBuilder().select("e.*", "u.*").from("event e").joinOn("user u", "e.ownerId = u.id");
