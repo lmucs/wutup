@@ -122,9 +122,9 @@ public class FBAuthResource {
         }
 
         try {
-            
+            fbService.syncUser(fbService.getAccessToken(code, redirectUri));
             return Response
-                    .ok(fbService.syncUser(fbService.getAccessToken(code, redirectUri)))
+                    .seeOther(new URI("http://wutup.cs.lmu.edu:9090/wutup/ManageEvents"))
                     .build();
 
         } catch (Exception e) {

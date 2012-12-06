@@ -153,22 +153,22 @@ var loadPageFunctionality = function (baseUrl, user) {
             return $('#calendar').fullCalendar('getView');
         },
 
-        setUserInfo = function () {
-        	setProfilePicture();
-        	setUserNameForGreeting();
+        setUserInfo = function (user) {
+        	setProfilePicture(user);
+        	setUserNameForGreeting(user);
         },
 
-        setProfilePicture = function () {
+        setProfilePicture = function (user) {
             if (user.facebookId !== undefined) {
-                var picture = document.getElementById("profile-picture-img"),
+                var picture = $("#profile-picture-img"),
                     facebookPictureSrc = "https://graph.facebook.com/" + user.facebookId + "/picture?type=normal";
-                picture.src = facebookPictureSrc;
+                picture.attr("src",facebookPictureSrc);
             }
         },
 
-        setUserNameForGreeting = function () {
+        setUserNameForGreeting = function (user) {
             if (user.firstname != undefined) {
-                document.getElementById("nickname").innerHTML = user.firstname;
+                $("#nickname").val(user.firstname);
             }
         },
 
@@ -198,7 +198,7 @@ var loadPageFunctionality = function (baseUrl, user) {
                     map.setCenter(initialLocation);
                 };
             map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-
+            setUserInfo(user);
             // Trying W3C Geolocation
             if (navigator.geolocation) {
                 browserSupportFlag = true;
@@ -240,7 +240,6 @@ var loadPageFunctionality = function (baseUrl, user) {
 
         };
 
-    setUserInfo();
     instantiateMapAndCalendar();
     //Start your Engines!
 
