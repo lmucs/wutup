@@ -184,6 +184,10 @@ public abstract class AbstractWutupResource {
             return new Interval(startTime, endTime);
         } catch (MalformedDateTimeStringException e) {
             throw new ServiceException(BAD_REQUEST, TIME_CANNOT_BE_PARSED);
+        } catch (NumberFormatException e) {
+            throw new ServiceException(BAD_REQUEST, TIME_CANNOT_BE_PARSED);
+        } catch (IllegalArgumentException e) {
+            throw new ServiceException(BAD_REQUEST, TIME_CANNOT_BE_PARSED);
         }
     }
 
