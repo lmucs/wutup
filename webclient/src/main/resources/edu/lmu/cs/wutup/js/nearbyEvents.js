@@ -28,7 +28,7 @@ var loadPageFunctionality = function(baseUrl, user) {
             return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&center=' + center.lat() + ',' + center.lng() + '&radius=' + (radius <= 100 ? radius : 100) + '&start=' + start.getTime() +
                 '&end=' + end.getTime();
         },
-        
+
         generateAttendingButton = function(occurrence) {
         	var attendingButton = $('<button id="marker-attend-btn" class="btn btn-success">')
         			.text("Attend Event!") ;
@@ -66,7 +66,6 @@ var loadPageFunctionality = function(baseUrl, user) {
         },
 
         createMarker = function (occurrence) {
-            console.log(occurrence);
             var marker = new google.maps.Marker({
                 map: map,
                 position: new google.maps.LatLng(occurrence.venue.latitude, occurrence.venue.longitude),
