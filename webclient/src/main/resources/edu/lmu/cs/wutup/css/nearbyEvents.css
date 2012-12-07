@@ -6,3 +6,13 @@
 .fc-header-title h2 {
 	font-size: 100%;
 }
+
+.calendar {
+    border-style: solid;
+    border-width: 5px;
+    border-color: #A50001;
+    border-radius: 25px;
+    min-width: 320px;
+    background-color: white;
+    padding: 10px;
+}

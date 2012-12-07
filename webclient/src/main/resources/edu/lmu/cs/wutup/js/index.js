@@ -34,6 +34,10 @@ var loadPageFunctionality = function (baseUrl, user) {
 	    generateOccurrencesByAttendeeUrl = function (attendee) {
 	    	return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&attendee=' + attendee.id;
 	    },
+	    
+	    generateAttendeeByOccurrenceUrl = function (occurrence) {
+	    	return baseUrl + ':8080/wutup/occurrences/' + occurrence.id + '/attendees';
+	    },
 
         displayInfoWindow = function (occurrence) {
             if (infowindow) {
@@ -47,9 +51,23 @@ var loadPageFunctionality = function (baseUrl, user) {
         },
 
         displayEventInfo = function (occurrence) {
-            $("#result").html(function () {
+        	var i, attendeesHtmlString ="";
+            $("#event-info").html(function () {
                 return "<h3>" + occurrence.event.name + "</h3>" + "<p>" + occurrence.event.description + "</p>" + "<h4>" + occurrence.venue.name + "</h4>" + "<p><b>Address:</b> " + occurrence.venue.address + "</p>" + "<p><b>Start:</b> " + occurrence.start + "</p>" + "<p><b>End:</b> " + occurrence.end + "</p>";
             });
+            $.getJSON(generateAttendeeByOccurrenceUrl(occurrence), function (attendees) {
+            	if (attendees.length > 0) { 
+            		$("#attendees-header").removeClass("hidden");
+	            	for (i = 0; i < attendees.length; i += 1) {
+	            		 attendeesHtmlString += '<p>' + attendees[i].nickname + '</p>';
+	            	}
+	            	$("#event-attendees").html(attendeesHtmlString);
+            	} else {
+            		$("#attendees-header").addClass("hidden");
+            		$("#event-attendees").html(attendeesHtmlString);
+            	}
+            });
+           
 
         },
 
