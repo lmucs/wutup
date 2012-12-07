@@ -1,8 +1,6 @@
 package edu.lmu.cs.wutup.ws.resource;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -52,25 +50,14 @@ public class FBAuthResource {
     @GET
     @Path("/facebook")
     public Response authenticate(
-            @DefaultValue("") @QueryParam("landing") String landing,
             @DefaultValue("") @QueryParam("state") String state,
             @DefaultValue("") @QueryParam("code") String code,
             @DefaultValue("") @QueryParam("error_reason") String errorReason,
             @DefaultValue("") @QueryParam("error") String error,
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
-        String redirectUri = "http://wutup.cs.lmu.edu:8080/wutup/auth/facebook";
-        
-        if (!landing.equals("")) {
-            try {
-                redirectUri = redirectUri + "?landing=" + URLEncoder.encode(landing, "ISO-8859-1");
-            } catch (UnsupportedEncodingException e) {
-                return Response.
-                        serverError().
-                        build();
-                
-            }
-        }
+        String redirectUri = "http://localhost:8080/wutup/auth/facebook";
+        String finalLandingUri = "http://localhost:9090/wutup";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -89,7 +76,7 @@ public class FBAuthResource {
             final String accessToken = fbService.getAccessToken(code, redirectUri);
             fbService.findOrCreateFBUser(accessToken, fbService.getUserIdFromFB(fbService.getFBUser(accessToken)));
             return Response
-                    .seeOther(new URI(/*landing*/"http://wutup.cs.lmu.edu:9090/wutup"))
+                    .seeOther(new URI(finalLandingUri))
                     .build();
 
         } catch (Exception e) {
@@ -106,7 +93,8 @@ public class FBAuthResource {
             @DefaultValue("") @QueryParam("error") String error,
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
-        final String redirectUri = "http://wutup.cs.lmu.edu:8080/wutup/auth/facebook/sync";
+        final String redirectUri = "http://localhost:8080/wutup/auth/facebook/sync";
+        final String finalLandingUri = "http://localhost:9090/wutup/ManageEvents";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -124,7 +112,7 @@ public class FBAuthResource {
         try {
             fbService.syncUser(fbService.getAccessToken(code, redirectUri));
             return Response
-                    .seeOther(new URI("http://wutup.cs.lmu.edu:9090/wutup/ManageEvents"))
+                    .seeOther(new URI(finalLandingUri))
                     .build();
 
         } catch (Exception e) {
