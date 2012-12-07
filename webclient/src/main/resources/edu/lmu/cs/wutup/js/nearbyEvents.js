@@ -1,5 +1,10 @@
 var loadPageFunctionality = function(baseUrl, user) {
 	"use strict";
+
+	jQuery.fn.getHtmlString = function() {
+	    return $(this).get()[0].outerHTML;
+	}
+
     var map, infowindow,
         calculateRadius = function (bounds) {
             if (Number.prototype.toRad === undefined) {
@@ -25,12 +30,20 @@ var loadPageFunctionality = function(baseUrl, user) {
         },
         
         generateAttendingButton = function(occurrence) {
-        	var attendingButton = $('<button class="btn btn-success">')
-        			.text("Attend Event!") 
-        			.click( function () { 
-        				$.post(baseUrl + ':8080/wutup/occurrences/' + occurrence.id + '/attendees', user.id);
-        				});
-        	return attendingButton;
+        	var attendingButton = $('<button id="marker-attend-btn" class="btn btn-success">')
+        			.text("Attend Event!") ;
+        	return $(attendingButton).getHtmlString();
+        },
+
+        armMarkerAttendButton = function(occurrence) {
+            $("#marker-attend-btn").live("click", function () {
+                $.ajax({
+                    type: "POST",
+                    url: baseUrl + ':8080/wutup/occurrences/' + occurrence.id + '/attendees',
+                    data: JSON.stringify(user.id),
+                    contentType:"application/json"
+                });
+            });
         },
 
         displayInfoWindow = function (occurrence) {
@@ -53,6 +66,7 @@ var loadPageFunctionality = function(baseUrl, user) {
         },
 
         createMarker = function (occurrence) {
+            console.log(occurrence);
             var marker = new google.maps.Marker({
                 map: map,
                 position: new google.maps.LatLng(occurrence.venue.latitude, occurrence.venue.longitude),
@@ -62,6 +76,7 @@ var loadPageFunctionality = function(baseUrl, user) {
             google.maps.event.addListener(marker, 'click', function () {
                 displayInfoWindow(occurrence);
                 displayEventInfo(occurrence);
+                armMarkerAttendButton(occurrence);
             });
             return marker;
         },
@@ -88,6 +103,7 @@ var loadPageFunctionality = function(baseUrl, user) {
                 i;
             for (i = 0; i < occurrences.length; i += 1) {
                 calendarEvents.push({
+                    id: occurrences[i].id,
                     title: occurrences[i].event.name,
                     start: new Date(occurrences[i].start),
                     end: new Date(occurrences[i].end),
@@ -203,7 +219,6 @@ var loadPageFunctionality = function(baseUrl, user) {
             }
 
         };
-
 
     instantiateMapAndCalendar();
     //Start your Engines!
