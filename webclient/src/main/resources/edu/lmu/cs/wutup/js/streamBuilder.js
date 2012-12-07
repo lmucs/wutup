@@ -7,7 +7,7 @@ var initializeEventQueue = function (id, rows, names) {
     table.style.attribute = "value";
 
     var tableBody=document.createElement('tbody');
-    var event, buttonCell, attendRow, attendButton, declineRow, declineButton, maybeRow, maybeButton;
+    var event, buttonCell, attendRow, attendButton, declineRow, declineButton;
     var pictureCell, picture;
     var detailsCell, eventTitle, eventDescription;
     var timeCell;
@@ -24,7 +24,6 @@ var initializeEventQueue = function (id, rows, names) {
         event = document.createElement("tr");
     
         if (isMainEventStream) {
-            
 
             buttonCell = document.createElement("td");
 
@@ -41,17 +40,9 @@ var initializeEventQueue = function (id, rows, names) {
             declineButton.className = "btn btn-small";
             declineButton.innerHTML = "Decline";
             declineRow.appendChild(declineButton);
-
-            maybeRow = document.createElement("tr");
-            maybeButton = document.createElement("btn");
-            maybeButton.id = id + "-maybeButton";
-            maybeButton.className = "btn btn-small";
-            maybeButton.innerHTML = "Maybe";
-            maybeRow.appendChild(maybeButton);
             
             buttonCell.appendChild(attendRow);
             buttonCell.appendChild(declineRow);
-            buttonCell.appendChild(maybeRow);
             
             event.appendChild(buttonCell);
         }

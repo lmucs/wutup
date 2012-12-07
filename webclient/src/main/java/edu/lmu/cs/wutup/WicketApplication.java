@@ -19,7 +19,7 @@ public class WicketApplication extends WebApplication
 	@Override
 	public Class<? extends WebPage> getHomePage()
 	{
-		return Index.class;
+		return NearbyEvents.class;
 	}
 
 	/**
@@ -34,6 +34,6 @@ public class WicketApplication extends WebApplication
 		getRootRequestMapperAsCompound().add(
 	            new MountMapper("/mount/point", new PackageMapper(
 	                PackageName.forClass(Index.class))));
-	        mountPackage("/", Index.class);
+	        mountPackage("/", NearbyEvents.class);
 	}
 }

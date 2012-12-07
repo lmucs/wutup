@@ -1,6 +1,6 @@
-$(document).ready(function () {
+var loadPageFunctionality = function(baseUrl, user) {
 	"use strict";
-    var map, infowindow, baseUrl = window.location.protocol + "//" + window.location.hostname,
+    var map, infowindow,
         calculateRadius = function (bounds) {
             if (Number.prototype.toRad === undefined) {
                 Number.prototype.toRad = function () {
@@ -23,13 +23,23 @@ $(document).ready(function () {
             return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&center=' + center.lat() + ',' + center.lng() + '&radius=' + (radius <= 100 ? radius : 100) + '&start=' + start.getTime() +
                 '&end=' + end.getTime();
         },
+        
+        generateAttendingButton = function(occurrence) {
+        	var attendingButton = $('<button class="btn btn-success">')
+        			.text("Attend Event!") 
+        			.click( function () { 
+        				$.post(baseUrl + ':8080/wutup/occurrences/' + occurrence.id + '/attendees', user.id);
+        				});
+        	return attendingButton;
+        },
 
         displayInfoWindow = function (occurrence) {
+        	var start = occurrence.start, end = occurrence.end, event = occurrence.event, venue = occurrence.venue;
             if (infowindow) {
                 infowindow.close();
             }
             infowindow = new google.maps.InfoWindow({
-                content: occurrence.event.name + '</br>',
+                content: event.name + '</br>' + start.toLocaleDateString() + ': ' + start.toLocaleTimeString() + ' - ' + end.toLocaleTimeString() + '</br>' + (user != undefined ? generateAttendingButton(occurrence) : ''),
                 position: new google.maps.LatLng(occurrence.venue.latitude, occurrence.venue.longitude)
             });
             infowindow.open(map);
@@ -198,4 +208,4 @@ $(document).ready(function () {
     instantiateMapAndCalendar();
     //Start your Engines!
 
-});
+};

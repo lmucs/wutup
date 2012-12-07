@@ -168,7 +168,7 @@ var loadPageFunctionality = function (baseUrl, user) {
 
         setUserNameForGreeting = function (user) {
             if (user.firstname != undefined) {
-                $("#nickname").val(user.firstname);
+                $("#nickname").append(user.firstname);
             }
         },
 
