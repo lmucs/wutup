@@ -15,8 +15,8 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
-import edu.lmu.cs.wutup.android.container.Occurrences;
-import edu.lmu.cs.wutup.android.model.Occurrence;
+import edu.lmu.cs.wutup.android.container.EventOccurrences;
+import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 
 public class GetOccurrences extends HttpWutup{
     
@@ -45,9 +45,9 @@ public class GetOccurrences extends HttpWutup{
             try {
                 
                 ObjectMapper occurenceObjectMapper = new ObjectMapper();
-                ObjectReader occurenceObjectReader = occurenceObjectMapper.reader(Occurrence.class);
+                ObjectReader occurenceObjectReader = occurenceObjectMapper.reader(EventOccurrence.class);
                 
-                MappingIterator<Occurrence> occurenceIterator = occurenceObjectReader.readValues(occurenceBuffer);
+                MappingIterator<EventOccurrence> occurenceIterator = occurenceObjectReader.readValues(occurenceBuffer);
                 fillOccurrences(occurenceIterator);
                 
             } finally {
@@ -61,16 +61,16 @@ public class GetOccurrences extends HttpWutup{
  
     }
     
-    private void fillOccurrences(MappingIterator<Occurrence> occurenceIterator) {
+    private void fillOccurrences(MappingIterator<EventOccurrence> occurenceIterator) {
         
-        Occurrences.clear();
+        EventOccurrences.clear();
         
         while (occurenceIterator.hasNext()) {
             
-            Occurrence occurrence = (Occurrence) occurenceIterator.next();
+            EventOccurrence occurrence = (EventOccurrence) occurenceIterator.next();
             Log.i("GET", "Retrieved occurence " + occurrence.getId() + ".");
             
-            Occurrences.add(occurrence);
+            EventOccurrences.add(occurrence);
             
         }
         

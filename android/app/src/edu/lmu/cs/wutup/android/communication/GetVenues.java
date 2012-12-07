@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
 import edu.lmu.cs.wutup.android.container.Venues;
-import edu.lmu.cs.wutup.android.model.Venue;
+import edu.lmu.cs.wutup.ws.model.Venue;
 
 public class GetVenues extends HttpWutup{
         

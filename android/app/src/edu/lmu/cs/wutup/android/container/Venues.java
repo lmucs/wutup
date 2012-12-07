@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.util.Log;
 
-import edu.lmu.cs.wutup.android.model.Venue;
+import edu.lmu.cs.wutup.ws.model.Venue;
 
 public class Venues {
     

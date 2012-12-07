@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
 import edu.lmu.cs.wutup.android.container.Events;
-import edu.lmu.cs.wutup.android.model.Event;
+import edu.lmu.cs.wutup.ws.model.Event;
 
 public class GetEvents extends HttpWutup{
     

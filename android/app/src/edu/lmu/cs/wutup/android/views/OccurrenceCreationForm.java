@@ -19,8 +19,8 @@ import edu.lmu.cs.wutup.android.autofill.ManualListAdapter;
 import edu.lmu.cs.wutup.android.communication.HttpWutup;
 import edu.lmu.cs.wutup.android.manager.LogTags;
 import edu.lmu.cs.wutup.android.manager.R;
-import edu.lmu.cs.wutup.android.model.Event;
-import edu.lmu.cs.wutup.android.model.Venue;
+import edu.lmu.cs.wutup.ws.model.Event;
+import edu.lmu.cs.wutup.ws.model.Venue;
 
 public class OccurrenceCreationForm extends Activity {
 	
