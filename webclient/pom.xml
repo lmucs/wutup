@@ -171,7 +171,7 @@
 		          <!-- http port -->
 		          <port>9090</port>
 		          <!-- application path always starts with /-->
-		          <path>/wutup</path>
+		          <path>/</path>
 		          <!-- if you want to use test dependencies rather than only runtime -->
 		          <useTestClasspath>false</useTestClasspath>
 		        </configuration>

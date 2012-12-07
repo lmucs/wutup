@@ -34,6 +34,7 @@ public class WicketApplication extends WebApplication
 		getRootRequestMapperAsCompound().add(
 	            new MountMapper("/mount/point", new PackageMapper(
 	                PackageName.forClass(Index.class))));
-	        mountPackage("/", NearbyEvents.class);
+	    mountPackage("/", NearbyEvents.class);
+	        
 	}
 }
