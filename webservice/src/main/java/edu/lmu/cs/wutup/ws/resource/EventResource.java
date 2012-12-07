@@ -53,6 +53,19 @@ public class EventResource extends AbstractWutupResource {
     EventService eventService;
 
     @GET
+    @Path("/{id}")
+    public Event findEventById(@PathParam("id") String idString) {
+        checkRequiredParameter("id", idString);
+        int id = toInteger("id", idString);
+
+        try {
+            return eventService.findEventById(id);
+        } catch (NoSuchEventException e) {
+            throw new ServiceException(NOT_FOUND, EVENT_NOT_FOUND, id);
+        }
+    }
+
+    @GET
     @Path("/")
     public List<Event> findEvents(@QueryParam("name") String name, @QueryParam("owner") String ownerString,
             @QueryParam("page") @DefaultValue(DEFAULT_PAGE) String pageString,
@@ -70,19 +83,6 @@ public class EventResource extends AbstractWutupResource {
         }
         PaginationData pagination = paginationDataFor(pageString, pageSizeString);
         return eventService.findEvents(name, owners, pagination);
-    }
-
-    @GET
-    @Path("/{id}")
-    public Event findEventById(@PathParam("id") String idString) {
-        checkRequiredParameter("id", idString);
-        int id = toInteger("id", idString);
-
-        try {
-            return eventService.findEventById(id);
-        } catch (NoSuchEventException e) {
-            throw new ServiceException(NOT_FOUND, EVENT_NOT_FOUND, id);
-        }
     }
 
     @POST

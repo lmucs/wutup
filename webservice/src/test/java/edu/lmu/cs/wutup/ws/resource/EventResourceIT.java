@@ -26,6 +26,34 @@ public class EventResourceIT {
     }
 
     @Test
+    public void endpointGetByIdWithUnusedIdProduces404() {
+        expect().
+            statusCode(404).
+            body(containsString("Event 100")).
+        when().
+            get("/wutup/events/100");
+    }
+
+    @Test
+    public void getEventsByQueryCanRespondEmptyArray() {
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(equalTo("[]")).
+        when().
+            get("/wutup/events?owner=8008135,2626");
+
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(equalTo("[]")).
+        when().
+            get("/wutup/events?name=zubatz");
+    }
+
+    @Test
     public void endpointGetByNameFindsExistingEvent() {
         given().
             header("Accept", "application/json").
@@ -100,12 +128,71 @@ public class EventResourceIT {
     }
 
     @Test
-    public void endpointGetByIdWithUnusedIdProduces404() {
+    public void endpointPostJsonCorrectlyCreatesEventAndProduces201() {
+        given().
+            contentType("application/json").
+            body("{\"name\":\"Ski Trip\",\"description\":\"WOOT\",\"creator\":{\"id\":8}}").
         expect().
-            statusCode(404).
-            body(containsString("Event 100")).
+            statusCode(201).
+            header("Location", "http://localhost:8080/wutup/events/9").
+            contentType("application/json").
         when().
-            get("/wutup/events/100");
+            post("/wutup/events");
+    }
+
+    @Test
+    public void endpointPostToEventsWithBadEventResponds400() {
+        given().
+            contentType("application/json").
+            body("{\"creator\":{\"id\":8},\"description\":\"TALLY HO\"}").
+        expect().
+            statusCode(400).
+        when().
+            post("/wutup/events");
+
+        given().
+            contentType("application/json").
+            body("{\"name\":\"Cheers, gentlemen.\"\"description\":\"TALLY HO\"}").
+        expect().
+            statusCode(400).
+        when().
+            post("/wutup/events");
+
+        given().
+            contentType("application/json").
+            body("{}").
+        expect().
+            statusCode(400).
+        when().
+            post("/wutup/events");
+    }
+
+    @Test
+    public void postedEventCanBeReadAndContainsLocationInHeader() {
+        given().
+            contentType("application/json").
+            body("{\"name\":\"Cheers, Gentlemen\",\"description\":\"TALLY HO\",\"creator\":{\"id\":8}}").
+        expect().
+            statusCode(201).
+            header("Location", "http://localhost:8080/wutup/events/10").
+            contentType("application/json").
+        when().
+            post("/wutup/events");
+
+        given().
+            header("Accept", "application/json").
+        expect().
+            statusCode(200).
+            body(containsString("\"name\":\"Cheers, Gentlemen\"")).
+            body(containsString("\"id\":10")).
+            body(containsString("\"description\":\"TALLY HO\"")).
+            body(containsString("\"firstname\":\"Katrina\"")).
+            body(containsString("\"lastname\":\"Sherbina\"")).
+            body(containsString("\"email\":\"ksherbina@gmail.com\"")).
+            body(containsString("\"firstname\":\"Katrina\"")).
+            body(containsString("\"nickname\":\"Kat\"")).
+        when().
+            get("/wutup/events/10");
     }
 
     @Test
@@ -117,25 +204,6 @@ public class EventResourceIT {
             statusCode(404).
         when().
             patch("/wutup/events/100");
-    }
-
-    @Test
-    public void getEventsByQueryCanRespondEmptyArray() {
-        given().
-            header("Accept", "application/json").
-        expect().
-            statusCode(200).
-            body(equalTo("[]")).
-        when().
-            get("/wutup/events?owner=8008135,2626");
-
-        given().
-            header("Accept", "application/json").
-        expect().
-            statusCode(200).
-            body(equalTo("[]")).
-        when().
-            get("/wutup/events?name=zubatz");
     }
 
     @Test
@@ -159,76 +227,45 @@ public class EventResourceIT {
         when().
             patch("/wutup/events/8");
 
-        given()
-            .contentType("application/json")
-        .expect()
-            .statusCode(200)
-            .body(containsString("\"name\":\"Texas Hold Em\""))
-            .body(containsString("\"description\":\"Don't miss out\""))
-            .body(containsString("\"id\":8"))
-        .when()
-            .get("/wutup/events/8");
-    }
-
-    @Test
-    public void endpointPostJsonCorrectlyCreatesEventAndProduces201() {
         given().
             contentType("application/json").
-            body("{\"name\":\"Ski Trip\",\"description\":\"WOOT\",\"creator\":{\"id\":8}}").
-        expect().
-            statusCode(201).
-            header("Location", "http://localhost:8080/wutup/events/9").
-            contentType("application/json").
-        when().
-            post("/wutup/events");
-    }
-
-    @Test
-    public void endpointPostToEventsWithBadEventResponsd400() {
-        given().
-            contentType("application/json").
-            body("{\"creator\":{\"id\":8},\"description\":\"TALLY HO\"}").
-        expect().
-            statusCode(400).
-        when().
-            post("/wutup/events");
-        
-        given().
-            contentType("application/json").
-            body("{\"name\":\"Cheers, gentlemen.\"\"description\":\"TALLY HO\"}").
-        expect().
-            statusCode(400).
-        when().
-            post("/wutup/events");
-    }
-
-    @Test
-    public void postedEventCanBeRead() {
-        given().
-            contentType("application/json").
-            body("{\"name\":\"Cheers, Gentlemen\",\"description\":\"TALLY HO\",\"creator\":{\"id\":8}}").
-        expect().
-            statusCode(201).
-            header("Location", "http://localhost:8080/wutup/events/10").
-            contentType("application/json").
-        when().
-            post("/wutup/events");
-        
-        given().
-            header("Accept", "application/json").
         expect().
             statusCode(200).
-            body(containsString("\"name\":\"Cheers, Gentlemen\"")).
-            body(containsString("\"id\":10")).
-            body(containsString("\"description\":\"TALLY HO\"")).
-            body(containsString("\"firstname\":\"Katrina\"")).
-            body(containsString("\"lastname\":\"Sherbina\"")).
-            body(containsString("\"email\":\"ksherbina@gmail.com\"")).
-            body(containsString("\"firstname\":\"Katrina\"")).
-            body(containsString("\"nickname\":\"Kat\"")).
+            body(containsString("\"name\":\"Texas Hold Em\"")).
+            body(containsString("\"description\":\"Don't miss out\"")).
+            body(containsString("\"id\":8")).
         when().
-            get("/wutup/events/10");
+            get("/wutup/events/8");
     }
+
+    @Test
+    public void endpointDeleteWithUnusedIdProduces404() {
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(404).
+        when().
+            delete("/wutup/events/100");
+    }
+
+    @Test
+    public void endpointDeleteRemovesEvents() {
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(204).
+        when().
+            delete("/wutup/events/6");
+
+        given().
+            contentType("application/json").
+        expect().
+            statusCode(404).
+            body(containsString("Event 6")).
+        when().
+            get("/wutup/events/6");
+    }
+
     // *********************** Comment Testing ***********************
 
     @Test

@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.dao.EventDao;
 import edu.lmu.cs.wutup.ws.exception.EventExistsException;
+import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
@@ -44,7 +45,7 @@ public class EventServiceTest {
         verify(dao).createEvent(sampleEvent);
     }
 
-    @Test(expected=EventExistsException.class)
+    @Test(expected = EventExistsException.class)
     public void creationPropagatesExistExceptions() {
         doThrow(new EventExistsException()).when(dao).createEvent(sampleEvent);
         service.createEvent(sampleEvent);
@@ -54,6 +55,12 @@ public class EventServiceTest {
     public void updatesDelegateToDao() {
         service.updateEvent(sampleEvent);
         verify(dao).updateEvent(sampleEvent);
+    }
+
+    @Test(expected = NoSuchEventException.class)
+    public void updatePropagatesNoSuchExceptions() {
+        doThrow(new NoSuchEventException()).when(dao).createEvent(sampleEvent);
+        service.createEvent(sampleEvent);
     }
 
     @Test
@@ -66,6 +73,24 @@ public class EventServiceTest {
 
         service.findEvents(null, null, samplePagination);
         verify(dao).findEvents(null, null, samplePagination);
+    }
+
+    @Test(expected = NoSuchEventException.class)
+    public void findingPropagatesNoSuchExceptions() {
+        doThrow(new NoSuchEventException()).when(dao).findEventById(8675309);
+        service.findEventById(8675309);
+    }
+
+    @Test
+    public void deletionDelegatesToDao() {
+        service.deleteEvent(sampleEvent.getId());
+        verify(dao).deleteEvent(sampleEvent.getId());
+    }
+
+    @Test(expected = NoSuchEventException.class)
+    public void deletionPropagatesNoSuchExceptions() {
+        doThrow(new NoSuchEventException()).when(dao).deleteEvent(8675309);
+        service.deleteEvent(8675309);
     }
 
     @Test
@@ -90,11 +115,5 @@ public class EventServiceTest {
     public void deletingCommentDelegatesToDao() {
         service.deleteComment(1, 2);
         verify(dao).deleteComment(1, 2);
-    }
-
-    @Test
-    public void deletionDelegatesToDao() {
-        service.deleteEvent(sampleEvent.getId());
-        verify(dao).deleteEvent(sampleEvent.getId());
     }
 }
