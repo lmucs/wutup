@@ -12,7 +12,6 @@
             <div class="section">
                 <a href="#"id="profile-picture-link"><img id="profile-picture-img" src="http://placehold.it/125x150" alt=""></a>
                     Wutup <div id="nickname"></div>!
-                <btn id="event-createButton" class="btn btn-large">Create Event</btn>
             </div>
 			<div class="section">
 				<div id="calendar" style='font-size: 13px'></div>
@@ -41,18 +40,11 @@
                 <div id="map_canvas" class="section"></div>
 
                 <div class="section">
-                    <div class="row-fluid header section" id="mainEventStreamNavigator">
-                        <btn class="btn"><i class="icon-backward"></i></btn>
-                        <h3 style="display: inline-block; ">
-                            <script language = "Javascript">
-                                var date = new Date();
-                                var day = date.getDate();
-                                var month = date.getMonth(); 
-                                var year = date.getFullYear();
-                                document.write(month + " " + day + " " + year);
-                            </script>
-                        </h3>
-                        <btn class="btn"><i class="icon-forward"></i></btn>
+                    <div class="row-fluid header section"></div>
+                    <div class="well">
+	                    <div id="event-info" ></div>
+	                    <h3 id="attendees-header" class="hidden">Attendees</h3>
+	                    <div id="event-attendees"></div>
                     </div>
 
                     <table class="table table-hover" id="current-event-stream"></table>

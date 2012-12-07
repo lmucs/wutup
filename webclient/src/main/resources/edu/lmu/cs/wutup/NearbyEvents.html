@@ -1,21 +1,14 @@
 <wicket:head>
 	<wicket:link>
-	    <link href="css/dashboard.css" rel="stylesheet" />
+	    <link href="css/nearbyEvents.css" rel="stylesheet" />
 	</wicket:link>
 </wicket:head>
 <wicket:extend>
 	<div id="container" class="container-fluid">
-		<div class="row-fluid" id="call-to-action">
-			<div class="span9">
-				<h2>Yo! Wutup?</h2>
-			</div>
-		</div>
-
-		<!-- Example row of columns -->
 		<div class="row-fluid">
 			<div class="span6">
 				<h2>Calendar</h2>
-				<div id="calendar" style='font-size: 18px'></div>
+				<div id="calendar" class="calendar"></div>
 			</div>
 			<div class="span1 hidden-desktop"></div>
 			<div class="span6">
@@ -27,7 +20,7 @@
 		<div class="row-fluid">
 			<div class="span">
 				<h2>Event Info</h2>
-				<div id="result" class="well well-large">THIS IS A WELL</div>
+				<div id="result" class="well well-large"></div>
 			</div>
 		</div>
 
@@ -46,6 +39,7 @@
 		<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.1.1/js/bootstrap.min.js"></script>
 		<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBqOg2q0dqSGTw1OkyqWTWsVSOLCsHjXpM&sensor=false"></script>
 		<script src="lib/fullcalendar/fullcalendar.min.js"></script>
-		<script src="js/dashboard.js"></script>
+		<script src="js/fbCheck.js"></script>
+		<script src="js/nearbyEvents.js"></script>
 	</wicket:link>
 </wicket:extend>

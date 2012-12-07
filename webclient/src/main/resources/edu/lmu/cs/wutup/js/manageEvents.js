@@ -45,6 +45,7 @@ var loadPageFunctionality = function (baseUrl, user) {
                 infowindow.open(map, marker);
             });
 
+			setUserInfo(user);
             // Trying W3C Geolocation
             if (navigator.geolocation) {
                 browserSupportFlag = true;
@@ -98,6 +99,25 @@ var loadPageFunctionality = function (baseUrl, user) {
         showError = function(errorText) {
         	 $('#facebook-sync').before("<div class=\"alert alert-error\"><a class=\"close\" data-dismiss=\"alert\">×</a><strong>Error: </strong>" + errorText + "</div>")
         },
+        
+        setUserInfo = function (user) {
+        	setProfilePicture(user);
+        	setUserNameForGreeting(user);
+        },
+
+        setProfilePicture = function (user) {
+            if (user.facebookId !== undefined) {
+                var picture = $("#profile-picture-img"),
+                    facebookPictureSrc = "https://graph.facebook.com/" + user.facebookId + "/picture?type=normal";
+                picture.attr("src",facebookPictureSrc);
+            }
+        },
+
+        setUserNameForGreeting = function (user) {
+        	console.log(user);
+                $("#nickname").append(user.firstname);
+        },
+        
 	    generateUserBoundUrl = function (owner) {
 	        return baseUrl + ':8080/wutup/events?page=0&pageSize=20&owner=' + owner.id	;
 	    },
