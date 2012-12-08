@@ -15,12 +15,7 @@ public class Occurrence {
     private ArrayList<User> attendees =  new ArrayList<User>();
     private ArrayList<Comment> comments = new ArrayList<Comment>();
     
-    public Occurrence(Event event, Venue venue, DateTime start, DateTime end) {
-    	this.event = event;
-    	this.venue = venue;
-    	this.start = start;
-    	this.end = end;
-    }
+
     
     public Integer getId() {
         return id;

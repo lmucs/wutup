@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import edu.lmu.cs.wutup.android.communication.GetOccurrences;
 import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.manager.EventPlotter;
 import edu.lmu.cs.wutup.android.model.Event;
@@ -24,45 +25,32 @@ import com.google.android.maps.OverlayItem;
 
 public class Map extends MapActivity {
     
-    private Drawable dropPin;
+    private static Drawable dropPin;
     
-    private MapView mapView; 
-    private List<Overlay> mapOverlays;
-    private EventPlotter occurrenceOverlay;
+    private static MapView mapView; 
+    private static List<Overlay> mapOverlays;
+    private static EventPlotter occurrenceOverlay;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map_view);
-		
-//		new GetOccurrences().execute();
-//		new GetEvents().execute();
-//		new GetVenues().execute();
-		
-		try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-		
+						
 		mapView = (MapView) findViewById(R.id.map);
 		mapView.setBuiltInZoomControls(true);
 		
-//		dropPin = this.getResources().getDrawable(R.drawable.androidmarker);
-//		
-//		mapOverlays = mapView.getOverlays();
-//		occurrenceOverlay = new EventPlotter(dropPin, this);	
-//		mapOverlays.add(occurrenceOverlay);
+		dropPin = this.getResources().getDrawable(R.drawable.androidmarker);
+		mapOverlays = mapView.getOverlays();
+		occurrenceOverlay = new EventPlotter(dropPin, this);	
+		mapOverlays.add(occurrenceOverlay);
 		
-
+		refreshMap();
 		
-//		plotOccurrences();
-//		
-//		new PostOccurrences().execute(Occurrences.get(9));
-//		
-//		plotOccurrences();
-		
+	}
+	
+	public static void refreshMap() {
+       new GetOccurrences().execute(mapView.getMapCenter(), 50);
 	}
 	
 	@Override
@@ -70,7 +58,7 @@ public class Map extends MapActivity {
                 return false;
         }
 	
-	private OverlayItem makeOverlayItem(Occurrence occurrence){
+	private static OverlayItem makeOverlayItem(Occurrence occurrence){
 	    	    
 	    Event event = occurrence.getEvent();
 	    Venue venue = occurrence.getVenue();
@@ -80,7 +68,7 @@ public class Map extends MapActivity {
 	    return new OverlayItem(position, event.getName(), event.getDescription());	    
 	}
 	
-	private void plotOccurrences() {
+	public static void plotOccurrences() {
 	    
 	    occurrenceOverlay.clearOverlay();
 	    Log.i("overlay", "Cleared occurrence overlay.");

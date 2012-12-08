@@ -13,6 +13,8 @@ public abstract class HttpWutup extends AsyncTask<Object, Integer, Object> {
 	public static final String ADDRESS_OF_OCCURRENCES = ADDRESS_OF_SERVER + "wutup/occurrences/";
 	public static final String ADDRESS_OF_VENUES = ADDRESS_OF_SERVER + "wutup/venues/";
 	
+	
+	
 	protected HttpClient client = new DefaultHttpClient();
 
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import edu.lmu.cs.wutup.android.communication.PostOccurrences;
 import edu.lmu.cs.wutup.android.manager.LogTags;
+import edu.lmu.cs.wutup.android.views.Map;
 import edu.lmu.cs.wutup.android.views.OccurrenceCreationForm;
 
 public class ResponceToPostOccurrenceButton implements OnClickListener {
@@ -46,6 +47,7 @@ public class ResponceToPostOccurrenceButton implements OnClickListener {
             Log.e(LogTags.POST, ERROR_MESSAGE, e);
         }
         
+        Map.refreshMap();
         occurrenceCreationForm.finish();
         
     }
