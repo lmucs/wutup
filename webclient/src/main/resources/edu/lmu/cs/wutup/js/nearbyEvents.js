@@ -57,12 +57,11 @@ var loadPageFunctionality = function(baseUrl, user) {
         	
         	$.when(checkAttendance).done(function() {
         		buttons = generateAttendingButton(occurrence, attendingEvent) + generateDeclineButton(occurrence, attendingEvent);
+        		setTimeout(function() {
+            		infowindow.setContent(infowindow.content + buttons);
+            		armMarkerButtons(occurrence);
+            	},100);
         	});
-        	setTimeout(function() {
-        		infowindow.setContent(infowindow.content + buttons);
-        		armMarkerButtons(occurrence);
-        	},100);
-        	
         },
         
 
