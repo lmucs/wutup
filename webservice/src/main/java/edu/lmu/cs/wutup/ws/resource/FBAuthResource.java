@@ -23,11 +23,11 @@ import edu.lmu.cs.wutup.ws.service.UserService;
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @Path("/auth")
-public class FBAuthResource {
+public class FBAuthResource extends AbstractWutupResource {
 
     @Autowired
     UserService userService;
-    
+
     @Autowired
     FBAuthService fbService;
 
@@ -39,7 +39,6 @@ public class FBAuthResource {
             return Response
                     .ok(userService.findUserByFacebookId(facebookId))
                     .build();
-
         } catch (NoSuchUserException e) {
             return Response
                     .ok("{}")
@@ -57,17 +56,15 @@ public class FBAuthResource {
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
         String redirectUri = "http://localhost:8080/wutup/auth/facebook";
-        String finalLandingUri = "http://localhost:9090/wutup";
+        String finalLandingUri = "http://localhost:9090/Index";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
-
         } else if (code.equals("")) {
             try {
                 return fbService.fetchFBCode(redirectUri);
-
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
                 return Response.serverError().build();
             }
         }
@@ -78,8 +75,8 @@ public class FBAuthResource {
             return Response
                     .seeOther(new URI(finalLandingUri))
                     .build();
-
         } catch (Exception e) {
+            logger.error(e);
             return Response.serverError().build();
         }
     }
@@ -94,17 +91,15 @@ public class FBAuthResource {
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
         final String redirectUri = "http://localhost:8080/wutup/auth/facebook/sync";
-        final String finalLandingUri = "http://localhost:9090/wutup/ManageEvents";
+        final String finalLandingUri = "http://localhost:9090/ManageEvents";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
-
         } else if (code.equals("")) {
             try {
                 return fbService.fetchFBCode(redirectUri);
-
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
                 return Response.serverError().build();
             }
         }
@@ -114,9 +109,8 @@ public class FBAuthResource {
             return Response
                     .seeOther(new URI(finalLandingUri))
                     .build();
-
         } catch (Exception e) {
-//            e.printStackTrace();
+            logger.error(e);
             return Response.serverError().build();
         }
     }

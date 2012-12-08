@@ -13,24 +13,27 @@ import org.joda.time.DateTime;
 import com.restfb.types.User;
 
 public interface FBAuthService {
-    public String getAccessToken(String code, String redirectUri) throws IOException;
-    
-    public Response fetchFBCode(String redirectUri) throws ParseException, ClientProtocolException,
-    UnsupportedEncodingException, IOException, URISyntaxException;
-    
-    public String getUserNameFromFB(com.restfb.types.User u);
 
-    public String getUserIdFromFB(com.restfb.types.User u);
+    String getAccessToken(String code, String redirectUri) throws IOException;
 
-    public User getFBUser(String accessToken);
+    Response fetchFBCode(String redirectUri) throws ParseException, ClientProtocolException,
+            UnsupportedEncodingException, IOException, URISyntaxException;
 
-    public String getUserEvents(String accessToken) throws ParseException, ClientProtocolException, IOException;
+    String getUserNameFromFB(com.restfb.types.User u);
 
-    public edu.lmu.cs.wutup.ws.model.User findOrCreateFBUser(String accessToken, String fbId);
+    String getUserIdFromFB(com.restfb.types.User u);
 
-    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken);
+    User getFBUser(String accessToken);
 
-    public String postUserEvent(String accessToken, String name, DateTime start, DateTime end,
-            String description, String location, String FBLocationId, String privacyType);
-    
+    String getUserEvents(String accessToken) throws ParseException, ClientProtocolException, IOException;
+
+    String getVenueFromFbById(String accessToken, String fbResourceId) throws ParseException, ClientProtocolException,
+            IOException;
+
+    edu.lmu.cs.wutup.ws.model.User findOrCreateFBUser(String accessToken, String fbId);
+
+    edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken);
+
+    String postUserEvent(String accessToken, String name, DateTime start, DateTime end, String description,
+            String location, String FBLocationId, String privacyType);
 }

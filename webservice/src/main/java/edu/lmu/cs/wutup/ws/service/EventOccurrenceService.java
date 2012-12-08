@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.joda.time.Interval;
@@ -18,6 +19,9 @@ public interface EventOccurrenceService extends CommentService {
     void deleteEventOccurrence(int id);
 
     List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination);
+
+    EventOccurrence findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start,
+            Timestamp end);
 
     EventOccurrence findEventOccurrenceById(int id);
 

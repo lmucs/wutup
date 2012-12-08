@@ -31,9 +31,6 @@ public class UserDaoJdbcImpl implements UserDao {
     private static final String UPDATE_SQL = "update user set firstName=ifnull(?, firstName), lastName=ifnull(?, lastName), "
             + "email=ifnull(?, email), nickname=ifnull(?, nickname), sessionId=ifnull(?, sessionId), facebookId=ifnull(?, facebookId) where id=?;";
     private static final String DELETE_SQL = "delete from user where id=?;";
-    private static final String FIND_BY_ID_SQL = "select * from user where id=?;";
-    private static final String FIND_BY_SESSION_ID_SQL = "select * from user where sessionId=?;";
-    private static final String FIND_BY_FACEBOOK_ID_SQL = "select * from user where facebookId=?;";
     private static final String COUNT_SQL = "select count(*) from user;";
 
     @Autowired
@@ -58,7 +55,8 @@ public class UserDaoJdbcImpl implements UserDao {
     @Override
     public User findUserById(int id) {
         try {
-            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, userRowMapper);
+            QueryBuilder query = getQueryOnUserWithIdFieldClause("id", id);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), userRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchUserException();
         }
@@ -67,7 +65,8 @@ public class UserDaoJdbcImpl implements UserDao {
     @Override
     public User findUserBySessionId(String sessionId) {
         try {
-            return jdbcTemplate.queryForObject(FIND_BY_SESSION_ID_SQL, new Object[]{sessionId}, userRowMapper);
+            QueryBuilder query = getQueryOnUserWithIdFieldClause("sessionId", sessionId);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), userRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchUserException();
         }
@@ -76,7 +75,8 @@ public class UserDaoJdbcImpl implements UserDao {
     @Override
     public User findUserByFacebookId(String id) {
         try {
-            return jdbcTemplate.queryForObject(FIND_BY_FACEBOOK_ID_SQL, new Object[]{id}, userRowMapper);
+            QueryBuilder query = getQueryOnUserWithIdFieldClause("facebookId", id);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), userRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchUserException();
         }
@@ -126,6 +126,10 @@ public class UserDaoJdbcImpl implements UserDao {
                 .addPagination(pagination);
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, builder.build(),
                 builder.getParametersArray(), author);
+    }
+
+    private QueryBuilder getQueryOnUserWithIdFieldClause(String idField, Object parameter) {
+        return new QueryBuilder().from("user").where(idField + "=:" + idField, parameter);
     }
 
     private void createUserWithGeneratedId(User u, KeyHolder keyHolder) {

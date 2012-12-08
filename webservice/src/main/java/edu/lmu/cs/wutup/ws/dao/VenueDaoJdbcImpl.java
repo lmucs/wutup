@@ -29,17 +29,10 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 @Repository
 public class VenueDaoJdbcImpl implements VenueDao {
 
-    private static final String SELECT_VENUE = "select v.* from venue v ";
-    private static final String SELECT_COMMENT = "select vc.*, u.* from venue_comment vc join user u on (vc.authorId = u.id)";
-    private static final String PAGINATION = "limit ? offset ?";
-
-    private static final String FIND_COMMENTS_SQL = SELECT_COMMENT + " where vc.subjectId = ? order by vc.timestamp "
-            + PAGINATION;
     private static final String CREATE_SQL = "insert into venue (id, name, address, latitude, longitude) values (?,?,?,?,?)";
     private static final String CREATE_WITH_AUTO_GENERATE_ID = "insert into venue (name, address, latitude, longitude) values (?,?,?,?)";
     private static final String UPDATE_SQL = "update venue set name=ifnull(?, name), address=ifnull(?, address), "
             + "latitude=ifnull(?, latitude), longitude=ifnull(?, longitude) where id=?";
-    private static final String FIND_BY_ID_SQL = SELECT_VENUE + " where v.id=?";
     private static final String DELETE_SQL = "delete from venue where id=?";
     private static final String COUNT_SQL = "select count(*) from venue";
     private static final String ADD_PROPERTY = "insert into venue_property(venueId, key, value) values(?,?,?)";
@@ -85,7 +78,19 @@ public class VenueDaoJdbcImpl implements VenueDao {
     @Override
     public Venue findVenueById(int id) {
         try {
-            return jdbcTemplate.queryForObject(FIND_BY_ID_SQL, new Object[]{id}, venueRowMapper);
+            QueryBuilder query = new QueryBuilder().from("venue").where("id=:id", id);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), venueRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchVenueException();
+        }
+    }
+
+    // TODO: Test this
+    @Override
+    public Venue findVenueByName(String name) {
+        try {
+            QueryBuilder query = new QueryBuilder().from("venue").where("name=:name", name);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), venueRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchVenueException();
         }
@@ -137,8 +142,14 @@ public class VenueDaoJdbcImpl implements VenueDao {
 
     @Override
     public List<Comment> findComments(int venueId, PaginationData pagination) {
-        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, FIND_COMMENTS_SQL, new Object[] {venueId,
-                pagination.pageSize, pagination.pageSize * pagination.pageNumber}, null);
+        QueryBuilder query = new QueryBuilder()
+            .select("vc.*,u.*")
+            .from("venue_comment vc")
+            .joinOn("user u", "vc.authorId = u.id")
+            .where("vc.subjectId=:subjectId", venueId)
+            .order("vc.timestamp")
+            .addPagination(pagination);
+        return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build(), query.getParametersArray(), null);
     }
 
     @Override
@@ -166,7 +177,8 @@ public class VenueDaoJdbcImpl implements VenueDao {
     @Override
     public Map<String, String> findProperties(int venueId) {
         QueryBuilder builder = new QueryBuilder().select("*").from("venue_property").where("venueId = :id", venueId);
-        List<String[]> keyValuePairs = jdbcTemplate.query(builder.build(), builder.getParametersArray(), propertyRowMapper);
+        List<String[]> keyValuePairs = jdbcTemplate.query(builder.build(), builder.getParametersArray(),
+                propertyRowMapper);
         Map<String, String> properties = new HashMap<String, String>();
         for (int i = 0; i < keyValuePairs.size(); i++) {
             properties.put(keyValuePairs.get(i)[0], keyValuePairs.get(i)[1]);

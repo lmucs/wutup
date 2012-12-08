@@ -12,6 +12,8 @@ public interface EventService extends CommentService {
     void updateEvent(Event e);
 
     Event findEventById(int id);
+    
+    Event findEventByName(String name);
 
     List<Event> findEvents(String name, List<Integer> owners, PaginationData pagination);
 

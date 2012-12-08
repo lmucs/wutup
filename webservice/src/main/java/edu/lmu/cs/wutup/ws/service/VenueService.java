@@ -13,6 +13,8 @@ public interface VenueService extends CommentService {
 
     Venue findVenueById(int id);
 
+    Venue findVenueByName(String name);
+
     List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination);
 
     void updateVenue(Venue loc);
@@ -28,5 +30,4 @@ public interface VenueService extends CommentService {
     void updateOrAddProperty(int venueId, Map<String, String> keyValuePair);
 
     void deleteProperty(int venueId, String propertyName);
-
 }

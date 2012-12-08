@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.joda.time.Interval;
@@ -20,6 +21,8 @@ public interface EventOccurrenceDao extends CommentDao {
     List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination);
 
     EventOccurrence findEventOccurrenceById(int id);
+    
+    EventOccurrence findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start, Timestamp end);
 
     List<EventOccurrence> findEventOccurrences(Integer attendee, Circle circle,
             Interval interval, List<Integer> eventId, Integer venueId, PaginationData pagination);

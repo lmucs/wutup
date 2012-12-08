@@ -60,7 +60,7 @@ public class GeocodeServiceImpl implements GeocodeService {
 
     }
     
-    public Venue resolveVenue(String address, Double lat, Double lng) throws ClientProtocolException, JSONException, IOException {
+    public Venue resolveVenue(String address, Double lat, Double lng) throws ClientProtocolException, JSONException, IOException, LocationNotFoundByGoogleException {
         if (address == null && (lat == null || lng == null)) {
             throw new NoAddressProvidedException();
         }
@@ -70,24 +70,15 @@ public class GeocodeServiceImpl implements GeocodeService {
         Double resolvedLat, resolvedLng;
         LatLong location;
         
-        try {
-            if (lat != null && lng != null) {
-                // TODO: Handle resolveLatLongToAddress failure with exception
-                resolvedAddress = resolveLatLongToAddress(lat, lng);
-                location = resolveAddressToLatLong(resolvedAddress);
-            } else if (address != null) {
-                location = resolveAddressToLatLong(address);
-                resolvedAddress = resolveLatLongToAddress(location.latitude, location.longitude);
-            } else {
-                return null;
-            }
-        } catch (LocationNotFoundByGoogleException e) {
-            v.setAddress(address);
-            v.setLatitude(null);
-            v.setLongitude(null);
-            v.setName(null);
-            
-            return v;
+        if (lat != null && lng != null) {
+            // TODO: Handle resolveLatLongToAddress failure with exception
+            resolvedAddress = resolveLatLongToAddress(lat, lng);
+            location = resolveAddressToLatLong(resolvedAddress);
+        } else if (address != null) {
+            location = resolveAddressToLatLong(address);
+            resolvedAddress = resolveLatLongToAddress(location.latitude, location.longitude);
+        } else {
+            return null;
         }
         
         resolvedLat = location.latitude;
@@ -97,8 +88,6 @@ public class GeocodeServiceImpl implements GeocodeService {
         v.setLatitude(resolvedLat);
         v.setLongitude(resolvedLng);
         v.setName(resolvedName);
-
-        venueService.createVenue(v);
 
         return v;
     }

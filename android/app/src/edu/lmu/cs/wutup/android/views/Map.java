@@ -10,13 +10,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import edu.lmu.cs.wutup.android.container.EventOccurrences;
-import edu.lmu.cs.wutup.android.manager.Converters;
+import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.manager.EventPlotter;
-import edu.lmu.cs.wutup.android.manager.R;
-import edu.lmu.cs.wutup.ws.model.Event;
-import edu.lmu.cs.wutup.ws.model.EventOccurrence;
-import edu.lmu.cs.wutup.ws.model.Venue;
+import edu.lmu.cs.wutup.android.model.Event;
+import edu.lmu.cs.wutup.android.model.Occurrence;
+import edu.lmu.cs.wutup.android.model.Venue;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -72,12 +70,12 @@ public class Map extends MapActivity {
                 return false;
         }
 	
-	private OverlayItem makeOverlayItem(EventOccurrence occurrence){
+	private OverlayItem makeOverlayItem(Occurrence occurrence){
 	    	    
 	    Event event = occurrence.getEvent();
 	    Venue venue = occurrence.getVenue();
 	    
-	    GeoPoint position = new GeoPoint(Converters.convertToMicrodegrees(venue.getLatitude()), Converters.convertToMicrodegrees(venue.getLongitude()));
+	    GeoPoint position = new GeoPoint(venue.getLatitude(), venue.getLongitude());
 	    
 	    return new OverlayItem(position, event.getName(), event.getDescription());	    
 	}
@@ -87,7 +85,7 @@ public class Map extends MapActivity {
 	    occurrenceOverlay.clearOverlay();
 	    Log.i("overlay", "Cleared occurrence overlay.");
 	    
-	    for (EventOccurrence occurrence : EventOccurrences.getAll()) {
+	    for (Occurrence occurrence : Occurrences.getAll()) {
 	        occurrenceOverlay.addOverlay(makeOverlayItem(occurrence));
 	        Log.i("overlay", "Plotted occurrence " + occurrence.getId() + ".");
 	    }

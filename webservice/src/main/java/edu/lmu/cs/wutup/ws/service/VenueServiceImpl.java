@@ -35,6 +35,12 @@ public class VenueServiceImpl implements VenueService {
         return venueDao.findVenueById(id);
     }
 
+    // TODO: Test this
+    @Override
+    public Venue findVenueByName(String name) {
+        return venueDao.findVenueByName(name);
+    }
+
     @Override
     public List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination) {
         return venueDao.findVenues(name, eventId, circle, pagination);

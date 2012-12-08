@@ -13,10 +13,11 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 
 public interface GeocodeService {
 
-    public LatLong resolveAddressToLatLong(String address)throws NoAddressProvidedException, LocationNotFoundByGoogleException, IOException;
+    LatLong resolveAddressToLatLong(String address) throws NoAddressProvidedException,
+            LocationNotFoundByGoogleException, IOException;
 
-    public String resolveLatLongToAddress(Double lat, Double lng) throws MalformedCoordinatesException;
-    
-    public Venue resolveVenue(String address, Double lat, Double lng) throws ClientProtocolException, JSONException, IOException;
+    String resolveLatLongToAddress(Double lat, Double lng) throws MalformedCoordinatesException;
 
+    Venue resolveVenue(String address, Double lat, Double lng) throws ClientProtocolException, JSONException,
+            IOException;
 }

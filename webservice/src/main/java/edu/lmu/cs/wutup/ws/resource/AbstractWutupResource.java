@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
@@ -41,6 +42,8 @@ public abstract class AbstractWutupResource {
 
     protected static final String DEFAULT_PAGE = "0";
     protected static final String DEFAULT_PAGE_SIZE = "20";
+
+    Logger logger = Logger.getLogger(getClass());
 
     /**
      * Throws a service exception with BAD_REQUEST is the value is null (corresponds to a missing required HTTP

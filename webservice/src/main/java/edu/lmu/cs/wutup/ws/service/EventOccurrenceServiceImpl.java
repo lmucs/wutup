@@ -1,5 +1,6 @@
 package edu.lmu.cs.wutup.ws.service;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.joda.time.Interval;
@@ -44,6 +45,12 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
     @Override
     public EventOccurrence findEventOccurrenceById(int id) {
         return eventOccurrenceDao.findEventOccurrenceById(id);
+    }
+
+    // TODO: Test this
+    @Override
+    public EventOccurrence findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start, Timestamp end){
+        return eventOccurrenceDao.findEventOccurrenceByProperties(parentEventId, venueId, start, end);
     }
 
     @Override

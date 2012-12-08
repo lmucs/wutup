@@ -15,6 +15,8 @@ public interface VenueDao extends CommentDao {
 
     Venue findVenueById(int id);
 
+    Venue findVenueByName(String name);
+
     void updateVenue(Venue loc);
 
     void deleteVenue(int venueId);

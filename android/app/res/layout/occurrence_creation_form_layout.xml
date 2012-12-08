@@ -23,28 +23,64 @@
 	            android:textAppearance="?android:attr/textAppearanceLarge" />
 	
 	        <AutoCompleteTextView
-	            android:id="@+id/occurrence_creation_form_event_text_field"
+	            android:id="@+id/occurrence_creation_form_event_name_text_field"
 	            android:layout_column="1"
 	            android:layout_gravity="fill_horizontal"
 	            android:layout_row="0"
 	            android:layout_rowSpan="1"
 	            android:ems="10" />
-	
+	        
 	        <TextView
 	            android:layout_column="0"
 	            android:layout_columnSpan="1"
 	            android:layout_gravity="left"
 	            android:layout_row="1"
 	            android:layout_rowSpan="1"
-	            android:text="@string/occurrence_creation_form_label_venue"
+	            android:text="@string/occurrence_creation_form_label_event_description"
 	            android:textAppearance="?android:attr/textAppearanceLarge" />
 	
-	        <AutoCompleteTextView
-	            android:id="@+id/occurrence_creation_form_venue_text_field"
+	        <EditText
+	            android:id="@+id/occurrence_creation_form_event_description_text_field"
 	            android:layout_column="1"
 	            android:layout_gravity="fill_horizontal"
 	            android:layout_row="1"
 	            android:layout_rowSpan="1"
+	            android:inputType="text"
+	            android:ems="10" />	        
+	
+	        <TextView
+	            android:layout_column="0"
+	            android:layout_columnSpan="1"
+	            android:layout_gravity="left"
+	            android:layout_row="2"
+	            android:layout_rowSpan="1"
+	            android:text="@string/occurrence_creation_form_label_venue"
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	        <AutoCompleteTextView
+	            android:id="@+id/occurrence_creation_form_venue_name_text_field"
+	            android:layout_column="1"
+	            android:layout_gravity="fill_horizontal"
+	            android:layout_row="2"
+	            android:layout_rowSpan="1"
+	            android:ems="10" />
+	        
+	        <TextView
+	            android:layout_column="0"
+	            android:layout_columnSpan="1"
+	            android:layout_gravity="left"
+	            android:layout_row="3"
+	            android:layout_rowSpan="1"
+	            android:text="@string/occurrence_creation_form_label_venue_address"
+	            android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	        <EditText
+	            android:id="@+id/occurrence_creation_form_venue_address_text_field"
+	            android:layout_column="1"
+	            android:layout_gravity="fill_horizontal"
+	            android:layout_row="3"
+	            android:layout_rowSpan="1"
+	            android:inputType="textPostalAddress"
 	            android:ems="10" />
 	
 	    </GridLayout>

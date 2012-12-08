@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="edu.lmu.cs.wutup.android.manager"
+          package="edu.lmu.cs.wutup.android.views"
           android:versionCode="1"
           android:versionName="1.0">
 
@@ -14,20 +14,17 @@
                  android:allowBackup="true" >
                  
         <uses-library android:name="com.google.android.maps" />
-        
-        <activity android:name ="edu.lmu.cs.wutup.android.manager.Manager"
-                  android:label="@string/title_manager" >
-                  
+              
+        <activity android:name ="edu.lmu.cs.wutup.android.views.Map"
+                  android:label="@string/title_map"
+                  android:theme="@android:style/Theme.NoTitleBar" >
+                      
             <intent-filter>
                 <action   android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             
         </activity>
-        
-        <activity android:name ="edu.lmu.cs.wutup.android.views.Map"
-                  android:label="@string/title_map"
-                  android:theme="@android:style/Theme.NoTitleBar" />
                     
         <activity android:name ="edu.lmu.cs.wutup.android.views.OccurrenceCreationForm"
                   android:label="@string/occurrence_creation_form_title" />

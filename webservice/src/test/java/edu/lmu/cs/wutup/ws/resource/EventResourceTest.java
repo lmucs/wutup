@@ -53,6 +53,60 @@ public class EventResourceTest {
     }
 
     @Test
+    public void findingExistingEventByIdProducesHttp200() {
+        when(service.findEventById(1)).thenReturn(sampleEvent);
+        resource.findEventById("1");
+        verify(service).findEventById(1);
+    }
+
+    @Test
+    public void findingByIdWithNoIdReturns400() {
+        try {
+            resource.findEventById(null);
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(400));
+        }
+    }
+
+    @Test
+    public void findingByIdWithBadIdReturns400() {
+        try {
+            resource.findEventById("zzzzz");
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(400));
+        }
+    }
+
+    @Test
+    public void findingAllEventsWithPageSizeTooHighProducesHttp403() {
+        try {
+            resource.findEvents(null, null, "1", "51");
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(403));
+        }
+    }
+
+    @Test
+    public void findingAllEventsWithPageSizeTooLowProducesHttp403() {
+        try {
+            resource.findEvents(null, null, "0", "0");
+            fail();
+        } catch (ServiceException e) {
+            assertThat(e.getResponse().getStatus(), is(403));
+        }
+    }
+
+    @Test
+    public void findingEventsByQueryPropagatesToService() {
+        when(service.findEvents("Poker", null, new PaginationData(0, 3))).thenReturn(sampleEventList);
+        List<Event> events = resource.findEvents("Poker", null, "0", "3");
+        assertThat(events, is(sampleEventList));
+    }
+
+    @Test
     public void eventCreationCreatesEventWithLocationHeader() {
         Response response = resource.createEvent(sampleEvent, sampleUriInfo);
         verify(service).createEvent(sampleEvent);
@@ -146,53 +200,6 @@ public class EventResourceTest {
             fail();
         } catch (ServiceException e) {
             assertThat(e.getResponse().getStatus(), is(400));
-        }
-    }
-
-    @Test
-    public void findingExistingEventByIdProducesHttp200() {
-        when(service.findEventById(1)).thenReturn(sampleEvent);
-        resource.findEventById("1");
-        verify(service).findEventById(1);
-    }
-
-    @Test
-    public void findingByIdWithNoIdThrowsException() {
-        try {
-            resource.findEventById(null);
-            fail();
-        } catch (ServiceException e) {
-            assertThat(e.getResponse().getStatus(), is(400));
-        }
-    }
-
-    @Test
-    public void findingByIdWithBadIdThrowsException() {
-        try {
-            resource.findEventById("zzzzz");
-            fail();
-        } catch (ServiceException e) {
-            assertThat(e.getResponse().getStatus(), is(400));
-        }
-    }
-
-    @Test
-    public void findingAllEventsWithPageSizeTooHighProducesHttp403() {
-        try {
-            resource.findEvents(null, null, "1", "51");
-            fail();
-        } catch (ServiceException e) {
-            assertThat(e.getResponse().getStatus(), is(403));
-        }
-    }
-
-    @Test
-    public void findingAllEventsWithPageSizeTooLowProducesHttp403() {
-        try {
-            resource.findEvents(null, null, "0", "0");
-            fail();
-        } catch (ServiceException e) {
-            assertThat(e.getResponse().getStatus(), is(403));
         }
     }
 
