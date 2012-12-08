@@ -36,17 +36,17 @@ public class PostEvent extends HttpWutup {
                 idOfPostedEvent = postEvent(name, description);
                 
             } catch (ClientProtocolException clientProtocolException) {
-                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, clientProtocolException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, clientProtocolException);
                 
             } catch (IOException ioException) {
-                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, ioException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, ioException);
             }
             
         } else {
             
             IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
             
-            Log.e(LogTags.POST, 
+            Log.e(LogTags.HTTP, 
                   "Passed invalid parameters for posting an event! Requires a name and description.", 
                   illegalArgumentException);
             
@@ -70,7 +70,7 @@ public class PostEvent extends HttpWutup {
         HttpResponse responceToPostingEvent = client.execute(postEvent);
         int idOfPostedEvent = extractEventId(responceToPostingEvent);
                 
-        Log.i(LogTags.POST, "Executed HTTP call to post event with the following JSON. " + jsonForPostingEvent + 
+        Log.i(LogTags.HTTP, "Executed HTTP call to post event with the following JSON. " + jsonForPostingEvent + 
                       " Posted event assigned ID " + idOfPostedEvent + ".");
         
         return idOfPostedEvent;

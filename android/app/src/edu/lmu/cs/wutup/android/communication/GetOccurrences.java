@@ -41,7 +41,7 @@ public class GetOccurrences extends HttpWutup{
             
             IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
             
-            Log.e(LogTags.GET, 
+            Log.e(LogTags.HTTP, 
                   "Passed invalid parameters for getting occurrences! Requires a GeoPoint, Integer, and Map.", 
                   illegalArgumentException);
             
@@ -66,7 +66,7 @@ public class GetOccurrences extends HttpWutup{
             HttpGet getOccurrences = new HttpGet(httpCallWithParametersToGetOccurrences);
             HttpResponse responceToGettingOccurrences = client.execute(getOccurrences);
             
-            Log.i(LogTags.GET, "Executed HTTP call to get occurrences with the following query. " + httpCallWithParametersToGetOccurrences);
+            Log.i(LogTags.HTTP, "Executed HTTP call to get occurrences with the following query. " + httpCallWithParametersToGetOccurrences);
             
             InputStream occurenceStream = responceToGettingOccurrences.getEntity().getContent();;
             BufferedInputStream occurenceBuffer = new BufferedInputStream(occurenceStream);       
@@ -85,7 +85,7 @@ public class GetOccurrences extends HttpWutup{
             }
             
         } catch (IOException ioException){
-            Log.e("GET", "Failed to retrieve occurrences form web service!", ioException);     
+            Log.e(LogTags.HTTP, "Failed to retrieve occurrences form web service!", ioException);     
         }
  
     }
@@ -97,7 +97,7 @@ public class GetOccurrences extends HttpWutup{
         while (occurenceIterator.hasNext()) {
             
             Occurrence occurrence = (Occurrence) occurenceIterator.next();
-            Log.i("GET", "Retrieved occurence " + occurrence.getId() + ".");
+            Log.i(LogTags.HTTP, "Retrieved occurence " + occurrence.getId() + ".");
             
             Occurrences.add(occurrence);
             

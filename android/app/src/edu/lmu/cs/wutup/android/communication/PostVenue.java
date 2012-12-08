@@ -36,17 +36,17 @@ public class PostVenue extends HttpWutup {
                 idOfPostedVenue = postVenue(name, address);
                 
             } catch (ClientProtocolException clientProtocolException) {
-                Log.e(LogTags.GET, DEFAULT_ERROR_MESSAGE, clientProtocolException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, clientProtocolException);
                 
             } catch (IOException ioException) {
-                Log.e(LogTags.GET, DEFAULT_ERROR_MESSAGE, ioException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, ioException);
             }
             
         } else {
             
             IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
             
-            Log.e(LogTags.POST, 
+            Log.e(LogTags.HTTP, 
                   "Passed invalid parameters for posting a venue! Requires a name and address.", 
                   illegalArgumentException);
             
@@ -70,7 +70,7 @@ public class PostVenue extends HttpWutup {
         HttpResponse responceToPostingVenue = client.execute(postVenue);
         int idOfPostedVenue = extractVenueId(responceToPostingVenue);
                 
-        Log.i(LogTags.GET, "Executed HTTP call to post venue with the following JSON. " + jsonForPostingVenue + 
+        Log.i(LogTags.HTTP, "Executed HTTP call to post venue with the following JSON. " + jsonForPostingVenue + 
                       " Posted venue assigned ID " + idOfPostedVenue + ".");
         
         return idOfPostedVenue;

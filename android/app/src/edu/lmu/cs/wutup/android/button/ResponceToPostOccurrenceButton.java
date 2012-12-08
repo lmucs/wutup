@@ -41,10 +41,10 @@ public class ResponceToPostOccurrenceButton implements OnClickListener {
             new PostOccurrences().execute(eventId, venueId, start, end);
             
         } catch (InterruptedException e) {
-            Log.e(LogTags.POST, ERROR_MESSAGE, e);
+            Log.e(LogTags.HTTP, ERROR_MESSAGE, e);
             
         } catch (ExecutionException e) {
-            Log.e(LogTags.POST, ERROR_MESSAGE, e);
+            Log.e(LogTags.HTTP, ERROR_MESSAGE, e);
         }
         
         Map.refreshMap();
