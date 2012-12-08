@@ -99,10 +99,10 @@ public class VenueResource extends AbstractWutupResource {
             try {
                 venue = geocodeService.resolveVenue(venue.getAddress(), venue.getLatitude(), venue.getLongitude());
             } catch (LocationNotFoundByGoogleException e) {
-                e.printStackTrace();
+                logger.error(e);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
                 return Response.serverError().build();
             }
         }
