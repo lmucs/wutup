@@ -94,7 +94,11 @@ public class VenueResource extends AbstractWutupResource {
         venue.setId(null);
         if (venue.getLatitude() == null || venue.getLongitude() == null || venue.getAddress() == null) {
             try {
-                venue = geocodeService.resolveVenue(venue.getAddress(), venue.getLatitude(), venue.getLongitude());
+                Venue resolvedVenue;
+                resolvedVenue = geocodeService.resolveVenue(venue.getAddress(), venue.getLatitude(), venue.getLongitude());
+                venue.setLatitude(resolvedVenue.getLatitude());
+                venue.setLongitude(resolvedVenue.getLongitude());
+                venue.setAddress(resolvedVenue.getAddress());
             } catch (LocationNotFoundByGoogleException e) {
                 logger.error(e);
                 return Response.status(Response.Status.BAD_REQUEST).build();
