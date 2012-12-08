@@ -38,21 +38,26 @@ public class PostOccurrences extends HttpWutup {
 		HttpPost postOccurrence = new HttpPost(ADDRESS_OF_OCCURRENCES);
 		StringEntity serializedOccurrence = new StringEntity(serializeOccurrence(occurrence));
 		postOccurrence.setEntity(serializedOccurrence);
+		postOccurrence.addHeader("Content-type", "application/json");
 		
 		HttpResponse response = client.execute(postOccurrence);
 		
-		Log.i("POST", "Posted occurrence " + occurrence.getId() + ".");
+		Log.i("POST", "Posted occurrence " + occurrence.getId() + ", at lat: " + occurrence.getVenue().getLatitude() + 
+		        " long: " + occurrence.getVenue().getLatitude() + " name: " + occurrence.getVenue().getName());
 		return response;
 		
 	}
 	
 	private String serializeOccurrence(Occurrence occurrence) throws JsonProcessingException {
 		
-		ObjectMapper objectMapper = new ObjectMapper();
-		String serializedOccurrence = objectMapper.writeValueAsString(occurrence);
-		
-		Log.i("POST", "Serialized occurrence " + occurrence.getId() + ".");
-		return serializedOccurrence;
+//		ObjectMapper objectMapper = new ObjectMapper();
+//		String serializedOccurrence = objectMapper.writeValueAsString(occurrence);
+//		
+//		Log.i("POST", "Serialized occurrence " + occurrence.getId() + "." + serializedOccurrence);
+//		return serializedOccurrence;
+	    
+	    return "{\"event\":{\"id\":1},\"venue\":{\"id\":1},\"start\":\"2012-12-01T11:30:00\",\"end\":\"2012-12-01T12:00:00\"}";
+	    
 	}
 
 }

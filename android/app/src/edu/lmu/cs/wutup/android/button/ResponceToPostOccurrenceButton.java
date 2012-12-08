@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import edu.lmu.cs.wutup.android.communication.PostOccurrences;
 import edu.lmu.cs.wutup.android.model.Event;
+import edu.lmu.cs.wutup.android.model.Occurrence;
 import edu.lmu.cs.wutup.android.model.Venue;
 import edu.lmu.cs.wutup.android.views.OccurrenceCreationForm;
 
@@ -35,7 +36,9 @@ public class ResponceToPostOccurrenceButton implements OnClickListener {
         start = new DateTime(startInUnixTime);
         end = new DateTime(endInUnixTime);
         
-        new PostOccurrences().execute(event, venue, start, end);
+        Occurrence occurrenceToPost = new Occurrence(event, venue, start, end);
+        new PostOccurrences().execute(occurrenceToPost);
+        occurrenceCreationForm.finish();
         
     }
     
