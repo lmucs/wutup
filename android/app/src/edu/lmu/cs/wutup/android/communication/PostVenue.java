@@ -11,16 +11,15 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.lmu.cs.wutup.android.manager.LogTags;
-import edu.lmu.cs.wutup.android.model.Occurrence;
-
 public class PostVenue extends HttpWutup {
     
     public static int INDEX_OF_NAME_IN_PARAMETERS = 0;
-    public static int INDEX_OF_ADDRESS_IN_PARAMETERS = 0;
+    public static int INDEX_OF_ADDRESS_IN_PARAMETERS = 1;
     
     @Override
     protected Object doInBackground(Object... parameters) {
+        
+        int idOfPostedVenue = -1;
         
         if (parameters[INDEX_OF_NAME_IN_PARAMETERS] instanceof String &&
             parameters[INDEX_OF_ADDRESS_IN_PARAMETERS] instanceof String) {
@@ -30,7 +29,7 @@ public class PostVenue extends HttpWutup {
                 String name = (String) parameters[INDEX_OF_NAME_IN_PARAMETERS];
                 String address = (String) parameters[INDEX_OF_ADDRESS_IN_PARAMETERS];
                 
-                postVenue(name, address);
+                idOfPostedVenue = postVenue(name, address);
                 
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
@@ -41,13 +40,11 @@ public class PostVenue extends HttpWutup {
             
         }
         
-       
-        
-        return null;
+        return idOfPostedVenue;
         
     }
     
-    private HttpResponse postVenue(String name, String address) throws ClientProtocolException, IOException {
+    private int postVenue(String name, String address) throws ClientProtocolException, IOException {
         
         HttpPost postOccurrence = new HttpPost(ADDRESS_OF_VENUES);
         StringEntity jsonForPostingOccurrence = new StringEntity(generateJsonForPostingOccurrecne(name, address));
@@ -55,9 +52,11 @@ public class PostVenue extends HttpWutup {
         postOccurrence.addHeader("Content-type", "application/json");
         
         HttpResponse response = client.execute(postOccurrence);
+        String locationOfPostedVenue = response.getFirstHeader("Location").getValue();
+        int idOfPostedVenue = extractVenueId(locationOfPostedVenue);
         
         Log.i("POST", "Executed post with JSON " + jsonForPostingOccurrence + ".");
-        return response;
+        return idOfPostedVenue;
         
     }
     
@@ -69,6 +68,24 @@ public class PostVenue extends HttpWutup {
         Log.i("POST", "Generated the following JSON for posting an occurrence. " + json);
         return json;
                 
+    }
+    
+    private int extractVenueId(String venueLocation) {
+        
+        int indexOfForwardSlashPrecedingId = -1;
+        
+        for (int index = 0; index < venueLocation.length(); index++) {
+            
+            if (venueLocation.charAt(index) == '/') {
+                indexOfForwardSlashPrecedingId = index;
+            }
+            
+        }
+        
+        int venueId = Integer.parseInt(venueLocation.substring(indexOfForwardSlashPrecedingId + 1));
+        
+        return venueId;
+        
     }
 
 }

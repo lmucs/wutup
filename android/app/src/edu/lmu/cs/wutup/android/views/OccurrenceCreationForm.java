@@ -1,8 +1,11 @@
 package edu.lmu.cs.wutup.android.views;
 
+import java.util.concurrent.ExecutionException;
+
 import org.joda.time.DateTimeConstants;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +21,7 @@ import edu.lmu.cs.wutup.android.autofill.DynamicSearchTrigger;
 import edu.lmu.cs.wutup.android.autofill.ManualListAdapter;
 import edu.lmu.cs.wutup.android.button.ResponceToPostOccurrenceButton;
 import edu.lmu.cs.wutup.android.communication.HttpWutup;
+import edu.lmu.cs.wutup.android.communication.PostVenue;
 import edu.lmu.cs.wutup.android.manager.LogTags;
 import edu.lmu.cs.wutup.android.manager.R;
 import edu.lmu.cs.wutup.android.model.Event;
@@ -62,7 +66,7 @@ public class OccurrenceCreationForm extends Activity {
         
         if (selectedEvent == null) {
             throw new UnsupportedOperationException();
-            
+                        
         } else {
             selectedEventId = selectedEvent.getId();
         }
@@ -71,12 +75,17 @@ public class OccurrenceCreationForm extends Activity {
         
     }
 
-    public int getVenueId() {
+    public int getVenueId() throws InterruptedException, ExecutionException {
         
         int selectedVenueId;
         
         if (selectedVenue == null) {
-            throw new UnsupportedOperationException();
+            
+            String name = venueNameTextField.getText().toString();
+            String address = venueAddressTextField.getText().toString();
+            
+            AsyncTask<Object, Integer, Object> postVenue = new PostVenue().execute(name, address);
+            selectedVenueId = (Integer) postVenue.get();
             
         } else {
             selectedVenueId = selectedVenue.getId();
