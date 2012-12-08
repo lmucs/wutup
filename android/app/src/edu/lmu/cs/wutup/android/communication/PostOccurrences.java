@@ -63,7 +63,7 @@ public class PostOccurrences extends HttpWutup {
 		
 		client.execute(postOccurrence);
 		
-		Log.i("POST", "Executed HTTP call to post occurrence with the following JSON. " + jsonForPostingOccurrence);
+		Log.i(LogTags.POST, "Executed HTTP call to post occurrence with the following JSON. " + jsonForPostingOccurrence);
 		
 	}
 	
