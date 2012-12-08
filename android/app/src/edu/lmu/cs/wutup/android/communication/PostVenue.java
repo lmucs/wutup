@@ -62,7 +62,7 @@ public class PostVenue extends HttpWutup {
         HttpResponse responceToPostingVenue = client.execute(postOccurrence);
         int idOfPostedVenue = extractVenueId(responceToPostingVenue);
                 
-        Log.i("POST", "Executed HTTP call to post venue with the following JSON. " + entityForPostingVenue + 
+        Log.i(LogTags.POST, "Executed HTTP call to post venue with the following JSON. " + jsonForPostingVenue + 
                       " Posted venue assigned ID " + idOfPostedVenue + ".");
         
         return idOfPostedVenue;
