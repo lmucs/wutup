@@ -204,6 +204,7 @@ var loadPageFunctionality = function (baseUrl, user) {
                 },
                 type: "GET",
                 url: baseUrl + ":8080/wutup/occurrences/" + occurrence.id + "/comments?pageSize=10&page=" + pageNumber,
+                async: false,
                 success: function (msg) {
                     appendComments(msg);
                 }
@@ -260,7 +261,10 @@ var loadPageFunctionality = function (baseUrl, user) {
                 type: "POST",
                 url: baseUrl + ":8080/wutup/occurrences/" + occurrence.id + "/comments",
                 data: JSON.stringify(commentObject),
-                contentType: "application/json"
+                contentType: "application/json",
+                success: function () {
+                    displayComments(occurrence);
+                }
             });
         },
 
@@ -270,12 +274,12 @@ var loadPageFunctionality = function (baseUrl, user) {
 
         armSubmitCommentButton = function (occurrence, user) {
             if (user !== undefined) {
-                $("#submit-comment-btn").on("click", function () {
+                $("#submit-comment-btn").unbind("click").click( function () {
                     var text = grabCommentInput();
                     if (checkCommentInput(text)) {
+                        $("#comment-text-field").val("");
                         sendCommentInput(occurrence, text, user);
                         clearCommentList();
-                        requestComments(occurrence, 0);
                     }
                 });
             }
