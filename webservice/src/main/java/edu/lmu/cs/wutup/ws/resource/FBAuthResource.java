@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
-import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.service.FBAuthService;
 import edu.lmu.cs.wutup.ws.service.UserService;
 
@@ -24,11 +23,11 @@ import edu.lmu.cs.wutup.ws.service.UserService;
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 @Path("/auth")
-public class FBAuthResource {
+public class FBAuthResource extends AbstractWutupResource {
 
     @Autowired
     UserService userService;
-    
+
     @Autowired
     FBAuthService fbService;
 
@@ -65,7 +64,7 @@ public class FBAuthResource {
             try {
                 return fbService.fetchFBCode(redirectUri);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
                 return Response.serverError().build();
             }
         }
@@ -77,7 +76,7 @@ public class FBAuthResource {
                     .seeOther(new URI(finalLandingUri))
                     .build();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
             return Response.serverError().build();
         }
     }
@@ -100,6 +99,7 @@ public class FBAuthResource {
             try {
                 return fbService.fetchFBCode(redirectUri);
             } catch (Exception e) {
+                logger.error(e);
                 return Response.serverError().build();
             }
         }
@@ -110,6 +110,7 @@ public class FBAuthResource {
                     .seeOther(new URI(finalLandingUri))
                     .build();
         } catch (Exception e) {
+            logger.error(e);
             return Response.serverError().build();
         }
     }

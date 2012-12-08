@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -59,11 +58,9 @@ public class VenueResource extends AbstractWutupResource {
 
     @Autowired
     VenueService venueService;
-    
+
     @Autowired
     GeocodeService geocodeService;
-
-    Logger logger = Logger.getLogger(getClass());
 
     @GET
     @Path("/")
