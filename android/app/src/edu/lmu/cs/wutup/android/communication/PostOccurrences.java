@@ -43,6 +43,9 @@ public class PostOccurrences extends HttpWutup {
             } catch (IOException ioException) {
                 Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, ioException);
             }
+            
+        } else {
+            throw new IllegalArgumentException();
         }
 
 		return null;
