@@ -24,7 +24,6 @@ import edu.lmu.cs.wutup.android.communication.HttpWutup;
 import edu.lmu.cs.wutup.android.communication.PostEvent;
 import edu.lmu.cs.wutup.android.communication.PostVenue;
 import edu.lmu.cs.wutup.android.manager.LogTags;
-import edu.lmu.cs.wutup.android.manager.R;
 import edu.lmu.cs.wutup.android.model.Event;
 import edu.lmu.cs.wutup.android.model.Venue;
 

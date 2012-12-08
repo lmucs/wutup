@@ -12,7 +12,6 @@ import android.view.MenuItem;
 
 import edu.lmu.cs.wutup.android.container.Occurrences;
 import edu.lmu.cs.wutup.android.manager.EventPlotter;
-import edu.lmu.cs.wutup.android.manager.R;
 import edu.lmu.cs.wutup.android.model.Event;
 import edu.lmu.cs.wutup.android.model.Occurrence;
 import edu.lmu.cs.wutup.android.model.Venue;
