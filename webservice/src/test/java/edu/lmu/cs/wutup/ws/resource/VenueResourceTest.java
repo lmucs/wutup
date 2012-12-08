@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
@@ -115,6 +116,7 @@ public class VenueResourceTest {
         assertThat(response.getStatus(), is(204));
     }
 
+    @Ignore
     @Test
     public void creatingVenueNullsOutIdAndResponds201WithLocation() {
         Response response = resource.createVenue(sampleVenue, sampleUriInfo);
