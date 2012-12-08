@@ -67,8 +67,6 @@ var loadPageFunctionality = function (baseUrl, user) {
             		$("#event-attendees").html(attendeesHtmlString);
             	}
             });
-           
-
         },
 
         createMarker = function (occurrence) {
@@ -81,6 +79,9 @@ var loadPageFunctionality = function (baseUrl, user) {
             google.maps.event.addListener(marker, 'click', function () {
                 displayInfoWindow(occurrence);
                 displayEventInfo(occurrence);
+                clearCommentList();
+                displayComments(occurrence);
+                armSubmitCommentButton(occurrence, user);
             });
             return marker;
         },
@@ -132,7 +133,9 @@ var loadPageFunctionality = function (baseUrl, user) {
         		event = calendarEvents[i].event;
         		start = calendarEvents[i].start;
         		end = calendarEvents[i].end;
-        		htmlString = "<tr><td><a href=\"./EventPage?event=" + id + "\">" + event.name + "</a><p>" + event.description + "</p></td><td>" +  start.toLocaleDateString() +": " + start.toLocaleTimeString() + " - " + end.toLocaleTimeString() + "</td></tr>";
+        		htmlString = "<tr><td><a href=\"./EventPage?occurrence=" + id + "&event=" + event.id + 
+        		    "\">" + event.name + "</a><p>" + event.description + "</p></td><td>" +  start.toLocaleDateString() 
+        		    +": " + start.toLocaleTimeString() + " - " + end.toLocaleTimeString() + "</td></tr>";
         		if (event.creator.id === user.id) {
 		        	$('#hosting-event-stream > tbody:last').append(htmlString);
         		} else {
@@ -187,6 +190,94 @@ var loadPageFunctionality = function (baseUrl, user) {
         setUserNameForGreeting = function (user) {
             if (user.firstname != undefined) {
                 $("#nickname").append(user.firstname);
+            }
+        },
+
+        displayComments = function (occurrence) {
+            requestComments(occurrence, 0);
+        },
+
+        requestComments = function(occurrence, pageNumber) {
+            $.ajax({
+                headers: {
+                    "Accept": "application/json"
+                },
+                type: "GET",
+                url: baseUrl + ":8080/wutup/occurrences/" + occurrence.id + "/comments?pageSize=10&page=" + pageNumber,
+                success: function (msg) {
+                    appendComments(msg);
+                }
+            })
+        },
+
+        appendComments = function(comments) {
+            for (var i = 0; i < comments.length; i++) {
+                var commentHtml = createCommentHtml(comments[i]);
+                insertCommentHtml(commentHtml);
+            }
+        },
+
+        createCommentHtml = function(comment) {
+            var body = comment.body,
+                author = comment.author.firstname + " " + comment.author.lastname,
+                publishDate = new Date(comment.postdate).toString(),
+                pictureSrc = getUserImageLink(comment.author);
+            var newComment = $("<div class='media well'></div>");
+            $(newComment).append("<div class='pull-left'><img height=30 width=30 class='media-object' src=" + pictureSrc + " /></div>"
+                    + "<div class='media-body'><h5 class='media-heading'>&nbsp" + author + "</h5><p>" + body + "</p><h6>posted on "
+                    + publishDate + "</h6></div>");
+            return newComment;
+        },
+
+        insertCommentHtml = function (html) {
+            $("#comment-list").append(html);
+        },
+
+        getUserImageLink = function (user) {
+            if (user.facebookId !== undefined) {
+                return "https://graph.facebook.com/" + user.facebookId + "/picture?type=square";
+            }
+            return "http://placehold.it/60x60";
+        },
+
+        grabCommentInput = function () {
+           return $("#comment-text-field").val();
+        },
+
+        checkCommentInput = function (input) {
+            return input.trim().length > 0 ? true : false;
+        },
+
+        sendCommentInput = function (occurrence, input, user) {
+            var timestamp = new Date().getTime(),
+                commentObject = {
+                    author: user,
+                    body: input,
+                    postdate: timestamp
+                };
+
+            $.ajax({
+                type: "POST",
+                url: baseUrl + ":8080/wutup/occurrences/" + occurrence.id + "/comments",
+                data: JSON.stringify(commentObject),
+                contentType: "application/json"
+            });
+        },
+
+        clearCommentList = function() {
+            $("#comment-list").empty();
+        },
+
+        armSubmitCommentButton = function (occurrence, user) {
+            if (user !== undefined) {
+                $("#submit-comment-btn").on("click", function () {
+                    var text = grabCommentInput();
+                    if (checkCommentInput(text)) {
+                        sendCommentInput(occurrence, text, user);
+                        clearCommentList();
+                        requestComments(occurrence, 0);
+                    }
+                });
             }
         },
 

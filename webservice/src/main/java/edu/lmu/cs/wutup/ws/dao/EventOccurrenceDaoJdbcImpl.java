@@ -172,7 +172,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 .from("occurrence_comment oc")
                 .joinOn("user u", "oc.authorId = u.id")
                 .where("oc.subjectId = :subjectId", eventId)
-                .order("oc.timestamp")
+                .order("oc.timestamp desc")
                 .addPagination(pagination);
         return CommentDaoUtils.findCommentableObjectComments(jdbcTemplate, query.build(), query.getParametersArray(), null);
     }
