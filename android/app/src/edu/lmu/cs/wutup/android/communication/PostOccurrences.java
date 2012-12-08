@@ -12,7 +12,7 @@ import android.util.Log;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.lmu.cs.wutup.ws.model.EventOccurrence;
+import edu.lmu.cs.wutup.android.model.Occurrence;
 
 public class PostOccurrences extends HttpWutup {
 
@@ -20,7 +20,7 @@ public class PostOccurrences extends HttpWutup {
 	protected Object doInBackground(Object... parameters) {
 		
 		try {
-			postOccurrence((EventOccurrence) parameters[0]);
+			postOccurrence((Occurrence) parameters[0]);
 			
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -33,7 +33,7 @@ public class PostOccurrences extends HttpWutup {
 		
 	}
 	
-	private HttpResponse postOccurrence(EventOccurrence occurrence) throws ClientProtocolException, IOException {
+	private HttpResponse postOccurrence(Occurrence occurrence) throws ClientProtocolException, IOException {
 		
 		HttpPost postOccurrence = new HttpPost(ADDRESS_OF_OCCURRENCES);
 		StringEntity serializedOccurrence = new StringEntity(serializeOccurrence(occurrence));
@@ -46,7 +46,7 @@ public class PostOccurrences extends HttpWutup {
 		
 	}
 	
-	private String serializeOccurrence(EventOccurrence occurrence) throws JsonProcessingException {
+	private String serializeOccurrence(Occurrence occurrence) throws JsonProcessingException {
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String serializedOccurrence = objectMapper.writeValueAsString(occurrence);
