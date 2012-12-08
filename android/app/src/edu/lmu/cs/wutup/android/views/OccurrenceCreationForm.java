@@ -18,6 +18,7 @@ import org.joda.time.DateTimeConstants;
 
 import edu.lmu.cs.wutup.android.autofill.DynamicSearchTrigger;
 import edu.lmu.cs.wutup.android.autofill.ManualListAdapter;
+import edu.lmu.cs.wutup.android.button.ResponceToPostOccurrenceButton;
 import edu.lmu.cs.wutup.android.communication.HttpWutup;
 import edu.lmu.cs.wutup.android.manager.LogTags;
 import edu.lmu.cs.wutup.android.manager.R;
@@ -46,8 +47,6 @@ public class OccurrenceCreationForm extends Activity {
     private CalendarView endDate;
     private TimePicker endTime;
     
-    private long startInUnixTime;
-    private long endInUnixTime;
     
     private Button cancelButton;
     private Button postOccurrenceButton;
@@ -234,78 +233,7 @@ public class OccurrenceCreationForm extends Activity {
         
         postOccurrenceButton = (Button) findViewById(R.id.occurrence_creation_form_button_post);
         
-        postOccurrenceButton.setOnClickListener(new OnClickListener() {
-            
-    
-            @Override
-            public void onClick(View v) {
-                
-                Event eventInFocus = reretrieveEventInFocus();
-                Venue venueInFocus = reretrieveVenueInFocus();
-                
-                long startInUnixTime = calculateAndSetStartInUnixTime();
-                long endInUnixTime = calculateAndSetEndInUnixTime();
-                
-                
-                
-                
-            }
-            
-            private Event reretrieveEventInFocus() {
-                
-                Event eventInFocus;
-                
-                if (selectedEvent == null) {
-                    // TODO post newly created and set as focus
-                    eventInFocus = null;
-                    
-                } else {
-                    eventInFocus = selectedEvent;
-                }
-                
-                return eventInFocus;
-                
-            }
-            
-            private Venue reretrieveVenueInFocus() {
-                
-                Venue venueInFocus;
-                
-                if (selectedVenue == null) {
-                    // TODO post newly created and set as focus
-                    venueInFocus = null;
-                    
-                } else {
-                    venueInFocus = selectedVenue;
-                }
-                    
-                return venueInFocus;
-                
-            }
-            
-            private long calculateAndSetStartInUnixTime() {
-                
-                long startInUnixTime = startDate.getDate();
-                
-                startInUnixTime += startTime.getCurrentHour() * DateTimeConstants.MILLIS_PER_HOUR;
-                startInUnixTime += startTime.getCurrentMinute() * DateTimeConstants.MILLIS_PER_MINUTE;
-                
-                return startInUnixTime;
-                
-            }
-            
-            private long calculateAndSetEndInUnixTime() {
-                
-                long endInUnixTime = endDate.getDate();
-                
-                endInUnixTime += endTime.getCurrentHour() * DateTimeConstants.MILLIS_PER_HOUR;
-                endInUnixTime += endTime.getCurrentMinute() * DateTimeConstants.MILLIS_PER_MINUTE;
-                
-                return endInUnixTime;
-                
-            }
-            
-        });
+        postOccurrenceButton.setOnClickListener(new ResponceToPostOccurrenceButton(this));
         
     }
     
