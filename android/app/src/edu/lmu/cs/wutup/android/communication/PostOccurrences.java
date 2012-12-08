@@ -10,7 +10,6 @@ import org.apache.http.entity.StringEntity;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.lmu.cs.wutup.android.model.Occurrence;
 
