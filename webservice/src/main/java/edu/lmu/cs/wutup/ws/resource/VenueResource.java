@@ -99,6 +99,9 @@ public class VenueResource extends AbstractWutupResource {
                 venue.setLatitude(resolvedVenue.getLatitude());
                 venue.setLongitude(resolvedVenue.getLongitude());
                 venue.setAddress(resolvedVenue.getAddress());
+                if (venue.getName() == null) {
+                    venue.setName(resolvedVenue.getName());
+                }
             } catch (LocationNotFoundByGoogleException e) {
                 logger.error(e);
                 return Response.status(Response.Status.BAD_REQUEST).build();
