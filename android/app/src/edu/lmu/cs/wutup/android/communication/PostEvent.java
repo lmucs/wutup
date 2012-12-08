@@ -43,7 +43,15 @@ public class PostEvent extends HttpWutup {
             }
             
         } else {
-            throw new IllegalArgumentException();
+            
+            IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
+            
+            Log.e(LogTags.POST, 
+                  "Passed invalid parameters for posting an event! Requires a name and description.", 
+                  illegalArgumentException);
+            
+            throw illegalArgumentException;
+            
         }
         
         return idOfPostedEvent;

@@ -43,7 +43,15 @@ public class PostVenue extends HttpWutup {
             }
             
         } else {
-            throw new IllegalArgumentException();
+            
+            IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
+            
+            Log.e(LogTags.POST, 
+                  "Passed invalid parameters for posting a venue! Requires a name and address.", 
+                  illegalArgumentException);
+            
+            throw illegalArgumentException;
+            
         }
         
         return idOfPostedVenue;

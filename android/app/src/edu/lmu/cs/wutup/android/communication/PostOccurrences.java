@@ -45,7 +45,15 @@ public class PostOccurrences extends HttpWutup {
             }
             
         } else {
-            throw new IllegalArgumentException();
+            
+            IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
+            
+            Log.e(LogTags.POST, 
+                  "Passed invalid parameters for posting an occurrence! Requires an event ID, venue ID, start, and end.", 
+                  illegalArgumentException);
+            
+            throw illegalArgumentException;
+                    
         }
 
 		return null;
