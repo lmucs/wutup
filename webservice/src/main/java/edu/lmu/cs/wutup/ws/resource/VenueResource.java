@@ -29,6 +29,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import edu.lmu.cs.wutup.ws.exception.LocationNotFoundByGoogleException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchPropertyException;
@@ -40,6 +41,7 @@ import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.Venue;
+import edu.lmu.cs.wutup.ws.service.GeocodeService;
 import edu.lmu.cs.wutup.ws.service.VenueService;
 
 @Component
@@ -57,6 +59,9 @@ public class VenueResource extends AbstractWutupResource {
 
     @Autowired
     VenueService venueService;
+    
+    @Autowired
+    GeocodeService geocodeService;
 
     Logger logger = Logger.getLogger(getClass());
 
@@ -87,9 +92,20 @@ public class VenueResource extends AbstractWutupResource {
 
     @POST
     @Path("/")
-    public Response createVenue(final Venue venue, @Context UriInfo uriInfo) {
+    public Response createVenue(Venue venue, @Context UriInfo uriInfo) {
         logger.debug("Creating venue");
         venue.setId(null);
+        if (venue.getLatitude() == null || venue.getLongitude() == null || venue.getAddress() == null) {
+            try {
+                venue = geocodeService.resolveVenue(venue.getAddress(), venue.getLatitude(), venue.getLongitude());
+            } catch (LocationNotFoundByGoogleException e) {
+                e.printStackTrace();
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Response.serverError().build();
+            }
+        }
         try {
             venueService.createVenue(venue);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(venue.getId() + "").build();

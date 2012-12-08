@@ -33,6 +33,12 @@ public class EventServiceImpl implements EventService {
         return eventDao.findEventById(id);
     }
 
+    // TODO: Test this
+    @Override
+    public Event findEventByName(String name) {
+        return eventDao.findEventByName(name);
+    }
+
     @Override
     public List<Event> findEvents(String name, List<Integer> owners, PaginationData pagination) {
         return eventDao.findEvents(name, owners, pagination);

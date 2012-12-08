@@ -99,13 +99,37 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         }
     }
 
+    // TODO: Test this
+    @Override
+    public EventOccurrence findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start, Timestamp end) {
+        QueryBuilder query = getSelectQuery();
+        if (parentEventId != null && parentEventId >= 0) {
+            query = query.where("o.eventId = :parentEventId", parentEventId);
+        }
+        if (venueId != null && venueId >= 0) {
+            query = query.where("o.venueId = :venueId", venueId);
+        }
+//        if (start != null) {
+//            query = query.where("o.start = :start", start);
+//        }
+//        if (end != null) {
+//            query = query.where("o.end = :start", end);
+//        }
+        try {
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(),
+                    eventOccurrenceRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchEventOccurrenceException();
+        }
+    }
+    
     @Override
     public List<EventOccurrence> findEventOccurrences(Integer attendee, Circle circle, Interval interval,
             List<Integer> eventIds, Integer venueId, PaginationData pagination) {
         QueryBuilder query = getSelectQuery().whereCircle(circle)
                 .where("o.venueid = :venueid", venueId)
                 .whereInterval(interval);
-
+        
         if (eventIds != null) {
             for (int i = 0; i < eventIds.size(); i++) {
                 query.orWhere("o.eventid = :eventid" + i, eventIds.get(i));
