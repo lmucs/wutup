@@ -21,6 +21,7 @@ import edu.lmu.cs.wutup.android.autofill.DynamicSearchTrigger;
 import edu.lmu.cs.wutup.android.autofill.ManualListAdapter;
 import edu.lmu.cs.wutup.android.button.ResponceToPostOccurrenceButton;
 import edu.lmu.cs.wutup.android.communication.HttpWutup;
+import edu.lmu.cs.wutup.android.communication.PostEvent;
 import edu.lmu.cs.wutup.android.communication.PostVenue;
 import edu.lmu.cs.wutup.android.manager.LogTags;
 import edu.lmu.cs.wutup.android.manager.R;
@@ -60,12 +61,18 @@ public class OccurrenceCreationForm extends Activity {
  * Member Variables END & View Programming Interface BEGIN
  **********************************************************************************************************************/
     
-    public int getEventId() {
+    public int getEventId() throws InterruptedException, ExecutionException {
         
         int selectedEventId;
         
         if (selectedEvent == null) {
-            throw new UnsupportedOperationException();
+            
+            String name = eventNameTextField.getText().toString();
+            String description = eventDescriptionTextField.getText().toString();
+            
+            AsyncTask<Object, Integer, Object> postEvent = new PostEvent().execute(name, description);
+            selectedEventId = (Integer) postEvent.get();
+
                         
         } else {
             selectedEventId = selectedEvent.getId();
