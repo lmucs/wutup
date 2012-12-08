@@ -1,5 +1,7 @@
 package edu.lmu.cs.wutup.android.views;
 
+import org.joda.time.DateTimeConstants;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,10 +14,6 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TimePicker;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
-
 import edu.lmu.cs.wutup.android.autofill.DynamicSearchTrigger;
 import edu.lmu.cs.wutup.android.autofill.ManualListAdapter;
 import edu.lmu.cs.wutup.android.button.ResponceToPostOccurrenceButton;
@@ -54,47 +52,64 @@ public class OccurrenceCreationForm extends Activity {
     private Event selectedEvent = null;
     private Venue selectedVenue = null;
 
+/**********************************************************************************************************************
+ * Member Variables END & View Programming Interface BEGIN
+ **********************************************************************************************************************/
     
-    public long getStartDate() {
-        return startDate.getDate();
+    public int getEventId() {
+        
+        int selectedEventId;
+        
+        if (selectedEvent == null) {
+            throw new UnsupportedOperationException();
+            
+        } else {
+            selectedEventId = selectedEvent.getId();
+        }
+        
+        return selectedEventId;
+        
     }
 
-    public long getStartHour() {
-        return startTime.getCurrentHour();
+    public int getVenueId() {
+        
+        int selectedVenueId;
+        
+        if (selectedVenue == null) {
+            throw new UnsupportedOperationException();
+            
+        } else {
+            selectedVenueId = selectedVenue.getId();
+        }
+        
+        return selectedVenueId;
+        
     }
     
-    public long getStartMinute() {
-        return startTime.getCurrentHour();
-    }
-
-    public long getEndDate() {
-        return endDate.getDate();
-    }
-
-    public long getEndHour() {
-        return endTime.getCurrentHour();
+    public long getStart() {
+        
+        long start = startDate.getDate();
+        
+        start += startTime.getCurrentHour() * DateTimeConstants.MILLIS_PER_HOUR;
+        start += startTime.getCurrentMinute() * DateTimeConstants.MILLIS_PER_MINUTE;
+        
+        return start;
+        
     }
     
-    public long getEndMinute() {
-        return endTime.getCurrentHour();
-    }
-
-
-    public Event getSelectedEvent() {
-        return selectedEvent;
-    }
-
-
-    public TimePicker getEndTime() {
-        return endTime;
-    }
-
-    public Venue getSelectedVenue() {
-        return selectedVenue;
+    public long getEnd() {
+        
+        long end = endDate.getDate();
+        
+        end += endTime.getCurrentHour() * DateTimeConstants.MILLIS_PER_HOUR;
+        end += endTime.getCurrentMinute() * DateTimeConstants.MILLIS_PER_MINUTE;
+        
+        return end;
+        
     }
 
 /**********************************************************************************************************************
- * Member Variables END & Android Life Cycle Methods BEGIN
+ * View Programming Interface END & Android Life Cycle Methods BEGIN
  **********************************************************************************************************************/
     
     @Override
@@ -113,21 +128,10 @@ public class OccurrenceCreationForm extends Activity {
         
     }
     
-    public void aaa(){
-        
-    }
-    
-
-
 /**********************************************************************************************************************
  * Android Life Cycle Methods END & Other Public Methods BEGIN
  **********************************************************************************************************************/
     
-    
-    
-
-
-
 
 /**********************************************************************************************************************
  * Public Methods END & Private Methods BEGIN
