@@ -28,22 +28,73 @@ var loadPageFunctionality = function(baseUrl, user) {
             return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&center=' + center.lat() + ',' + center.lng() + '&radius=' + (radius <= 100 ? radius : 100) + '&start=' + start.getTime() +
                 '&end=' + end.getTime();
         },
+        
+	    generateAttendeeByOccurrenceUrl = function (occurrence) {
+	    	return baseUrl + ':8080/wutup/occurrences/' + occurrence.id + '/attendees';
+	    },
 
-        generateAttendingButton = function(occurrence) {
+        generateAttendingButton = function (occurrence, attendingStatus) {
         	var attendingButton = $('<button id="marker-attend-btn" class="btn btn-success">')
         			.text("Attend Event!") ;
+        	if(attendingStatus) { attendingButton.addClass("hidden"); }
         	return $(attendingButton).getHtmlString();
         },
+        
+        generateDeclineButton = function (occurrence, attendingStatus) {
+        	var declineButton = $('<button id="marker-decline-btn" class="btn btn-danger">')
+        			.text("Decline Event") ;
+        	if(!attendingStatus) { declineButton.addClass("hidden"); }
+        	return $(declineButton).getHtmlString();
+        },
+        
+        generateAttendAndDeclineButtons = function (occurrence, infowindow) {
+        	var attendingEvent = false, buttons;
+        	var checkAttendance = $.getJSON(generateAttendeeByOccurrenceUrl(occurrence), function(attendees) {
+        		if ($.grep(attendees, function (attendee) { return attendee.id === user.id }).length > 0) {
+        			attendingEvent = true;
+        		}
+        	});
+        	
+        	$.when(checkAttendance).done(function() {
+        		buttons = generateAttendingButton(occurrence, attendingEvent) + generateDeclineButton(occurrence, attendingEvent);
+        	});
+        	setTimeout(function() {
+        		infowindow.setContent(infowindow.content + buttons);
+        		armMarkerButtons(occurrence);
+        	},100);
+        	
+        },
+        
 
-        armMarkerAttendButton = function(occurrence) {
-            $("#marker-attend-btn").live("click", function () {
+        armMarkerAttendButton = function (occurrence) {
+            $("#marker-attend-btn").click(function () {
                 $.ajax({
                     type: "POST",
                     url: baseUrl + ':8080/wutup/occurrences/' + occurrence.id + '/attendees',
                     data: JSON.stringify(user.id),
                     contentType:"application/json"
                 });
+                $("#marker-attend-btn").toggleClass("hidden");
+                $("#marker-decline-btn").toggleClass("hidden");
             });
+        },
+        
+        armMarkerDeclineButton = function (occurrence) {
+        	$("#marker-decline-btn").click(function () {
+                $.ajax({
+                    type: "DELETE",
+                    url: baseUrl + ':8080/wutup/occurrences/' + occurrence.id + '/attendees/' + user.id,
+                    contentType:"application/json"
+                });
+                $("#marker-attend-btn").toggleClass("hidden");
+                $("#marker-decline-btn").toggleClass("hidden");
+        	});
+        },
+        
+        armMarkerButtons = function (occurrence) {
+        	console.log("ARMED");
+        	armMarkerAttendButton(occurrence);
+        	armMarkerDeclineButton(occurrence);
         },
 
         displayInfoWindow = function (occurrence) {
@@ -52,9 +103,11 @@ var loadPageFunctionality = function(baseUrl, user) {
                 infowindow.close();
             }
             infowindow = new google.maps.InfoWindow({
-                content: event.name + '</br>' + start.toLocaleDateString() + ': ' + start.toLocaleTimeString() + ' - ' + end.toLocaleTimeString() + '</br>' + (user != undefined ? generateAttendingButton(occurrence) : ''),
+                content: event.name + '</br>' + start.toLocaleDateString() + ': ' + start.toLocaleTimeString() + ' - ' + end.toLocaleTimeString() + '</br>' + (user != undefined ? "<div id='buttons'></span>" : ''),
                 position: new google.maps.LatLng(occurrence.venue.latitude, occurrence.venue.longitude)
             });
+            infowindow.setOptions({maxHeight:400});
+            generateAttendAndDeclineButtons(occurrence, infowindow);
             infowindow.open(map);
         },
 
@@ -75,7 +128,6 @@ var loadPageFunctionality = function(baseUrl, user) {
             google.maps.event.addListener(marker, 'click', function () {
                 displayInfoWindow(occurrence);
                 displayEventInfo(occurrence);
-                armMarkerAttendButton(occurrence);
             });
             return marker;
         },
