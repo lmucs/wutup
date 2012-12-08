@@ -6,12 +6,13 @@
     <string name="occurrence_creation_form_title">Create an Occurrence!</string>
     <string name="occurrence_creation_form_label_event">Event:</string>
     <string name="occurrence_creation_form_label_event_description">Description:</string><string name="occurrence_creation_form_label_venue">Venue:</string>
-    <string name="occurrence_creation_form_label_venue_street">Street:</string><string name="occurrence_creation_form_label_venue_city">City:</string><string name="occurrence_creation_form_label_venue_state">State:</string><string name="occurrence_creation_form_label_venue_zip_code">Zip Code:</string><string name="occurrence_creation_form_label_date_start">Starts on ...</string>
+    <string name="occurrence_creation_form_label_venue_address">Address:</string><string name="occurrence_creation_form_label_venue_street">Street:</string><string name="occurrence_creation_form_label_venue_city">City:</string><string name="occurrence_creation_form_label_venue_state">State:</string><string name="occurrence_creation_form_label_venue_zip_code">Zip Code:</string><string name="occurrence_creation_form_label_date_start">Starts on ...</string>
     <string name="occurrence_creation_form_label_date_end">Ends on ...</string>
     <string name="occurrence_creation_form_label_time_start">Starts at ...</string>
     <string name="occurrence_creation_form_label_time_end">Ends at ...</string>
     <string name="generic_label_button_cancel">Cancel</string>
     <string name="occurrence_creation_form_label_button_post">Post Occurrence</string>
+    
     
     
     
