@@ -139,6 +139,7 @@ public class FBAuthServiceImpl implements FBAuthService {
         for (int x = 0; x < events.length(); x++) {
             try {
                 current = events.getJSONObject(x);
+                System.out.println("\n\n\ncurrent: " + current);
                 currentName = current.getString("name");
                 currentStartTime = current.getString("start_time");
                 currentLocation = current.getString("location");
@@ -146,8 +147,7 @@ public class FBAuthServiceImpl implements FBAuthService {
                 // TODO: Not used.
                 //currentVenueFBResourceId = new JSONObject(current.getString("venue")).getString("id");
             } catch (JSONException exception) {
-                exception.printStackTrace();
-                break;
+                continue;
             }
 
             try {
@@ -163,14 +163,10 @@ public class FBAuthServiceImpl implements FBAuthService {
                 event.setId(Integer.class.cast(eventService.createEvent(event)));
             }
 
-            System.out.println("\n\n" + event);
-            
-            
             try {
                 v = geocodeService.resolveVenue(currentLocation, null, null);
             } catch (Exception exception) {
-                exception.printStackTrace();
-                break;
+                continue;
             }
 
             try {
@@ -178,8 +174,6 @@ public class FBAuthServiceImpl implements FBAuthService {
             } catch (NoSuchVenueException exception) {
                 venueService.createVenue(v);
             }
-            
-            System.out.println(v + "\n\n");
 
             DateTime start;
             DateTime end;
@@ -190,7 +184,7 @@ public class FBAuthServiceImpl implements FBAuthService {
                 e = new EventOccurrence(event, v, start, end);
             } catch (Exception exception) {
                 exception.printStackTrace();
-                break;
+                continue;
             }
 
             try {
@@ -200,7 +194,6 @@ public class FBAuthServiceImpl implements FBAuthService {
                         start != null ? new Timestamp(start.getMillis()) : null,
                         end != null ? new Timestamp(end.getMillis()) : null);
             } catch (NoSuchEventOccurrenceException exception) {
-                exception.printStackTrace();
                 occurrenceService.createEventOccurrence(e);
             }
         }
