@@ -20,7 +20,8 @@ public interface EventOccurrenceService extends CommentService {
 
     List<User> findAttendeesByEventOccurrenceId(int id, PaginationData pagination);
 
-    public EventOccurrence findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start, Timestamp end);
+    EventOccurrence findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start,
+            Timestamp end);
 
     EventOccurrence findEventOccurrenceById(int id);
 
