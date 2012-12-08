@@ -2,7 +2,6 @@ package edu.lmu.cs.wutup.android.communication;
 
 import java.io.IOException;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -11,12 +10,16 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import edu.lmu.cs.wutup.android.manager.LogTags;
+
 public class PostOccurrences extends HttpWutup {
     
-    public static int INDEX_OF_EVENT_ID_IN_PARAMETERS = 0;
-    public static int INDEX_OF_VENUE_ID_IN_PARAMETERS = 1;
-    public static int INDEX_OF_START_IN_PARAMETERS = 2;
-    public static int INDEX_OF_END_IN_PARAMETERS = 3;
+    public static final String DEFAULT_ERROR_MESSAGE = "Failed to post occurrence!";
+    
+    public static final int INDEX_OF_EVENT_ID_IN_PARAMETERS = 0;
+    public static final int INDEX_OF_VENUE_ID_IN_PARAMETERS = 1;
+    public static final int INDEX_OF_START_IN_PARAMETERS = 2;
+    public static final int INDEX_OF_END_IN_PARAMETERS = 3;
 
 	@Override
 	protected Object doInBackground(Object... parameters) {
@@ -34,35 +37,34 @@ public class PostOccurrences extends HttpWutup {
             try {
                 postOccurrence(eventId, venueId, start, end);
                 
-            } catch (ClientProtocolException e) {
-                e.printStackTrace();
+            } catch (ClientProtocolException clientProtocolException) {
+                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, clientProtocolException);
                 
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ioException) {
+                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, ioException);
             }
         }
-	    
 
-		
 		return null;
 		
 	}
 	
-	private HttpResponse postOccurrence(Integer eventId, Integer venueId, String start, String end) throws ClientProtocolException, IOException {
+	private void postOccurrence(Integer eventId, Integer venueId, String start, String end) throws ClientProtocolException, IOException {
 		
 		HttpPost postOccurrence = new HttpPost(ADDRESS_OF_OCCURRENCES);
-		StringEntity serializedOccurrence = new StringEntity(generateJson(eventId, venueId, start, end));
-		postOccurrence.setEntity(serializedOccurrence);
+		String jsonForPostingOccurrence = generateJsonForPostingOccurrence(eventId, venueId, start, end);
+		StringEntity entityForPostingOccurrence = new StringEntity(jsonForPostingOccurrence);
+		
+		postOccurrence.setEntity(entityForPostingOccurrence);
 		postOccurrence.addHeader("Content-type", "application/json");
 		
-		HttpResponse response = client.execute(postOccurrence);
+		client.execute(postOccurrence);
 		
-		Log.i("POST", "Posted occurrence " + serializedOccurrence + ".");
-		return response;
+		Log.i("POST", "Executed HTTP call to post occurrence with the following JSON. " + jsonForPostingOccurrence);
 		
 	}
 	
-	private String generateJson(Integer eventId, Integer venueId, String start, String end) throws JsonProcessingException {
+	private String generateJsonForPostingOccurrence(Integer eventId, Integer venueId, String start, String end) throws JsonProcessingException {
 	    
 	    String jsonFormat = "{\"event\":{\"id\":%s},\"venue\":{\"id\":%s},\"start\":\"%s\",\"end\":\"%s\"}";
 	    String json = String.format(jsonFormat, eventId, venueId, start, end);

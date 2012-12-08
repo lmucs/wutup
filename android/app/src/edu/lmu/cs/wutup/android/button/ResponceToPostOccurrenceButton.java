@@ -8,16 +8,19 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import edu.lmu.cs.wutup.android.communication.PostOccurrences;
+import edu.lmu.cs.wutup.android.manager.LogTags;
 import edu.lmu.cs.wutup.android.views.OccurrenceCreationForm;
 
 public class ResponceToPostOccurrenceButton implements OnClickListener {
+    
+    public static final String ERROR_MESSAGE = "Failed to post occurrence!";
     
     private OccurrenceCreationForm occurrenceCreationForm;
     
     private int eventId;
     private int venueId;
-    private DateTime start;
-    private DateTime end;
+    private String start;
+    private String end;
     
     public ResponceToPostOccurrenceButton(OccurrenceCreationForm occurrenceCreationForm) {
         this.occurrenceCreationForm = occurrenceCreationForm;
@@ -26,23 +29,23 @@ public class ResponceToPostOccurrenceButton implements OnClickListener {
     @Override
     public void onClick(View v) {
         
-//        eventId = occurrenceCreationForm.getEventId();
-//        venueId = occurrenceCreationForm.getVenueId();
-                
-//        start = new DateTime(occurrenceCreationForm.getStart());
-//        end = new DateTime(occurrenceCreationForm.getEnd());
-//        
-//        new PostOccurrences().execute(eventId, venueId, start.toString(), end.toString());
         try {
-            int blarkar = occurrenceCreationForm.getVenueId();
-            Log.d("POST", "" + blarkar);
+
+            eventId = occurrenceCreationForm.getEventId();
+            venueId = occurrenceCreationForm.getVenueId();
+            
+            start = new DateTime(occurrenceCreationForm.getStart()).toString();
+            end = new DateTime(occurrenceCreationForm.getEnd()).toString();
+            
+            new PostOccurrences().execute(eventId, venueId, start, end);
+            
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.e(LogTags.POST, ERROR_MESSAGE, e);
+            
         } catch (ExecutionException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.e(LogTags.POST, ERROR_MESSAGE, e);
         }
+        
         occurrenceCreationForm.finish();
         
     }

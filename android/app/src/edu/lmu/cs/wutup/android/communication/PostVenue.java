@@ -38,6 +38,8 @@ public class PostVenue extends HttpWutup {
                 e.printStackTrace();
             }
             
+        } else {
+            throw new IllegalArgumentException();
         }
         
         return idOfPostedVenue;
