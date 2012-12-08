@@ -62,6 +62,7 @@ public class EventOccurrenceResourceIT {
             get("/wutup/occurrences?eventId=2&page=1&pageSize=0");
     }
 
+    @Ignore
     @Test
     public void getWithCircleQueryFindsEventOccurrences() {
         given().
@@ -280,6 +281,7 @@ public class EventOccurrenceResourceIT {
             patch("/wutup/occurrences/3");
     }
 
+    @Ignore
     @Test
     public void deleteEventOccurrenceProduces204() {
         given().

@@ -26,6 +26,8 @@ public interface FBAuthService {
 
     public String getUserEvents(String accessToken) throws ParseException, ClientProtocolException, IOException;
 
+    public String getVenueFromFbById(String accessToken, String fbResourceId) throws ParseException, ClientProtocolException, IOException;
+
     public edu.lmu.cs.wutup.ws.model.User findOrCreateFBUser(String accessToken, String fbId);
 
     public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken);

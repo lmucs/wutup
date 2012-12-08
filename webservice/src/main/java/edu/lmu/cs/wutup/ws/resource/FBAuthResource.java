@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
+import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.service.FBAuthService;
 import edu.lmu.cs.wutup.ws.service.UserService;
 
@@ -39,7 +40,6 @@ public class FBAuthResource {
             return Response
                     .ok(userService.findUserByFacebookId(facebookId))
                     .build();
-
         } catch (NoSuchUserException e) {
             return Response
                     .ok("{}")
@@ -57,15 +57,13 @@ public class FBAuthResource {
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
         String redirectUri = "http://localhost:8080/wutup/auth/facebook";
-        String finalLandingUri = "http://localhost:9090/wutup";
+        String finalLandingUri = "http://localhost:9090/Index";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
-
         } else if (code.equals("")) {
             try {
                 return fbService.fetchFBCode(redirectUri);
-
             } catch (Exception e) {
                 e.printStackTrace();
                 return Response.serverError().build();
@@ -78,8 +76,8 @@ public class FBAuthResource {
             return Response
                     .seeOther(new URI(finalLandingUri))
                     .build();
-
         } catch (Exception e) {
+            e.printStackTrace();
             return Response.serverError().build();
         }
     }
@@ -94,17 +92,14 @@ public class FBAuthResource {
             @DefaultValue("") @QueryParam("error_description") String errorDescription) {
 
         final String redirectUri = "http://localhost:8080/wutup/auth/facebook/sync";
-        final String finalLandingUri = "http://localhost:9090/wutup/ManageEvents";
+        final String finalLandingUri = "http://localhost:9090/ManageEvents";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
-
         } else if (code.equals("")) {
             try {
                 return fbService.fetchFBCode(redirectUri);
-
             } catch (Exception e) {
-                e.printStackTrace();
                 return Response.serverError().build();
             }
         }
@@ -114,9 +109,7 @@ public class FBAuthResource {
             return Response
                     .seeOther(new URI(finalLandingUri))
                     .build();
-
         } catch (Exception e) {
-//            e.printStackTrace();
             return Response.serverError().build();
         }
     }

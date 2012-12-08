@@ -13,6 +13,8 @@ public interface EventDao extends CommentDao {
 
     List<Event> findEvents(String name, List<Integer> owners, PaginationData pagination);
 
+    Event findEventByName(String name);
+
     void updateEvent(Event e);
 
     void deleteEvent(int id);

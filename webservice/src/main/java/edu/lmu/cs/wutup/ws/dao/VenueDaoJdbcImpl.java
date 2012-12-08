@@ -85,6 +85,17 @@ public class VenueDaoJdbcImpl implements VenueDao {
         }
     }
 
+    // TODO: Test this
+    @Override
+    public Venue findVenueByName(String name) {
+        try {
+            QueryBuilder query = new QueryBuilder().from("venue").where("name=:name", name);
+            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(), venueRowMapper);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            throw new NoSuchVenueException();
+        }
+    }
+
     @Override
     public List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination) {
         QueryBuilder builder = new QueryBuilder().select("v.*").from("venue v");

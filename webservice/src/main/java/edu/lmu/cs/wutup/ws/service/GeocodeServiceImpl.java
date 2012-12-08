@@ -98,7 +98,7 @@ public class GeocodeServiceImpl implements GeocodeService {
         v.setLongitude(resolvedLng);
         v.setName(resolvedName);
 
-        venueService.createVenue(v);
+//        venueService.createVenue(v);
 
         return v;
     }

@@ -13,6 +13,8 @@ public interface VenueService extends CommentService {
 
     Venue findVenueById(int id);
 
+    Venue findVenueByName(String name);
+
     List<Venue> findVenues(String name, Integer eventId, Circle circle, PaginationData pagination);
 
     void updateVenue(Venue loc);

@@ -27,6 +27,10 @@ public class FacebookGateway extends AbstractGateway {
         return stringifyEntity(executeGetRequest(constructGetEventsUrl(accessToken)));
     }
 
+    public static String acquireResource(String accessToken, String fbResourceId) throws ParseException, ClientProtocolException, IOException {
+        return stringifyEntity(executeGetRequest(constructGetResourceByIdUrl(accessToken, fbResourceId)));
+    }
+    
     public static String createUserEvent(String accessToken, String userFBId, String name, DateTime start,
             DateTime end, String description, String location, String FBLocationId, String privacyType)
             throws RequiredFBNameOrStartTimeMissingException, FBAccessTokenMissingException, ParseException,
@@ -67,6 +71,10 @@ public class FacebookGateway extends AbstractGateway {
 
     private static String constructGetEventsUrl(String accessToken) {
         return "https://graph.facebook.com/me/events?access_token=" + accessToken;
+    }
+    
+    private static String constructGetResourceByIdUrl(String accessToken, String fbResourceId) {
+        return "https://graph.facebook.com/" + fbResourceId + "?access_token=" + accessToken;
     }
 
     private static String constructPostEventUrl(String accessToken, String userFBId, String name, DateTime start,
