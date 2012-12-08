@@ -56,7 +56,17 @@ public class PostOccurrences extends HttpWutup {
 //		Log.i("POST", "Serialized occurrence " + occurrence.getId() + "." + serializedOccurrence);
 //		return serializedOccurrence;
 	    
-	    return "{\"event\":{\"id\":1},\"venue\":{\"id\":1},\"start\":\"2012-12-01T11:30:00\",\"end\":\"2012-12-01T12:00:00\"}";
+	    String postFormat = "{\"event\":{\"id\":%s},\"venue\":{\"id\":%s},\"start\":\"%s\",\"end\":\"%s\"}";
+	    String json = String.format(postFormat, 
+	                                occurrence.getEvent().getId(), 
+	                                occurrence.getVenue().getId(), 
+	                                occurrence.getStart().toString(), 
+	                                occurrence.getEnd().toString());
+	    
+	    Log.i("POST", "Serialized occurrence " + occurrence.getId() + "." + json);
+	    return json;
+	    
+//	    return "{\"event\":{\"id\":1},\"venue\":{\"id\":1},\"start\":\"2012-12-01T11:30:00\",\"end\":\"2012-12-01T12:00:00\"}";
 	    
 	}
 
