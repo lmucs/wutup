@@ -50,7 +50,7 @@ public class Map extends MapActivity {
 	}
 	
 	public static void refreshMap() {
-       new GetOccurrences().execute(mapView.getMapCenter(), 50);
+       new GetOccurrences().execute(mapView.getMapCenter(), 100);
 	}
 	
 	@Override
