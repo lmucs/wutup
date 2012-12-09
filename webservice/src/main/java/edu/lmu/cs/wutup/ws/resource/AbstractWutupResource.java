@@ -110,7 +110,7 @@ public abstract class AbstractWutupResource {
      *             with BAD_REQUEST if creator or name are not specified.
      */
     void checkEventCanBeCreated(Event e) {
-        if (e.getCreator() == null || e.getName() == null) {
+        if (e.getCreator() == null || e.getCreator().getId() == null || e.getName() == null) {
             throw new ServiceException(BAD_REQUEST, INSUFFICIENT_EVENT_DATA);
         }
     }
