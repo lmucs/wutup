@@ -34,7 +34,23 @@ public class GestureOverlay extends Overlay {
     }
     
     @Override
-    public boolean onTouchEvent(android.view.MotionEvent motionEvent, MapView mapView) {
+    public boolean onTouchEvent(MotionEvent motionEvent, MapView mapView) {
+        
+        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+            Map.refreshMap();
+        }
+        
+        handleLongTouch(motionEvent);
+  
+        return super.onTouchEvent(motionEvent, mapView);
+        
+    }
+    
+    public void onLongTouch() {
+        mapActivity.startActivity(new Intent(mapActivity, OccurrenceCreationForm.class));
+    }
+        
+    private void handleLongTouch(MotionEvent motionEvent) {
         
         if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
             
@@ -58,9 +74,7 @@ public class GestureOverlay extends Overlay {
             
             distanceMovedAlongXAxisSinceLastRelease = 0;
             distanceMovedAlongYAxisSinceLastRelease = 0;
-            
-            Map.refreshMap();            
-        
+                    
         } else {
       
             distanceMovedAlongXAxisSinceLastRelease += Math.abs(touchDownXposition - motionEvent.getX());
@@ -71,13 +85,7 @@ public class GestureOverlay extends Overlay {
             }
 
         }
-  
-        return super.onTouchEvent(motionEvent, mapView);
         
-    }
-    
-    public void onLongTouch() {
-        mapActivity.startActivity(new Intent(mapActivity, OccurrenceCreationForm.class));
     }
 
 }
