@@ -57,6 +57,17 @@ public class EventDaoTest {
         assertThat(event.getCreator().getId(), is(8));
     }
 
+    @Test
+    public void findExistingEventByName() {
+        Event createdEvent = eventDao.findEventById(1);
+        assertThat(createdEvent.getName(), is("Poker Night"));
+    }
+
+    @Test(expected = NoSuchEventException.class)
+    public void findNonExistentEventByNameThrowsException() {
+        eventDao.findEventByName("Some Crazy Ass Event That Should Never Exist");
+    }
+
     @Test(expected = NoSuchEventException.class)
     public void findingNonExistentEventViaIdThrowsException() {
         eventDao.findEventById(8675309);

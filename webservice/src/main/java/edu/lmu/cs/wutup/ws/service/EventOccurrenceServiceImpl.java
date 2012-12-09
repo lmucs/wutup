@@ -49,7 +49,7 @@ public class EventOccurrenceServiceImpl implements EventOccurrenceService {
 
     // TODO: Test this
     @Override
-    public EventOccurrence findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start, Timestamp end){
+    public List<EventOccurrence> findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start, Timestamp end){
         return eventOccurrenceDao.findEventOccurrenceByProperties(parentEventId, venueId, start, end);
     }
 

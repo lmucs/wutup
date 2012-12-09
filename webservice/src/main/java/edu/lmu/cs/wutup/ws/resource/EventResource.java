@@ -96,6 +96,8 @@ public class EventResource extends AbstractWutupResource {
             return Response.created(newLocation).build();
         } catch (EventExistsException e) {
             throw new ServiceException(CONFLICT, EVENT_ALREADY_EXISTS, event.getId());
+        } catch (NoSuchEventException e) {
+            return Response.ok("No event found.").build();
         }
     }
 

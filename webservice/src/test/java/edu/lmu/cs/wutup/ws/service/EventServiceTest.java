@@ -27,7 +27,7 @@ public class EventServiceTest {
     EventDao dao;
 
     User sampleUser = new User(4, "hello@gmail.com");
-    Event sampleEvent = new Event(1, "Alice");
+    Event sampleEvent = new Event(1, "Alice", "Alice description", sampleUser);
     Comment sampleComment = new Comment(56, "Mic check 1 2", null, sampleUser);
     List<Comment> sampleComments = new ArrayList<Comment>();
     PaginationData samplePagination = new PaginationData(0, 10);
@@ -49,6 +49,18 @@ public class EventServiceTest {
     public void creationPropagatesExistExceptions() {
         doThrow(new EventExistsException()).when(dao).createEvent(sampleEvent);
         service.createEvent(sampleEvent);
+    }
+
+    @Test
+    public void findEventByName() {
+        when(dao.findEventByName(sampleEvent.getName())).thenReturn(sampleEvent);
+        assertThat(service.findEventByName(sampleEvent.getName()), equalTo(sampleEvent));
+    }
+
+    @Test(expected = NoSuchEventException.class)
+    public void findNonexistentEventByNameFails() {
+        doThrow(new NoSuchEventException()).when(dao).findEventByName(sampleEvent.getName());
+        assertThat(service.findEventByName(sampleEvent.getName()), equalTo(sampleEvent));
     }
 
     @Test

@@ -35,7 +35,6 @@ public class VenueServiceImpl implements VenueService {
         return venueDao.findVenueById(id);
     }
 
-    // TODO: Test this
     @Override
     public Venue findVenueByName(String name) {
         return venueDao.findVenueByName(name);
