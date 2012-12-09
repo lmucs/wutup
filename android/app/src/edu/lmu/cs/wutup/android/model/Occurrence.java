@@ -15,12 +15,7 @@ public class Occurrence {
     private ArrayList<User> attendees =  new ArrayList<User>();
     private ArrayList<Comment> comments = new ArrayList<Comment>();
     
-    public Occurrence(Event event, Venue venue, DateTime start, DateTime end) {
-    	this.event = event;
-    	this.venue = venue;
-    	this.start = start;
-    	this.end = end;
-    }
+
     
     public Integer getId() {
         return id;
@@ -69,6 +64,20 @@ public class Occurrence {
     public String toString() {
 		return "blarkar";
     	
+    }
+    
+    public String getDetails() {
+        
+        String dateTimeFormat = "EEEE, MMMM d, yyyy 'at' h:mm a";
+        
+        String details = event.getDescription() + "\n\n" + 
+                         "Held at " + venue.getName() + "\n" +
+                         venue.getAddress() + "\n\n" +
+                         "Starts " + start.toString(dateTimeFormat) + "\n\n" +
+                         "Ends " + end.toString(dateTimeFormat);
+        
+        return details;
+                     
     }
     
 }

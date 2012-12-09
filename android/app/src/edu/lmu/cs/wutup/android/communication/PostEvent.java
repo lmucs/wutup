@@ -36,14 +36,22 @@ public class PostEvent extends HttpWutup {
                 idOfPostedEvent = postEvent(name, description);
                 
             } catch (ClientProtocolException clientProtocolException) {
-                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, clientProtocolException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, clientProtocolException);
                 
             } catch (IOException ioException) {
-                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, ioException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, ioException);
             }
             
         } else {
-            throw new IllegalArgumentException();
+            
+            IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
+            
+            Log.e(LogTags.HTTP, 
+                  "Passed invalid parameters for posting an event! Requires a name and description.", 
+                  illegalArgumentException);
+            
+            throw illegalArgumentException;
+            
         }
         
         return idOfPostedEvent;
@@ -62,7 +70,7 @@ public class PostEvent extends HttpWutup {
         HttpResponse responceToPostingEvent = client.execute(postEvent);
         int idOfPostedEvent = extractEventId(responceToPostingEvent);
                 
-        Log.i(LogTags.POST, "Executed HTTP call to post event with the following JSON. " + jsonForPostingEvent + 
+        Log.i(LogTags.HTTP, "Executed HTTP call to post event with the following JSON. " + jsonForPostingEvent + 
                       " Posted event assigned ID " + idOfPostedEvent + ".");
         
         return idOfPostedEvent;
@@ -71,7 +79,7 @@ public class PostEvent extends HttpWutup {
     
     private String generateJsonForPostingEvent(String name, String description) throws JsonProcessingException {
         
-        String jsonFormat = "{\"name\":\"%s\",\"description\":\"%s\",\"creator\":{\"email\":\"40mpg@gmail.com\"}}";
+        String jsonFormat = "{\"name\":\"%s\",\"description\":\"%s\",\"creator\":{\"id\":5}}";
         String json = String.format(jsonFormat, name, description);
         
         return json;

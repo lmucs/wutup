@@ -5,41 +5,70 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.google.android.maps.GeoPoint;
 
 import edu.lmu.cs.wutup.android.container.Occurrences;
+import edu.lmu.cs.wutup.android.manager.LogTags;
 import edu.lmu.cs.wutup.android.model.Occurrence;
+import edu.lmu.cs.wutup.android.views.Map;
 
 public class GetOccurrences extends HttpWutup{
     
-    private HttpClient client = new DefaultHttpClient();
+    public static final String DEFAULT_ERROR_MESSAGE = "Failed to plot event occurrences!";
+    
+    public static final int INDEX_OF_CENTER_IN_PARAMETERS = 0;
+    public static final int INDEX_OF_RADIUS_IN_PARAMETERS = 1;   
     
     @Override
     protected Object doInBackground(Object... parameters) {
         
-        retrieveOccurences();
-        
-        return null;
+        if (parameters[INDEX_OF_CENTER_IN_PARAMETERS] instanceof GeoPoint &&
+            parameters[INDEX_OF_RADIUS_IN_PARAMETERS] instanceof Integer) {
+            
+            GeoPoint center = (GeoPoint) parameters[INDEX_OF_CENTER_IN_PARAMETERS];
+            int radius = (Integer) parameters[INDEX_OF_RADIUS_IN_PARAMETERS];
+   
+            retrieveOccurences(center, radius);    
+                
+        } else {
+            
+            IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
+            
+            Log.e(LogTags.HTTP, 
+                  "Passed invalid parameters for getting occurrences! Requires a GeoPoint, Integer, and Map.", 
+                  illegalArgumentException);
+            
+            throw illegalArgumentException;
+            
+        }   
 
+        return null;
         
     }
     
-    private void retrieveOccurences() {
+    @Override
+    protected void onPostExecute(Object result) {
+        Map.plotOccurrences();        
+    }   
+    
+    private void retrieveOccurences(GeoPoint center, int radius) {
         
         try {
             
-            HttpGet requestForOccurences = new HttpGet(ADDRESS_OF_OCCURRENCES);
-            HttpResponse responceToRequestForOccurences = client.execute(requestForOccurences);
+            String httpCallWithParametersToGetOccurrences = generateHttpCallWithParametersToGetOccurrences(center, radius);
+            HttpGet getOccurrences = new HttpGet(httpCallWithParametersToGetOccurrences);
+            HttpResponse responceToGettingOccurrences = client.execute(getOccurrences);
             
-            InputStream occurenceStream = responceToRequestForOccurences.getEntity().getContent();;
+            Log.i(LogTags.HTTP, "Executed HTTP call to get occurrences with the following query. " + httpCallWithParametersToGetOccurrences);
+            
+            InputStream occurenceStream = responceToGettingOccurrences.getEntity().getContent();;
             BufferedInputStream occurenceBuffer = new BufferedInputStream(occurenceStream);       
                         
             try {
@@ -56,7 +85,7 @@ public class GetOccurrences extends HttpWutup{
             }
             
         } catch (IOException ioException){
-            Log.e("GET", "Failed to retrieve occurrences form web service!", ioException);     
+            Log.e(LogTags.HTTP, "Failed to retrieve occurrences form web service!", ioException);     
         }
  
     }
@@ -68,11 +97,32 @@ public class GetOccurrences extends HttpWutup{
         while (occurenceIterator.hasNext()) {
             
             Occurrence occurrence = (Occurrence) occurenceIterator.next();
-            Log.i("GET", "Retrieved occurence " + occurrence.getId() + ".");
+            Log.i(LogTags.HTTP, "Retrieved occurence " + occurrence.getId() + ".");
             
             Occurrences.add(occurrence);
             
         }
+        
+    }
+    
+    private String generateHttpCallWithParametersToGetOccurrences(GeoPoint center, int radius) {
+        
+        String httpCallFormat = ADDRESS_OF_OCCURRENCES + "?center=%s,%s&radius=%s";
+        
+        double latitude = microDegreesToDegrees(center.getLatitudeE6());
+        double longitude = microDegreesToDegrees(center.getLongitudeE6());
+        
+        String httpCall = String.format(httpCallFormat, latitude, longitude, radius);
+        
+        return httpCall;
+        
+    }
+    
+    private static double microDegreesToDegrees(int microDegrees) {
+        
+        double degrees =  microDegrees / 1E6;
+        
+        return degrees;
         
     }
 

@@ -38,14 +38,22 @@ public class PostOccurrences extends HttpWutup {
                 postOccurrence(eventId, venueId, start, end);
                 
             } catch (ClientProtocolException clientProtocolException) {
-                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, clientProtocolException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, clientProtocolException);
                 
             } catch (IOException ioException) {
-                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, ioException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, ioException);
             }
             
         } else {
-            throw new IllegalArgumentException();
+            
+            IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
+            
+            Log.e(LogTags.HTTP, 
+                  "Passed invalid parameters for posting an occurrence! Requires an event ID, venue ID, start, and end.", 
+                  illegalArgumentException);
+            
+            throw illegalArgumentException;
+                    
         }
 
 		return null;
@@ -63,7 +71,7 @@ public class PostOccurrences extends HttpWutup {
 		
 		client.execute(postOccurrence);
 		
-		Log.i(LogTags.POST, "Executed HTTP call to post occurrence with the following JSON. " + jsonForPostingOccurrence);
+		Log.i(LogTags.HTTP, "Executed HTTP call to post occurrence with the following JSON. " + jsonForPostingOccurrence);
 		
 	}
 	

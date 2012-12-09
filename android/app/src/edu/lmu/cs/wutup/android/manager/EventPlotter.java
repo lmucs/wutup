@@ -11,7 +11,7 @@ import com.google.android.maps.OverlayItem;
 
 public class EventPlotter extends ItemizedOverlay<OverlayItem> {
     
-        private Context mContext;
+    private Context mContext;
 	private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
 
 	public EventPlotter(Drawable defaultMarker) {

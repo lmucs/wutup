@@ -36,14 +36,22 @@ public class PostVenue extends HttpWutup {
                 idOfPostedVenue = postVenue(name, address);
                 
             } catch (ClientProtocolException clientProtocolException) {
-                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, clientProtocolException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, clientProtocolException);
                 
             } catch (IOException ioException) {
-                Log.e(LogTags.POST, DEFAULT_ERROR_MESSAGE, ioException);
+                Log.e(LogTags.HTTP, DEFAULT_ERROR_MESSAGE, ioException);
             }
             
         } else {
-            throw new IllegalArgumentException();
+            
+            IllegalArgumentException illegalArgumentException  = new IllegalArgumentException();
+            
+            Log.e(LogTags.HTTP, 
+                  "Passed invalid parameters for posting a venue! Requires a name and address.", 
+                  illegalArgumentException);
+            
+            throw illegalArgumentException;
+            
         }
         
         return idOfPostedVenue;
@@ -52,17 +60,17 @@ public class PostVenue extends HttpWutup {
     
     private int postVenue(String name, String address) throws ClientProtocolException, IOException {
         
-        HttpPost postOccurrence = new HttpPost(ADDRESS_OF_VENUES);
+        HttpPost postVenue = new HttpPost(ADDRESS_OF_VENUES);
         String jsonForPostingVenue = generateJsonForPostingOccurrecne(name, address);
         StringEntity entityForPostingVenue = new StringEntity(jsonForPostingVenue);
         
-        postOccurrence.setEntity(entityForPostingVenue);
-        postOccurrence.addHeader("Content-type", "application/json");
+        postVenue.setEntity(entityForPostingVenue);
+        postVenue.addHeader("Content-type", "application/json");
         
-        HttpResponse responceToPostingVenue = client.execute(postOccurrence);
+        HttpResponse responceToPostingVenue = client.execute(postVenue);
         int idOfPostedVenue = extractVenueId(responceToPostingVenue);
                 
-        Log.i(LogTags.POST, "Executed HTTP call to post venue with the following JSON. " + jsonForPostingVenue + 
+        Log.i(LogTags.HTTP, "Executed HTTP call to post venue with the following JSON. " + jsonForPostingVenue + 
                       " Posted venue assigned ID " + idOfPostedVenue + ".");
         
         return idOfPostedVenue;
