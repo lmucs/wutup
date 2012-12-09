@@ -36,7 +36,7 @@ public class EventOccurrenceResourceTest {
     EventOccurrenceResource resource;
     EventOccurrenceService service;
 
-    EventOccurrence sampleEventOccurrence = new EventOccurrence(1, new Event(), new Venue());
+    EventOccurrence sampleEventOccurrence = new EventOccurrence(1, new Event(300, "People Party"), new Venue(300, "Party Place", "1 LMU Dr."));
     Comment sampleEventOccurrenceComment = new Comment(1, "body", new DateTime(), new User());
     List<EventOccurrence> sampleEventOccurrenceList = new ArrayList<EventOccurrence>();
     List<User> sampleUserList = new ArrayList<User>();

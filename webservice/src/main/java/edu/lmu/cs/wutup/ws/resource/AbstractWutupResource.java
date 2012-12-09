@@ -120,7 +120,7 @@ public abstract class AbstractWutupResource {
      *             with BAD_REQUEST if eventOccurrence is insufficiently specified.
      */
     void checkOccurrenceCanBeCreated(EventOccurrence o) {
-        if (o.getEvent() == null || o.getVenue() == null) {
+        if (o.getEvent() == null || o.getEvent().getId() == null || o.getVenue() == null || o.getVenue().getId() == null) {
             throw new ServiceException(BAD_REQUEST, INSUFFICIENT_OCCURRENCE_DATA);
         }
     }
