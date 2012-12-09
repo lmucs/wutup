@@ -4,20 +4,26 @@ import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static javax.ws.rs.core.Response.Status.CONFLICT;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONException;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import edu.lmu.cs.wutup.ws.exception.LocationNotFoundByGoogleException;
 import edu.lmu.cs.wutup.ws.exception.MalformedDateTimeStringException;
 import edu.lmu.cs.wutup.ws.exception.ServiceException;
 import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Event;
 import edu.lmu.cs.wutup.ws.model.EventOccurrence;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
+import edu.lmu.cs.wutup.ws.model.Venue;
+import edu.lmu.cs.wutup.ws.service.GeocodeService;
 
 /**
  * Base for all resource classes in the Wutup webservice.
@@ -36,6 +42,7 @@ public abstract class AbstractWutupResource {
     private static final String INSUFFICIENT_EVENT_DATA = "Not enough data to create event";
     private static final String INSUFFICIENT_OCCURRENCE_DATA = "Not enough data to create event occurrence";
     private static final String TIME_CANNOT_BE_PARSED = "The %s and %s parameters cannot be parsed into a valid DateTime";
+    private static final String VENUE_CANNOT_BE_RESOLVED = "The venue provided cannot be resolved to a location";
 
     private static final Pattern CENTER_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?");
     private static final Pattern RADIUS_PATTERN = Pattern.compile("-?\\d+(\\.\\d+)?");
@@ -44,6 +51,9 @@ public abstract class AbstractWutupResource {
     protected static final String DEFAULT_PAGE_SIZE = "20";
 
     Logger logger = Logger.getLogger(getClass());
+
+    @Autowired
+    GeocodeService geocodeService;
 
     /**
      * Throws a service exception with BAD_REQUEST is the value is null (corresponds to a missing required HTTP
@@ -110,7 +120,7 @@ public abstract class AbstractWutupResource {
      *             with BAD_REQUEST if creator or name are not specified.
      */
     void checkEventCanBeCreated(Event e) {
-        if (e.getCreator() == null || e.getName() == null) {
+        if (e.getCreator() == null || e.getCreator().getId() == null || e.getName() == null) {
             throw new ServiceException(BAD_REQUEST, INSUFFICIENT_EVENT_DATA);
         }
     }
@@ -120,11 +130,40 @@ public abstract class AbstractWutupResource {
      *             with BAD_REQUEST if eventOccurrence is insufficiently specified.
      */
     void checkOccurrenceCanBeCreated(EventOccurrence o) {
-        if (o.getEvent() == null || o.getVenue() == null) {
+        if (o.getEvent() == null || o.getEvent().getId() == null || o.getVenue() == null || o.getVenue().getId() == null) {
             throw new ServiceException(BAD_REQUEST, INSUFFICIENT_OCCURRENCE_DATA);
         }
     }
 
+    /**
+     * @throws ServiceException
+     *             with BAD_REQUEST if venue location cannot be determined.
+     */
+    void preprocessVenue(Venue venue) {
+        if (venue.getLatitude() == null || venue.getLongitude() == null || venue.getAddress() == null) {
+            try {
+                Venue resolvedVenue;
+                resolvedVenue = geocodeService.resolveVenue(venue.getAddress(), venue.getLatitude(), venue.getLongitude());
+                venue.setLatitude(resolvedVenue.getLatitude());
+                venue.setLongitude(resolvedVenue.getLongitude());
+                venue.setAddress(resolvedVenue.getAddress());
+                if (venue.getName() == null) {
+                    venue.setName(resolvedVenue.getName());
+                }
+            } catch (LocationNotFoundByGoogleException e) {
+                throw new ServiceException(BAD_REQUEST, VENUE_CANNOT_BE_RESOLVED);
+            } catch (IOException e) {
+                throw new ServiceException(BAD_REQUEST, VENUE_CANNOT_BE_RESOLVED);
+            } catch (JSONException e) {
+                throw new ServiceException(BAD_REQUEST, VENUE_CANNOT_BE_RESOLVED);
+            }
+        }
+    }
+
+    /**
+     * @throws ServiceException
+     *             with BAD_REQUEST if no valid query was provided.
+     */
     void checkOccurrenceCanBeQueried(Integer attendee, Circle circle, Interval interval, List<Integer> eventId,
             Integer venueId) {
         if (attendee == null && circle == null && interval == null && eventId == null && venueId == null) {

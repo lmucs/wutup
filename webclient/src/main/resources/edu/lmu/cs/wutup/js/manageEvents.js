@@ -123,7 +123,6 @@ var loadPageFunctionality = function (baseUrl, user) {
 	    },
 
 	    generateOccurrencesByUserEventIdsUrl = function (eventIds) {
-	    	console.log(eventIds)
 	    	return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&eventId=' + (eventIds.length === 0 ? 0 : eventIds);
 	    },
 	    
