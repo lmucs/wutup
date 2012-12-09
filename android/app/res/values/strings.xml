@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">WutUp</string>
-    <string name="title_manager">Manager</string>
     <string name="title_map">Map View</string>
     <string name="place_holder_text">This is place holder text!</string>
     <string name="occurrence_creation_form_title">Create an Occurrence!</string>

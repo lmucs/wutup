@@ -93,11 +93,7 @@ public class Map extends MapActivity {
 	    switch (item.getItemId()) {
 	    
 	        case R.id.create_occurrence: startActivity(new Intent(this, OccurrenceCreationForm.class));  
-	        							 break;
-        	                      
-        	case R.id.list:              break;
-        	                 
-        	case R.id.search:            break;                 
+	        							 break;               
         	                     
         	default:                     break;
 	    
