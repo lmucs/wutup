@@ -15,7 +15,7 @@ import edu.lmu.cs.wutup.android.manager.LogTags;
 
 public class PostVenue extends HttpWutup {
     
-    public static final String DEFAULT_ERROR_MESSAGE = "Failed to post occurrence!";
+    public static final String DEFAULT_ERROR_MESSAGE = "Failed to post event occurrence!";
 
     
     public static final int INDEX_OF_NAME_IN_PARAMETERS = 0;
