@@ -35,6 +35,7 @@ public class WicketApplication extends WebApplication
 	            new MountMapper("/mount/point", new PackageMapper(
 	                PackageName.forClass(Index.class))));
 	    mountPackage("/", NearbyEvents.class);
+	    getMarkupSettings().setStripWicketTags(true);
 	        
 	}
 }
