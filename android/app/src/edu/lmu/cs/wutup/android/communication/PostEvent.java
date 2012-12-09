@@ -79,7 +79,7 @@ public class PostEvent extends HttpWutup {
     
     private String generateJsonForPostingEvent(String name, String description) throws JsonProcessingException {
         
-        String jsonFormat = "{\"name\":\"%s\",\"description\":\"%s\",\"creator\":{\"email\":\"40mpg@gmail.com\"}}";
+        String jsonFormat = "{\"name\":\"%s\",\"description\":\"%s\",\"creator\":{\"id\":5}}";
         String json = String.format(jsonFormat, name, description);
         
         return json;

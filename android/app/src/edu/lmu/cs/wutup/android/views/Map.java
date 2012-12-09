@@ -25,8 +25,9 @@ import com.google.android.maps.OverlayItem;
 
 public class Map extends MapActivity {
     
-    private static Drawable dropPin;
+    public static final int DEFAULT_RADIUS_FOR_RETRIEVING_OCCURRENCES = 100;
     
+    private static Drawable dropPin;
     private static MapView mapView; 
     private static List<Overlay> mapOverlays;
     private static EventPlotter occurrenceOverlay;
@@ -50,7 +51,7 @@ public class Map extends MapActivity {
 	}
 	
 	public static void refreshMap() {
-       new GetOccurrences().execute(mapView.getMapCenter(), 100);
+       new GetOccurrences().execute(mapView.getMapCenter(), DEFAULT_RADIUS_FOR_RETRIEVING_OCCURRENCES);
 	}
 	
 	@Override
