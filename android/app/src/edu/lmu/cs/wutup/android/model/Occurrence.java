@@ -66,4 +66,18 @@ public class Occurrence {
     	
     }
     
+    public String getDetails() {
+        
+        String dateTimeFormat = "EEEE, MMMM d, yyyy 'at' h:mm a";
+        
+        String details = event.getDescription() + "\n\n" + 
+                         "Held at " + venue.getName() + "\n" +
+                         venue.getAddress() + "\n\n" +
+                         "Starts " + start.toString(dateTimeFormat) + "\n\n" +
+                         "Ends " + end.toString(dateTimeFormat);
+        
+        return details;
+                     
+    }
+    
 }

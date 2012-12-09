@@ -66,7 +66,7 @@ public class Map extends MapActivity {
 	    
 	    GeoPoint position = new GeoPoint(venue.getLatitude(), venue.getLongitude());
 	    
-	    return new OverlayItem(position, event.getName(), event.getDescription());	    
+	    return new OverlayItem(position, event.getName(), occurrence.getDetails());	    
 	}
 	
 	public static void plotOccurrences() {
