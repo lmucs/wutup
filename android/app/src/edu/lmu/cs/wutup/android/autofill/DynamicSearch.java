@@ -58,13 +58,21 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, List<T>> {
 				
 				BufferedInputStream serializedObjects = retrieveSerializedObjects(address);				
 				MappingIterator<T> deserializedObjects = deserializeObjects(serializedObjects);
-				autoCompleteSuggestions = IteratorUtils.toList(deserializedObjects);
 				
+				if (deserializedObjects.hasNext()) {
+					autoCompleteSuggestions = IteratorUtils.toList(deserializedObjects);
+				} else {
+					autoCompleteSuggestions = new ArrayList<T>();
+				}
+								
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 				
 			} catch (IOException e) {
 				e.printStackTrace();
+			
+			} catch (Exception e) {
+				Log.i(LogTags.HTTP, "Unknown error while preforming dynamic search!", e);
 			}
 			
 		} else {

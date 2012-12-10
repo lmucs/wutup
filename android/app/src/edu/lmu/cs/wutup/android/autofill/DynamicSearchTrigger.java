@@ -57,6 +57,8 @@ public class DynamicSearchTrigger<T> implements TextWatcher {
 			String queryParameters = "?name=" + newText;
 			String addressWithParameters = address + queryParameters;
 			addressWithParameters = addressWithParameters.replaceAll(" ", SPACE_CHARACTER_FOR_URLS);
+			addressWithParameters = addressWithParameters.replaceAll("\"", "\\\"");
+			addressWithParameters = addressWithParameters.replaceAll("\\", "\\\\");
 			
 			dynamicSearch = new DynamicSearch<T>().execute(c, adpater, addressWithParameters);
 			Log.i(LogTags.AUTO_COMPLETE, "Executed new dynamic search for " + c.toString() + ", with HTTP call \"" + addressWithParameters + "\".");
