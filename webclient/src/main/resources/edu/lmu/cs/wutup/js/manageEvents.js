@@ -1,6 +1,7 @@
 var loadPageFunctionality = function (baseUrl, user) {
     "use strict";
-     var mapOptions = {
+
+    var mapOptions = {
             zoom: 17,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         },
@@ -77,6 +78,14 @@ var loadPageFunctionality = function (baseUrl, user) {
 			   document.location.href=baseUrl + ':8080/wutup/auth/facebook/sync';
 			});
         },
+        
+        escapeHtmlEntities = function (str) {
+       	 return str
+       	    .replace(/&/g, '&amp;')
+       	    .replace(/>/g, '&gt;')
+       	    .replace(/</g, '&lt;')
+       	    .replace(/"/g, '&quot;');
+       	},
 
         handleNoGeolocation = function (errorFlag, fakeLocation) {
         	var initialLocation, siberia = new google.maps.LatLng(60, 105);
@@ -511,11 +520,13 @@ var loadPageFunctionality = function (baseUrl, user) {
                     buttons: {
                         "Save Event!": function () {
                             $(this).dialog("close");
-                            var eventName = $('#event-name').val(),
-                                venueName = $('#venue-name').val(),
+                            var eventName = escapeHtmlEntities($('#event-name').val()),
+                                venueName = escapeHtmlEntities($('#venue-name').val()),
+                                eventDescription = escapeHtmlEntities($('#event-description').val()),
+                                venueAddress = escapeHtmlEntities($('#venue-address').val()),
                                 creator = user;
-                            createOrPatchEvent(eventName, $('#event-description').val(), creator);
-                            createOrPatchVenue(venueName, $('#venue-address').val());
+                            createOrPatchEvent(eventName, eventDescription, creator);
+                            createOrPatchVenue(venueName, venueAddress);
                             setTimeout(function () {
                                 if (calEvent === null) {
                                     createOccurrence(eventName, venueName, start, end);
