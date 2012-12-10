@@ -62,8 +62,8 @@ public class Occurrence {
     
     @Override
     public String toString() {
-		return "blarkar";
-    	
+        return "blarkar";
+        
     }
     
     public String getDetails() {

@@ -12,12 +12,12 @@ public class Event {
     private String facebookId;
         
     public String getFacebookId() {
-		return facebookId;
-	}
-	public void setFacebookId(String facebookId) {
-		this.facebookId = facebookId;
-	}
-	public int getId() {
+        return facebookId;
+    }
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
+    public int getId() {
         return id;
     }
     public void setId(int id) {
@@ -50,7 +50,7 @@ public class Event {
     
     @Override
     public String toString() {
-    	return name;
+        return name;
     }
 
 

@@ -23,96 +23,96 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 
 public class DynamicSearch<T> extends AsyncTask<Object, Integer, List<T>> {
-	
+    
 /**********************************************************************************************************************
  * Member Variables BEGIN
- **********************************************************************************************************************/	
-	
-	public static final int INDEX_OF_CLASS_IN_PARAMETERS = 0;
-	public static final int INDEX_OF_ADAPTER_IN_PARAMETERS = 1;
-	public static final int INDEX_OF_ADDRESS_IN_PARAMETERS = 2;
-	
-	private Class<T> c;
-	private ManualListAdapter<T> adapter;
-	private String address;
-	
+ **********************************************************************************************************************/    
+    
+    public static final int INDEX_OF_CLASS_IN_PARAMETERS = 0;
+    public static final int INDEX_OF_ADAPTER_IN_PARAMETERS = 1;
+    public static final int INDEX_OF_ADDRESS_IN_PARAMETERS = 2;
+    
+    private Class<T> c;
+    private ManualListAdapter<T> adapter;
+    private String address;
+    
 /**********************************************************************************************************************
  * Member Variables END & Public Methods BEGIN
  **********************************************************************************************************************/
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	protected List<T> doInBackground(Object... parameters) {
-		
-		List<T> autoCompleteSuggestions = new ArrayList<T>();
-		
-		if (parameters[INDEX_OF_CLASS_IN_PARAMETERS] instanceof Class &&
-			parameters[INDEX_OF_ADAPTER_IN_PARAMETERS] instanceof ManualListAdapter &&	
-			parameters[INDEX_OF_ADDRESS_IN_PARAMETERS] instanceof String)
-		{
-			c = (Class<T>) parameters[INDEX_OF_CLASS_IN_PARAMETERS];
-			adapter = (ManualListAdapter<T>) parameters[INDEX_OF_ADAPTER_IN_PARAMETERS];
-			address = (String) parameters[INDEX_OF_ADDRESS_IN_PARAMETERS];
-			
-			try {
-				
-				BufferedInputStream serializedObjects = retrieveSerializedObjects(address);				
-				MappingIterator<T> deserializedObjects = deserializeObjects(serializedObjects);
-				
-				if (deserializedObjects.hasNext()) {
-					autoCompleteSuggestions = IteratorUtils.toList(deserializedObjects);
-				} else {
-					autoCompleteSuggestions = new ArrayList<T>();
-				}
-								
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			
-			} catch (Exception e) {
-				Log.i(LogTags.HTTP, "Unknown error while preforming dynamic search!", e);
-			}
-			
-		} else {
-			
-			IllegalArgumentException illegalArgumentException = new IllegalArgumentException();
-			
-			Log.e(LogTags.AUTO_COMPLETE, "Invalid dynamic search parameters!", illegalArgumentException);
-			throw illegalArgumentException;
-			
-		}
-		
-		return autoCompleteSuggestions;
-		
-	}
-	
-	@Override
-	protected void onPostExecute (List<T> autoCompleteSuggestions) {
-		populateAutoCompleteSuggestions(autoCompleteSuggestions);	
-	}
-	
+    
+    @Override
+    @SuppressWarnings("unchecked")
+    protected List<T> doInBackground(Object... parameters) {
+        
+        List<T> autoCompleteSuggestions = new ArrayList<T>();
+        
+        if (parameters[INDEX_OF_CLASS_IN_PARAMETERS] instanceof Class &&
+            parameters[INDEX_OF_ADAPTER_IN_PARAMETERS] instanceof ManualListAdapter &&    
+            parameters[INDEX_OF_ADDRESS_IN_PARAMETERS] instanceof String)
+        {
+            c = (Class<T>) parameters[INDEX_OF_CLASS_IN_PARAMETERS];
+            adapter = (ManualListAdapter<T>) parameters[INDEX_OF_ADAPTER_IN_PARAMETERS];
+            address = (String) parameters[INDEX_OF_ADDRESS_IN_PARAMETERS];
+            
+            try {
+                
+                BufferedInputStream serializedObjects = retrieveSerializedObjects(address);                
+                MappingIterator<T> deserializedObjects = deserializeObjects(serializedObjects);
+                
+                if (deserializedObjects.hasNext()) {
+                    autoCompleteSuggestions = IteratorUtils.toList(deserializedObjects);
+                } else {
+                    autoCompleteSuggestions = new ArrayList<T>();
+                }
+                                
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            
+            } catch (Exception e) {
+                Log.i(LogTags.HTTP, "Unknown error while preforming dynamic search!", e);
+            }
+            
+        } else {
+            
+            IllegalArgumentException illegalArgumentException = new IllegalArgumentException();
+            
+            Log.e(LogTags.AUTO_COMPLETE, "Invalid dynamic search parameters!", illegalArgumentException);
+            throw illegalArgumentException;
+            
+        }
+        
+        return autoCompleteSuggestions;
+        
+    }
+    
+    @Override
+    protected void onPostExecute (List<T> autoCompleteSuggestions) {
+        populateAutoCompleteSuggestions(autoCompleteSuggestions);    
+    }
+    
 /**********************************************************************************************************************
  * Public Methods END & Private Methods BEGIN
  **********************************************************************************************************************/
 
-	private BufferedInputStream retrieveSerializedObjects(String address) throws IllegalStateException, IOException {
+    private BufferedInputStream retrieveSerializedObjects(String address) throws IllegalStateException, IOException {
 
-		HttpClient httpClient = new DefaultHttpClient();            
-	    HttpGet httpGet = new HttpGet(address);
-	    HttpResponse httpResponse = httpClient.execute(httpGet);
-	    
-	    InputStream inputStream = httpResponse.getEntity().getContent();;
-	    BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);       
+        HttpClient httpClient = new DefaultHttpClient();            
+        HttpGet httpGet = new HttpGet(address);
+        HttpResponse httpResponse = httpClient.execute(httpGet);
+        
+        InputStream inputStream = httpResponse.getEntity().getContent();;
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);       
                     
-	    Log.i(LogTags.AUTO_COMPLETE, "Retrieve auto complete serialized suggestions from web service.");
-	    return bufferedInputStream;
-	    
-	}
-	
-	private MappingIterator<T> deserializeObjects(BufferedInputStream serializedObjects) throws JsonProcessingException, 
-	                                                                                            IOException 
+        Log.i(LogTags.AUTO_COMPLETE, "Retrieve auto complete serialized suggestions from web service.");
+        return bufferedInputStream;
+        
+    }
+    
+    private MappingIterator<T> deserializeObjects(BufferedInputStream serializedObjects) throws JsonProcessingException, 
+                                                                                                IOException 
     { 
         ObjectMapper eventObjectMapper = new ObjectMapper();
         ObjectReader eventObjectReader = eventObjectMapper.reader(c); 
@@ -122,17 +122,17 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, List<T>> {
               
         Log.i(LogTags.AUTO_COMPLETE, "Deserialized auto complete suggestions from web service.");
         return deserializeObjects;
-	
-	}
-	
-	private void populateAutoCompleteSuggestions(List<T> autoCompleteSuggestions) {
-		adapter.clear();		
-		adapter.addAll(autoCompleteSuggestions);		
-		adapter.notifyDataSetChanged();			
-	}
+    
+    }
+    
+    private void populateAutoCompleteSuggestions(List<T> autoCompleteSuggestions) {
+        adapter.clear();        
+        adapter.addAll(autoCompleteSuggestions);        
+        adapter.notifyDataSetChanged();            
+    }
 
 /**********************************************************************************************************************
  * Private Methods END
- **********************************************************************************************************************/	
-	
+ **********************************************************************************************************************/    
+    
 }

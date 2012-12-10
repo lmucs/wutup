@@ -12,12 +12,12 @@ public class User {
 
     
     public String getFacebookId() {
-		return facebookId;
-	}
-	public void setFacebookId(String facebookId) {
-		this.facebookId = facebookId;
-	}
-	public int getId() {
+        return facebookId;
+    }
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
+    public int getId() {
         return id;
     }
     public void setId(int id) {

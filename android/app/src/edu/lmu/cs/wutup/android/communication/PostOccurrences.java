@@ -21,9 +21,9 @@ public class PostOccurrences extends HttpWutup {
     public static final int INDEX_OF_START_IN_PARAMETERS = 2;
     public static final int INDEX_OF_END_IN_PARAMETERS = 3;
 
-	@Override
-	protected Object doInBackground(Object... parameters) {
-		
+    @Override
+    protected Object doInBackground(Object... parameters) {
+        
         if (parameters[INDEX_OF_EVENT_ID_IN_PARAMETERS] instanceof Integer &&
             parameters[INDEX_OF_VENUE_ID_IN_PARAMETERS] instanceof Integer &&
             parameters[INDEX_OF_START_IN_PARAMETERS] instanceof String &&
@@ -56,32 +56,32 @@ public class PostOccurrences extends HttpWutup {
                     
         }
 
-		return null;
-		
-	}
-	
-	private void postOccurrence(Integer eventId, Integer venueId, String start, String end) throws ClientProtocolException, IOException {
-		
-		HttpPost postOccurrence = new HttpPost(ADDRESS_OF_OCCURRENCES);
-		String jsonForPostingOccurrence = generateJsonForPostingOccurrence(eventId, venueId, start, end);
-		StringEntity entityForPostingOccurrence = new StringEntity(jsonForPostingOccurrence);
-		
-		postOccurrence.setEntity(entityForPostingOccurrence);
-		postOccurrence.addHeader("Content-type", "application/json");
-		
-		client.execute(postOccurrence);
-		
-		Log.i(LogTags.HTTP, "Executed HTTP call to post occurrence with the following JSON. " + jsonForPostingOccurrence);
-		
-	}
-	
-	private String generateJsonForPostingOccurrence(Integer eventId, Integer venueId, String start, String end) throws JsonProcessingException {
-	    
-	    String jsonFormat = "{\"event\":{\"id\":%s},\"venue\":{\"id\":%s},\"start\":\"%s\",\"end\":\"%s\"}";
-	    String json = String.format(jsonFormat, eventId, venueId, start, end);
-	    
-	    return json;
-	    	    
-	}
+        return null;
+        
+    }
+    
+    private void postOccurrence(Integer eventId, Integer venueId, String start, String end) throws ClientProtocolException, IOException {
+        
+        HttpPost postOccurrence = new HttpPost(ADDRESS_OF_OCCURRENCES);
+        String jsonForPostingOccurrence = generateJsonForPostingOccurrence(eventId, venueId, start, end);
+        StringEntity entityForPostingOccurrence = new StringEntity(jsonForPostingOccurrence);
+        
+        postOccurrence.setEntity(entityForPostingOccurrence);
+        postOccurrence.addHeader("Content-type", "application/json");
+        
+        client.execute(postOccurrence);
+        
+        Log.i(LogTags.HTTP, "Executed HTTP call to post occurrence with the following JSON. " + jsonForPostingOccurrence);
+        
+    }
+    
+    private String generateJsonForPostingOccurrence(Integer eventId, Integer venueId, String start, String end) throws JsonProcessingException {
+        
+        String jsonFormat = "{\"event\":{\"id\":%s},\"venue\":{\"id\":%s},\"start\":\"%s\",\"end\":\"%s\"}";
+        String json = String.format(jsonFormat, eventId, venueId, start, end);
+        
+        return json;
+                
+    }
 
 }
