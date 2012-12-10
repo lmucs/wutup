@@ -243,7 +243,11 @@ var loadPageFunctionality = function (baseUrl, user) {
         },
 
         grabCommentInput = function () {
-           return $("#comment-text-field").val();
+           return replaceHtmlBrackets($("#comment-text-field").val());
+        },
+        
+        replaceHtmlBrackets = function (text) {
+            return text.replace(/</g, "&lt").replace(/>/g, "&gt");
         },
 
         checkCommentInput = function (input) {
