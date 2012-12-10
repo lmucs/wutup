@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.lmu.cs.wutup.ws.dao.VenueDao;
+import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.exception.VenueExistsException;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
@@ -46,6 +47,18 @@ public class VenueServiceTest {
     public void creationPropagatesExistExceptions() {
         doThrow(new VenueExistsException()).when(dao).createVenue(sampleVenue);
         service.createVenue(sampleVenue);
+    }
+
+    @Test
+    public void findVenueByName() {
+        when(dao.findVenueByName(sampleVenue.getName())).thenReturn(sampleVenue);
+        assertThat(service.findVenueByName(sampleVenue.getName()).getName(), equalTo(sampleVenue.getName()));
+    }
+
+    @Test(expected = NoSuchVenueException.class)
+    public void findNonexistentVenueFails() {
+        doThrow(new NoSuchVenueException()).when(dao).findVenueByName(sampleVenue.getName());
+        service.findVenueByName(sampleVenue.getName());
     }
 
     @Test

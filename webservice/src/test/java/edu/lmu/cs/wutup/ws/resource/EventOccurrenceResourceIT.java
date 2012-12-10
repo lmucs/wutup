@@ -222,6 +222,21 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
+    public void postJsonWithEventWithoutIdResponds400() {
+        DateTime sampleStartDate = new DateTime(2012, 12, 21, 12, 30);
+        DateTime sampleEndDate = new DateTime(2012, 12, 21, 16, 35);
+
+        given().
+            contentType("application/json").
+            body("{\"event\":{\"name\":\"Fun failing\"},\"venue\":{\"id\":1},\"start\":" + sampleStartDate.getMillis()
+                    + ",\"end\":" + sampleEndDate.getMillis() + "}").
+        expect().
+            statusCode(400).
+        when().
+            post("/wutup/occurrences");
+    }
+
+    @Test
     public void postJsonWithoutVenueResponds400() {
         DateTime sampleStartDate = new DateTime(2012, 12, 21, 12, 30);
         DateTime sampleEndDate = new DateTime(2012, 12, 21, 16, 35);
@@ -229,6 +244,21 @@ public class EventOccurrenceResourceIT {
         given().
             contentType("application/json").
             body("{\"event\":{\"id\":1},\"start\":" + sampleStartDate.getMillis()
+                    + ",\"end\":" + sampleEndDate.getMillis() + "}").
+        expect().
+            statusCode(400).
+        when().
+            post("/wutup/occurrences");
+    }
+
+    @Test
+    public void postJsonWithVenueWithoutIdResponds400() {
+        DateTime sampleStartDate = new DateTime(2012, 12, 21, 12, 30);
+        DateTime sampleEndDate = new DateTime(2012, 12, 21, 16, 35);
+
+        given().
+            contentType("application/json").
+            body("{\"event\":{\"id\":1},\"venue\":{\"address\":\"1 LMU Dr., Los Angeles, CA\"},\"start\":" + sampleStartDate.getMillis()
                     + ",\"end\":" + sampleEndDate.getMillis() + "}").
         expect().
             statusCode(400).
@@ -393,7 +423,7 @@ public class EventOccurrenceResourceIT {
     // ********************** Comment Testing *************************
 
     @Test
-    public void testGetCommentsCanBeRead() {
+    public void getCommentsCanBeRead() {
         DateTime knownPostDate = new DateTime(2012, 4, 18, 0, 0, 0);
         given().
             header("Accept", "application/json").
@@ -475,7 +505,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void deleteNonExistantOccurrenceCommentResponds404() {
+    public void deleteNonExistentOccurrenceCommentResponds404() {
         given().
             header("Accept", "application/json").
         expect().
@@ -485,7 +515,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void deleteCommentOnNonexistantOccurrenceResponds404() {
+    public void deleteCommentOnNonExistentOccurrenceResponds404() {
         given().
             header("Accept", "application/json").
         expect().
@@ -495,7 +525,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void addCommentToNonExistantOccurrenceResponds404() {
+    public void addCommentToNonExistentOccurrenceResponds404() {
         DateTime publishDate = new DateTime(2012, 11, 15, 12, 34, 56);
         given().
             contentType("application/json").
@@ -507,7 +537,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void addCommentWithNonExistantAuthorResponds404() {
+    public void addCommentWithNonExistentAuthorResponds404() {
         DateTime publishDate = new DateTime(2012, 11, 15, 12, 34, 56);
         given().
             contentType("application/json").

@@ -28,7 +28,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import edu.lmu.cs.wutup.ws.exception.LocationNotFoundByGoogleException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchCommentException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchPropertyException;
@@ -40,7 +39,6 @@ import edu.lmu.cs.wutup.ws.model.Circle;
 import edu.lmu.cs.wutup.ws.model.Comment;
 import edu.lmu.cs.wutup.ws.model.PaginationData;
 import edu.lmu.cs.wutup.ws.model.Venue;
-import edu.lmu.cs.wutup.ws.service.GeocodeService;
 import edu.lmu.cs.wutup.ws.service.VenueService;
 
 @Component
@@ -58,9 +56,6 @@ public class VenueResource extends AbstractWutupResource {
 
     @Autowired
     VenueService venueService;
-
-    @Autowired
-    GeocodeService geocodeService;
 
     @GET
     @Path("/")
@@ -92,24 +87,7 @@ public class VenueResource extends AbstractWutupResource {
     public Response createVenue(Venue venue, @Context UriInfo uriInfo) {
         logger.debug("Creating venue");
         venue.setId(null);
-        if (venue.getLatitude() == null || venue.getLongitude() == null || venue.getAddress() == null) {
-            try {
-                Venue resolvedVenue;
-                resolvedVenue = geocodeService.resolveVenue(venue.getAddress(), venue.getLatitude(), venue.getLongitude());
-                venue.setLatitude(resolvedVenue.getLatitude());
-                venue.setLongitude(resolvedVenue.getLongitude());
-                venue.setAddress(resolvedVenue.getAddress());
-                if (venue.getName() == null) {
-                    venue.setName(resolvedVenue.getName());
-                }
-            } catch (LocationNotFoundByGoogleException e) {
-                logger.error(e);
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            } catch (Exception e) {
-                logger.error(e);
-                return Response.serverError().build();
-            }
-        }
+        preprocessVenue(venue);
         try {
             venueService.createVenue(venue);
             URI newLocation = uriInfo.getAbsolutePathBuilder().path(venue.getId() + "").build();

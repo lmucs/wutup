@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +29,9 @@ import edu.lmu.cs.wutup.ws.model.User;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 /**
- * Unit tests on the JDBC Dao using a programmatically-configured embedded database. The database is setup and torn down
- * around each test so that the tests don't affect each other.
+ * Unit tests on the JDBC Dao using a programmatically-configured embedded
+ * database. The database is setup and torn down around each test so that the
+ * tests don't affect each other.
  */
 public class EventOccurrenceDaoTest {
 
@@ -48,16 +50,38 @@ public class EventOccurrenceDaoTest {
 
     @Before
     public void setUp() {
-        database = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-                .addScript("schema.sql")
-                .addScript("init.sql")
-                .build();
+        database = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).addScript("schema.sql")
+                .addScript("init.sql").build();
         eventOccurrenceDao.jdbcTemplate = new JdbcTemplate(database);
     }
 
     @Test
     public void countOfInitialDataSetIsAsExpected() {
         assertThat(eventOccurrenceDao.findNumberOfEventOccurrences(), is(10));
+    }
+
+    @Test
+    public void findEventByProperties() {
+        List<EventOccurrence> eo = eventOccurrenceDao.findEventOccurrenceByProperties(2, null, null, null);
+        assertThat(eo.size(), is(2));
+        assertThat(eo.get(0).getId(), is(1));
+        assertThat(eo.get(1).getId(), is(6));
+
+        eo = eventOccurrenceDao.findEventOccurrenceByProperties(2, 1, null, null);
+        assertThat(eo.size(), is(2));
+        assertThat(eo.get(0).getId(), is(1));
+        assertThat(eo.get(1).getId(), is(6));
+
+        eo = eventOccurrenceDao.findEventOccurrenceByProperties(2, 1,
+                new Timestamp(new DateTime("2012-01-15T20:00:00").getMillis()), null);
+        assertThat(eo.size(), is(1));
+        assertThat(eo.get(0).getId(), is(1));
+
+        eo = eventOccurrenceDao.findEventOccurrenceByProperties(2, 1,
+                new Timestamp(new DateTime("2012-11-15T01:00:00").getMillis()),
+                new Timestamp(new DateTime("2012-11-15T15:30:00").getMillis()));
+        assertThat(eo.size(), is(1));
+        assertThat(eo.get(0).getId(), is(6));
     }
 
     @Test

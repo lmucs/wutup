@@ -99,9 +99,8 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         }
     }
 
-    // TODO: Test this
     @Override
-    public EventOccurrence findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start, Timestamp end) {
+    public List<EventOccurrence> findEventOccurrenceByProperties(Integer parentEventId, Integer venueId, Timestamp start, Timestamp end) {
         QueryBuilder query = getSelectQuery();
         if (parentEventId != null && parentEventId >= 0) {
             query = query.where("o.eventId = :parentEventId", parentEventId);
@@ -109,14 +108,14 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
         if (venueId != null && venueId >= 0) {
             query = query.where("o.venueId = :venueId", venueId);
         }
-//        if (start != null) {
-//            query = query.where("o.start = :start", start);
-//        }
-//        if (end != null) {
-//            query = query.where("o.end = :start", end);
-//        }
+        if (start != null) {
+            query = query.where("o.start = :start", start);
+        }
+        if (end != null) {
+            query = query.where("o.end = :end", end);
+        }
         try {
-            return jdbcTemplate.queryForObject(query.build(), query.getParametersArray(),
+            return jdbcTemplate.query(query.build(), query.getParametersArray(),
                     eventOccurrenceRowMapper);
         } catch (IncorrectResultSizeDataAccessException e) {
             throw new NoSuchEventOccurrenceException();

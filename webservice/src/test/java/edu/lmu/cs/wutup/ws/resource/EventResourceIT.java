@@ -152,6 +152,14 @@ public class EventResourceIT {
 
         given().
             contentType("application/json").
+            body("{\"name\":\"Ski Trip\",\"creator\":{\"email\":\"hello@example.com\"},\"description\":\"TALLY HO\"}").
+        expect().
+            statusCode(400).
+        when().
+            post("/wutup/events");
+
+        given().
+            contentType("application/json").
             body("{\"name\":\"Cheers, gentlemen.\"\"description\":\"TALLY HO\"}").
         expect().
             statusCode(400).
@@ -340,7 +348,7 @@ public class EventResourceIT {
     }
 
     @Test
-    public void deleteNonExistantCommentResponds404() {
+    public void deleteNonExistentCommentResponds404() {
         given().
             header("Accept", "application/json").
         expect().

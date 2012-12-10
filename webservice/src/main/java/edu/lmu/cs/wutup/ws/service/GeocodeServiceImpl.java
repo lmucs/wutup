@@ -67,7 +67,6 @@ public class GeocodeServiceImpl implements GeocodeService {
         
         Venue v = new Venue();
         String resolvedName, resolvedAddress;
-        Double resolvedLat, resolvedLng;
         LatLong location;
         
         if (lat != null && lng != null) {
@@ -80,13 +79,15 @@ public class GeocodeServiceImpl implements GeocodeService {
         } else {
             return null;
         }
-        
-        resolvedLat = location.latitude;
-        resolvedLng = location.longitude;
-        resolvedName = extractNameFromJSON(new JSONObject(geocodeAddressToLatLong(resolvedAddress)));
+
+        try {
+            resolvedName = extractNameFromJSON(new JSONObject(geocodeAddressToLatLong(resolvedAddress)));
+        } catch (JSONException e) {
+            throw new LocationNotFoundByGoogleException();
+        }
         v.setAddress(resolvedAddress);
-        v.setLatitude(resolvedLat);
-        v.setLongitude(resolvedLng);
+        v.setLatitude(location.latitude);
+        v.setLongitude(location.longitude);
         v.setName(resolvedName);
 
         return v;

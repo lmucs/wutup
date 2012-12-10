@@ -60,6 +60,37 @@ public class OccurrenceCreationForm extends Activity {
  * Member Variables END & View Programming Interface BEGIN
  **********************************************************************************************************************/
     
+    public boolean formIsCorrectlyFilled() {
+        
+        boolean formIsCorrectlyFilled = eventFieldsArecomplete() && venueFieldsArecomplete() && startBeforeEnd();
+        
+        return formIsCorrectlyFilled; 
+        
+    }
+    
+    public boolean eventFieldsArecomplete() {  
+        
+        boolean eventFieldscomplete = eventNameTextField.getText().length() != 0 && eventDescriptionTextField.getText().length() != 0;  
+        
+        return eventFieldscomplete;    
+        
+    }
+    
+    public boolean venueFieldsArecomplete() {  
+        
+        boolean venueFieldscomplete = venueNameTextField.getText().length() != 0 && venueAddressTextField.getText().length() != 0;  
+        
+        return venueFieldscomplete;    
+        
+    }
+    
+    public boolean startBeforeEnd() {
+        
+        boolean startBeforeEnd = getStart() <= getEnd();
+        
+        return startBeforeEnd;
+    }
+    
     public int getEventId() throws InterruptedException, ExecutionException {
         
         int selectedEventId;

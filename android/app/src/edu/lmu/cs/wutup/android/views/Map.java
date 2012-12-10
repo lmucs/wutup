@@ -2,26 +2,23 @@ package edu.lmu.cs.wutup.android.views;
 
 import java.util.List;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
-import edu.lmu.cs.wutup.android.communication.GetOccurrences;
-import edu.lmu.cs.wutup.android.container.Occurrences;
-import edu.lmu.cs.wutup.android.manager.EventPlotter;
-import edu.lmu.cs.wutup.android.model.Event;
-import edu.lmu.cs.wutup.android.model.Occurrence;
-import edu.lmu.cs.wutup.android.model.Venue;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
+
+import edu.lmu.cs.wutup.android.communication.GetOccurrences;
+import edu.lmu.cs.wutup.android.container.Occurrences;
+import edu.lmu.cs.wutup.android.manager.EventPlotter;
+import edu.lmu.cs.wutup.android.manager.GestureOverlay;
+import edu.lmu.cs.wutup.android.model.Event;
+import edu.lmu.cs.wutup.android.model.Occurrence;
+import edu.lmu.cs.wutup.android.model.Venue;
 
 public class Map extends MapActivity {
     
@@ -31,6 +28,8 @@ public class Map extends MapActivity {
     private static MapView mapView; 
     private static List<Overlay> mapOverlays;
     private static EventPlotter occurrenceOverlay;
+    
+    private static GestureOverlay gestureOverlay;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,11 +42,14 @@ public class Map extends MapActivity {
 		
 		dropPin = this.getResources().getDrawable(R.drawable.androidmarker);
 		mapOverlays = mapView.getOverlays();
-		occurrenceOverlay = new EventPlotter(dropPin, this);	
+		occurrenceOverlay = new EventPlotter(dropPin, this);
+		gestureOverlay = new GestureOverlay(this);
+		
 		mapOverlays.add(occurrenceOverlay);
+		mapOverlays.add(gestureOverlay);
 		
 		refreshMap();
-		
+	
 	}
 	
 	public static void refreshMap() {
@@ -55,9 +57,9 @@ public class Map extends MapActivity {
 	}
 	
 	@Override
-        protected boolean isRouteDisplayed() {
-                return false;
-        }
+    protected boolean isRouteDisplayed() {
+        return false;
+    }
 	
 	private static OverlayItem makeOverlayItem(Occurrence occurrence){
 	    	    
@@ -81,26 +83,5 @@ public class Map extends MapActivity {
 	      
 	}	
 	
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.menu_map_view, menu);
-	    return true;
-	}
-	
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    //respond to menu item selection
-	    
-	    switch (item.getItemId()) {
-	    
-	        case R.id.create_occurrence: startActivity(new Intent(this, OccurrenceCreationForm.class));  
-	        							 break;               
-        	                     
-        	default:                     break;
-	    
-	    }
-	    
-	    return true;
-	}
-
 }
      

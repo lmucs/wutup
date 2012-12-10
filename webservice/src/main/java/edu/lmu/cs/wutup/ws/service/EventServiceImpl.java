@@ -33,7 +33,6 @@ public class EventServiceImpl implements EventService {
         return eventDao.findEventById(id);
     }
 
-    // TODO: Test this
     @Override
     public Event findEventByName(String name) {
         return eventDao.findEventByName(name);
