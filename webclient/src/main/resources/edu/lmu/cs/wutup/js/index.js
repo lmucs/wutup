@@ -80,6 +80,7 @@ var loadPageFunctionality = function (baseUrl, user) {
                 displayInfoWindow(occurrence);
                 displayEventInfo(occurrence);
                 clearCommentList();
+                $("#create-comment").removeClass("hidden");
                 displayComments(occurrence);
                 armSubmitCommentButton(occurrence, user);
             });
