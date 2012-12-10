@@ -166,6 +166,10 @@ var loadPageFunctionality = function (baseUrl, user) {
                 eventClick: function (event) { //'event' is used here instead of 'occurrence' due to fullcalendar.js documentation
                     displayInfoWindow(event);
                     displayEventInfo(event);
+                    clearCommentList();
+                    $("#create-comment").removeClass("hidden");
+                    displayComments(event);
+                    armSubmitCommentButton(event, user);
                 },
                 events: calendarEvents
             });
