@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,6 @@ import com.restfb.types.User;
 import edu.lmu.cs.wutup.ws.exception.FBUserSynchronizationException;
 import edu.lmu.cs.wutup.ws.exception.InvalidFBAccessTokenException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
-import edu.lmu.cs.wutup.ws.exception.NoSuchEventOccurrenceException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchVenueException;
 import edu.lmu.cs.wutup.ws.model.Event;
@@ -133,19 +133,15 @@ public class FBAuthServiceImpl implements FBAuthService {
         EventOccurrence e;
         JSONObject current;
         Venue v;
-        String currentName, currentLocation, currentStartTime, currentEndTime, currentVenueFBResourceId;
+        String currentName, currentLocation, currentStartTime, currentEndTime;
         edu.lmu.cs.wutup.ws.model.User u = findOrCreateFBUser(accessToken, getUserIdFromFB(getFBUser(accessToken)));
 
         for (int x = 0; x < events.length(); x++) {
             try {
                 current = events.getJSONObject(x);
-                System.out.println("\n\n\ncurrent: " + current);
                 currentName = current.getString("name");
                 currentStartTime = current.getString("start_time");
                 currentLocation = current.getString("location");
-                
-                // TODO: Not used.
-                //currentVenueFBResourceId = new JSONObject(current.getString("venue")).getString("id");
             } catch (JSONException exception) {
                 continue;
             }
@@ -187,13 +183,13 @@ public class FBAuthServiceImpl implements FBAuthService {
                 continue;
             }
 
-            try {
-                occurrenceService.findEventOccurrenceByProperties(
-                        event.getId(),
-                        v.getId(),
-                        start != null ? new Timestamp(start.getMillis()) : null,
-                        end != null ? new Timestamp(end.getMillis()) : null);
-            } catch (NoSuchEventOccurrenceException exception) {
+            List<EventOccurrence> occurrences = occurrenceService.findEventOccurrenceByProperties(
+                    event.getId(),
+                    v.getId(),
+                    start != null ? new Timestamp(start.getMillis()) : null,
+                    end != null ? new Timestamp(end.getMillis()) : null);
+
+            if (occurrences.size() == 0) {
                 occurrenceService.createEventOccurrence(e);
             }
         }

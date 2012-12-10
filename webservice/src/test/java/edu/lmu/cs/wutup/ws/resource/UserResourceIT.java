@@ -11,7 +11,7 @@ import org.junit.Test;
 public class UserResourceIT {
 
     @Test
-    public void testGetUserById() {
+    public void getUserByIdReturns200() {
         given()
             .contentType("application/json")
         .expect()
@@ -27,7 +27,7 @@ public class UserResourceIT {
     }
 
     @Test
-    public void testGetNonExistantUserByIdResponds404() {
+    public void getNonExistentUserByIdResponds404() {
         given().
             contentType("application/json").
         expect().
@@ -37,7 +37,7 @@ public class UserResourceIT {
     }
 
     @Test
-    public void testGetUserWithMalformedIdResponds400() {
+    public void getUserWithMalformedIdResponds400() {
         given().
             contentType("application/json").
         expect().
@@ -47,7 +47,7 @@ public class UserResourceIT {
     }
 
     @Test
-    public void testCreateUserRequiresAtleastNameAndEmail() {
+    public void createUserRequiresAtleastNameAndEmail() {
         given()
             .contentType("application/json")
             .body("{\"id\":155,\"firstname\":\"Carlos\",\"lastname\":\"Agudo\""
@@ -169,7 +169,7 @@ public class UserResourceIT {
     }
 
     @Test
-    public void getNonExistantUserResponds404() {
+    public void getNonExistentUserResponds404() {
         given()
             .contentType("application/json")
         .expect()
@@ -191,7 +191,7 @@ public class UserResourceIT {
     }
 
     @Test
-    public void deleteNonExistantUserResponds404() {
+    public void deleteNonExistentUserResponds404() {
         given().
             contentType("application/json").
         expect().
@@ -232,7 +232,7 @@ public class UserResourceIT {
     }
 
     @Test
-    public void findCommentsByNonExistantUserIdResponds404() {
+    public void findCommentsByNonExistentUserIdResponds404() {
         given()
             .header("Accept", "application/json")
         .expect()

@@ -348,7 +348,7 @@ public class EventResourceIT {
     }
 
     @Test
-    public void deleteNonExistantCommentResponds404() {
+    public void deleteNonExistentCommentResponds404() {
         given().
             header("Accept", "application/json").
         expect().

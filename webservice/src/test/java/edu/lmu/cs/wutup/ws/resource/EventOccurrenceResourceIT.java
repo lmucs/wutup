@@ -423,7 +423,7 @@ public class EventOccurrenceResourceIT {
     // ********************** Comment Testing *************************
 
     @Test
-    public void testGetCommentsCanBeRead() {
+    public void getCommentsCanBeRead() {
         DateTime knownPostDate = new DateTime(2012, 4, 18, 0, 0, 0);
         given().
             header("Accept", "application/json").
@@ -505,7 +505,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void deleteNonExistantOccurrenceCommentResponds404() {
+    public void deleteNonExistentOccurrenceCommentResponds404() {
         given().
             header("Accept", "application/json").
         expect().
@@ -515,7 +515,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void deleteCommentOnNonexistantOccurrenceResponds404() {
+    public void deleteCommentOnNonExistentOccurrenceResponds404() {
         given().
             header("Accept", "application/json").
         expect().
@@ -525,7 +525,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void addCommentToNonExistantOccurrenceResponds404() {
+    public void addCommentToNonExistentOccurrenceResponds404() {
         DateTime publishDate = new DateTime(2012, 11, 15, 12, 34, 56);
         given().
             contentType("application/json").
@@ -537,7 +537,7 @@ public class EventOccurrenceResourceIT {
     }
 
     @Test
-    public void addCommentWithNonExistantAuthorResponds404() {
+    public void addCommentWithNonExistentAuthorResponds404() {
         DateTime publishDate = new DateTime(2012, 11, 15, 12, 34, 56);
         given().
             contentType("application/json").

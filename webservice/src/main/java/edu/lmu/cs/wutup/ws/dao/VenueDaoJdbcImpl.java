@@ -85,7 +85,6 @@ public class VenueDaoJdbcImpl implements VenueDao {
         }
     }
 
-    // TODO: Test this
     @Override
     public Venue findVenueByName(String name) {
         try {

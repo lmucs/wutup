@@ -91,7 +91,6 @@ public class EventDaoJdbcImpl implements EventDao {
         return jdbcTemplate.query(query.addPagination(pagination).order("e.id").build(), query.getParametersArray(), eventRowMapper);
     }
 
-    // TODO: Test this
     @Override
     public Event findEventByName(String name) {
         QueryBuilder query = getSelectQuery().where("e.name=:name", name);
