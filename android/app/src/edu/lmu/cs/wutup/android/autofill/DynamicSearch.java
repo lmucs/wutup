@@ -53,7 +53,7 @@ public class DynamicSearch<T> extends AsyncTask<Object, Integer, List<T>> {
             c = (Class<T>) parameters[INDEX_OF_CLASS_IN_PARAMETERS];
             adapter = (ManualListAdapter<T>) parameters[INDEX_OF_ADAPTER_IN_PARAMETERS];
             address = (String) parameters[INDEX_OF_ADDRESS_IN_PARAMETERS];
-            
+
             try {
                 
                 BufferedInputStream serializedObjects = retrieveSerializedObjects(address);                
