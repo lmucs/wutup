@@ -73,11 +73,9 @@ public class GeocodeServiceImpl implements GeocodeService {
             // TODO: Handle resolveLatLongToAddress failure with exception
             resolvedAddress = resolveLatLongToAddress(lat, lng);
             location = resolveAddressToLatLong(resolvedAddress);
-        } else if (address != null) {
+        } else {
             location = resolveAddressToLatLong(address);
             resolvedAddress = resolveLatLongToAddress(location.latitude, location.longitude);
-        } else {
-            return null;
         }
 
         try {

@@ -22,70 +22,53 @@ public class GeocodeResource {
 
     @Autowired
     GeocodeService geocodeService;
-    
+
     @GET
-    @Produces({"application/json"})
-    public Response resolveAddressToLatLong(
-            @QueryParam("address") String address,
-            @QueryParam("lat") Double lat,
+    @Produces({ "application/json" })
+    public Response resolveAddressToLatLong(@QueryParam("address") String address, @QueryParam("lat") Double lat,
             @QueryParam("lng") Double lng) {
-        
+
         if (address != null && !address.equals("")) {
             return resolveAddress(address);
         } else {
             return resolveLatLong(lat, lng);
         }
     }
-    
+
     private Response resolveAddress(String address) {
         LatLong response;
-        
+
         try {
-            // TODO: We need to expect that address has already had spaces replaced with + characters
-            response = geocodeService
-                    .resolveAddressToLatLong(address);
+            // TODO: We need to expect that address has already had spaces
+            // replaced with + characters
+            response = geocodeService.resolveAddressToLatLong(address);
         } catch (NoAddressProvidedException e) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (IOException e) {
-            return Response
-                    .serverError()
-                    .build();
+            return Response.serverError().build();
         }
-        
+
         if (response == null) {
-            return Response
-                    .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        
-        return Response
-                .ok(response)
-                .build();
+
+        return Response.ok(response).build();
     }
-    
+
     private Response resolveLatLong(Double lat, Double lng) {
         String response;
-        
+
         try {
-            response = geocodeService
-                    .resolveLatLongToAddress(lat, lng);
+            response = geocodeService.resolveLatLongToAddress(lat, lng);
         } catch (MalformedCoordinatesException e) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        
+
         if (response == null) {
-            return Response
-                    .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        
-        return Response
-                .ok(response)
-                .build();
+
+        return Response.ok(response).build();
     }
-    
+
 }

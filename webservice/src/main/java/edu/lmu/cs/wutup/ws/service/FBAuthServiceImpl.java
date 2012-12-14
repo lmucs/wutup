@@ -28,6 +28,7 @@ import com.restfb.DefaultFacebookClient;
 import com.restfb.types.User;
 
 import edu.lmu.cs.wutup.ws.exception.FBUserSynchronizationException;
+import edu.lmu.cs.wutup.ws.exception.FailedToPostFBUserEventException;
 import edu.lmu.cs.wutup.ws.exception.InvalidFBAccessTokenException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchEventException;
 import edu.lmu.cs.wutup.ws.exception.NoSuchUserException;
@@ -179,7 +180,6 @@ public class FBAuthServiceImpl implements FBAuthService {
                 
                 e = new EventOccurrence(event, v, start, end);
             } catch (Exception exception) {
-                exception.printStackTrace();
                 continue;
             }
 
@@ -205,8 +205,7 @@ public class FBAuthServiceImpl implements FBAuthService {
             return createUserEvent(accessToken, getUserIdFromFB(getFBUser(accessToken)), name, start, end, description,
                     location, FBLocationId, privacyType);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new FailedToPostFBUserEventException();
         }
     }
 }
