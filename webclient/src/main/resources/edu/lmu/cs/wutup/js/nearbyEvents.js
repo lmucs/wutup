@@ -23,6 +23,16 @@ var loadPageFunctionality = function(baseUrl, user) {
                 c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             return R * c;
         },
+        
+        generateEventfulURL = function (center,radius, start, end) {
+        	var parseDate = function (date) {
+        		var month = (date.getMonth() < 10 ? '0' + (date.getMonth() + 1): (date.getMonth() + 1) + ''),
+        			day = (date.getDate() < 10 ? '0' + date.getDate(): date.getDate());
+        			return date.getFullYear() + month + day + '00';
+        	};
+        	return	'http://api.eventful.com/json/events/search?app_key=mf6JvWZ6Ss8MGZBM&where=' + center.lat() + ',' + center.lng() + '&within=' + (radius <= 100 ? radius : 100) + 
+        	'&page_number=0&page_size=50&sort_order=popularity&date=' + parseDate(start) + '-'+ parseDate(end);
+        },
 
         generateOccurrenceURL = function (center, radius, start, end) {
             return baseUrl + ':8080/wutup/occurrences?page=0&pageSize=20&center=' + center.lat() + ',' + center.lng() + '&radius=' + (radius <= 100 ? radius : 100) + '&start=' + start.getTime() +
@@ -91,7 +101,6 @@ var loadPageFunctionality = function(baseUrl, user) {
         },
         
         armMarkerButtons = function (occurrence) {
-        	console.log("ARMED");
         	armMarkerAttendButton(occurrence);
         	armMarkerDeclineButton(occurrence);
         },
@@ -141,35 +150,55 @@ var loadPageFunctionality = function(baseUrl, user) {
                     }
                     mapMarkers.length = 0;
                 };
-            map = gMap;
             deleteOverlays();
             for (i = 0; i < events.length; i += 1) {
                 mapMarkers.push(createMarker(events[i]));
             }
         },
-
+        
         parseOccurrencesForCalendar = function (occurrences) {
             var calendarEvents = [],
                 i;
             for (i = 0; i < occurrences.length; i += 1) {
                 calendarEvents.push({
-                    id: occurrences[i].id,
-                    title: occurrences[i].event.name,
-                    start: new Date(occurrences[i].start),
-                    end: new Date(occurrences[i].end),
-                    event: occurrences[i].event,
-                    venue: occurrences[i].venue,
-                    allDay: false
+                	id: occurrences[i].id,
+                	title: occurrences[i].event.name,
+                	start: new Date(occurrences[i].start),
+                	end: new Date(occurrences[i].end),
+                	event: occurrences[i].event,
+                	venue: occurrences[i].venue,
+                	allDay: false
+                });
+            }
+            return calendarEvents;
+        },
 
+        parseEventfulResponseForCalendar = function (response) {
+            var calendarEvents = [],
+                i, startDate, endDate;
+                
+            for (i = 0; i < response.events.event.length; i += 1) {
+            	startDate = new Date(response.events.event[i].start_time);
+            	startDate.setHours(startDate.getHours() + 1);
+            	endDate = startDate;
+                calendarEvents.push({
+                    id: response.events.event[i].id,
+                    title: response.events.event[i].title,
+                    start: new Date(response.events.event[i].start_time),
+                    end: (response.events.event[i].stop_time === null ? endDate : new Date(response.events.event[i].stop_time)),
+                    event: { name: response.events.event[i].title, description: response.events.event[i].description },
+                    venue: { name: response.events.event[i].venue_name, address: response.events.event[i].venue_address, latitude: response.events.event[i].latitude, longitude: response.events.event[i].longitude},
+                    allDay: false
                 });
             }
             return calendarEvents;
         },
 
         populateCalendar = function (calendarEvents) {
+        	var eventSourceObject = { events: calendarEvents};
             $('#calendar').fullCalendar('removeEventSource', calendarEvents);
             $('#calendar').fullCalendar('removeEvents');
-            $('#calendar').fullCalendar('addEventSource', calendarEvents);
+            $('#calendar').fullCalendar('addEventSource', eventSourceObject);
         },
 
         createCalendar = function (calendarEvents, map, mapMarkers) {
@@ -190,18 +219,25 @@ var loadPageFunctionality = function(baseUrl, user) {
                 },
                 viewDisplay: function (view) { // This function controls behavior when the calendar view is changed
                     var bounds = map.getBounds(),
-                        radius = calculateRadius(bounds);
+                        radius = calculateRadius(bounds),
+                        allOccurrences;
                     $.getJSON(generateOccurrenceURL(bounds.getCenter(), radius, view.start, view.end), function (occurrences) {
-                        calendarEvents = parseOccurrencesForCalendar(occurrences);
-                        populateCalendar(calendarEvents);
-                        populateMap(map, calendarEvents, mapMarkers);
+                    	$.getJSON(generateEventfulURL(bounds.getCenter(), radius, view.start, view.end), function (response) {
+	                        occurrences = parseOccurrencesForCalendar(occurrences);
+	                    	response = parseEventfulResponseForCalendar(response);
+	                    	allOccurrences = occurrences.concat(response)
+	                        populateCalendar(allOccurrences);
+	                        populateMap(map, allOccurrences, mapMarkers);
+                    	});
                     });
                 },
                 eventClick: function (event) { //'event' is used here instead of 'occurrence' due to fullcalendar.js documentation
                     displayInfoWindow(event);
                     displayEventInfo(event);
                 },
-                events: calendarEvents
+                events: calendarEvents,
+                eventRender: function(event, element) {
+                }
             });
         },
 
@@ -215,7 +251,7 @@ var loadPageFunctionality = function(baseUrl, user) {
                 browserSupportFlag = false,
                 calendarEvents = null,
                 mapOptions = {
-                    zoom: 17,
+                    zoom: 15,
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 },
                 mapMarkers = [],
@@ -243,17 +279,21 @@ var loadPageFunctionality = function(baseUrl, user) {
                     initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                     map.setCenter(initialLocation);
                     google.maps.event.addListenerOnce(map, 'idle', function () {
-                        createCalendar(calendarEvents, map, mapMarkers);
+                        createCalendar(null, map, mapMarkers);
                     });
-                    var bounds, radius, center;
+                    var bounds, radius, center, allOccurrences;
                     google.maps.event.addListener(map, 'idle', function () {
                         bounds = map.getBounds();
                         center = bounds.getCenter();
                         radius = calculateRadius(bounds);
-                        $.getJSON(generateOccurrenceURL(center, radius, getCalendarView().start, getCalendarView().end), function (occurrences) {
-                            calendarEvents = parseOccurrencesForCalendar(occurrences);
-                            populateCalendar(calendarEvents);
-                            populateMap(map, calendarEvents, mapMarkers);
+                        $.getJSON(generateOccurrenceURL(bounds.getCenter(), radius, getCalendarView().start, getCalendarView().end), function (occurrences) {
+                        	$.getJSON(generateEventfulURL(bounds.getCenter(), radius, getCalendarView().start, getCalendarView().end), function (response) {
+    	                        occurrences = parseOccurrencesForCalendar(occurrences);
+    	                    	response = parseEventfulResponseForCalendar(response);
+    	                    	allOccurrences = occurrences.concat(response)
+    	                        populateCalendar(allOccurrences);
+    	                        populateMap(map, allOccurrences, mapMarkers);
+                        	});
                         });
 
                     });
