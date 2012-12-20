@@ -30,7 +30,7 @@ public class GeocodeResourceIT {
     public void reverseGeocodeLatLongToAddress() {
         expect().
             statusCode(200).
-            body(containsString("1 Loyola Marymount University Dr, " +
+            body(containsString("1 Loyola Marymount University Drive, " +
                     "Loyola Marymount University, Los Angeles, CA 90045, USA")).
         when().
             get("/wutup/geocode?lat=33.966605&lng=-118.423562");

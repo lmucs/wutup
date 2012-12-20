@@ -124,9 +124,7 @@ public class FBAuthServiceImpl implements FBAuthService {
         JSONArray events;
         try {
             events = new JSONObject(getUserEvents(accessToken)).getJSONArray("data");
-        } catch (JSONException e) {
-            throw new FBUserSynchronizationException();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new FBUserSynchronizationException();
         }
 
@@ -172,16 +170,9 @@ public class FBAuthServiceImpl implements FBAuthService {
                 venueService.createVenue(v);
             }
 
-            DateTime start;
-            DateTime end;
-            try {
-                start = new DateTime(currentStartTime);
-                end = (currentEndTime != null ? new DateTime(currentEndTime) : start.plusDays(1));
-                
-                e = new EventOccurrence(event, v, start, end);
-            } catch (Exception exception) {
-                continue;
-            }
+            DateTime start = new DateTime(currentStartTime);
+            DateTime end = (currentEndTime != null ? new DateTime(currentEndTime) : start.plusDays(1));;
+            e = new EventOccurrence(event, v, start, end);
 
             List<EventOccurrence> occurrences = occurrenceService.findEventOccurrenceByProperties(
                     event.getId(),
