@@ -82,12 +82,16 @@ public class FacebookGateway extends AbstractGateway {
 
         return "https://graph.facebook.com/" + userFBId + "/events?"
                 + "access_token=" + accessToken
-                + "&name=" + URLEncoder.encode(name, "ISO-8859-1")
-                + "&start_time=" + URLEncoder.encode(start.toString(), "ISO-8859-1")
-                + ((end != null) ? "&end_time=" + URLEncoder.encode(end.toString(), "ISO-8859-1")  : "")
-                + ((description != null) ? "&description=" + URLEncoder.encode(description, "ISO-8859-1") : "")
-                + ((location != null) ? "&location=" + URLEncoder.encode(location, "ISO-8859-1") : "")
-                + ((FBLocationId != null) ? "&location_id=" + URLEncoder.encode(FBLocationId, "ISO-8859-1") : "")
-                + ((privacyType != null) ? "&privacy_type=" + URLEncoder.encode(privacyType, "ISO-8859-1") : "");
+                + "&name=" + encodeForUrl(name)
+                + "&start_time=" + encodeForUrl(start.toString())
+                + ((end != null) ? "&end_time=" + encodeForUrl(end.toString())  : "")
+                + ((description != null) ? "&description=" + encodeForUrl(description) : "")
+                + ((location != null) ? "&location=" + encodeForUrl(location) : "")
+                + ((FBLocationId != null) ? "&location_id=" + encodeForUrl(FBLocationId) : "")
+                + ((privacyType != null) ? "&privacy_type=" + encodeForUrl(privacyType) : "");
+    }
+
+    private static String encodeForUrl(String s) throws UnsupportedEncodingException {
+        return URLEncoder.encode(s, "ISO-8859-1");
     }
 }
