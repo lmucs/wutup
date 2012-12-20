@@ -120,14 +120,8 @@ public class FBAuthServiceImpl implements FBAuthService {
     }
 
     @Override
-    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken) {
-        JSONArray events;
-        try {
-            events = new JSONObject(getUserEvents(accessToken)).getJSONArray("data");
-        } catch (Exception e) {
-            throw new FBUserSynchronizationException();
-        }
-
+    public edu.lmu.cs.wutup.ws.model.User syncUser(String accessToken) throws FBUserSynchronizationException {
+        JSONArray events = extractFBEventData(accessToken);
         Event event;
         EventOccurrence e;
         JSONObject current;
@@ -145,18 +139,8 @@ public class FBAuthServiceImpl implements FBAuthService {
                 continue;
             }
 
-            try {
-                currentEndTime = current.getString("end_time");
-            } catch (JSONException exception) {
-                currentEndTime = null;
-            }
-
-            try {
-                event = eventService.findEventByName(currentName);
-            } catch (NoSuchEventException exception) {
-                event = new Event(null, currentName, currentName, u);
-                event.setId(Integer.class.cast(eventService.createEvent(event)));
-            }
+            currentEndTime = extractCurrentEndTime(current);
+            event = findOrCreateEvent(currentName, u);
 
             try {
                 v = geocodeService.resolveVenue(currentLocation, null, null);
@@ -164,12 +148,7 @@ public class FBAuthServiceImpl implements FBAuthService {
                 continue;
             }
 
-            try {
-                v = venueService.findVenueByName(v.getName());
-            } catch (NoSuchVenueException exception) {
-                venueService.createVenue(v);
-            }
-
+            v = findOrCreateVenue(v);
             DateTime start = new DateTime(currentStartTime);
             DateTime end = (currentEndTime != null ? new DateTime(currentEndTime) : start.plusDays(1));;
             e = new EventOccurrence(event, v, start, end);
@@ -186,6 +165,44 @@ public class FBAuthServiceImpl implements FBAuthService {
         }
 
         return u;
+    }
+
+    private JSONArray extractFBEventData(String accessToken) {
+        try {
+            return new JSONObject(getUserEvents(accessToken)).getJSONArray("data");
+        } catch (Exception e) {
+            throw new FBUserSynchronizationException();
+        }
+    }
+
+    private String extractCurrentEndTime(JSONObject current) {
+        try {
+            return current.getString("end_time");
+        } catch (JSONException exception) {
+            return null;
+        }
+    }
+
+    private Event findOrCreateEvent(String currentName, edu.lmu.cs.wutup.ws.model.User u) {
+        Event event;
+        try {
+            event = eventService.findEventByName(currentName);
+        } catch (NoSuchEventException exception) {
+            event = new Event(null, currentName, currentName, u);
+            event.setId(Integer.class.cast(eventService.createEvent(event)));
+        }
+
+        return event;
+    }
+
+    private Venue findOrCreateVenue(Venue v) {
+        try {
+            v = venueService.findVenueByName(v.getName());
+        } catch (NoSuchVenueException exception) {
+            venueService.createVenue(v);
+        }
+
+        return v;
     }
 
     @Override
