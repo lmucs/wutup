@@ -54,8 +54,8 @@ public class FacebookGateway extends AbstractGateway {
 
     private static String constructAccessTokenLandingUrl(String code, String redirectUri) throws UnsupportedEncodingException {
         return "https://graph.facebook.com/oauth/access_token?" + "client_id=" + System.getenv("WUTUP_FB_APP_ID")
-                + "&redirect_uri=" + URLEncoder.encode(redirectUri, "ISO-8859-1")
-                + "&client_secret=" + System.getenv("WUTUP_FB_APP_SECRET") + "&code=" + code;
+                + "&redirect_uri=" + encodeForUrl(redirectUri)
+                + "&client_secret=" + System.getenv("WUTUP_FB_APP_SECRET") + "&code=" + encodeForUrl(code);
     }
     
     public static Response acquireFBCode(String redirectUri) throws ParseException, ClientProtocolException, UnsupportedEncodingException, IOException, URISyntaxException {
@@ -65,7 +65,7 @@ public class FacebookGateway extends AbstractGateway {
     private static String constructAuthDialogUrl(String redirectUri) throws UnsupportedEncodingException {
         return "https://www.facebook.com/dialog/oauth?"
                 + "client_id=" + System.getenv("WUTUP_FB_APP_ID")
-                + "&redirect_uri=" + URLEncoder.encode(redirectUri, "ISO-8859-1")
+                + "&redirect_uri=" + encodeForUrl(redirectUri)
                 + "&scope=user_events,create_event,email" + "&state=" + Math.abs(new Random().nextInt());
     }
 
