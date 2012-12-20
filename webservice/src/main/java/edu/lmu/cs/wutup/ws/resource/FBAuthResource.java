@@ -95,7 +95,7 @@ public class FBAuthResource extends AbstractWutupResource {
             @Context UriInfo uriInfo) {
 
         String redirectUri = uriInfo.getAbsolutePath().toString();
-        String finalLandingUri = "http://" + uriInfo.getAbsolutePath().getHost().toString() + "ManageEvents";
+        String finalLandingUri = "http://" + uriInfo.getAbsolutePath().getHost().toString() + "/ManageEvents";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
