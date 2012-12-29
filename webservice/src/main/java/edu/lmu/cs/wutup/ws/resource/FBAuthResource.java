@@ -9,8 +9,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -53,10 +55,11 @@ public class FBAuthResource extends AbstractWutupResource {
             @DefaultValue("") @QueryParam("code") String code,
             @DefaultValue("") @QueryParam("error_reason") String errorReason,
             @DefaultValue("") @QueryParam("error") String error,
-            @DefaultValue("") @QueryParam("error_description") String errorDescription) {
+            @DefaultValue("") @QueryParam("error_description") String errorDescription,
+            @Context UriInfo uriInfo) {
 
-        String redirectUri = "http://wutup.cs.lmu.edu:8080/wutup/auth/facebook";
-        String finalLandingUri = "http://wutup.cs.lmu.edu/Index";
+        String redirectUri = uriInfo.getAbsolutePath().toString();
+        String finalLandingUri = "http://" + uriInfo.getAbsolutePath().getHost().toString() + "/Index";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -88,10 +91,11 @@ public class FBAuthResource extends AbstractWutupResource {
             @DefaultValue("") @QueryParam("code") String code,
             @DefaultValue("") @QueryParam("error_reason") String errorReason,
             @DefaultValue("") @QueryParam("error") String error,
-            @DefaultValue("") @QueryParam("error_description") String errorDescription) {
+            @DefaultValue("") @QueryParam("error_description") String errorDescription,
+            @Context UriInfo uriInfo) {
 
-        final String redirectUri = "http://wutup.cs.lmu.edu:8080/wutup/auth/facebook/sync";
-        final String finalLandingUri = "http://wutup.cs.lmu.edu/ManageEvents";
+        String redirectUri = uriInfo.getAbsolutePath().toString();
+        String finalLandingUri = "http://" + uriInfo.getAbsolutePath().getHost().toString() + "/ManageEvents";
 
         if (!error.equals("")) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
