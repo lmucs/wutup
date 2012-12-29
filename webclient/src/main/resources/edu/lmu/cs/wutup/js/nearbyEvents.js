@@ -30,7 +30,7 @@ var loadPageFunctionality = function(baseUrl, user) {
         			day = (date.getDate() < 10 ? '0' + date.getDate(): date.getDate());
         			return date.getFullYear() + month + day + '00';
         	};
-        	return	'http://api.eventful.com/json/events/search?app_key=mf6JvWZ6Ss8MGZBM&where=' + center.lat() + ',' + center.lng() + '&within=' + (radius <= 100 ? radius : 100) + 
+        	return	'http://api.eventful.com/json/events/search?app_key=mf6JvWZ6Ss8MGZBM&cors_filter=1&where=' + center.lat() + ',' + center.lng() + '&within=' + (radius <= 100 ? radius : 100) + 
         	'&page_number=0&page_size=50&sort_order=popularity&date=' + parseDate(start) + '-'+ parseDate(end);
         },
 
