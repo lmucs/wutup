@@ -140,6 +140,7 @@ public class UserDaoJdbcImpl implements UserDao {
         final String sessionId = u.getSessionId();
         final String facebookId = u.getFacebookId();
         jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement ps = connection.prepareStatement(CREATE_WITH_AUTO_GENERATE_ID, new String[]{"id"});
                 ps.setString(1, firstName);
@@ -154,6 +155,7 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     private static RowMapper<User> userRowMapper = new RowMapper<User>() {
+        @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"),
                     rs.getString("email"), rs.getString("nickname"), rs.getString("sessionId"),

@@ -142,6 +142,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
                 eventOccurrenceRowMapper);
     }
 
+    @Override
     public int findNumberOfEventOccurrences() {
         return jdbcTemplate.queryForInt(new QueryBuilder().select("count(*)").from("occurrence").build());
     }
@@ -206,6 +207,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
     }
 
     private RowMapper<EventOccurrence> eventOccurrenceRowMapper = new RowMapper<EventOccurrence>() {
+        @Override
         public EventOccurrence mapRow(ResultSet rs, int rowNum) throws SQLException {
             int occurrenceId = rs.getInt("id");
             DateTime start = new DateTime(rs.getTimestamp("start"));
@@ -234,6 +236,7 @@ public class EventOccurrenceDaoJdbcImpl implements EventOccurrenceDao {
 
     // TODO: Factor out repeated code from UserDaoJdbcImpl
     private static RowMapper<User> userRowMapper = new RowMapper<User>() {
+        @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new User(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"),
                     rs.getString("email"), rs.getString("nickname"), rs.getString("facebookId"));

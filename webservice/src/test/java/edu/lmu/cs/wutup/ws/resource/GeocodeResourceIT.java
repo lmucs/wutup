@@ -17,7 +17,7 @@ public class GeocodeResourceIT {
         when().
             get("/wutup/geocode?address=1+lmu+dr,+los+angeles,+ca");
     }
-    
+
     @Test
     public void noAddressRespondsWith400() {
         expect().
@@ -25,17 +25,17 @@ public class GeocodeResourceIT {
         when().
             get("/wutup/geocode?address=");
     }
-    
+
     @Test
     public void reverseGeocodeLatLongToAddress() {
         expect().
             statusCode(200).
-            body(containsString("1 Loyola Marymount University Drive, " +
+            body(containsString("Loyola Marymount University Drive, " +
                     "Loyola Marymount University, Los Angeles, CA 90045, USA")).
         when().
             get("/wutup/geocode?lat=33.966605&lng=-118.423562");
     }
-    
+
     @Test
     public void noLatRespondsWith400() {
         expect().
@@ -43,7 +43,7 @@ public class GeocodeResourceIT {
         when().
             get("/wutup/geocode?lng=-118.423562");
     }
-    
+
     @Test
     public void noLngRespondsWith400() {
         expect().
@@ -51,7 +51,7 @@ public class GeocodeResourceIT {
         when().
             get("/wutup/geocode?lat=33.966605");
     }
-    
+
     @Test
     public void emptyQueryParamsToGeocodeResourceReturns400() {
         expect().

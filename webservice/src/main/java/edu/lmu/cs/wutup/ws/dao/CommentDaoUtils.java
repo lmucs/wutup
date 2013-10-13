@@ -79,6 +79,7 @@ public class CommentDaoUtils {
     }
 
     public static RowMapper<Comment> commentRowMapper = new RowMapper<Comment>() {
+        @Override
         public Comment mapRow(ResultSet rs, int rowNum) throws SQLException {
             int commentId = rs.getInt("id");
             String text = rs.getString("text");

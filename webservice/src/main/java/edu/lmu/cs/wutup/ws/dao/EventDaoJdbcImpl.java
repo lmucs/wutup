@@ -141,6 +141,7 @@ public class EventDaoJdbcImpl implements EventDao {
     }
 
     private static RowMapper<Event> eventRowMapper = new RowMapper<Event>() {
+        @Override
         public Event mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Event(rs.getInt("id"), rs.getString("name"), rs.getString("description"), new User(
                     rs.getInt("ownerid"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("email"),

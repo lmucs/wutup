@@ -72,13 +72,13 @@ public class EventOccurrenceTest {
         DateTime end = new DateTime(2012, 9, 27, 10, 40, 0);
         EventOccurrence occurrence1 = new EventOccurrence(3, eventOne, new Venue(3, "", "", 33.969369, -118.414386, null), start,
                 end);
-        String expected1 = "EventOccurrence{id=3, event=Event{id=1, name=Party, description=A hoedown!, creator=User{id=1, email=dondi@example.com, firstname=null, lastname=null, nickname=null}}, location=Venue{id=3, address=, latitude=33.969369, longitude=-118.414386, propertyMap=null}, start=2012-09-27T09:25:00.000-07:00, end=2012-09-27T10:40:00.000-07:00}";
+        String expected1 = "EventOccurrence{id=3, event=Event(id=1, name=Party, description=A hoedown!, creator=User{id=1, email=dondi@example.com, firstname=null, lastname=null, nickname=null}), location=Venue{id=3, address=, latitude=33.969369, longitude=-118.414386, propertyMap=null}, start=2012-09-27T09:25:00.000-07:00, end=2012-09-27T10:40:00.000-07:00}";
         EventOccurrence occurrence2 = new EventOccurrence();
         occurrence2.setId(5);
         occurrence2.setEvent(eventOne);
         occurrence2.setStart(start);
         occurrence2.setEnd(end);
-        String expected2 = "EventOccurrence{id=5, event=Event{id=1, name=Party, description=A hoedown!, creator=User{id=1, email=dondi@example.com, firstname=null, lastname=null, nickname=null}}, location=null, "
+        String expected2 = "EventOccurrence{id=5, event=Event(id=1, name=Party, description=A hoedown!, creator=User{id=1, email=dondi@example.com, firstname=null, lastname=null, nickname=null}), location=null, "
                 + "start=2012-09-27T09:25:00.000-07:00, end=2012-09-27T10:40:00.000-07:00}";
         assertThat(occurrence1.toString(), is(expected1));
         assertThat(occurrence2.toString(), is(expected2));

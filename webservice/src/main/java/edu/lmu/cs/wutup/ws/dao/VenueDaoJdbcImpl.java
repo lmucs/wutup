@@ -162,6 +162,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
         final Double latitude = v.getLatitude();
         final Double longitude = v.getLongitude();
         jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                 PreparedStatement ps = connection.prepareStatement(CREATE_WITH_AUTO_GENERATE_ID, new String[]{"id"});
                 ps.setString(1, name);
@@ -212,6 +213,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     }
 
     private static RowMapper<Venue> venueRowMapper = new RowMapper<Venue>() {
+        @Override
         public Venue mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Venue(rs.getInt("id"), rs.getString("name"), rs.getString("address"), rs.getDouble("latitude"),
                     rs.getDouble("longitude"), null);
@@ -219,6 +221,7 @@ public class VenueDaoJdbcImpl implements VenueDao {
     };
 
     private static RowMapper<String[]> propertyRowMapper = new RowMapper<String[]>() {
+        @Override
         public String[] mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new String[]{rs.getString("key"), rs.getString("value")};
         }

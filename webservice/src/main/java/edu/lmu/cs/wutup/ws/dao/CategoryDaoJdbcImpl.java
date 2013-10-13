@@ -95,6 +95,7 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
         final Integer parentId = c.getParentId();
         jdbcTemplate.update(
             new PreparedStatementCreator() {
+                @Override
                 public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
                     PreparedStatement ps =
                         connection.prepareStatement(CREATE_WITH_AUTO_GENERATE_ID, new String[] {"id"});
@@ -113,6 +114,7 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
     }
     
     private static RowMapper<Category> categoryRowMapper = new RowMapper<Category>() {
+        @Override
         public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Category(rs.getInt("id"), rs.getString("name"),
                     rs.getInt("parentId"));
