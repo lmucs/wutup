@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.lmu.cs.wutup.ws.exception.LocationNotFoundByGoogleException;
 import edu.lmu.cs.wutup.ws.exception.MalformedCoordinatesException;
 import edu.lmu.cs.wutup.ws.exception.NoAddressProvidedException;
-import edu.lmu.cs.wutup.ws.model.LatLong;
+import edu.lmu.cs.wutup.ws.model.Location;
 import edu.lmu.cs.wutup.ws.model.Venue;
 
 @Service
@@ -26,19 +26,19 @@ import edu.lmu.cs.wutup.ws.model.Venue;
 public class GeocodeServiceImpl implements GeocodeService {
     @Autowired
     VenueService venueService;
-    
+
     @Override
-    public LatLong resolveAddressToLatLong(String address) throws NoAddressProvidedException, LocationNotFoundByGoogleException, IOException {
+    public Location resolveAddressToLatLong(String address) throws NoAddressProvidedException, LocationNotFoundByGoogleException, IOException {
 
         if (address == null || address == "") {
             throw new NoAddressProvidedException();
         }
-        
+
         try {
             JSONObject r = extractLocationFromJSON(new JSONObject(
                     geocodeAddressToLatLong(address)));
 
-            return new LatLong(r.getDouble("lat"), r.getDouble("lng"));
+            return new Location(r.getDouble("lat"), r.getDouble("lng"));
 
         } catch (JSONException e) {
             throw new LocationNotFoundByGoogleException();
@@ -51,7 +51,7 @@ public class GeocodeServiceImpl implements GeocodeService {
         if (lat == null || lng == null || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
             throw new MalformedCoordinatesException();
         }
-        
+
         try {
             return extractAddressFromJSON(new JSONObject(geocodeCoordinatesToAddress(lat, lng)));
 
@@ -61,17 +61,17 @@ public class GeocodeServiceImpl implements GeocodeService {
         }
 
     }
-    
+
     @Override
     public Venue resolveVenue(String address, Double lat, Double lng) throws ClientProtocolException, JSONException, IOException, LocationNotFoundByGoogleException {
         if (address == null && (lat == null || lng == null)) {
             throw new NoAddressProvidedException();
         }
-        
+
         Venue v = new Venue();
         String resolvedName, resolvedAddress;
-        LatLong location;
-        
+        Location location;
+
         if (lat != null && lng != null) {
             // TODO: Handle resolveLatLongToAddress failure with exception
             resolvedAddress = resolveLatLongToAddress(lat, lng);

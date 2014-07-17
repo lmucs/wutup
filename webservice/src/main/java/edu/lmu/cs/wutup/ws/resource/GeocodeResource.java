@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import edu.lmu.cs.wutup.ws.exception.MalformedCoordinatesException;
 import edu.lmu.cs.wutup.ws.exception.NoAddressProvidedException;
-import edu.lmu.cs.wutup.ws.model.LatLong;
+import edu.lmu.cs.wutup.ws.model.Location;
 import edu.lmu.cs.wutup.ws.service.GeocodeService;
 
 @Component
@@ -36,7 +36,7 @@ public class GeocodeResource {
     }
 
     private Response resolveAddress(String address) {
-        LatLong response;
+        Location response;
 
         try {
             // TODO: We need to expect that address has already had spaces
