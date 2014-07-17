@@ -5,9 +5,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.CoreMatchers.endsWith;
-import static org.hamcrest.CoreMatchers.containsString;
 
 public class CircleTest {
 
@@ -77,11 +74,8 @@ public class CircleTest {
     @Test
     public void toStringIncludesAllFields() {
         String result = new Circle(7, 9, 20).toString();
-        assertThat(result, startsWith("Circle"));
-        assertThat(result, endsWith("}"));
-        assertThat(result, containsString("lat"));
-        assertThat(result, containsString("lon"));
-        assertThat(result, containsString("radius"));
+        String expected = "Circle(centerLatitude=7.0, centerLongitude=9.0, radius=20.0)";
+        assertThat(result, equalTo(expected));
     }
 
     private void boundsCheck(double lat, double lon, double radius, String expectedMessage) {

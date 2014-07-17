@@ -19,7 +19,7 @@ import edu.lmu.cs.wutup.ws.model.Category;
 public class CategoryDaoTest {
     private EmbeddedDatabase database;
     private CategoryDaoJdbcImpl categoryDao = new CategoryDaoJdbcImpl();
-    
+
     @Before
     public void setUp() {
         database = new EmbeddedDatabaseBuilder()
@@ -29,15 +29,15 @@ public class CategoryDaoTest {
                 .build();
         categoryDao.jdbcTemplate = new JdbcTemplate(database);
     }
-    
+
     @Test
     public void tableHasCorrectSizeFromSetup() {
         assertThat(categoryDao.findNumberOfCategories(), is(3));
     }
-    
+
     @Test
     public void creatingIncrementsSize() {
-        Category c = new Category(4, "Park");
+        Category c = Category.builder().id(4).name("Park").build();
         int beforeSize = categoryDao.findNumberOfCategories();
         categoryDao.createCategory(c);
         assertThat(categoryDao.findNumberOfCategories(), is(beforeSize + 1));
@@ -45,55 +45,55 @@ public class CategoryDaoTest {
 
     @Test
     public void deletingDecrementsSize() {
-        Category c = new Category(4, "Park");
+        Category c = Category.builder().id(4).name("Park").build();
         categoryDao.createCategory(c);
         int initialSize = categoryDao.findNumberOfCategories();
-        categoryDao.deleteCategory(c.getId());      
+        categoryDao.deleteCategory(c.getId());
         assertThat(categoryDao.findNumberOfCategories(), is(initialSize - 1));
     }
-    
+
     @Test
     public void createdCategoryCanBeFound() {
-        Category c = new Category(4, "Park");
+        Category c = Category.builder().id(4).name("Park").build();
         categoryDao.createCategory(c);
         Category result = categoryDao.findCategoryById(4);
         assertThat(result.getId(), is(c.getId()));
         assertThat(result.getName(), is(c.getName()));
     }
-    
+
     @Test(expected=CategoryExistsException.class)
     public void creatingCategoryWithDuplicateIdThrowsException() {
-        Category c = new Category(1, "Theater");
+        Category c = Category.builder().id(1).name("Theater").build();
         categoryDao.createCategory(c);
     }
-    
+
     @Test
     public void createCategoryWithNullIdAndNullParentGeneratesId() {
-        Category c = new Category("Alcohol");
+        Category c = Category.builder().name("Alcohol").build();
         categoryDao.createCategory(c);
         assertThat(c.getId(), is(4));
     }
-    
+
     @Test
     public void createCategoryWithNullIdGeneratesId() {
-        Category c = new Category("Musical", 1);
+        Category c = Category.builder().parentId(1).name("Musical").build();
         categoryDao.createCategory(c);
         assertThat(c.getId(), is(4));
     }
-    
-    
+
+
     @Test(expected=NoSuchCategoryException.class)
     public void deletingNonExistentCategoryThrowsException() {
-        Category c = new Category(57, "Party");
+        Category c = Category.builder().id(57).name("Party").build();
         categoryDao.deleteCategory(c.getId());
     }
 
     @Test(expected=NoSuchCategoryException.class)
     public void updatingNonExistentCategoryThrowsException() {
-        Category c = new Category(57, "Party");
+        Category c = Category.builder().id(57).name("Party").build();
         categoryDao.updateCategory(c);
     }
-    
+
     @Test(expected=NoSuchCategoryException.class)
     public void findingNonExistantCategoryThrowsException() {
         categoryDao.findCategoryById(2012);
@@ -105,25 +105,25 @@ public class CategoryDaoTest {
         Category c = categoryDao.findCategoryById(9);
         c.setName("Fun meeting");
         categoryDao.updateCategory(c);
-        
+
         Category newer = categoryDao.findCategoryById(9);
         assertThat(newer.getName(), is(c.getName()));
     }*/
-    
+
     @Test
     public void getMaxIdValueReturnsCorrectValue() {
-        categoryDao.createCategory(new Category(9999, "Kick back"));
+        categoryDao.createCategory(Category.builder().id(9999).name("Kick back").build());
         int max = categoryDao.getMaxValueFromColumn("id");
         assertEquals(max, 9999);
     }
-    
+
     @Test
     public void getNextUsableUserIdReturnsMaxPlusOne() {
         int currentMaxIdValue = categoryDao.getMaxValueFromColumn("id");
         int nextGeneratedUserId = categoryDao.getNextUsableCategoryId();
         assertEquals(nextGeneratedUserId, currentMaxIdValue + 1);
     }
-    
+
     @After
     public void tearDownDatabase() {
         database.shutdown();

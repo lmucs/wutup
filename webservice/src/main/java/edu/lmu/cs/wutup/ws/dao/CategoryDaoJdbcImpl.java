@@ -26,7 +26,7 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
     private static final String DELETE_SQL = "delete from category where id=?;";
     private static final String FIND_BY_ID_SQL = "select * from category where id=?;";
     private static final String COUNT_SQL = "select count(*) from category;";
-    
+
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -59,17 +59,17 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
     public void updateCategory(Category c) {
         int rowsUpdated = jdbcTemplate.update(
                 UPDATE_SQL, c.getName(), c.getParentId(), c.getId());
-        
+
         if (rowsUpdated == 0) {
             throw new NoSuchCategoryException();
         }
     }
-    
+
     @Override
     public int findNumberOfCategories() {
         return jdbcTemplate.queryForInt(COUNT_SQL);
     }
-    
+
     @Override
     public void deleteCategory(int id) {
         int rowsUpdated = jdbcTemplate.update(DELETE_SQL, id);
@@ -77,19 +77,19 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
             throw new NoSuchCategoryException();
         }
     }
-    
+
     @Override
     public int getMaxValueFromColumn(String columnName) {
         String queryForMax = "select max(" + columnName + ") from category;";
         return jdbcTemplate.queryForInt(queryForMax);
     }
-    
+
     @Override
     public int getNextUsableCategoryId() {
         int largestIdValue = getMaxValueFromColumn("id");
         return largestIdValue + 1;
     }
-    
+
     private void createCategoryWithGeneratedId(Category c, KeyHolder keyHolder) {
         final String name = c.getName();
         final Integer parentId = c.getParentId();
@@ -100,24 +100,27 @@ public class CategoryDaoJdbcImpl implements CategoryDao {
                     PreparedStatement ps =
                         connection.prepareStatement(CREATE_WITH_AUTO_GENERATE_ID, new String[] {"id"});
                     ps.setString(1, name);
-                    
+
                     if (parentId == null) {
                         ps.setNull(2,  java.sql.Types.NULL);
                     } else {
                         ps.setInt(2,  parentId);
                     }
-                    
+
                     return ps;
                 }
             },
             keyHolder);
     }
-    
+
     private static RowMapper<Category> categoryRowMapper = new RowMapper<Category>() {
         @Override
         public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Category(rs.getInt("id"), rs.getString("name"),
-                    rs.getInt("parentId"));
+            return Category.builder()
+                    .id(rs.getInt("id"))
+                    .name(rs.getString("name"))
+                    .parentId(rs.getInt("parentId"))
+                    .build();
         }
     };
 }
